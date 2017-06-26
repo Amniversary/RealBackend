@@ -1,0 +1,84 @@
+//从协议内容中获取设备号、唯一号、登录类型、设备类型
+        $deviceNo = '';
+        $uniqueNo= '';
+        $registerType='';
+        $deviceType='';
+        if(!ApiCommon::GetBaseInfoFromProtocol($dataProtocal, $deviceNo, $uniqueNo,$registerType,$deviceType,$error))
+        {
+            return false;
+        }
+
+        //加入异步任务处理
+        $data=[
+            'user_id'=>$user_id,
+            'attention_id'=>$attention_id,
+            'op_type'=>'attention'
+        ];
+        if(!JobUtil::AddJob('user_attention',$data,$error))
+        {
+            \Yii::getLogger()->log('job save error:'.$error,Logger::LEVEL_ERROR);
+        }
+
+向beanstalkd丢任务脚本：
+$jobId =\Yii::$app->beanstalk->putInTube('tube',$data);
+
+beanstalkd想要输入logger日志，必须加上：
+\Yii::getLogger()->flush(true);
+
+\Yii::getLogger()->log(var_export($model->getErrors(), true),Logger::LEVEL_ERROR);
+
+常用的事物类型 READ_UNCOMMITTED]], [[READ_COMMITTED]], [[REPEATABLE_READ]] and [[SERIALIZABLE
+
+        //创建消息
+        $msg = new Message();
+        $msg->user_id = $user->account_id;
+        $msg->content = sprintf('%s打赏了愿望【%s】',$user->nick_name,$wishRecord->wish_name);
+        $msg->cur_money = $pay_money;
+        $msg->create_time = date('Y-m-d H:i:s',time());
+        $msg->status = '1';
+        $msg->msg_type = '2';
+        $msg->is_read = '0';
+
+
+//业务日志获取后需要修改的字段
+        $modifyPwdLog->remark5 = strval($borrowRecord->borrow_fund_id);
+        $modifyPwdLog->remark6 = $billRecord->bill_id;
+        $modifyPwdLog->remark7 = strval($billInfo->account_info_id);
+        $modifyPwdLog->remark9 = sprintf('%s用账户余额还了借款【%s】，第【%s】期',$user->nick_name,$params['pay_money'],$billRecord->cur_stage);
+
+
+
+                $transActions[] = new BusinessLogSaveForReward($businessLog,['error'=>'余额支持愿望业务日志存储异常',
+                    'propertys'=>[
+                        'remark10'=>[
+                            'model'=>'user_bill',
+                            'attr'=>'attributes',
+                            'key_method'=>'SetRemark10ByUserAccountInfo',
+                        ],
+                        'remark5'=>[
+                            'model'=>'get_cash',
+                            'attr'=>'get_cash_id',
+                            'value_php_fun'=>'strval',
+                        ],
+                    ]]);
+
+加载js
+$this->registerJs($js,\yii\web\View::POS_END);
+
+http://front.meiyuan.com/myback/dealfinishstatus?backvelidatekey=ewjosjfe7200u0ujsjowjojfshcosheroewcsd46496sd8
+
+
+启用worker 控制台命令
+系统变量名 .\yii worker名称
+
+
+//yii框架进行跨域处理
+return \yii\helpers\ArrayHelper::merge([
+    [
+        'class' => \yii\filters\Cors::className(),
+        'cors' => [
+            'Origin' => ['http://test.mblive.cn'],
+            'Access-Control-Request-Method' => ['*'],
+        ],
+    ],
+], parent::behaviors());

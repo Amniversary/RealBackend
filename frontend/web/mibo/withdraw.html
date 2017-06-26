@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection"content="telephone=no, email=no" />
+    <title>提现</title>
+    <link rel="stylesheet" href="css/weixin/withdraw.css">
+    <link rel="stylesheet" href="css/weixin/sweetalert.css">
+
+    <style type="text/css">
+    .prompt{
+        margin-top: 30%;
+        text-align: center;
+        padding:0 10%;
+    }
+    .prompt img{
+        height: 80px;
+        width: 80px;
+    }
+    .prompt span{
+        display: block;
+        font-size: 24px;
+        font-weight: 400;
+        color: #a7a7a7;
+        line-height: 60px;
+    }
+    .btnOpenApp{
+        font-size: 14px;
+        font-weight: bold;
+        color: #a7a7a7;
+        border:1px solid #fff;
+        border-radius:10px;
+        background-color: #fff;
+        padding: 5px 10px; 
+        width: 60%;
+        margin: 20px auto;
+    }
+    .btnOpenApp:hover{
+        color: #fff;
+        background-color: #333;
+    }
+    #removeAd ~*{
+        display: none;
+    }
+    </style>
+</head>
+
+<body class="p-recharge2">
+    <div class="warp"></div>
+    <script src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/jquery-1.9.1.min.js"></script>
+    <!-- backboneMVC框架 -->
+    <script src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/backbone_underscore.js"></script>
+    <script type="text/javascript" src="js/libs/sweetalert/sweetalert.min.js"></script>
+    <script src="js/component/pop.js"></script>
+    <script src="js/pages/recharge/pay.js"></script>
+
+        <header class="header">
+            <div class="rw-photo"><img src=""></div>
+            <p class="name">王老迪</p>
+            <p class="id">ID:55665</p>
+            <p class="balance">您的账户余额:<span>500</span>票</p>
+            <p style="display: none" class="client_id"><p>
+        </header>
+
+        <div class="withdraw-money">
+            <ul>
+                <li>
+                    <div class="labelclick">
+                        <div class="number">
+                            <span>50110票</span>
+                        </div>
+                        <div class="money">
+                            <span>600元</span>
+                            <input type="radio" name="recharge">
+                        </div>   
+                    </div>
+                </li>
+                <li>
+                    <div class="labelclick">
+                        <div class="number">
+                            <span>50110票</span>
+                        </div>
+                        <div class="money">
+                            <span>600元</span>
+                            <input type="radio" name="recharge">
+                        </div>   
+                    </div>
+                </li>
+                <li>
+                    <div class="labelclick">
+                        <div class="number">
+                            <span>50110票</span>
+                        </div>
+                        <div class="money">
+                            <span>600元</span>
+                            <input type="radio" name="recharge">
+                        </div>   
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <footer>
+            <div class="footerss">
+                <div class="footers">
+                    <p>确认提现后提现金额将以红包形式发送至您的微信，请注意收取红包</p>
+                    <a id="confirm" href="javascript:;"><span>确认提现</span></a>
+                    <div class="more" style="display:none;position:absolute;bottom:100%;left:0;width:100%;background:#404040;color: #a7a7a7;line-height:50px;text-align:center;border-top: 1px solid #e5e5e5;">查看更多</div>
+                </div>
+            </div>
+        </footer>
+      
+
+    <script type="text/template" id="j_user_template">
+        <header class="header">
+            <div class="rw-photo"><img src="<%= pic %>"></div>
+            <p class="name"><%= nick_name %></p>
+            <p class="id">ID:<%= client_no %></p>
+            <p class="balance">您的账户余额:<span><%= ticket_count %></span>蜂蜜</p>
+            <p style="display: none" class="client_id"><%= client_id %><p>
+        </header>
+    </script>
+
+    <script type="text/template" id="j_list_template">
+        <div class="withdraw-money">
+            <ul>
+                <% _.each(list,function(obj, index){ %>
+                <li>
+                    <div class="labelclick">
+                        <div class="number">
+                            <span style="color:#ffbe00"><%= obj.ticket_num %>蜂蜜</span>
+                        </div>
+                        <div class="money">
+                            <span><%= obj.result_money %>元</span>
+                            <% var checked = index==0?'checked':''%>
+                            <input type="radio" name="recharge" <%= checked %> data-id="<%= obj.goods_id %>">
+                        </div>   
+                    </div>
+                </li>
+                <% }) %>
+            </ul>
+        </div>
+        <footer>
+            <div class="footerss">
+                <div class="footers">
+                    <p style="font-size:12px;">确认提现后需要审核，审核时间需要3到5个工作日，审核成功后提现金额将以红包形式发送至您的微信，请注意收取红包</p>
+                    <a id="confirm" href="javascript:;"><span>确认提现</span></a>
+                    <div class="more" style="display:none;position:absolute;bottom:100%;left:0;width:100%;background:#fff;color: #a7a7a7;line-height:50px;text-align:center;border-top: 1px solid #e5e5e5;">查看更多</div>
+                </div>
+            </div>
+        </footer>
+    </script>
+
+    <script src="https://s.mlinks.cc/scripts/dist/mlink.min.js"></script>
+    <script>
+    var time = null;
+    var User = Backbone.Model.extend({
+        url:"/mbliving/wxgoodslist",
+    })
+    var UserView = Backbone.View.extend({
+        el: $('.warp'),
+        template: _.template($('#j_user_template').html()),
+        render: function(){
+            this.$el.append(this.template(this.model));
+            return this;
+        }
+    })
+
+
+    //金额
+    var Money = Backbone.Model.extend({});
+    var MoneyView = Backbone.View.extend({
+        el: $('.warp'),
+        template: _.template($('#j_list_template').html()),
+        render: function(){          
+            this.$el.append(this.template(this.model.toJSON()));
+            return this;
+        }
+    })
+    
+
+    var AppView = Backbone.View.extend({
+        el: $('.warp'),
+        events: {
+            'click #confirm': 'gotoPay',
+            'dblclick #confirm': 'gotoPay1'
+        },
+        initialize: function(){
+            this.model = new User();
+            var _this = this;
+            this.model.fetch({
+                success: function(model, data){
+                    //实例化用户
+                    if(data.code == 1){
+                        _this.$el.append('<div class="prompt"><img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/error.png"><span>'+ data.msg +'</span><a class="btnOpenApp" id="btnOpenApp">进入app中绑定</a></div>');}
+                    if(data.code == 2)
+                    {
+                        window.location.href = 'withdraw_bind.html';
+                    }
+                    var goods_price;              
+                    var user = data.msg.data,
+                        userView = new UserView({model: user});
+
+                    _this.$el.append(userView.render().el);
+
+                    //实例化金额列表
+                    var money = new Money();
+                    money.set({'list': data.msg.goods});
+                    var moneyView = new MoneyView({model: money});    
+                                                           
+                    _this.$el.append('<div class="interval"><span>请选择提现金额：</span></div>');
+                    _this.$el.append(moneyView.render().el);
+
+                    //是否显示查看更多
+                    var sHeight = $(window).height(),//屏幕高度
+                        cHeight = $(document).height();//页面高度
+                    if(cHeight>sHeight){
+                      $('.more').show();
+                      $('.more').on('touchstart',function(){
+                        $('.more').hide();
+                         $('body').animate({ scrollTop: 200 }, 500);
+                      })
+                      $(window).scroll(function(){
+                        $('.more').hide();
+                      })
+                    }
+                },
+                error:function(){
+                    alert("数据请求异常，请刷新页面重试!");
+                }
+            });
+        },
+        gotoPay: function(){
+            //清除延时触发的事件
+            clearTimeout(time);
+            //单击事件延时300ms触发
+            time = setTimeout(
+                function(){
+                    
+                        swal({ 
+                            title: "您是否确定提现？", 
+                            type: "warning", 
+                            showCancelButton: true, 
+                            closeOnConfirm: true, 
+                            confirmButtonText: "确定", 
+                            confirmButtonColor: "#ffbe00" 
+                        }, function() { 
+                            var good_id = $('[name=recharge]:checked').attr('data-id');
+                            var client_id = $(".client_id").text();
+                            
+                            $.ajax({
+                                type: "POST",
+                                url: "/mbliving/wxdrawmoney",
+                                data: {
+                                    goods_id:good_id,
+                                },
+                                success: function(data){
+                                
+                                    data = $.parseJSON(data);
+                                    if(data.code == 0){
+                                        window.location.href="withdraw_success.html";
+                                    }
+                                    if(data.code == 1){
+                                        popInfo(data.msg,1);
+                                    }
+                                },
+                            });
+                            
+                        });
+           
+                    
+            },300);
+            
+        },
+
+
+        gotoPay1 : function(){
+            //清除延时触发的事件
+            clearTimeout(time);
+            //双击事件的具体操作
+                        swal({ 
+                            title: "您是否确定提现？", 
+                            type: "warning", 
+                            showCancelButton: true, 
+                            closeOnConfirm: false, 
+                            confirmButtonText: "确定", 
+                            confirmButtonColor: "#6ffabc"
+                        }, function() { 
+                            var good_id = $('[name=recharge]:checked').attr('data-id');
+                            var client_id = $(".client_id").text();
+                            
+                            $.ajax({
+                                type: "POST",
+                                url: "/mbliving/wxdrawmoney",
+                                data: {
+                                    goods_id:good_id,
+                                },
+                                success: function(data){
+                                
+                                    data = $.parseJSON(data);
+                                    if(data.code == 0){
+                                        window.location.href="withdraw_success.html";
+                                    }
+                                    if(data.code == 1){
+                                        popInfo(data.msg,1);
+                                    }
+                                },
+                            });
+                            
+                        });
+           
+                    
+        }
+        
+    })
+    var appView = new AppView();
+    $("body").on('touchstart','.labelclick',function(){
+        $(this).find('input[type="radio"]').prop('checked',true);
+        $(this).siblings().find('input[type="radio"]').prop('checked',false);
+    });
+
+    $('body').on('click','#btnOpenApp',function(){
+             window.location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.mb.mibo";
+     })
+
+     new Mlink({
+                mlink : link,
+                button : document.querySelectorAll("a#btnOpenApp"),
+                autoLaunchApp : false,
+     });
+
+
+    </script>
+    <div id="removeAd"></div>
+</body>
+</html>
+
+
+
+
+                

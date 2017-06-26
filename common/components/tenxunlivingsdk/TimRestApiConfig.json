@@ -1,0 +1,6 @@
+{
+	"sdkappid":"1400008928",  //test: 1400008665  real: 1400008928
+	"identifier":"meiboadmin",
+	"private_pem_path":"/private_key/private_key.pem",
+	"user_sig":""
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>	
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection"content="telephone=no, email=no" />
+    <title>直播信息</title>
+    <link rel="stylesheet" href="css/weixin/style.css">
+    <style type="text/css">
+    .prompt{
+        display: none;
+        margin-top: 30%;
+        text-align: center;
+        padding:0 10%;
+    }
+    .prompt img{
+        height: 80px;
+        width: 80px;
+    }
+    .prompt span{
+        display: block;
+        font-size: 22px;
+        font-weight: 400;
+        color: #a7a7a7;
+        line-height: 60px;
+    }
+    #removeAd ~*{
+        display: none;
+    }
+    </style>
+</head>
+<body class="p-livinginfo">
+    <div class="g-mn" id="j_main">
+        <!-- <div class="img">
+            <img src="http://image.matewish.cn/wish/826df4762129477628e39c2bcdbf9ac1.jpg" alt="">
+        </div>        
+        <div class="info">
+            <h2 class="nick">宝宝包阿</h2>
+            <span class="id_no">ID:12345678</span>
+            <p>本月直播时长</p>
+            <p class="time">18小时36分</p>
+        </div> -->
+    </div>
+	<div class="prompt" id="j_prompt"><img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/error.png"><span>您还未绑定蜜播账号，请绑定后查询。</span></div>
+    <script src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/jquery-2.0.3.min.js"></script>
+    <script src="js/libs/template/template.js"></script>
+    <script type="text/template" id="j_template">
+        <div class="img">
+            <img src="{{pic}}" alt="">
+        </div>        
+        <div class="info">
+            <h2 class="nick">{{nick_name}}</h2>
+            <span class="id_no">ID：{{client_no}}</span>
+            <p>本月直播时长</p>
+            <p class="time">{{hours}}小时{{mins}}分</p>
+        </div>
+    </script>
+    <script id="removeAd">
+	    
+        $.ajax({
+            url: "/mbliving/livingstatistics",
+            success: function(data){
+                
+                var data = JSON.parse(data);
+
+                if(data.code == 0){
+                    //成功 
+                    data = data.msg;
+                    data.hours = data.living_time.H;
+                    data.mins = data.living_time.I;
+                    var html = template("j_template", data);  
+                    $("#j_main").html(html);
+                }else{
+                    //没绑定过
+                    $("#j_prompt").show();
+                }
+            },
+            error: function(){
+                alert("服务器出错了！");
+            }
+        })
+    </script>
+</body>   
+</html>

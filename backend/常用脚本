@@ -1,0 +1,180 @@
+$this->registerJs($js,\yii\web\View::POS_END);
+
+刷新按钮
+Html::button('刷新数据', ['type'=>'button','id'=>'data-fresh', 'title'=>'测试刷新', 'class'=>'btn btn-success']).' '.
+gridview客户端更新脚本：
+$("#user-manage-list").yiiGridView("applyFilter");
+
+隐藏弹框
+$("#contact-modal").modal("hide");
+
+自带弹框组件属性：
+data-toggle="modal" data-target="#contact-modal"
+
+
+        $modifyPwdLog->remark5 = strval($borrowRecord->borrow_fund_id);
+        $modifyPwdLog->remark6 = $billRecord->bill_id;
+        $modifyPwdLog->remark7 = strval($billInfo->account_info_id);
+        $modifyPwdLog->remark9 = sprintf('%s用账户余额还了借款【%s】，第【%s】期',$user->nick_name,$params['pay_money'],$billRecord->cur_stage);
+
+
+
+js获取gridview的checkbox列的所有值的脚本：
+var keys = $("#wish_search_list").yiiGridView("getSelectedRows");
+
+
+artdialog提示函数：
+artDialog.tips = function (content, time) {
+    return artDialog({
+        id: "Tips",
+        title: false,
+        cancel: false,
+        fixed: true,
+        lock: true
+    })
+    .content("<div style=\"padding: 0 1em;\">" + content + "</div>")
+    .time(time || 1);
+};
+
+gridview列：
+checkbox列：
+    [
+        'class'=>'\yii\grid\CheckboxColumn',
+        'checkboxOptions'=>function($model)
+        {
+            return [
+                'value'=>$model['wish_id'],
+            ];
+        },
+        'name'=>'wish_id',
+    ],
+
+序号列：
+['class' => 'kartik\grid\SerialColumn'],
+编辑列：
+    [
+        'class' => 'kartik\grid\EditableColumn',
+        'attribute' => 'packets_name',
+        //'pageSummary' => 'Page Total',
+        'vAlign'=>'middle',
+        'headerOptions'=>['class'=>'kv-sticky-column'],
+        'contentOptions'=>['class'=>'kv-sticky-column'],
+        'editableOptions'=>['header'=>'Name', 'size'=>'md']
+    ],
+    [
+        'attribute'=>'discribtion',
+        'value'=>function ($model, $key, $index, $widget) {
+            return "<span class='badge' style='background-color: {$model->discribtion}'> </span>  <code>" .
+            $model->discribtion . '</code>';
+        },
+        'filterType'=>GridView::FILTER_COLOR,
+        'vAlign'=>'middle',
+        'format'=>'raw',
+        'width'=>'150px',
+        'noWrap'=>true
+    ],
+
+    时间列：
+        [
+            //'class'=>'kartik\grid\BooleanColumn',
+            'attribute'=>'create_time',
+            'vAlign'=>'middle',
+            'filterType'=>'\yii\jui\DatePicker',
+            'filterWidgetOptions'=>[
+                'language'=>'zh-CN',
+                'dateFormat'=>'yyyy-MM-dd',
+                //'attribute'=>'start_time',
+                'options'=>['class'=>'form-control','style'=>'display:inline-block;']
+            ],
+        ],
+    动作列：
+    [
+            'width'=>'120px',
+            'class' => 'kartik\grid\ActionColumn',
+            'template'=>'{update}{cancel_wish}',
+            'dropdown' => false,
+            'vAlign'=>'middle',
+            'urlCreator' => function($action, $model, $key, $index)
+            {
+                $url = '';
+                switch($action)
+                {
+                    case 'cancel_wish':
+                        $url='/wishmanage/cancel_show?wish_id='.$model->wish_id;
+                        break;
+                    case 'update':
+                        $url ='/wishmanage/edit?wish_id='.$model->wish_id;
+                        break;
+                }
+                return $url;
+            },
+            'updateOptions'=>['title'=>'编辑','label'=>'编辑', 'data-toggle'=>false],//tooltip
+            'buttons'=>[
+                'cancel_wish' => function ($url, $model, $key) {
+                    return Html::a('取消',$url,[ 'data-toggle'=>'modal','data-target'=>'#contact-modal','style'=>'margin-left:10px;']);
+                },
+            ],
+        ],
+
+
+tab标签：
+echo Tabs::widget([
+    'items' => [
+        [
+            'label' => '未打款提现记录',
+            'content' => 'Anim pariatur cliche...',
+            'active' => true
+        ],
+        [
+            'label' => '已打款提现记录',
+            'content' => 'Anim pariatur cliche...',
+            'headerOptions' => [],
+             'options' => ['id' => 'myveryownID'],
+         ],
+         [
+             'label' => 'Example',
+             'url' => 'http://www.example.com',
+         ],
+         [
+             'label' => 'Dropdown',
+             'items' => [
+                 [
+                     'label' => 'DropdownA',
+                     'content' => 'DropdownA, Anim pariatur cliche...',
+                 ],
+                 [
+                     'label' => 'DropdownB',
+                     'content' => 'DropdownB, Anim pariatur cliche...',
+                 ],
+             ],
+         ],
+     ],
+ ]);
+
+ bootstrap alert
+ class类型
+         'alert-danger',
+         'alert-danger',
+         'alert-success',
+         'alert-info',
+         'alert-warning'
+
+echo \yii\bootstrap\Alert::widget([
+    'body'=>'您没有权限访问此功能',
+    'options'=>[
+    'class'=>'alert-danger',
+        ]
+]);
+
+//Yii2 输入框日期
+<?php
+    echo \yii\jui\DatePicker::widget([
+        'model' => $model,
+        'attribute' => 'gift_value',
+        'language' => 'zh-CN',
+        'dateFormat' => 'yyyy-MM-dd',
+    ]);
+    ?>
+
+    //错误日志
+    \Yii::getLogger()->log('client_id:'.$client->client_id,Logger::LEVEL_ERROR);

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<canvas id="myCanvas"></canvas>
+</body>
+<script>
+	var myCanvas = document.getElementById("myCanvas");
+
+	//确定浏览器支持canvas元素
+	if(myCanvas.getContext){
+		var context = myCanvas.getContext("2d");
+	}
+</script>
+</html>		

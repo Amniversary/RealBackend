@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>蜜播</title>
+    <link rel="stylesheet" href="css/weixin/style.css">
+    <link rel="stylesheet" type="text/css" href="css/weixin/livingshare.css" />
+    <script src="js/component/pop.js"></script>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="https://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/jquery-2.0.3.min.js"></script>
+    <style type="text/css">
+        #removeAd ~*{
+                display: none;
+        }
+        .anchor-id span{
+            color: #fff !important;
+            display: inline-block !important;
+        }
+        .anchor-nick-name{
+            color: #fff !important;
+            display: inline-block !important;
+        }
+        .bottom-confirm-mima{
+            padding: 10px 0;
+        }
+        .obj-mibod img{
+            width: 100%;
+        }
+        .enter-app{
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="p-direct">
+
+    <!-- 初始弹窗-->
+    <div class="enter-app">
+            <div class="enter-app-mask"></div>
+           <div class="enter-app-center">
+                <div class="enter-app-top">
+                    <span>打开蜜播看高清直播</span>
+                </div>
+                <div class="enter-app-bottom">
+                        <div class="bottom-close">取消</div>
+                        <a  class="bottom-confirm" id="btnOpenApp">打开</a>
+                 </div>
+         </div>
+    </div>
+
+    <!-- header 推荐主播-->
+    <header class="top">      
+    </header>
+
+    <p class="anchor-user-id" style="display:none"></p>
+    <!-- center 其他热门主播-->
+    <div class="oanchor">
+    </div>
+
+    <!-- 加载动态 -->
+    <div class="loadgif">
+        <img src="https://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/loading.png">
+    </div>
+
+    <!-- 直播密码输入-->
+    <div class="prompt">
+        <div class="prompt-center">
+                <div class="prompt-top">
+                    <span>输入密码</span>
+                    <input  type="number"  class="prompt-mima" oninput="if(value.length>6)value=value.slice(0,6)" placeholder="请输入真实有效的密码" />
+                </div>
+                <div class="prompt-bottom">
+                        <div class="bottom-close">取消</div>
+                        <div class="bottom-confirm-mima">确认</div>
+                 </div>
+        </div>
+    </div>
+
+
+    <!-- 推荐主播(前端模板) -->
+    <script type="text/template" id="anchor-template">
+        <div id="j_anchor" data-hlsurl="<%= obj.pull_hls_url %>" data-rtmpurl="<%= obj.pull_rtmp_url %>" data-httpurl="<%= obj.pull_http_url %>" data-flag="<%= obj.flag %>" data-livingid="<%= obj.living_id %>">
+            <div class="anchor" >
+                
+                <img class="obj-pic" src="<%= obj.pic %>" >
+                
+            </div>
+            <div class="anchor-top-left">
+                        <div class="anchor-top-left-pic">
+                            <img src="<%= obj.pic %>"/>
+                        </div>
+                        <div class="anchor-top-left-info">
+                            <p class="anchor-nick-name"><span><%= obj.nick_name %></span></p>
+                            <p class="anchor-id">密播ID：<span class="obj-user-id"><%= obj.client_no %></span></p>
+                            
+                        </div>
+            </div>
+            <div class="anchor-top-right">
+                <a id="btnOpenApps" href="javascript:void(0)"  mlink-handling="true"><p>关注</p></a>
+            </div>
+             <a id="btnOpenApps" class="obj-mibod" href="javascript:void(0)"  mlink-handling="true"><img  src="https://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/mibod.png"></a>
+            <% if(obj.flag == 1) { %>
+            <a class="anchor-state-1" href="javascript:;" style="outline:none; -webkit-tap-highlight-color:rgba(0,0,0,0);"></a>
+            <% }else{ %>
+            <div class="anchor-state-2">
+                <p>直播已结束</p>
+                <p>快去看看热门直播吧</p>
+            </div> 
+            <% } %>
+
+
+            <!--新增直播-->
+            <div id="j_living" style="display:none;">
+                <!--主播信息-->
+                <div class="topbar w94 clearfix" id="j_top">
+                </div>
+                <!--mainarea-->
+                <div class="mainarea"></div>
+                <!-- <div  class="opan-app"><a id="btnOpenApp"><img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/mibod.png"></a></div> -->
+                <div id="player"></div>
+            </div>
+        </div>
+        <div class="mask">
+            <img class="logo" src="https://oss-cn-hangzhou.aliyuncs.com/mblive/meibo-test/logo.png">
+            <div class="platform-info"> 
+                <p>蜜播</p>
+                <p>来蜜播，从这看世界！</p>
+                <a href="https://a.app.qq.com/o/simple.jsp?pkgname=com.mb.mibo" style="outline:none;" id="J-call-app" class="label">立即下载</a>
+                 <input id="J-download-app" type="hidden" name="storeurl" value="https://a.app.qq.com/o/simple.jsp?pkgname=com.mb.mibo">
+            </div>
+        </div>
+       <!--  <div class="top-content">
+            <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; display: inline; float: left;border: 1px solid #ffeb00; margin: 20px 10px">
+                <img class="photo" src="<%= obj.pic %>">
+            </div>
+            <div class="info">
+                <p style="height: 20px;">
+                    <span class="name"><%= obj.nick_name %></span>
+                    
+                        <img src="<%= obj.sex %>" class="sex">
+                    <span class="grade-rq">
+                        <img src="@grade" class="grade">
+                        <span class="grade-1">
+                            <%= obj.level_no %>
+                        </span>
+                    </span>
+                    
+                    </span>
+                </p>
+                <p style="font-size:12px">
+                        <span class="age"><% if(obj.age != null ){  %><%= obj.age %>岁&nbsp;<% } %></span>
+                        ID:<span class="id"><%= obj.client_no %></span>
+                </p>
+                <p class="label"><%= obj.sign_name %></p>
+                <% if(obj.attention == 1) { %>
+                <a href="javascript:;" class="floow" style="outline:none; -webkit-tap-highlight-color:rgba(0,0,0,0);">已关注</a>
+                <% } else { %>
+                <a href="javascript:;" class="floow" style="outline:none; -webkit-tap-highlight-color:rgba(0,0,0,0);">关注</a>
+                <% } %>
+            </div> -->
+        </div>
+    </script>
+
+
+    <!-- (前端模板) ……观看-->
+    <script type="text/template" id="OtherAnchor-template">
+        <div class="center">
+            <div class="center-title">热门直播</div>
+            <ul class="center-anchor">
+                <% _.each(list,function(obj){ %>
+                    <% var url = obj.url;
+                    url = obj.flag == 0?'javascript:;':url;   
+                    var sWidth = document.documentElement.clientWidth;
+                    sWidth = sWidth>640?640:sWidth
+                    var width = Math.ceil(sWidth/3)+'px';
+                 if(obj.pull_hls_url==''&&obj.pull_rtmp_url==''&&obj.push_url==''){%>
+                        <li onclick="javascript:popInfo('哎呀，找不到播放地址了',1);">
+                    <%}else{ %> 
+                        <li onclick="location.href='<%= url %>'">
+                    <% } %>
+                    <img class="other-anchor" src="<%= obj.pic %>"><a>LIVE</a>
+                    <p class="look-number"><img src="https://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/观看.png"><span class="person_count"><%= obj.living_num %></span><span>人</span></p>
+                    <p class="look-mack"></p>
+                    <p class="nick-name" style="color: #505050; font-size: 16px;"><%= obj.nick_name %></p>
+                </li>
+                <% }) %>
+            </ul>
+        </div>
+    </script>
+
+    <!-- (前端模板) ……观看的展示-->
+    <script type="text/template" id="j_template">
+        
+            <div class="anchor-info l">
+                <!-- <div class="avatar">
+                    <img src="<%= living_info_one.pic %>" alt="" class="dw">
+                </div> -->
+                 <!-- 直播LIVE -->
+                    <!-- <%= living_info_one.person_count_total %>&nbsp;人 -->
+                <!-- <p>
+                    <span class="nick"><%= living_info_one.nick_name %></span>
+                    <span class="member-num"><%= living_info_one.client_id %>
+                    </span>
+                </p>      -->          
+                <!-- <span class="beans-num"><%= living_info_one.tickets_num %></span> -->
+            </div>
+            <div class="member-list r">
+                <ul class="clearfix">
+                    <% _.each(person_pic_list, function(obj){ %>
+                        <li class="avatar">
+                            <a href="javascript:;"><img src="<%= obj.pic %>" alt="" class="dw"></a>
+                        </li>
+                    <%  }) %>
+                </ul>
+            </div>
+            <!-- <div class="guanzhu">
+                <a href="http://a.app.qq.com/o/simple.jsp?pkgname=com.mb.mibo">关注</a>
+            </div> -->
+    </script>
+
+
+    <!-- 微信分享接口 -->
+    <script type="text/javascript">
+        var us = this.location.href;
+        var living_id_1 = lookup("living_id");
+        var user_id_1 = lookup("user_id");
+        var app_id_1 = lookup("app_id");
+        function lookup(x){
+             var index1 = us.indexOf(x);
+             var index = x.length;
+             var index_1 = us.indexOf("&",index1);
+             if(index_1 == -1)
+             {
+                 index_1 = us.length;
+             }
+             var index1s = us.substring(index1+index+1,index_1);
+             console.log(index1s);
+             return index1s;
+        }
+
+        function isWeiXin(){
+            var ua = window.navigator.userAgent.toLowerCase();
+            if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+                return true;
+            }else{
+                return false;
+            }
+        }
+       if(isWeiXin()){
+            //alert("weixin");
+            ////获取分享信息
+            var share = {};
+            //alert(window.location.href);
+            //var urlArr = window.location.href.split('?');
+            $.ajax({
+                url: '/mbliving/wechatshareinfo',
+                type: 'post',
+                data: {
+                    living_id:living_id_1,
+                    url: window.location.href
+                },
+                async: false,
+                success: function(data){
+                    var data = data&&JSON.parse(data);
+                    share.sign = data.sign;
+                    share.content = data.content;
+                    share.link = data.link;
+                    share.pic = data.pic;
+                    share.title = data.title;
+                    //alert(JSON.stringify(share));
+                },
+                error:function(error){
+                    alert("error");
+                }
+            });
+            wx.config({
+                debug: false,
+                appId: "wx19f6ec4aec39c380",
+                timestamp: 1455695941,
+                nonceStr: "meiyuanduo2jd2oDGFERETRE",
+                signature: share.sign,
+                jsApiList: [
+                "onMenuShareTimeline",
+                "onMenuShareAppMessage",
+                "onMenuShareQQ",
+                "onMenuShareWeibo",
+                "onMenuShareQZone",
+                "openLocation",
+                "getLocation"
+            ]
+            });
+            wx.ready(function(){
+			//alert("ready");
+                wx.onMenuShareTimeline({
+                    title: share.title, // 分享标题
+                    link: share.link, // 分享链接
+                    imgUrl: share.pic, // 分享图标
+                    success: function () {
+                        //alert("分享朋友圈ok");
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                        //alert("取消分享朋友圈ok");
+                    }
+                });
+                wx.onMenuShareAppMessage({
+                    title: share.title, // 分享标题
+                    desc: share.content, // 分享描述
+                    link: share.link, // 分享链接
+                    imgUrl: share.pic, // 分享图标
+                    type: "", // 分享类型,music、video或link，不填默认为link
+                    dataUrl: "", // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                        // alert("ffffffff");
+                    }
+                });
+                wx.onMenuShareQQ({
+                    title: share.title, // 分享标题
+                    desc: share.content, // 分享描述
+                    link: share.link, // 分享链接
+                    imgUrl: share.pic, // 分享图标
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                    }
+                });
+            });
+            wx.error(function(res){
+                //alert(res);
+                //alert(res.errMsg);
+
+            });
+        }else{
+            //alert("not weixin");
+        }   
+    </script>
+
+
+    <!-- backbone的JS -->
+    <script src="https://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/jquery-2.0.3.min.js"></script>
+    <script src="https://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/backbone_underscore.js"></script>
+    <script src="js/pages/livingshare/livingshare_backbone.js"></script>
+    <script src="js/component/pop.js"></script>
+
+    <!--zff-新增直播js-->
+    <script src="js/libs/jwplayer/jwplayer.js"></script>
+
+    <script type="text/javascript">
+        function initLivingShow(){
+            var width = document.documentElement.clientWidth;
+            var height = document.documentElement.clientHeight;
+           if(width>640){width=640}
+            var pull_hls_url = $('#j_anchor').data('hlsurl'),
+                pull_rtmp_url = $('#j_anchor').data('rtmpurl'),
+                pull_http_url = $('#j_anchor').data('httpurl'),
+                flag = $('#j_anchor').data('flag');
+            console.log(pull_hls_url,pull_rtmp_url,pull_http_url,flag);   
+            var thePlayer = jwplayer("player").setup({
+                flashplayer: 'js/libs/jwplayer/jwplayer.flash.swf',
+                //'image': 'http://www.jq22.com/demo/jwplayer-150617205852/TB65QsSn-720.jpg',
+                id: 'playerID',
+                controls:true,
+                width: width,
+                height: height,
+                autostart: false,//自动播放
+                stretching:'fill',
+                sources:[{'file': pull_hls_url},{'file': pull_rtmp_url},{'file': pull_http_url}]
+            });
+            thePlayer.onReady(function(){  	
+            });
+            /*//视屏准备就绪的的时候隐藏播放按钮
+            thePlayer.onBufferFull(function(){ 
+                alert("视频缓冲完成"); 
+                $('.jw-display-icon-container').hide();
+            })*/
+            //开始播放时
+            thePlayer.onPlay(function(){
+                $('.jw-display-icon-container').hide();
+            })
+            
+            //点击播放
+            $('.top').on('click','.anchor',function(){
+                    var user_id_3 = $(this).next().find('.obj-user-id').html();
+                    openAnchor(user_id_3);
+               
+            })
+            $('.top').on('click','.anchor-state-1',function(){
+                    var user_id_3 = $(this).parent().find('.obj-user-id').html();
+                    openAnchor(user_id_3);
+            })
+            
+             function  openAnchor(user_id){
+                 if(flag!=1){//直播已结束                
+                    return false;
+                    }
+                // console.log('click start');
+                  $.ajax({
+                    url: '/mbliving/open_living',
+                    type: 'post',
+                    data: {
+                        living_id:living_id_1,
+                        proving:1
+                    },
+                    async: true,
+                    dataType:'json',
+                    success: function(data){
+                        //type 1 是私密直播 
+                        //type 2 是门票直播 
+                        if(data.type == 1){
+                              //显示弹出窗
+                                $('.anchor-state-1').hide();
+                                $('.prompt').fadeIn();
+                        }else if(data.type == 2){
+                                // alert(user_id);
+                                // alert(living_id_1);
+                                var linkss = "http://a.mlinks.cc/Aa1A?living_id="+living_id_1+"&user_id="+user_id;
+                                window.location.href = linkss;
+                        }else{
+                                $('.anchor').hide();
+                                $('#j_living').show();
+                                $('.mask').addClass('ani-top');
+                                $('.anchor-state-1').hide();
+                                thePlayer.play(); 
+                        }
+                    }
+                });
+            }
+            //私密直播点击确认和取消
+            $('.bottom-close').click(function(){
+                 $('.prompt').fadeOut();
+                 $('.anchor-state-1').show();
+            })
+            $('.bottom-confirm-mima').click(function(){
+                //得到输入的密码
+                $.ajax({
+                            url: '/mbliving/open_living',
+                            type: 'post',
+                            data: {
+                                living_id:living_id_1,
+                                living_password:$('.prompt-mima').val(),
+                                proving:2
+                            },
+                            dataType:'json',
+                            async: true,
+                            success: function(data){
+                                     if(data.code == 0){
+                                        $('.prompt').fadeOut();
+                                        $('.anchor').hide();
+                                        $('#j_living').show();
+                                        $('.mask').addClass('ani-top');
+                                        $('.anchor-state-1').hide();
+                                        thePlayer.play(); 
+                                    }
+                                    if(data.code == 1){
+                                        $('.prompt').fadeOut();
+                                        popInfo(data.msg, 0);
+                                        $('.anchor-state-1').show();
+                                    }
+                            },
+                            error:function(error){
+                            }
+                        });
+            })
+            //点击视频
+            $('.top').on('click','.mainarea',function(){
+                console.log(thePlayer.getState().toUpperCase());
+                if($(this).hasClass('paused')){
+                    $('.mask').addClass('ani-top');
+                    $('.top-content').removeClass('ani-top');
+                    $('.anchor-state-1').hide();
+                    $(this).removeClass('paused');
+                    $('.topbar').show();
+                    $('.oanchor').css('margin-top','0');
+                }else{
+                    //alert('暂停');
+                    $('.mask').removeClass('ani-top');
+                    $('.top-content').addClass('ani-top');
+                    $('.anchor-state-1').show();
+                    $('.topbar').hide();
+                    $(this).addClass('paused');
+                    $('.oanchor').css('margin-top','0px');
+                    document.documentElement.scrollTop = document.body.scrollTop =0;
+                }
+                if(thePlayer.getState().toUpperCase()!='PLAYING'){
+                    console.log('播放');
+                    thePlayer.play();                
+                }else{
+                    console.log('暂停');
+                    thePlayer.pause();                
+                }
+            })
+            //主播的模板
+            var Anchor = Backbone.Model.extend({
+                url:'/mbliving/getlivingmasterinfo',
+                defaults:{
+                    main_pic:'',
+                    flag:'',
+                    pic:'',
+                    nick_name:'',
+                    sex:'',
+                    level_no:'',
+                    age:'',
+                    client_no:'',                
+                    sign_name:'',//label 主播的个性标签
+                    attention:'',                
+                    pull_rtmp_url:'',//rtmp地址               
+                    pull_hls_url:'',//hls地址
+                }
+            });
+            var anchor = new Anchor();
+            //推荐主播
+            var View  = Backbone.View.extend({
+                el: $('#j_top'),
+                template: _.template($('#j_template').html()),
+                initialize: function(){
+                    //var i = getUrlParam('living_id');
+                    //console.log(i);
+                    this.listenTo(this.model, 'change', this.render); 
+                    this.model.fetch({
+                        method: 'post',
+                        data: {
+                            living_id: $('#j_anchor').data('livingid'),
+                        },
+                        success:function(model){
+                        }
+                    });
+                },
+                render:function(){
+                    this.$el.append(this.template(this.model.toJSON()));
+                }
+            })
+            var appView = new View({model: anchor});
+        }
+    </script>
+
+    <script src="https://s.mlinks.cc/scripts/dist/mlink.min.js"></script>
+    <!-- 页面上的点击事件 -->
+    <script type="text/javascript">
+            // var browser={
+            //     versions:function(){
+            //            var u = navigator.userAgent, app = navigator.appVersion;
+            //            return {//移动终端浏览器版本信息
+            //                 trident: u.indexOf('Trident') > -1, //IE内核
+            //                 presto: u.indexOf('Presto') > -1, //opera内核
+            //                 webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+            //                 gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+            //                 mobile: !!u.match(/AppleWebKit.*Mobile.*/)||!!u.match(/AppleWebKit/), //是否为移动终端
+            //                 ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+            //                 android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+            //                 iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者QQHD浏览器
+            //                 iPad: u.indexOf('iPad') > -1, //是否iPad
+            //                 webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+            //             };
+            //          }(),
+            //          language:(navigator.browserLanguage || navigator.language).toLowerCase()
+            // }
+            // console.log(browser.versions.mobile);
+            // if(!(browser.versions.mobile))
+            // {
+            //     alert("aaa");
+            //     $('#btnOpenApp').click(function(){
+            //         window.location.href = "http://a.mlinks.cc/Aa1A";
+            //     })
+            // }
+            
+
+            //初始弹窗点击关闭和打开按钮
+            $('.enter-app-bottom .bottom-close').click(function(){
+                $('.enter-app').hide();
+            })
+
+
+
+            // $(function(){ 
+            // 　　alert($('.anchor-user-id').html());
+            // }); 
+    </script>
+
+    <div id="removeAd"></div>
+</body>
+</html>

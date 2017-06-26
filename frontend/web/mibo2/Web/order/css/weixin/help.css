@@ -1,0 +1,38 @@
+        *{
+			padding: 0;
+			margin: 0;
+            font-family: "微软雅黑";
+		}
+        body{ -webkit-tap-highlight-color:rgba(0,0,0,0); background-color:#e6e6e6;color:#505050;}
+		@media all and (min-width:640px){
+            body{width:640px;margin-right:auto;margin-left:auto}
+        }
+        section{
+        	width: 100%;
+        }
+        section ul{
+        	
+        	list-style-type: none; 
+        	font-size: 16px;
+        }
+
+        section ul li{
+        	position: relative;
+        	height:50px;
+        	line-height: 50px;
+        	border-bottom: 1px solid #e6e6e6;
+            background-color: #fff;
+            padding-left:4.5%;
+
+        }
+        section ul li img{
+        	position: absolute;
+        	right: 20px;
+        	top: 50%;
+        	-webkit-transform:translate(0,-50%);
+            width: 10px;
+        }
+
+        section ul li a{
+            outline-style:none;
+        }

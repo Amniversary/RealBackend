@@ -1,0 +1,29 @@
+   'discount' => '0.00'
+    'payment_type' => '1'
+    'subject' => '测试的商品'
+    'trade_no' => '2015123121001004670008298453'
+    'buyer_email' => 'lilleo@21cn.com'
+    'gmt_create' => '2015-12-31 14:01:10'
+    'notify_type' => 'trade_status_sync'
+    'quantity' => '1'
+    'out_trade_no' => '123114003124082'
+    'seller_id' => '2088121659089991'
+    'notify_time' => '2015-12-31 14:01:10'
+    'body' => '该测试商品的详细描述'
+    'trade_status' => 'WAIT_BUYER_PAY'
+    'is_total_fee_adjust' => 'Y'
+    'total_fee' => '0.01'
+    'seller_email' => '2181325630@qq.com'
+    'price' => '0.01'
+    'buyer_id' => '2088002037206671'
+    'notify_id' => '51c9b44ca9957519461e86a51ab6fdel64'
+    'use_coupon' => 'N'
+    'sign_type' => 'RSA'
+    'sign' => ''
+
+    需要的参数：
+    trade_no
+    out_trade_no
+    body
+    total_fee
+    seller_id

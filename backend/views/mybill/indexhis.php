@@ -1,0 +1,181 @@
+<style>
+    .ctr-head
+    {
+        margin-bottom: 10px;
+    }
+</style>
+<?php
+/**
+ * Created by PhpStorm.
+ * User: John
+ * Date: 2015/12/29
+ * Time: 19:38
+ */
+use kartik\grid\GridView;
+use yii\bootstrap\Html;
+use \yii\bootstrap\Tabs;
+
+echo Tabs::widget([
+    'options'=>['class'=>'ctr-head'],
+    'items' => [
+        [
+            'label' => '未还款账单记录',
+            'url' => \Yii::$app->urlManager->createAbsoluteUrl(['mybill/index','data_type'=>'undo']),// $this->render('indexundo'),
+            'active' => ($data_type === 'undo'? true: false),
+            'options' => ['id' => 'my_bill_undo'],
+        ],
+        [
+            'label' => '已还款账单记录',
+            'url' =>\Yii::$app->urlManager->createAbsoluteUrl(['mybill/indexhis','data_type'=>'his']),//$this->render('indexhis'),
+            'headerOptions' => [],
+            'options' => ['id' => 'my_bill_his'],
+            'active' => ($data_type === 'his'? true: false)
+        ],
+    ],
+]);
+
+$gridColumns = [
+    ['class' => 'kartik\grid\SerialColumn'],
+    [
+        'label'=>'借款单号',
+        'attribute'=>'borrow_fund_id',
+        'width'=>'100px',
+    ],
+    [
+        'label'=>'用户昵称',
+        'attribute'=>'user_id',
+        'width'=>'100px',
+        'value'=>function($model)
+        {
+            $user = \frontend\business\PersonalUserUtil::GetAccontInfoById($model->user_id);
+            return (isset($user)?$user->nick_name:'未设置');
+        }
+    ],
+    [
+        'label'=>'手机号码',
+        'attribute'=>'user_id',
+        'width'=>'100px',
+        'value'=>function($model)
+        {
+            $user = \frontend\business\PersonalUserUtil::GetAccontInfoById($model->user_id);
+            return (isset($user)?$user->phone_no:'未设置');
+        }
+    ],
+    [
+        'width'=>'100px',
+        'attribute'=>'status',
+        'vAlign'=>'middle',
+        'value'=>function($model)
+        {
+
+            return $model->GetStatusName();
+        },
+        'filter'=>['1'=>'已还款','2'=>'坏账'],
+    ],
+    [
+        'width'=>'100px',
+        'attribute'=>'pay_type',
+        'vAlign'=>'middle',
+        'value'=>function($model)
+        {
+
+            return $model->GetPayTypeName();
+        },
+        'filter'=>['1'=>'余额支付','3'=>'支付宝支付','4'=>'微信支付'],
+    ],
+    [
+        'width'=>'100px',
+    'attribute'=>'back_fee',
+        ],
+    'source_fee',
+    'borrow_fee',
+    [
+        'attribute'=>'is_cur_stage',
+        'vAlign'=>'middle',
+        'value'=>function($model)
+        {
+
+            return $model->GetIsCurStageName();
+        },
+        'filter'=>['1'=>'是','0'=>'否'],
+    ],
+    [
+        'width'=>'100px',
+        'attribute'=>'back_date',
+    ],
+    [
+        'width'=>'80px',
+        'attribute'=>'cur_stage',
+        'vAlign'=>'middle',
+        'value'=>function($model)
+        {
+
+            return (strval($model->cur_stage).'/'.strval($model->by_stages_count));
+        },
+    ],
+    [
+        'attribute'=>'is_delay',
+        'vAlign'=>'middle',
+        'width'=>'80px',
+        'value'=>function($model)
+        {
+
+            return ((time() > strtotime($model->back_date))?'是':'否');
+        },
+    ],
+    [
+        'attribute'=>'breach_days',
+        'vAlign'=>'middle',
+        'width'=>'80px',
+        'value'=>function($model)
+        {
+            $days = \common\components\TimeUtil::GetDays(date('Y-m-d'),$model->back_date);
+            return ($days < 0 ? 0 : $days);
+        },
+    ],
+//    ['class' => 'kartik\grid\CheckboxColumn']
+];
+echo GridView::widget([
+    'dataProvider' => $dataProvider,
+    'filterModel' => $searchModel,
+    'columns' => $gridColumns,
+    'containerOptions' => ['style'=>'overflow: auto;height:620px;'], // only set when $responsive = false
+    'beforeHeader'=>[
+        [
+//            'columns'=>[
+//                ['content'=>'Header Before 1', 'options'=>['colspan'=>4, 'class'=>'text-center warning']],
+//                ['content'=>'Header Before 2', 'options'=>['colspan'=>4, 'class'=>'text-center warning']],
+//                ['content'=>'Header Before 3', 'options'=>['colspan'=>3, 'class'=>'text-center warning']],
+//            ],
+            'options'=>['class'=>'skip-export'] // remove this row from export
+        ]
+    ],
+    'toolbar' =>  [
+        ['content'=>'',
+            //Html::a('&lt;i class="glyphicon glyphicon-repeat">&lt;/i>', ['grid-demo'], ['data-pjax'=>0, 'class' => 'btn btn-default', 'title'=>Yii::t('kvgrid', 'Reset Grid')])
+        ],
+        '{export}',
+        //'{toggleData}',
+        //'toggleDataContainer' => ['class' => 'btn-group-sm'],
+        'exportContainer' => ['class' => 'btn-group-sm']
+    ],
+    'pjax' => true,
+    'bordered' => true,
+    'striped' => false,
+    'condensed' => false,
+    'responsive' => true,
+    'hover' => true,
+    //'floatHeader' => true,
+    //'floatHeaderOptions' => ['scrollingTop' => '300px'],
+    //'showPageSummary' => true,
+    'panel' => [
+        'type' => GridView::TYPE_PRIMARY
+    ],
+]);
+
+echo \yii\bootstrap\Modal::widget([
+        'id' => 'contact-modal',
+        'clientOptions' => false,
+        'size'=>\yii\bootstrap\Modal::SIZE_LARGE,
+    ]
+);

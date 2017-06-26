@@ -1,0 +1,684 @@
+
+        html,body{
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            padding-bottom: 30px;
+        }
+        @media all and (min-width:640px){
+            body{width:640px;margin-right:auto;margin-left:auto}
+        }
+        p,a{
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        /* 推荐主播部分 */
+        
+        .top{
+            width: 100%;
+            position: relative;
+            padding-bottom: 110px;
+        }
+        @media (max-width:450px){
+            .top{
+                padding-bottom: 90px;
+            }
+        }
+
+        
+        /* 推荐上部分 */
+        /* 推荐image */
+        .top .anchor{
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+         .top .anchor .obj-pic{
+            position: absolute;
+            width: 100%;
+             z-index: 0;
+             left: -50%;
+            top:50%;
+            -webkit-transform:translate(5%,-50%);
+         }
+        /* 直播平台下载的遮罩层 */
+        .top .mask{
+            position: fixed;
+            bottom:0;
+            height: 11%;
+            z-index: 1;
+            background: rgba(0,0,0,0.5);
+        }
+        @media (max-width:450px){
+            .top .mask{
+                height: 60px;
+            }
+        }
+        @media (max-width:350px){
+            .top .mask{
+                height: 50px;
+            }
+        }
+        .top .logo{
+             padding-top: 16px;
+            padding-left: 20px;
+            display: inline;
+            float: left;
+            width: 75px;
+        }
+        @media (max-width:350px){
+            .top .logo{
+                padding-top: 7px;
+                padding-left: 12px;
+                width: 35px;
+            }
+        }
+         @media (min-width:350px) and (max-width:450px){
+            .top .logo{
+                padding-top: 7px;
+                padding-left: 12px;
+                width: 45px;
+            }
+        }
+        .top .platform-info{
+            float: left;
+            padding-top:18px; 
+            padding-left: 10px;
+            color:#333333;
+        }
+        @media (max-width:350px){
+           .top .platform-info{
+                padding-top:10px; 
+            }
+        }
+        @media (min-width:350px) and (max-width:450px){
+            .top .platform-info{
+                padding-top:10px; 
+                padding-left: 8px;
+            }
+        }
+
+        .top .platform-info p{
+            font: "微软雅黑";
+            font-size: 24px;
+            color: #dfdfde;
+           
+        }
+        @media (max-width:350px){
+			
+            .top .platform-info p{
+                font-size: 10px;
+                line-height:16px;
+            }
+        }
+        @media (min-width:350px) and (max-width:376px){
+            .top .platform-info p{
+                font-size: 14px;
+                margin-top: -2px;
+                line-height:24px;
+            }
+        }
+        @media (min-width:376px) and (max-width:450px){
+            .top .platform-info p{
+                font-size: 14px;
+                 line-height:22px;
+            }
+        }
+
+        .top .platform-info a{
+            position: absolute;
+            top:23px;
+            right: 20px;
+            width: 100px;
+            line-height: 54px;
+            height:54px;
+            text-align: center;
+            border-radius: 50px;
+            border: 2px solid #ffbe00; 
+            color: #ffbe00;
+            font-size: 24px;
+            padding: 0 10px;
+        }
+        @media (max-width:350px){
+            .top .platform-info a{
+                top:12px;
+                font-size: 14px;
+                line-height: 24px;
+                height:24px;
+                padding: 0 2px;
+                width: 70px;
+            }
+        }
+        @media (min-width:350px) and (max-width:500px){
+           .top .platform-info a{
+                top:18px;
+                font-size: 14px;
+                line-height: 24px;
+                height:24px;
+                padding: 0 2px;
+                width: 70px;
+            }
+        }
+        @media (min-width:700px) and (max-width:768px){
+            .top .platform-info a{
+                right: 150px;
+            }
+        }
+
+        /* 主播的两种状态 */
+        .top .anchor-state-1{
+            position: absolute;
+            top:40%;
+            left: 50%;
+            -webkit-transform:translate(-50%,-50%);
+            background-image: url(http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/play.png);
+            background-size: 100% auto;
+            width: 100px;
+            height: 100px;
+        }
+
+        .top .anchor-state-2{
+            position: absolute;
+            top:40%;
+            left: 50%;
+            -webkit-transform:translate(-50%,-50%);
+            background: rgba(0,0,0,.5);
+            border-radius: 5px;
+            height: 100px;
+            width: 240px;
+            padding-top: 40px;
+            text-align: center;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,.3);
+        }
+        @media (max-width:450px){
+            .top .anchor-state-1{
+                width: 50px;
+                height: 50px;
+            }
+            .top .anchor-state-2{
+                height: 60px;
+                padding-top: 20px;
+                width: 220px;
+            }
+        }
+        .top .anchor-state-2 p{
+            font-size: 14px;
+            padding-bottom: 10px;
+        }
+
+        /* 推荐下部分 */
+        .top-content{
+            width:100%;
+            height:110px;
+            position: absolute;
+            bottom: 0;
+        }
+         @media (max-width:450px){
+            .top-content{
+                height:90px;
+        }
+        }
+        .top-content .name{
+            color: #fff;
+        }
+        .top-content .photo{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        .top-content .info{
+            display: inline-block;
+            padding-top: 20px;
+            float: left;
+
+        }
+        .top-content .info p{
+            line-height: 15px;
+            height: 15px;
+            font-size: 14px;
+            padding: 3px 0;
+            margin: 0px;
+            color: #a0a0a0;
+        }
+        .top-content .info .label{
+            color: #a0a0a0;
+        }
+         @media (max-width:350px){
+            .top-content .info .label{
+                font-size: 14px;
+            }
+        }
+
+        .top-content .info .sex{
+            width: 15px;
+            height: 16px;
+            vertical-align:middle;
+            padding: 0 5px;
+            margin-top: -3px;
+        }
+        .top-content .info .grade{
+            height: 15px;
+            vertical-align:middle;
+            padding: 0 3px;
+            margin-right:5px; 
+            margin-top:2px; 
+            border-radius: 20px;
+        }
+        .top-content .info .grade-rq{
+            position: relative;
+            display: inline-block;
+            border-radius:3px; 
+            vertical-align: middle;
+            margin-top:-2px; 
+        }
+         .top-content .info .grade-1{
+            position: absolute;
+            top: 2px;
+            left: 20px;
+            font-size: 12px;
+             color:#fff;
+         }
+         .top-content .info .id{
+            padding: 0 5px;
+         }
+         .top-content .info .label{
+            font-size:15px;
+             width:180px;
+             text-overflow: ellipsis;
+             overflow: hidden;
+             white-space: nowrap;
+         }
+
+        /* 其他热门直播 */
+        .center{
+            padding-top:10px;
+            width: 100%;
+            float: left; 
+            background-color:#e6e6e6;  
+        }
+        .center .center-title{
+            height: 50px;
+            line-height: 50px;
+            background-color: #fff;
+            text-align: center;
+            font-size: 26px;
+            color: #ffce40;
+            margin: 10px 0;
+        }
+        .center .center-anchor{
+            padding: 1px 0;
+        }
+        .center ul{
+            margin: 0px;
+        }
+        .center ul li{
+            list-style-type: none;
+            display: block;
+            position: relative;
+            float: left;
+            width: 47%;
+            padding: 0px;
+            margin: 0px;
+            margin-bottom: 10px;
+        }
+        .center ul li:nth-child(odd)
+        {
+            padding-left: 2%;
+            padding-right: 1%;
+        }
+        .center ul li:nth-child(even)
+        {
+            padding-left: 1%;
+            padding-right: 2%;
+        }
+        .center ul li img{
+            width: 99%;
+            margin: 0;
+            display: block;
+            padding-bottom: 1px;
+        }
+        .center ul li a{
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            height: 16px;
+            line-height: 16px;
+            color: #ffeb00;
+            padding: 3px 5px;
+            border: 1px solid #ffeb00;
+            border-radius: 30px;
+        }
+        @media (max-width:450px){
+            .center ul li a{
+                font-size:10px; 
+                right: 15px;
+                padding: 3px 10px;
+            }
+        }
+        .center .look-number{
+            position: absolute;
+            bottom: 36px;
+            width: 89%;
+            height: 30px;
+            line-height: 30px;
+             z-index: 999;
+            padding-left: 5%;
+        }
+        .look-mack{
+            position: absolute;
+            bottom: 35px;
+            width: 89%;
+            height: 30px;
+            line-height: 30px;
+           /* background: rgba(0,0,0,.5); */
+            /*display: inline-block;*/
+          background-image: -moz-linear-gradient( 90deg, rgb(0,0,0) 0%, rgba(0,0,0,0) 100%);
+          background-image: -webkit-linear-gradient( 90deg, rgb(0,0,0) 0%, rgba(0,0,0,0) 100%);
+          background-image: -ms-linear-gradient( 90deg, rgb(0,0,0) 0%, rgba(0,0,0,0) 100%);
+          opacity: 0.502;
+            padding-left: 5%;
+            z-index: 99;
+        }
+        .center .look-number img{
+            width: 24px;
+            display: inline;
+            float: left;
+            padding: 8px 5px;
+        }
+        .center .look-number span{
+            padding-right: 2px;
+            float: left;
+        }
+        .center  p{
+            font-size: 14px;
+            color: #fff;
+        }
+        .center-anchor>div:after{
+            content: '';
+            display: table;
+            clear: both;
+        }
+
+
+        /* 加载 */
+        .loadgif{
+            position: absolute;
+            top:50%;
+            left: 50%;
+            -webkit-transform:translate(-50%,-50%);
+            margin: 0 auto;
+        }
+
+        .loadgif img{
+            vertical-align:middle;
+        }
+
+
+        .top-content .info .floow{
+            position: absolute;
+            right: 20px;
+            top:40px;
+            text-align:center;
+            width: 80px;
+            height: 24px;
+            line-height: 24px;
+            border: 2px solid #ffbe00;
+            border-radius: 20px;
+            color: #ffbe00;
+            font-size:16px; 
+        }
+        @media (max-width:350px){
+            .top-content .info a{
+                height: 20px;
+                line-height: 20px;
+                top:30px;
+                width: 70px;
+            }
+        }
+
+        /* 自定义alert */
+.pop-info{position:fixed;top:25%;left:20%;width:60%;z-index:9;border-radius:12px;background-color:rgba(0,0,0,.6);padding:12px 0}
+.pop-info img{display:none;width:36px;margin:0 auto 6px}
+.pop-info p{width:90%;font-size:16px;text-align:center;color:#fff;margin:2px auto}
+.pop-hid{-webkit-animation:hidpop .8s 1 linear;animation:hidpop .8s 1 linear;opacity:0}
+@-webkit-keyframes hidpop{0%{opacity:1}}
+ /* zff-修改样式 */
+ .top-content{
+    display: none;
+    position: relative;
+    background-color: #404040;
+    border-bottom:10px solid #505050;
+    -webkit-transition: all .6s ease-out;
+    transition: all .6s ease-out;
+ }
+ .center{
+    padding-top: 0px;
+ }
+ .top{
+    padding-bottom: 0;
+ }
+ .anchor-state-1{
+    z-index: 999;
+ }
+ .jw-controlbar{/* 隐藏视频控制条、播放暂停按钮,.jw-display-icon-container */     
+        display: none !important;
+    }
+    .top .mask{
+        z-index:100;
+        -webkit-transition: all .6s ease-out;
+        transition: all .6s ease-out;
+    }
+    .p-direct .topbar{
+        z-index: 99;
+    }
+   /* .ani-top{
+        -webkit-transform: translate(0, -100%);
+            transform: translate(0, -100%);
+    }*/
+    
+    .mainarea{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        bottom: 100px;
+        z-index: 88;
+    }
+    #removeAd ~*{
+        display: none;
+    }
+
+    .prompt{
+        position: absolute;
+        top:50%;
+        left: 50%;
+         -webkit-transform:translate(-50%,-50%);
+         width: 60%;
+         background-color: #fff;
+         text-align: center;
+         border-radius: 10px;
+        color: #000;
+        border: 1px solid rgba(255,255,255,.3);
+        display: none;
+        z-index: 999999;
+    }
+    .prompt-center{
+        padding-top: 5%;
+    }
+    .prompt-left {
+        width: 20%;
+        display: inline-block;
+        float: left;
+    }
+    .prompt-top{
+        border-bottom: 1px solid #e6e6e6;
+    }
+    .prompt-top span{
+        font-size: 16px;
+    }
+    .prompt-right {
+        width: 80%;
+        display: inline-block;
+        float: left;
+    }
+    .prompt-left img{
+        width: 100%;
+    }
+    .prompt-mima{
+        border-radius: 4px;
+        border:0px;
+        width: 80%;
+        padding: 5px;
+        margin: 10px 5px;
+        background-color: #e6e6e6;
+    }
+    .prompt-bottom .bottom-close{
+        display: inline-block;
+        width: 49%;
+        float: left;
+        padding: 10px 0;
+        font-size: 16px;
+        border-right: 1px solid #e6e6e6;
+    }
+    .prompt-bottom .bottom-confirm{
+        display: inline-block;
+        width: 50%;
+        float: left;
+        padding: 10px 0;
+        font-size: 16px;
+    }
+    .nick-name{
+        background-color: #fff;
+        height: 35px;
+        line-height: 35px;
+        padding-left: 7%;
+    }
+    .guanzhu{
+        float: right;
+        margin-right: 8%;
+        padding: 10px 25px;
+        background-color: #ffbe00;
+        color: #fff;
+        height: 20px;
+        border-radius: 20px;
+        margin-top: 5px;
+    }
+    .guanzhu a{
+        color: #fff;
+    }
+    .opan-app{
+        width: 70%;
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+        z-index: 9999;
+    }
+    .opan-app img{
+        width: 100%;
+    }
+    .anchor-top-left{
+        position: absolute;
+        top: 5%;
+        left: 5%;
+        z-index: 99999;
+    }
+    .anchor-top-left-pic{
+        border: 1px solid #ffbe00;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        overflow: hidden;
+        display: inline-block;
+        float: left;
+    }
+     .anchor-top-left-pic img{
+        width: 100%;
+    }
+    .anchor-top-left-info{
+        display: inline-block;
+        float: left;
+        font-size: 12px;
+        color: #fff;
+    }
+    .anchor-top-left-info p{
+         font-size: 14px;
+        padding-top: 3px;
+        padding-left: 5px;
+        text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5);
+    }
+    .anchor-top-right{
+        position: absolute;
+        top: 7%;
+        right: 5%;
+        z-index: 99999;
+    }
+    .anchor-top-right p {
+        padding:  4px 15px;
+        border-radius: 14px;
+        font-size: 14px;
+        height: 20px;
+        background-color:#ffbe00; 
+        color: #fff;
+    }
+    .obj-mibod{
+        position: absolute;
+        bottom: 1%;
+        right: 2%;
+        z-index: 99999;
+        width: 50%;
+    }
+    .enter-app{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 9999999;
+    }
+    .enter-app-mask{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.2);
+    }
+    .enter-app-center{
+        position: absolute;
+        top:50%;
+        left: 50%;
+         -webkit-transform:translate(-50%,-100%);
+         width: 80%;
+        background-color: #fff;
+        z-index: 99999999;
+        border-radius: 5px;
+    }
+    .enter-app-top{
+        text-align: center;
+        font-size: 18px;
+        padding: 25px 0;
+        border-bottom: 1px solid #e6e6e6;
+    }
+    .enter-app-bottom{
+        text-align: center;
+        font-size: 18px;
+    }
+    .bottom-close{
+        display: inline-block;
+        width: 49%;
+        float: left;
+        border-right: 1px solid #e6e6e6;
+        padding: 10px 0 ;
+        cursor:pointer;
+    }
+    .bottom-confirm{
+        display: inline-block;
+        width: 50%;
+        float: left;
+        padding: 10px 0 ;
+        color: #ffbe00;
+    }
+     @media (max-width:320px){
+        .nick-name{
+            font-size: 13px;
+        }
+    }

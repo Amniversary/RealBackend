@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>	
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection"content="telephone=no, email=no" />
+    <title>帮助中心</title>
+    <link rel="stylesheet" href="css/style.css">
+	<!-- 初始化样式 -->
+	<style type="text/css">
+        body{
+            padding-bottom: 100px;
+        }
+        header{
+            position: relative;
+            padding: 4.5%;
+        }
+        header .rw-photo{
+            width: 17%;
+            border-radius: 50%;
+            overflow: hidden;
+
+        }
+        header .rw-photo img{
+            display: block;
+            width: 100%;
+            border-radius: 50%;
+        }
+        header .name{
+            font-size: 16px;
+            font-weight: bold;
+        }
+        header .id{
+            font-size: 13px;
+        }
+        header .rw-info{
+            position: absolute;
+            left: 22%;
+            top: 50%;
+            -webkit-transform: translate(0, -50%);
+            color:#3a3a3a;
+            line-height: 22px;
+            padding-top: 2px;
+        }
+        header .login{
+            position: absolute;
+            right: 4.5%;
+            top: 50%;
+            height: 24px;
+            -webkit-transform: translate(0, -50%);
+            -webkit-appearance:none;
+            border: 1px solid #74fabe;
+            color: #74fabe;
+            background-color: #fff;
+            border-radius: 12px;
+            font-size: 12px;
+            padding: 0 10px;
+        }
+        .interval{
+            height: 35px;
+            line-height: 35px;
+            background-color: #eee;
+            color: #a7a7a7;
+        }
+        .interval span{
+            padding-left: 5.5%;
+            font-size: 14px;
+        }
+
+        .withdraw-money{
+            width: 100%;
+        }
+        .withdraw-money ul{
+            list-style-type: none;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .withdraw-money ul li{
+            height: 50px;
+            line-height: 50px;
+            border-top: 1px solid #e5e5e5;
+        }
+        .withdraw-money ul li label{
+            display: block;
+        }
+        .withdraw-money ul li .number{
+            position: relative;
+            margin-left: 4.5%;
+            padding-left: 26px;
+            display: inline-block;
+            font-size: 16px;
+            color: #3a3a3a;
+        }
+        .withdraw-money ul li .number:after{
+            position: absolute;
+            content: '';
+            left: 0;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: url(images/bean.png);
+            background-size: 100%;
+            -webkit-transform: translate(0,-50%);
+        }
+        .withdraw-money ul li .number span:first-child{
+            display: inline-block;
+            width: 70px;
+        }
+        .withdraw-money ul li .number span:nth-child(2){
+            color: #a7a7a7;
+            font-size: 13px;
+        }
+        .withdraw-money ul li .money{
+            display: inline-block;
+            float: right;
+            font-size: 16px;
+            color: #3a3a3a;
+        }
+        .withdraw-money ul li .money input{
+            margin: 0 15px;
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            margin-top: -3px;
+            background-image: url("images/choice.png");
+            -webkit-appearance : none;
+            background-size: 100%;
+        }
+        .withdraw-money ul li .money input:checked{
+            background-image: url("images/choice1.png");
+        }
+	</style>
+</head>
+<body class="p-recharge">
+	<header class="clearfix">
+        <div class="clearfix">
+            <div class="rw-photo l">
+                <img src="images/photo.jpg">
+            </div>
+            <div class="rw-info">
+                <p class="name">胡大大大</p>
+                <p class="id">ID:123456</p>
+            </div>               
+        </div>
+        <input type="button" value="更换账号" class="login" onclick="window.location.href='recharge1.html'">
+    </header>
+    <div class="interval">
+        <span>请选择充值金额：</span>
+    </div>
+    <div class="withdraw-money">
+        <ul>
+            <li>
+                <label>
+                    <div class="number">
+                        <span>60豆</span>
+                    </div>
+                    <div class="money">
+                        <span>6元</span>
+                        <input type="radio" name="recharge">
+                    </div>
+                </label>
+            </li>
+            <li>
+                <label>
+                    <div class="number">
+                        <span>300豆</span>
+                        <span>额外赠送24豆</span>
+                    </div>
+                    <div class="money">
+                        <span>30元</span>
+                        <input type="radio" name="recharge">
+                    </div>
+                </label>
+            </li>
+            <li>
+                <label>
+                    <div class="number">
+                        <span>980豆</span>
+                        <span>额外赠送80豆</span>
+                    </div>
+                    <div class="money">
+                        <span>98元</span>
+                        <input type="radio" name="recharge">
+                    </div>
+                </label>
+            </li>
+            <li>
+                <label>
+                    <div class="number">
+                        <span>2980豆</span>
+                        <span>额外赠送250豆</span>
+                    </div>
+                    <div class="money">
+                        <span>298元</span>
+                        <input type="radio" name="recharge">
+                    </div>
+                </label>
+            </li>
+            <li>
+                <label>
+                    <div class="number">
+                        <span>5880豆</span>
+                        <span>额外赠送499豆</span>
+                    </div>
+                    <div class="money">
+                        <span>588元</span>
+                        <input type="radio" name="recharge">
+                    </div>
+                </label>
+            </li>
+            <li>
+                <label>
+                    <div class="number">
+                        <span>15980豆</span>
+                        <span>额外赠送1374豆</span>
+                    </div>
+                    <div class="money">
+                        <span>1598元</span>
+                        <input type="radio" name="recharge">
+                    </div>
+                </label>
+            </li>
+        </ul>
+    </div>
+    <div class="submit bg-grey">
+        <input type="button" value="提交申请" class="btn-green" id="j_submit">
+        <p class="tip">充值成功后请到app余额内查看</p>
+    </div>  
+</body>
+</html>

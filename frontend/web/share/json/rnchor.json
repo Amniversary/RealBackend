@@ -1,0 +1,70 @@
+{
+    "living_info_one": {
+        "client_id": "3",
+        "unique_no": "456",
+        "client_no": "3",
+        "age": 12,
+        "nick_name": "王小二",
+        "pic": "image/rw1.png",
+        "main_pic": "image/rw1.png",
+        "sign_name": "王小二",
+        "sex": "女",
+        "flag": "1",
+        "living_master_id": "3",
+        "pull_rtmp_url": "www.sina.com",
+        "pull_hls_url": "www.qq.com",
+        "active_id": null,
+        "attention_num": null,
+        "funs_num": null,
+        "experience": null,
+        "level_no": 60,
+        "attention": 20
+    },
+    "living_info_list": [
+        {
+            "living_id": "7",
+            "living_master_id": "3",
+            "pull_rtmp_url": "www.sina.com",
+            "pull_hls_url": "www.qq.com",
+            "push_url": "www.baidu.com",
+            "main_pic": "image/other-rw.png",
+            "person_count": "50000"
+        },
+        {
+            "living_id": "33",
+            "living_master_id": "1",
+            "pull_rtmp_url": null,
+            "pull_hls_url": null,
+            "push_url": null,
+            "main_pic": "image/other-rw.png",
+            "person_count": "0"
+        },
+        {
+            "living_id": "34",
+            "living_master_id": "2",
+            "pull_rtmp_url": null,
+            "pull_hls_url": null,
+            "push_url": null,
+            "main_pic": "image/other-rw.png",
+            "person_count": "0"
+        },
+        {
+            "living_id": "38",
+            "living_master_id": "1",
+            "pull_rtmp_url": null,
+            "pull_hls_url": null,
+            "push_url": null,
+            "main_pic": "image/other-rw.png",
+            "person_count": "0"
+        },
+        {
+            "living_id": "61",
+            "living_master_id": "5",
+            "pull_rtmp_url": null,
+            "pull_hls_url": null,
+            "push_url": null,
+            "main_pic": "image/other-rw.png",
+            "person_count": "0"
+        }
+    ]
+}

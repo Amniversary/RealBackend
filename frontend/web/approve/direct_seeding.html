@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection"content="telephone=no, email=no" />
+	<title>直播</title>
+	<link rel="stylesheet" href="css/style.css">
+	<style>
+	html,body{
+		position: relative;
+		height: 100%;
+		overflow: hidden;
+	}
+	.jw-controlbar,.jw-display-icon-container{/* 隐藏视频控制条、播放暂停按钮 */		
+		display: none !important;
+	}
+	</style>
+</head>
+
+<body class="p-direct">
+	<div id="player"></div>
+	<div class="mainarea" id="mainarea"></div>
+	<div class="wrap" id="wrap">
+		<!--主播信息-->
+		<div class="topbar w94 clearfix">
+			<div class="anchor-info l">
+				<div class="avatar">
+					<img src="images/per1.png" alt="" class="dw">
+				</div>
+				<p>
+					<span class="nick">不会卖萌...</span>
+					<span class="member-num">3826人</span>
+				</p>
+				<i class="sprite-grade grade-3">48</i>
+				<span class="beans-num">1685952</span>
+			</div>
+			<div class="member-list r">
+				<ul class="clearfix">
+					<li class="avatar">
+						<a href="javascript:;"><img src="images/per1.png" alt="" class="dw"></a>
+					</li>
+					<li class="avatar">
+						<a href="javascript:;"><img src="images/per2.png" alt="" class="dw"></a>
+					</li>
+					<li class="avatar">
+						<a href="javascript:;"><img src="images/per3.png" alt="" class="dw"></a>
+					</li>
+					<li class="avatar">
+						<a href="javascript:;"><img src="images/per4.png" alt="" class="dw"></a>
+					</li>
+					<li class="avatar">
+						<a href="javascript:;"><img src="images/per1.png" alt="" class="dw"></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!--评论+工具条-->
+		<div class="footer w94">
+			<div class="comment-list">
+				<ul>
+					<li>
+						<i class="sprite-grade grade-1">12</i>
+						<p><span>南山之北：</span><span class="c-purple">我送主播了一辆法拉利</span></p>
+					</li>
+					<li>
+						<i class="sprite-grade grade-2">24</i>
+						<p><span>莫小北：</span><span class="c-yellow">来了~</span></p>
+					</li>
+					<li>
+						<i class="sprite-grade grade-3">36</i>
+						<p><span>我爱大西瓜：</span><span class="c-yellow">关注了直播，不错过下次直播！</span></p>
+					</li>
+					<li>
+						<i class="sprite-grade grade-4">71</i>
+						<p><span>小小冉：</span><span class="c-white">小妹妹，你读几年级呀？</span></p>
+					</li>
+					<li>
+						<i class="sprite-grade grade-4">71</i>
+						<p><span>马尔泰若曦：</span><span class="c-purple">四爷哈</span></p>
+					</li>
+					<li>
+						<i class="sprite-grade grade-4">71</i>
+						<p><span>四爷：</span><span class="c-purple">若曦再哪？</span></p>
+					</li>
+				</ul>
+			</div>		
+			<div class="toolbar">
+				<div class="l">
+					<a href="javascript:;"><i class="sprite-tool sprite-comment"></i>评论</a>
+					<a href="javascript:;"><i class="sprite-tool sprite-send"></i>私信</a>				
+				</div>
+				<div class="r">
+					<a href="javascript:;"><i class="sprite-tool sprite-give"></i>送礼物</a>
+					<a href="javascript:;"><i class="sprite-tool sprite-share"></i>分享</a>
+					<a href="javascript:history.go(-1);"><i class="sprite-tool sprite-back"></i>返回</a>
+				</div>
+			</div>
+		</div>		
+	</div>
+			
+	<script src="js/jwplayer.js"></script>
+	<script type="text/javascript">
+var width = document.documentElement.clientWidth;
+		var height = document.documentElement.clientHeight;
+		 //;
+		/*thePlayer.setup({
+		    'flashplayer': 'js/jwplayer.flash.swf',
+			//'image': 'images/direct_index.jpg',
+		    'id': 'playerID',
+		    'width': '100%',
+		    'height': height,
+		    //'stretching':'fill',
+			//'aspectratio':'10:6',
+		    'file': 'mp4/snsd.mp4',
+		    //androidhls: true,
+		    //overstretch:'fit',
+		    autostart:true//自动播放
+		});*/
+var thePlayer = jwplayer("player").setup({
+    'flashplayer': 'jwplayer.flash.swf',
+	'image': 'http://www.jq22.com/demo/jwplayer-150617205852/TB65QsSn-720.jpg',
+    'id': 'playerID',
+    'width': width,
+    'height': height,
+    //'stretching':'fill',
+	//'aspectratio':'10:6',
+	//autostart: true,//自动播放
+	//assessControlBarState:false,
+          //controls:false,//显示控件按钮
+          //overstretch:true,
+    'file': 'mp4/snsd.mp4',
+    
+  });
+thePlayer.onReady(function(){
+	thePlayer.play(true);
+})
+/*
+ thePlayer.onPlay(function(){
+             console.log("开始播放视频");
+             //设置播放器背景色，默认为黑色，但我们的视频是白色的背景，这里无法更改，我只能通过更改源码来解决(jwplayer.js将"#000000"更改为"#ffffff")
+             //jQuery("#sp_box").css('bgcolor','#ffffff');
+        });
+  thePlayer.onPlaylistComplete(function(){
+            console.log("load complay");
+            //alert("hello,视频播放完毕啦！");
+        
+        });
+		console.log(thePlayer);*/
+	</script>
+	<script src="js/hammer.js"></script>
+	<script src="js/jquery-2.0.3.min.js"></script>
+	<script src="js/underscore.js"></script>
+	<script src="js/backbone.js"></script>
+	<script>
+		//创建一个新的hammer对象并且在初始化时指定要处理的dom元素
+	        var hammer = new Hammer(document.getElementById("mainarea"));
+	         //添加事件
+	        hammer.on('tap',function(){// 单击
+	        	console.log(thePlayer.getState());
+	        	if(thePlayer.getState().toUpperCase()!='PLAYING'){
+	        		console.log('播放');
+	        		thePlayer.play(true);
+	        	}else{
+	        		console.log('暂停');
+	        		//thePlayer.play(false);
+	        		thePlayer.pause(true);
+	        	}
+	        	
+	        }) 
+	        hammer.on('doubletap',function(){// 双击
+	        	console.log('双击');
+	        	thePlayer.setFullscreen(true);
+	        	
+	        }) 
+	        hammer.on('swiperight',function(){// 右滑
+	        	$('#wrap').animate({'left':'100%'});
+	        }) 
+	        hammer.on('swipeleft',function(){// 左滑
+	        	$('#wrap').animate({'left':'0'});
+	        })
+	</script>
+</body>
+
+</html>

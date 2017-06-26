@@ -1,0 +1,458 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="http://mibo.matewish.cn:80">
+    <title>我的等级</title>
+
+    <script src="http://the5fireblog.b0.upaiyun.com/staticfile/jquery-1.10.2.js"></script>
+    <script src="http://the5fireblog.b0.upaiyun.com/staticfile/underscore.js"></script>
+    <script src="http://the5fireblog.b0.upaiyun.com/staticfile/backbone.js"></script>
+
+    <style type="text/css">
+        html,body{
+            margin: 0;
+            padding: 0;
+        }
+        @media all and (min-width:450px){
+            body{width:450px;margin-right:auto;margin-left:auto}
+        }
+        .wrap{
+            background-color: #ededed;
+            color: #3a3a3a;
+            font: 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        /* 上部分 */
+        .wrap-top{
+            background-color: #fff;
+            position: relative;
+        }
+        /* 用户等级 */
+        .user{
+			height: 240px;
+        }
+        .user .user-grade{
+        	text-align: center;
+        	padding-top: 30px;
+        }
+        .user .user-grade img{
+        	height: 62.5px;
+        	width: 62.5px;
+        }
+        .user .user-grade p{
+        	font-size: 18px;
+        	color: #9a9a9a;
+        	margin: 0;
+        }
+        .user .user-grade span{
+        	color: #99cc33;
+        }
+        /* 经验条 */
+        .experience-article{
+        	padding-top: 100px;
+        	width: 75%;
+        	margin: 0 auto;
+        	position: relative; 
+        }
+		.experience-article .load-bar{
+			position: absolute;
+			top: 60%;
+			width: 100%;
+			height: 15px;
+			border-radius: 30px;  
+    		background: #dcdbd7;  
+    		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8),  inset 0 2px 3px rgba(0, 0, 0, 0.2);
+		}
+		.experience-article .load-bar .inner{  
+		    height: 99%;  
+		    width: 80%;
+		    border-radius: inherit;  
+		    position: relative;  
+		    background: linear-gradient(to right,#ffed34, #9fdd41);
+		    background:-webkit-gradient(linear,0 50%,100% 50%,from(#ffed34),to(#9fdd41));
+		    background: -webkit-linear-gradient(to right,#ffed34, #9fdd41); /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(to right,#ffed34, #9fdd41); /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(to right,#ffed34, #9fdd41); /* Firefox 3.6 - 15 */
+		}  
+		.experience-article .counter {  
+		    position: absolute;   
+		    top: -30px; 
+		    left: 80%;
+		    -webkit-transform:translate(-60%,0);
+		    width: 20px;
+	    }  
+		/* 等级(左和右) */
+		.experience-article .level-number{
+			position: absolute;
+			top: 80%;
+			width: 100%;
+			font-weight: bold;
+		}
+		.experience-article .level-number .level-number2{
+			float: right;
+		}
+		
+
+
+		/* 经验信息 */
+        .experience-info {
+        	position: relative;
+        }
+        .experience-info ul{
+        	padding: 0;
+        	margin: 0;
+        }
+		.experience-info li{
+			position: relative;
+			height: 80px;
+			line-height: 80px;
+			list-style-type: none;
+			font-size: 20px;
+			font-weight: bold; 
+			border-bottom: 2px solid #ededed;
+		}
+		@media (max-width:400px){
+           .experience-info li{
+				height: 70px;
+				line-height: 70px;
+				font-size: 16px;
+			}
+        }
+		.experience-info li span{
+			float: right;
+			padding-right:30px; 
+		}
+		/* 经验信息图标 */
+		.experience-info .info-icon{
+			vertical-align: middle;
+			padding-left: 30px;
+		}
+		@media (max-width:400px){
+          .experience-info .info-icon{
+				height:35px;
+				width: 35px;
+			}
+        }
+
+		/* 当前经验值 */
+        .experience-info .experience{
+        	display: inline-block;
+        }
+ 		
+		.experience-info #icon-style{
+			position: absolute;
+			right:30px;
+			top: 50%;
+			-webkit-transform:translate(0,-50%);
+			-moz-transform:translate(0,-50%);
+			-ms-transform:translate(0,-50%);   /* ie */
+			-o-transform:translate(0,-50%);    /* 火狐 */
+			line-height: 20px;
+			vertical-align: middle;
+			border-radius: 5px;
+		}
+		.experience-info #icon-style img{
+			width: 36px;
+			padding: 1px;
+			vertical-align:middle;
+		}
+	  	.experience-info .level-add{
+			display: inline;
+		}
+	  	/* 可获得的图标 */
+		.experience-info .prompt{		
+			float: right;
+			text-align: center;
+			font-size: 14px;
+			color: #9a9a9a;
+			padding-right:25px; 
+		}
+		@media (max-width:400px){
+           .experience-info .prompt{
+           		font-size: 12px;
+           }
+        }
+        /* 当等级大于80时，可获得的图标为none */
+		.none{
+			display: none;
+		}
+
+        /* 下部分 */
+        .wrap-down{
+            width: 100%;
+        }
+		.wrap-down .level{
+			padding-bottom: 20px; 
+			padding-left: 20px;
+		}
+		.wrap-down .help{
+			padding-left: 20px;
+		}
+
+		/* 等级图标配色 */
+		.color1{
+			display: inline-block;
+			background-color: #99cc33;
+			width: 20px;
+			text-align:center;
+		}
+		.color2{
+			display: inline-block;
+			background-color: #ff9900;
+			width: 20px;
+			text-align:center;
+		}
+		.color3{
+			display: inline-block;
+			background-color: #ffcc00;
+			width: 20px;
+			text-align:center;
+		}
+		.color4{
+			display: inline-block;
+			background-color: #cc6699;
+			width: 20px;
+			text-align:center;
+		}
+		.color5{
+			display: inline-block;
+			background-color: #3366cc;
+			width: 20px;
+			text-align:center;
+		}
+		.color6{
+			display: inline-block;
+			background-color: #009966;
+			width: 20px;
+			text-align:center;
+		}
+		.color7{
+			display: inline-block;
+			background-color: #990033;
+			width: 20px;
+			text-align:center;
+		}
+		.color8{
+			display: inline-block;
+			background-color: #2a2a2a;
+			width: 20px;
+			text-align:center;
+		}
+		.color9{
+			display: inline-block;
+			background-color: #fff;
+			width: 20px;
+			text-align:center;
+		}
+    </style>
+</head>
+
+
+<body class="wrap">
+
+	<!--  html文件 -->
+    <div class="wrap-top">
+    </div>
+    <div class="wrap-down">
+        <div class="level">
+            <h2>等级权益</h2>
+            <p>等级越高，身份越尊贵，等级图标越个性。</p>
+        </div>
+        <div class="help">
+            <h2>如何升级</h2>
+            <p>1.发直播和观看直播都可以获得经验值。</p>
+            <p>2.送礼物是最快的升级方式哦。</p>
+        </div>
+    </div>
+
+
+	<!-- 前端模板 -->
+    <script type="text/template" id="my-Level">
+    	<div class="user">
+   			<div class="user-grade">
+				<div class="user-image"><img src="<%= pic %>"></div>
+				<p>当前等级:<span>LV@user-grade</span></p>
+			</div>
+			<div class="experience-article">
+        		<div class="load-bar"> 
+            		<div class="inner" data-loading="0"> </div> 
+            		<img src="http://image.matewish.cn/app-wishlist/counter.png" class="counter">
+        		</div> 
+        		<div class="level-number">
+        			<span class="level-number1">LV@level-left</span>
+        			<span class="level-number2">LV@level-right</span>
+        		</div>
+        	</div>
+        </div>
+        <div style="height: 15px;background-color: #ededed;"></div>
+        <div class="experience-info">
+        	<ul>
+        		<li>
+        			<img src="http://image.matewish.cn/app-wishlist/mb_level_01.png" class="info-icon">
+                	当前经验值<span><%= experience %></span>
+        		</li>
+        		<li>
+        			<img src="http://image.matewish.cn/app-wishlist/mb_level_02.png" class="info-icon">
+        			<div class="level-add">距升级还差<span>@exp-add</span></div>
+        		</li>
+        		<li>
+        			<img src="http://image.matewish.cn/app-wishlist/mb_level_02.png" class="info-icon">
+        			荣誉勋章
+                		<div id="icon-style" class="@color1">
+                			<img src="<%= level_pic %>">
+                		</div>
+        		</li>
+        		<li>
+        			<img src="http://image.matewish.cn/app-wishlist/mb_level_04.png" class="info-icon">
+        			即将获得
+        			<div class="prompt">
+                		<span >@levelNunmer级可获得</span>
+                		<div id="icon-style" class="@color2">
+                			<img src="<%= next_level_pic %>">
+                		</div>
+               		</div>  
+        		</li>
+        	</ul>
+        </div>
+    </script>
+
+	
+	<!-- backbone框架的使用 -->
+	<script type="text/javascript">
+		var level = 1;
+		var expAdd = 1;
+		var expUp = 1;
+		var pct = 1;
+		var color1 ;
+		var color2 ;
+		var levelNunmer;
+
+		var M = Backbone.Model.extend({
+			defaults:{
+				experience:"",
+			}	
+		});
+
+		var C = Backbone.Collection.extend({
+			model:M,
+			url:"http://mibo.matewish.cn/mbliving/userliving?user_id=8",
+		});
+		var Ep = new C;
+
+		var V = Backbone.View.extend({
+			
+			template : _.template($("#my-Level").html()),
+
+			render:function(){
+				Model = this.model;
+				exp = Model.experience;
+				
+				for(var x = 1; x < 999 ; x++){
+					var y = ((x-1)*(x-2)/2)*((x-1)*(x-2)/2) + 600*(x-1);
+					if(exp < y){
+						level = x;
+						//剩下的经验值
+						expAdd = y - exp;
+						//当前等级升级所需要的经验
+						expUp = (x-1)*(x-1)*(x-1) + 600;
+						break; 
+					}
+				}
+				//两个等级
+				levelLeft = level;
+				levelRight = level+1;
+				//距离升级还差的经验值
+				expA = expUp - expAdd;
+				//百分比
+				console.log(expAdd);
+				console.log(expUp);
+				pct = expA / expUp;
+				pct = Math.round(pct * 100);
+
+
+				//判断等级勋章
+				if(level >= 1 && level < 13){
+					color1 = "color1";
+					color2 = "color2";
+					levelNunmer = 13;
+				}else if(level >= 13 && level < 20){
+					color1 = "color2";
+					color2 = "color3";
+					levelNunmer = 20;
+				}else if(level >= 20 && level < 25){
+					color1 = "color3";
+					color2 = "color4";
+					levelNunmer = 25;
+				}else if(level >= 25 && level < 30){
+					color1 = "color4";
+					color2 = "color5";
+					levelNunmer = 30;
+				}else if(level >= 30 && level < 40){
+					color1 = "color5";
+					color2 = "color6";
+					levelNunmer = 40;
+				}else if(level >= 40 && level < 50){
+					color1 = "color6";
+					color2 = "color7";
+					levelNunmer = 50;
+				}else if(level >= 50 && level < 80){
+					color1 = "color7";
+					color2 = "color8";
+					levelNunmer = 80;
+				}else if(level > 80){
+					color1 = "color8";
+					color2 = "color9";
+					levelNunmer = 0;
+
+				}
+
+				//******************
+				templates = this.template(Model);
+				templates = templates.replace("@level-left",levelLeft);
+				templates = templates.replace("@user-grade",levelLeft);
+            	templates = templates.replace("@level-right",levelRight);
+            	templates = templates.replace("@exp-add",expAdd);
+            	templates = templates.replace("@color1",color1);
+            	templates = templates.replace("@color2",color2);
+            	templates = templates.replace("@levelNunmer",levelNunmer);
+                this.$el.html(templates);
+
+                if(level > 80){
+                	$(this.el).find(".prompt").addClass("none");
+                }
+                $(this.el).find(".inner").css("width",pct+"%");
+                $(this.el).find(".counter").css("left",pct+"%");
+
+                return this;
+			}
+
+		});
+
+		var Vi = Backbone.View.extend({
+
+			el: $("body"),
+
+			initialize: function() {
+                this.listenTo(Ep, 'add', this.addOne);
+               	Ep.fetch({
+               		success:function(){
+               		
+               		}
+               	});
+            },
+
+            addOne: function (EXP){
+            	EXP1 = EXP.get("msg");
+                view = new V({model:EXP1});
+                this.$(".wrap-top").append(view.render().el);
+            },
+		})
+		var myLevel = new Vi;
+
+	</script>			
+
+</body>
+</html>

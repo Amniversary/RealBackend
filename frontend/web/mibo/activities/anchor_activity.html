@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+    <title>主播关注活动</title>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://bmpic.matewish.cn/meibo-test/js/jquery-1.9.1.min.js"></script>
+ 
+    <style>
+    /* CSS reset */
+	body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td {
+	  margin: 0;
+	  padding: 0;
+	}
+	html,body {
+	  margin: 0;
+	  padding: 0;
+	  height: 100%;
+	}
+	table {
+	  border-collapse: collapse;
+	  border-spacing: 0;
+	}
+	fieldset,img {
+	  border: 0;
+	}
+	address,caption,cite,code,dfn,th,var {
+	  font-style: normal;
+	  font-weight: normal;
+	}
+	ol,ul {
+	  list-style: none;
+	}
+	caption,th {
+	  text-align: left;
+	}
+	h1,h2,h3,h4,h5,h6 {
+	  font-size: 100%;
+	  font-weight: normal;
+	}
+	q:before,q:after {
+	  content: '';
+	}
+	abbr,acronym {
+	  border: 0;
+	}
+	section,header {
+	  display: block;
+	}
+	body {
+	  font-family: "微软雅黑";
+	  font-weight: 400;
+	  font-size: 15px;
+	  color: #391b27;
+	  overflow-y: scroll;
+	  overflow-x: hidden;
+	  background: #f8f8f8 url(http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/poster/bg.jpg) repeat top left;
+	}
+	header {
+	  position: fixed;
+	  z-index: 100;
+	  width: 100%;
+	  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	  border-bottom: 0 solid #cfd8dc;
+	}
+	.warp {
+	  	padding-top: 80px;
+	}
+	.warp .banner-top {
+		  margin-top: 20px;
+		  padding: 10px 20px;
+		  background-color: #fff;
+		  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+		  border-bottom: 0 solid #cfd8dc;
+	}
+	.warp .title{
+		padding-left: 5px;
+		font-size: 36px;
+		text-shadow: -1px -1px 0 #fff,1px 1px 0 #333,1px 1px 0 #444;
+		color: rgba(26,89,120,0.9);
+	}
+	.warp .hint{
+		margin-top: 20px;
+		padding-bottom: 100px;
+		padding-top: 40px;
+		font-size: 24px;
+		text-align: center;
+	}
+    </style>
+</head>
+<body>
+ 
+
+    <div  class="warp">
+            <div class="container">
+            	     <p class="title">活动详情</p>
+
+                   <div class="banner-top hint status1">
+                        <p>活动未开始!!!!!!!!!!!!!</p>
+                  </div> 
+
+                  <div class="banner-top hint status0">
+                        <p>活动不存在!!!!!!!!!!!!!</p>
+                  </div> 
+	
+                  <div class="status2">
+                  	
+                  </div>
+           </div>
+    </div>
+
+
+
+    <script type="text/template" id="anchor">
+    	<% for(x in query){%>
+	<div class="banner-top ">
+	    	<div>主播图片:<%= query[x].pic %></div>
+                      <p>主播名称:<%= query[x].nick_name %></p>
+                      <% if(query[x].status == 2 && query[x].is_attention != 0) {%>
+                      <button class="watch-yes">观看</button>
+                      <%}%>
+                       <% if(query[x].status != 2 && query[x].is_attention == 0) {%>
+                      <button class="attention">关注</button>
+                      <%}%>
+                       <% if(query[x].status != 2 && query[x].is_attention != 0) {%>
+                      <button class="attention-yes">已关注</button>
+                      <%}%>
+                        <% if(query[x].status == 2 && query[x].is_attention ==0) {%>
+                      <button class="watch">关注并观看</button>
+                      <%}%>
+               	 <p class="anchor_id" style="display:none"><%= query[x].anchor_id %></p>
+		<p class="is_attention" style="display:none"><%= query[x].is_attention %></p>
+		<p class="source_signs" style="display:none"><%= sourceSigns %></p>
+            </div> 
+            <%}%>
+    </script>
+
+<script type="text/javascript">
+
+      	//从连接地址上拿到数据
+      	var mystr = this.location.href; 
+      	function lookup(x) {
+                var index1 = mystr.indexOf(x);
+                var index = x.length;
+                var index_1 = mystr.indexOf("&", index1);
+                if (index_1 == -1) {
+                    index_1 = mystr.length;
+                }
+                var index1s = mystr.substring(index1 + index + 1, index_1);
+                return index1s;
+            }
+
+            //拿到签名
+            var time = lookup("time");
+	 var unique_no = lookup("unique_no");
+	 var sign = lookup("sign");
+	 var rand_str = lookup("rand_str");
+	 //拿到用户的ID和活动的ID
+	 var activity_id = lookup("activity_id");
+
+	
+    	$(".status1").hide();
+    	$(".status0").hide();
+    	$(".status2").hide();
+
+    	if(unique_no.indexOf("@") == 0){
+    		alert("请从APP端进入该活动");
+
+    	}
+
+    	//根据APP和后台传进来的活动ID拿到活动的状态，判断展示什么页面，APP端进入时同时要得到用户的信息（密播ID等）
+    	$.ajax({
+	        url: "/activity/get_status",    //请求的url地址
+	        dataType: "json",   //返回格式为json
+	        async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+	        type: "post",   //请求方式
+	        data: {'activity_id': activity_id},
+	         success: function(data) {
+	                   switch(data[0].status)
+	                   {
+	                   	case "0":
+	                   		$(".status0").show();
+	                   		break;
+	                   	case "1":
+	                   		$(".status1").show();
+	                   		break;
+	                   	case "2":
+	                   		$(".status2").show();
+	                   		break;
+	                   }
+	         }
+	 });
+
+    	
+    	// 判断移动终端
+	var browser={
+	    versions:function(){ 
+           	var u = navigator.userAgent, app = navigator.appVersion; 
+          		return {//移动终端浏览器版本信息 
+                		trident: u.indexOf('Trident') > -1, //IE内核
+                		presto: u.indexOf('Presto') > -1, //opera内核
+                		webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                		gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                		mobile : !!u.match(/AppleWebKit.*Mobile/) || !!u.match(/Windows Phone/) || !!u.match(/Android/) || !!u.match(/MQQBrowser/), //是否为移动终端
+                		ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                		android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+               		iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者QQHD浏览器
+                		iPad: u.indexOf('iPad') > -1, //是否iPad
+               		 webApp: u.indexOf('Safari') == -1 ,//是否web应该程序，没有头部与底部
+                		weixin: u.toLowerCase().match(/MicroMessenger/i) == 'micromessenger'//判断是不是微信
+            	};
+         	     }(),
+         	     language:(navigator.browserLanguage || navigator.language).toLowerCase()
+    	}
+
+
+    	//点击‘观看’按钮掉观看的接口
+    	$(".status2").on("click",".watch-yes",function(){
+    		//拿到用户ID
+	    	var user_id = $(this).siblings(".anchor_id").text();
+	    	//拿到是否关注的值
+    		var is_attention = $(this).siblings(".is_attention").text();
+
+
+    		//设置苹果APP端观看的连接
+		iPhoneHref = "mibo://live?userId="+user_id+"&is_attention="+is_attention;
+
+    		if(browser.versions.ios){
+		    	//判断是否是ios
+		    	//
+		    	alert("IOS");
+		    	window.location.href = iPhoneHref;
+		}else if(browser.versions.android){
+		    	//判断是否是android
+		    	alert("安卓");
+		    	window.ApproveWebView.onOpenVideo(user_id,is_attention);
+		}	
+    		alert("观看啦")
+    	})
+    	//点击‘关注’按钮掉关注的接口
+    	$(".status2").on("click",".attention",function(){
+    		//拿到主播的ID
+    		var living_master_id = $(this).siblings(".anchor_id").text();
+    		var sourceSigns = $(this).siblings(".source_signs").text();
+    		var is_attentions = $(this);
+    		$.ajax({
+		        url: "/mbliving/living_attention?time=" + time +"&unique_no=" + unique_no +"&sign=" + sourceSigns +"&rand_str=" + rand_str,   
+		         //请求的url地址
+		        dataType: "json",   //返回格式为json
+		        async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+		        type: "post",   //请求方式
+		        data: {'living_master_id': living_master_id},
+		         success: function(data) {
+		         		if(data.code){
+		         		    is_attentions.text("已关注");
+		         		}else{
+		         		      alert(data.msg);
+		         		}
+		         },
+	                    error: function(){
+	                       alert("出错");
+	                    }
+		 });
+    		
+    		alert("关注啦");
+    	})
+    	//点击‘已关注’按钮掉关注的接口
+    	$(".status2").on("click",".attention-yes",function(){
+    		alert("你们已经是好友了哟！")
+    	})
+    	//点击‘关注并观看’按钮掉关注的接口
+    	$(".status2").on("click",".watch",function(){
+    		//拿到主播的ID
+    		var user_id = $(this).siblings(".anchor_id").text();
+    		//拿到是否关注的值
+    		var is_attention = $(this).siblings(".is_attention").text();
+
+    		//设置苹果APP端观看的连接
+		iPhoneHref = "mibo://live?userId="+user_id+"&is_attention="+is_attention;
+
+    		if(browser.versions.ios){
+    			alert("IOS");
+		    	//判断是否是ios
+		    	window.location.href = iPhoneHref;
+		}else if(browser.versions.android){
+		    	//判断是否是android
+		    	alert("安卓");
+		    	window.ApproveWebView.onOpenVideo(user_id,is_attention);
+		}
+    		alert("关注并观看啦")
+    	})
+
+    </script> 
+
+
+    <script src="http://bmpic.matewish.cn/meibo-test/js/backbone_underscore.js"></script>
+    <script type="text/javascript">
+    	//根据拿到的活动ID找到对应的主播信息
+    	//这里需要用到Backbone 暂时只使用ajax测试一下  1-》活动Id
+
+                var M1 = Backbone.Model.extend({});
+                var C1 = Backbone.Collection.extend({
+                    model:M1,
+                    url:"/activity/get_anchor"
+                });
+                var Ep = new C1();
+                var V1 = Backbone.View.extend({
+                    template:_.template($("#anchor").html()),
+                    render:function() {
+                       this.$el.html(this.template(this.model.toJSON()));
+                       return this;
+                    }
+                });
+
+                var Vi1 = Backbone.View.extend({
+                    el:$("body"),
+                    initialize:function() {
+                        this.listenTo(Ep, "add", this.addOne);
+                        Ep.fetch({
+                            method:"post",
+                            data:{
+                                activity_id: activity_id,
+                                unique_no:unique_no,
+                                rand_str:rand_str,
+                                time:time,
+                                sign:sign,
+                            },
+                            success:function(data) {
+
+                            }
+                        });
+                    },
+                    addOne: function(todo) {
+                        var view = new V1({model: todo});
+                             this.$(".status2").append(view.render().el);
+                        }
+                })
+
+                var Writing = new Vi1();
+    </script>
+
+
+     
+
+
+</body>
+</html>

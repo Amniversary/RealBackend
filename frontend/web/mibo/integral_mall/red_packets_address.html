@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="http://mibo.matewish.cn:80">
+    <meta name="format-detection"content="telephone=no, email=no" />
+    <title>收货信息</title>
+    <link rel="stylesheet" type="text/css" href="css/address.css">
+    <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.css">
+
+    <style>
+    	#end ~*{
+		display: none;
+    	}
+    </style>
+</head>
+
+
+<body class="wrap">
+
+	<!--  html文件 -->
+	<div class="content">
+		<p class="hint">
+			为了方便工作人员及时为您<br/>发放奖品，请您如实填写领奖资料。</p>
+		<div class="address">
+			<span>微信昵称</span>
+			<input type="text"  class="wx-name" placeholder="请输入你的微信昵称"  />
+		</div>
+		<div class="address">
+			<span>微信账号</span>
+			<input type="text"  class="wx-number" placeholder="请输入你的微信账号" />
+		</div>
+		<div class="save">
+			<a>提交</a>
+		</div>
+	</div>
+
+
+
+	    <script type="text/javascript" src="js/sweetalert.min.js"></script>
+	    <script src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/jquery-2.0.3.min.js"></script>
+	<!-- 页面展示和页面按钮点击后的处理 -->
+	<script type="text/javascript">
+		var urls = localStorage.getItem("url");
+		var mystr = this.location.href;
+
+		//获取地址栏上参数的方法
+		function lookup(x) {
+		        var index1 = mystr.indexOf(x);
+		        var index = x.length;
+		        var index_1 = mystr.indexOf("&", index1);
+		        if (index_1 == -1) {
+		            index_1 = mystr.length;
+		        }
+		        var index1s = mystr.substring(index1 + index + 1, index_1);
+		        return index1s;
+		 }
+
+		  //进入页面时展示接口
+		$.ajax({
+                            url:"/integral/show_address_info",
+                             //请求的url地址
+                            dataType: "json",   //返回格式为json
+                            async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+                            type: "post",   //请求方式
+                            data:{'user_id':lookup("user_id")},
+                            success: function(data) {
+	                          //请求成功时处理
+	                          if(data.msg['wx_name'] != undefined){
+	                          	$(".wx-name").val(data.msg['wx_name']);
+	                          }
+	                          if(data.msg['wx_number'] != undefined){
+	                          	$(".wx-number").val(data.msg['wx_number']);
+	                          }     
+                            },
+                            error: function() {
+                                //请求出错处理
+                                swal({
+                                    title: "请求数据出错了",
+                                    type: "error",
+                                    showCancelButton: false,
+                                    closeOnConfirm: false,
+                                    confirmButtonText: "确定",
+                                    confirmButtonColor: "#6ffabc"
+                                },function(){
+                                	window.location.href = urls;
+                                })
+                           }
+                        });
+
+		$(".save").click(function(){
+			$.ajax({
+	                            url:"/integral/save_user_address",
+	                             //请求的url地址
+	                            dataType: "json",   //返回格式为json
+	                            async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+	                            type: "post",   //请求方式
+	                            data:{'wx_name':$(".wx-name").val(),'wx_number':$(".wx-number").val(),'user_id':lookup("user_id"),'gift_order':lookup("gift_order"),'gift_type':300},
+	                            success: function(data) {
+		                          //请求成功时处理  1代表出现正常错误
+		                          	if (data.code == "1") {
+	                              			alert(data.msg)
+		                              	}
+		                              	else if(data.code == "0"){
+		                              		window.location.href = urls+"&is_success=1";
+		                              	}
+	                            },
+	                            error: function() {
+	                                //请求出错处理
+	                                swal({
+	                                    title: "请求数据出错了",
+	                                    type: "error",
+	                                    showCancelButton: false,
+	                                    closeOnConfirm: false,
+	                                    confirmButtonText: "确定",
+	                                    confirmButtonColor: "#6ffabc"
+	                                },function(){
+	                                 	window.location.href = urls;
+	                                })
+	                           }
+	                        });
+		})
+	</script>
+
+	<!-- APP端点击返回需要调用的方法 -->
+	<script type="text/javascript">
+		function back(){
+			window.location.href = urls;
+		}
+	</script>
+	
+	<div id="end"></div>
+</body>
+</html>

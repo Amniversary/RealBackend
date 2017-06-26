@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head>  
+    <title>demo</title>
+    <meta charset="utf-8">
+    <script src="jquery.js"></script>
+</head>  
+<body>  
+<div id="container"></div>
+<div id="container_my">
+    <input id="my_input" type="text" value="tosew" />
+</div>
+      <button id="testbtn">测试</button>
+<script type="text/javascript">
+   $("#testbtn").on("click",function(){
+       text = $("#container_my").html();
+       console.log(text);
+       obj = $("<div></div>");
+        $(obj).html($("#container_my").children().clone());
+       console.log(obj);
+       console.log(obj.html());
+       $("#container_my").after(obj);
+       text = $("#my_input").val();
+       console.log(text);
+   });
+</script>
+</body></html> 

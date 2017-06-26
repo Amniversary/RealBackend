@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+<head>	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection"content="telephone=no, email=no" />
+	<title>蜜播认证</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="p-verify">	
+	<form class="form" id="j_form">
+		<div class="tips bg-grey">
+			<p>*小蜜提示：为了保护您的合法权益，请您如实填写以下信息（均为必填），我们的工作人员会在第一时间对您的申请进行审核处理，通过后您就可以发起直播啦！</p>
+		</div>
+		<div class="ipt-box">
+			<span>真实姓名</span>
+			<input type="text" placeholder="输入真实姓名" name="actual_name">
+		</div>
+		<div class="ipt-box">
+			<span>身份证号</span>
+			<input type="text" placeholder="输入身份证号" name="id_card">
+		</div>
+		<div class="ipt-box">
+			<span>银行账户</span>
+			<input type="tel" placeholder="请输入银行卡号" name="bank_account">
+		</div>
+
+        <div class="ipt-box">
+            <span>家族名称</span>
+            <input type="tel" placeholder="请输入家族名称(选填)" name="family_name">
+        </div>
+        <div class="ipt-box">
+            <span>微信号</span>
+            <input type="tel" placeholder="请输入微信号" name="wechat">
+        </div>
+        <div class="ipt-box">
+            <span>QQ号</span>
+            <input type="tel" placeholder="请输入QQ号" name="qq">
+        </div>
+        <div class="ipt-box">
+            <span>开户名</span>
+            <input type="tel" placeholder="请输入开户名" name="account_name">
+        </div>
+        <div class="ipt-box">
+            <span>开户行</span>
+            <input type="tel" placeholder="请输入开户行(选填)" name="bank">
+        </div>
+        <div class="ipt-box">
+            <span>现住址</span>
+            <input type="tel" placeholder="请输入现住址(选填)" name="address">
+        </div>
+        <div class="ipt-box">
+            <span>手机号码</span>
+            <input type="tel" placeholder="输入手机号码" name="phone_num">
+        </div>
+        <div class="ipt-box ipt-code">
+            <span>验证码</span>
+            <input type="tel" placeholder="输入验证码" name="verify">
+            <div class="get">
+                <input type="button" value="获取验证码" class="btn-green btn-sm" id="j_get">
+            </div>
+        </div>
+        <div class="tips bg-grey">
+            <p>*小蜜提示：银行卡号认证是为了响应直播行业公约，蜜播不会将您的银行卡号用于不当目的，请您放心输入银行卡号。银行账户信息必须与您本人（即开户人）姓名、手机号码完全一致，否则将导致您的申请无法通过。</p>
+        </div>
+		<div class="tips bg-grey">
+			<p>1、请上传您本人正面手持身份证的照片，并保持您的面部、身份证照片和号码可以清晰辨认&nbsp;<a href="" class="link">参考照片</a></p>
+			<p>2、身份证正面近照</p>
+			<p>3、身份证反面近照</p>
+		</div>
+		<ul class="addImgs clearfix">
+			<li>
+				<span>1</span>
+				<img src="images/delete.png" alt="" class="del">
+				<a href="javascript:;" class="add-img">				
+					<img src="images/add_img.png" alt=""  class="img">					
+				</a>
+				<input type="hidden" name="id_card_pic_all">
+			</li>
+			<li>
+				<span>2</span>
+				<img src="images/delete.png" alt="" class="del">
+				<a href="javascript:;" class="add-img">
+					<img src="images/add_img.png" alt="" class="img">				
+				</a>
+				<input type="hidden" name="id_card_pic_main">
+			</li>
+			<li>
+				<span>3</span>
+				<img src="images/delete.png" alt="" class="del">
+				<a href="javascript:;" class="add-img">
+					<img src="images/add_img.png" alt="" class="img">				
+				</a>
+				<input type="hidden" name="id_card_pic_turn">
+			</li>
+		</ul>
+		<div class="submit bg-grey">
+			<input type="button" value="提交申请" class="btn-green" id="j_submit">
+		</div>	
+	</form>
+
+	<!--跟plupload有关的dom结构部分-->
+	<div style="display:none;">
+		<h4>您所选择的文件列表：</h4>
+		<div id="ossfile">你的浏览器不支持flash,Silverlight或者HTML5！</div>
+		<div id="container">
+			<a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
+			<a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
+		</div>
+	    <form name="theform">
+			<input type="radio" name="myradio" value="local_name"/>上传文件名字保持本地文件名字
+			<input type="radio" name="myradio" value="random_name" checked=true/>上传文件名字是随机文件名, 后缀保留
+		</form>
+	</div>
+	<!--图片上传中-自定义进度条-->
+	<span class="ceil" id="j_progress">
+        <div class="loader loader-green duration-3s-before">
+            <a href="javascript:;">100%</a>
+        </div>
+    </span>
+	<script src="js/jquery-2.0.3.min.js"></script>
+	<script src="js/underscore.js"></script>
+	<script src="js/backbone.js"></script>
+	<!--自定义弹窗组件-->
+	<script src="js/pop.js"></script>
+	<!--跟上传图片有关-->
+	<script src="js/plupload.full.min.js"></script>
+	<script src="js/upload.js"></script>
+	<script>
+		//设置图片容器的高度
+		var imgWidth = $('.add-img').width();
+		$('.add-img').css('height', imgWidth); 
+
+		//点击上传图片
+		var $curEle;
+		$('.add-img').click(function(){
+			$('.moxie-shim input').click();
+			$curEle = $(this).parents('li');
+		})   	
+     
+      	//获取验证码
+      	$('#j_get').click(function(){
+      		countDown($(this));
+      	})
+      	var timer,
+      		wait = 59,
+      		$ele = $('#j_get');
+      	function countDown(){	      		
+			if (wait == 0) { 
+				$ele.attr("disabled", false); 
+				$ele.val("重新获取"); 
+				wait = 59; 
+				clearTimeout(timer);
+			} else { 
+				$ele.attr("disabled", true); 
+				$ele.val(wait + "s"); 
+				wait--; 
+				timer = setTimeout(countDown, 1000);
+			} 
+      	}
+	   
+
+	    var Person = Backbone.Model.extend({
+	    	url: 'http://meibo.com/mbliving/livingapprove',
+	    	defaults: {
+	    		'actual_name': '', //真实姓名
+	    		'id_card': '', //身份证号码
+	    		'phone_num': '', //手机号码
+	    		'verify': '', //验证码
+	    		'bank_account': '', //银行卡号
+	    		'id_card_pic_all': '',//手持身份证照
+	    		'id_card_pic_main': '',//正面
+	    		'id_card_pic_turn': '',//反面
+                'family_name': '',//家族名称
+                'wechat': '',//微信号
+                'qq': '',//QQ号
+                'account_name': '',//开户名
+                'bank': '',//开户行
+                'address': ''//现住址
+	    	},
+	    	validate: function(model){
+	    		//真实姓名
+	    		if(model.actual_name==''){
+	    			return "真实姓名不能为空哦";
+	    		}else{
+	    			var reg = /^[\u4e00-\u9fa5]{2,6}$/;
+	    			if(!reg.test(model.actual_name)){
+	    				return "请输入正确的真实姓名";
+	    			}
+	    		}
+	    		//身份证号码
+	    		if(model.id_card==''){
+	    			return "身份证号码不能为空哦";
+	    		}else{
+	    			console.log(model.id_card.length);
+	    			//1、15位或18位，如果是15位，必需全是数字。
+	    			//2、如果是18位，最后一位可以是数字或字母Xx，其余必需是数字。
+	    			var reg = /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/;
+	    			if(!reg.test(model.id_card)){
+	    				return "请输入正确的身份证号码";
+	    			}
+	    		}
+	    		//手机号码
+	    		if(model.phone_num==''){
+	    			return "手机号码不能为空哦";
+	    		}else{
+	    			var reg = /^(13|14|15|18)[0-9]{9}$/;
+	    			if(!reg.test(model.phone_num)){
+	    				return "请输入正确的手机号码";
+	    			}
+	    		}
+	    		//验证码
+	    		if(model.verify==''){
+	    			return "验证码不能为空哦";
+	    		}
+	    		//银行卡号
+	    		if(model.bank_account==''){
+	    			return "银行卡号不能为空哦";
+	    		}else{
+	    			/*var reg = /^[622126-622925]\d{10}$/;*/
+	    			var reg = /^\d{16}|\d{19}$/;
+	    			if(!reg.test(model.bank_account)){
+	    				return "请输入正确的银行卡号";
+	    			}
+	    		}
+	    		//照片
+	    		if(model.id_card_pic_all==''||model.id_card_pic_main==''||model.id_card_pic_turn==''){
+	    			return "须上传手持身份证、身份证正面、身份证反面3张照片哦";
+	    		}
+
+                if(model.wechat==''){
+                    return "微信号不能为空";
+                }
+                if(model.qq==''){
+                    return "QQ号不能为空";
+                }
+                if(model.account_name==''){
+                    return "开户名不能为空";
+                }
+	    	}
+	    })
+	    var PersonView = Backbone.View.extend({
+	    	el: $('#j_form'),
+	    	events: {
+	    		'click #j_submit' :'submitForm'
+	    	},
+	    	initialize: function(){
+	    		this.model = new Person();
+	    		this.listenTo(this.model, 'invalid', this.alertErrorMsg);
+	    	},
+	    	submitForm: function(){
+	    		this.getFormInfo();
+	    		//获取url中有用的参数
+	    		this.model.set({
+	    			rand_str: this.getUrlParam('rand_str'),
+    				time: this.getUrlParam('time'),
+    				unique_no: this.getUrlParam('unique_no'),
+    				p_sign: this.getUrlParam('p_sign')
+	    		})
+
+	    		this.model.fetch({
+                    method:'post',
+
+                    data:{
+                        'rand_str':this.model.get('rand_str'),
+                        'time':this.model.get('time'),
+                        'unique_no':this.model.get('unique_no'),
+                        'p_sign':this.model.get('p_sign'),
+                        'actual_name':this.model.get('actual_name'),
+                        'id_card':this.model.get('id_card'),
+                        'phone_num':this.model.get('phone_num'),
+                        'verify':this.model.get('verify'),
+                        'bank_account':this.model.get('bank_account'),
+                        'id_card_pic_all':this.model.get('id_card_pic_all'),
+                        'id_card_pic_main':this.model.get('id_card_pic_main'),
+                        'id_card_pic_turn':this.model.get('id_card_pic_turn'),
+                        'family_name': this.model.get('family_name'),//家族名称
+                        'wechat': this.model.get('wechat'),//微信号
+                        'qq': this.model.get('qq'),//QQ号
+                        'account_name': this.model.get('account_name'),//开户名
+                        'bank': this.model.get('bank'),//开户行
+                        'address': this.model.get('address')//现住址
+                    },
+	    			success: function(model, resp) {
+			            console.log(resp);
+			        }
+
+	    		});
+	    	},
+	    	getFormInfo: function(){
+	    		var jsonArr = $('#j_form').serializeArray();//将提交的表单元素的值编译成拥有name和value对象组成的数组
+	    		var _this = this;
+	    		_.each(jsonArr,function(obj, index){
+	    			_this.model.set(obj.name, obj.value);	    			
+	    		})
+	    		console.log(this.model);
+	    	},
+	    	alertErrorMsg: function(model, error){
+	    		popInfo(error,1);
+	    	},
+	    	getUrlParam: function(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+				var r = window.location.search.substr(1).match(reg); //匹配目标参数
+				if (r != null) return unescape(r[2]);
+				return null; //返回参数值
+			}
+	    }) 
+	    var personView = new PersonView();
+    </script>
+</body>
+
+</html>

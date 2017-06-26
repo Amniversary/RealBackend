@@ -1,0 +1,474 @@
+/*账户充值*/
+.recharge{
+    border-radius: 10px;
+}
+.recharge>div{
+    padding: 30px 60px;
+}
+.recharge .user{
+    padding-bottom: 30px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.recharge .user>img{
+    width: 80px;
+}
+.recharge .user div{
+    height: 80px;
+    display: inline-block;
+    margin-left: 30px;
+}
+.recharge .user div h6{
+    color: #505050;
+    font-size: 20px;
+    margin-top: 15px;
+    line-height: 30px;
+}
+.recharge .user div p{
+    font-size: 16px;
+}
+.recharge .user div p span{
+    color: #ffbe00;
+    cursor: pointer;
+}
+.recharge .user div p.client_no{
+    color: #a0a0a0;
+}
+.recharge .user>span{
+    color: #ffbe00;
+    font-size: 20px;
+    display: inline-block;
+    line-height: 80px;
+}
+.recharge .user.login_on{
+    display: none;
+}
+.recharge .recharge_cont h6{
+    font-size: 20px;
+    color: #505050;
+    margin-bottom: 25px;
+}
+.recharge .recharge_cont .recharge_list{
+    width: 365px;
+    height: 45px;
+    padding: 0px 15px;
+    line-height: 40px;
+    border: 2px solid #a0a0a0;
+    border-radius: 6px;
+    color: #a0a0a0;
+    float: left;
+    margin-right: 25px;
+    margin-bottom: 25px;
+    position: relative;
+    cursor: pointer;
+}
+.recharge .recharge_cont .recharge_list span{
+    margin-left: 20px;
+    font-size: 16px;
+    vertical-align: sub;
+}
+.recharge .recharge_cont .recharge_list span.give{
+    font-size: 12px;
+    position: absolute;
+    left: 160px;
+    color: #ff9710;
+    top: 2px;
+}
+.recharge .recharge_cont .recharge_list.on{
+    border: 2px solid #ffbe00;
+}
+.recharge .recharge_cont .recharge_list.on .flower,
+.recharge .recharge_cont .recharge_list.on .money{
+    color: #ffbe00;
+}
+.recharge .recharge_cont label{
+    position: relative;
+    margin-right: 40px;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+.recharge .recharge_cont label span{
+    display: inline-block;
+    width: 162px;
+    height: 50px;
+}
+.recharge .recharge_cont label input{
+    position: absolute;
+    left: 0;
+    opacity: 0;
+}
+.recharge .recharge_cont label.wx_pay span{
+    background: url(http://mbpic.mblive.cn/test/wx_payno.png)no-repeat;
+    background-size: 100%;
+}
+.recharge .recharge_cont label.wx_pay.on span{
+    background: url(http://mbpic.mblive.cn/test/wx_pay.png)no-repeat;
+    background-size: 100%;
+}
+.recharge .recharge_cont label.zfb_pay span{
+    background: url(http://mbpic.mblive.cn/test/zfb_pay.png)no-repeat;
+    background-size: 100%;
+}
+.recharge .recharge_cont label.zfb_pay.on span{
+    background: url(http://mbpic.mblive.cn/test/zfb_payon.png)no-repeat;
+    background-size: 100%;
+}
+.recharge .true_pay{
+    margin-top: 20px;
+    padding-top: 30px;
+    line-height: 50px;
+    border-top: 1px solid #f0f0f0;
+}
+.recharge .true_pay p{
+    display: inline-block;
+    font-size: 24px;
+    color: #505050;
+}
+.recharge .true_pay p span{
+    color: #ffbe00;
+}
+.recharge .true_pay button{
+    float: right;
+    background: #fff;
+    width: 162px;
+    height: 50px;
+    line-height: 46px;
+    border:2px solid #a0a0a0;
+    border-radius: 6px;
+    color: #a0a0a0;
+    font-size: 16px;
+}
+.recharge .true_pay button.on{
+    border:2px solid #ffbe00;
+    color: #ffbe00;
+}
+/*模态框*/
+.recharge_modal .modal-dialog{
+    margin-top: 10%;
+    width: 640px;
+    height: 450px;
+    background: rgba(250,250,250,0.4);
+    border-radius: 8px;
+    padding-top: 5px;
+    padding-left: 5px;
+}
+.recharge_modal .modal-content{
+    width: 630px;
+    height: 440px;
+    border:none;
+    border-radius: 8px;
+}
+.recharge_modal .modal-content .modal-body .close{
+    opacity: 0.4;
+}
+.recharge_modal .modal-content .modal-body .close:hover{
+    opacity: 1;
+}
+.recharge_modal .modal-content .modal-body .close span{
+    border: 2px solid #bababa;
+    border-radius: 50px;
+    width: 34px;
+    height: 34px;
+    display: inline-block;
+    text-align: center;
+    line-height: 28px;
+    font-size: 20px;
+    color: #bababa;
+}
+.recharge_modal .modal-content .modal-body h6{
+    margin-top: 45px;
+    font-size: 24px;
+    color: #505050;
+    text-align: center;
+}
+.recharge_modal .modal-content .modal-body input{
+    width: 400px;
+    height: 48px;
+    color: #a0a0a0;
+    font-size: 16px;
+    display: block;
+    padding: 0px;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+}
+.recharge_modal .modal-content .modal-body button.btn_login{
+    width: 400px;
+    height: 48px;
+    font-size: 16px;
+    color: #fff;
+    background: #ffbe00;
+    border: none;
+    border-radius: 60px;
+    padding: 0;
+    margin: auto;
+    display: block;
+    opacity: 0.5;
+}
+.recharge_modal .modal-content .modal-body button.btn_login.on{
+    opacity: 1;
+}
+#login_id .modal-content .modal-body input{
+    margin: 100px auto;
+}
+#login_phone .modal-content .modal-body{
+    text-align: center;
+}
+#login_phone .modal-content .modal-body h6{
+    margin-bottom: 40px;
+}
+#login_phone .modal-content .modal-body input{
+    margin: 10px auto;
+    margin-top: 0px;
+}
+#login_phone .modal-content .modal-body div{
+    display: inline-block;
+    position: relative;
+}
+#login_phone .modal-content .modal-body div img{
+    width: 102px;
+    position: absolute;
+    right: 0;
+    bottom: 18px;
+    cursor: pointer;
+}
+#login_phone .modal-content .modal-body>div>span{
+    position: absolute;
+    right: 0;
+    bottom: 23px;
+    font-size: 16px;
+    color: #a0a0a0;
+    width: 102px;
+    height: 22px;
+    text-align: right;
+    border-left: 1px solid #a0a0a0;
+    cursor: pointer;
+}
+#login_phone .modal-content .modal-body button.btn_login{
+    margin-top: 35px;
+    margin-bottom: 20px;
+}
+#login_phone .modal-content .modal-body p{
+    font-size: 16px;
+    color: #a0a0a0;
+}
+#login_phone .modal-content .modal-body p a{
+    color: #ffbe00;
+}
+/*微信支付&支付宝支付*/
+.zfbpay,.wxpay{
+    padding-bottom: 30px;
+    border-radius: 10px;
+}
+.view_payway{
+    width: 860px;
+    height: 458px;
+    margin: auto;
+    padding: 60px 0px;
+}
+.view_payway>img.scan{
+    width: 260px;
+}
+.view_payway>img{
+    vertical-align: middle;
+}
+.view_payway>img.right_arrow{
+    margin-left: 140px;
+    width: 40px;
+}
+.view_payway .pay_code{
+    display: inline-block;
+    text-align: center;
+    float: right;
+}
+.view_payway .pay_code p{
+    font-size: 20px;
+    color: #505050;
+}
+.view_payway .pay_code p.pay_acount{
+    padding-top: 30px;
+    font-size: 26px;
+}
+.view_payway .pay_code p.pay_acount span{
+    color: #ffbe00;
+}
+.view_payway .pay_code>span{
+    font-size: 16px;
+    color: #a0a0a0;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+.view_payway .pay_code>img{
+    width: 240px;
+    height: 240px;
+    padding: 10px;
+    border: 2px solid #ffbe00;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+.wxpay>a,
+.zfbpay>a{
+    margin-left: 60px;
+    font-size: 20px;
+    color: #a0a0a0;
+}
+.wxpay>a>img,
+.zfbpay>a>img{
+    margin-right: 7px;
+}
+.zfbpay .view_payway>img.scan{
+    width: 265px;
+}
+/*支付成功*/
+.pay_success{
+    border-radius: 10px;
+    text-align: center;
+    height: 634px;
+}
+.pay_success img{
+    width: 80px;
+    height: 80px;
+    margin-top: 100px;
+}
+.pay_success p{
+    margin-top: 40px;
+    margin-bottom: 120px;
+    font-size: 24px;
+    color: #505050;
+}
+.pay_success a{
+    width: 400px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 80px;
+    color: #fff;
+    font-size: 24px;
+    background: #ffbe00;
+    display: inline-block;
+    margin-bottom: 110px;
+}
+/*联系我们*/
+.contact{
+    border-radius: 10px;
+    position: relative;
+}
+.contact .contact_left{
+    padding: 30px 160px;
+}
+.contact .contact_list h6{
+    font-size: 20px;
+    color: #505050;
+    padding-top: 10px;
+    margin-bottom: 15px;
+}
+.contact .contact_list p{
+    font-size: 20px;
+    color: #505050;
+}
+.contact .public{
+    position: absolute;
+    top: 194px;
+    right: 160px;
+    font-size: 16px;
+    color: #505050;
+    text-align: center;
+}
+.contact .public img{
+    width: 160px;
+}
+/*主播招募*/
+.recruit{
+    border-radius: 10px;
+}
+.recruit img{
+    display: block;
+    margin: auto;
+    width: 70%;
+    padding: 80px 0px;
+}
+
+/*用户协议*/
+.agreement{
+    padding-bottom: 60px;
+    border-radius: 10px;
+}
+.agreement .title{
+    text-align: center;
+    padding: 40px 0px;
+    font-size: 26px;
+    color: #505050;
+}
+.agreement h6{
+    font-size: 20px;
+    margin: 0px 125px;
+    margin-top: 20px;
+    color: #505050;
+    margin-bottom: 5px;
+}
+.agreement p{
+    font-size: 20px;
+    margin: 0px 125px;
+    color: #505050;
+}
+/*公司历程*/
+.history{
+    border-radius: 10px;
+}
+.history>div{
+    padding: 50px;
+}
+.history h5.title{
+    margin: auto;
+    width: 148px;
+    height: 42px;
+    font-size: 20px;
+    color: #505050;
+    line-height: 40px;
+    text-align: center;
+    background: url(http://mbpic.mblive.cn/test/history_title_bg.png)no-repeat;
+    background-size: 100%;
+}
+.history .history_animate{
+    width: 10px;
+    /*width: 965px;*/
+    height: 325px;
+    margin-top: 95px;
+    position: relative;
+    background: url(http://mbpic.mblive.cn/test/line.png)no-repeat;
+    background-position-x: 12px;
+    background-position-y: 47px;
+    margin-left: 110px;
+}
+.history .history_animate>div{
+    position: absolute;
+    display: none;
+}
+.history .history_animate>div img{
+    width: 20px;
+    position: absolute;
+}
+.history .history_animate>div h6{
+    font-size: 18px;
+    color: #ffbe00;
+}
+.history .history_animate>div p{
+    font-size: 14px;
+    color: #505050;
+}
+.history .history_animate>div.dot_1{left: 32px;bottom: 0px;}
+.history .history_animate>div.dot_2{left: 65px;bottom: 96px;}
+.history .history_animate>div.dot_3{left: 155px;bottom: 197px;}
+.history .history_animate>div.dot_4{left: 240px;bottom: 25px;}
+.history .history_animate>div.dot_5{left: 385px;bottom: 85px;}
+.history .history_animate>div.dot_6{left: 450px;bottom: 235px;}
+.history .history_animate>div.dot_7{left: 605px;bottom: 78px;}
+.history .history_animate>div.dot_8{left: 635px;bottom: 285px;}
+
+.history .history_animate>div.dot_1 img{left: -30px;top: 3px;}
+.history .history_animate>div.dot_2 img{left: -8px;top: -21px;}
+.history .history_animate>div.dot_3 img{left: 0px;top: 70px;}
+.history .history_animate>div.dot_4 img{left: -3px;top: -29px;}
+.history .history_animate>div.dot_5 img{left: -29px;top: 3px;}
+.history .history_animate>div.dot_6 img{left: -2px;top: 66px;}
+.history .history_animate>div.dot_7 img{left: -2px;top: -25px;}
+.history .history_animate>div.dot_8 img{left: 95px;top: 50px;}

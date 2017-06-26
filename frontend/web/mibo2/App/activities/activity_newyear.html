@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+    <meta http-equiv="Content-Security-Policy" content="default-src gap://ready file:; style-src 'self' 'unsafe-inline'; script-src 'unsafe-inline' 'unsafe-eval'">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection"content="telephone=no, email=no" />
+	<title>春节活动榜</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style type="text/css">
+            .avatar-img{
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                overflow: hidden;
+            }
+    </style>
+</head>
+<body>
+<div class="g-mn">
+    <!--活动标题-->
+    <div class="m-title">
+        <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/halloween_01.png" alt="" class="dw">
+    </div>
+    <!--排行榜信息-->
+    <div class="m-rank relative hide" id="j_list">
+        <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/halloween_02.png" alt="" class="bg1 dw">
+        <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/halloween_03.png" alt="" class="bg2 dw">
+        <ul class="m-list clearfix" id="j_rank_list">
+            <li class="clearfix top top1">
+                <div class="avatar">
+                    <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/liantu.png" alt="" class="dw">       
+                    <i class="label_yellow label_1"></i>
+                </div>
+                <div class="info">
+                    <h2>我叫王大锤</h2>
+                    <p class="no"><i class="icons icon-male"></i>ID：25864980</p>
+                </div>
+                <p class="score">圆满值<span>10693</span>点</p>
+            </li>
+            <li class="clearfix top top2">
+                <div class="avatar">
+                    <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/liantu.png" alt="" class="dw">  
+                    <i class="label_purple label_1"></i>   
+                </div>
+                <div class="info">
+                    <h2>南极的北极熊</h2>
+                    <p class="no"><i class="icons icons-female"></i>ID：25864980</p>
+                </div>
+                <p class="score">圆满值<span>10693</span>点</p>
+            </li>
+            <li class="clearfix top top3">
+                <div class="avatar">
+                    <img src="http://image.matewish.cn/app-wishlist/bg3.png" alt="" class="dw">  
+                    <i class="label_purple label_2"></i>    
+                </div>
+                <div class="info">
+                    <h2>南极的北极熊</h2>
+                    <p class="no"><i class="icons icon-male"></i>ID：25864980</p>
+                </div>
+                <p class="score">圆满值<span>10693</span>点</p>
+            </li>
+            <li class="clearfix">
+                <div class="avatar">
+                    <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/liantu.png" alt="" class="dw">  
+                    <i class="label label_1"></i>     
+                </div>
+                <div class="info">
+                    <h2>南极的北极熊</h2>
+                    <p class="no"><i class="icons icon-male"></i>ID：25864980</p>
+                </div>
+                <p class="score">圆满值<span>10693</span>点</p>
+            </li>
+            <li class="clearfix">
+                <div class="avatar">
+                    <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/liantu.png" alt="" class="dw"> 
+                    <i class="label label_2"><span>百里挑一</span></i>        
+                </div>
+                <div class="info">
+                    <h2>南极的北极熊</h2>
+                    <p class="no"><i class="icons icon-male"></i>ID：25864980</p>
+                </div>
+                <p class="score">圆满值<span>10693</span>点</p>
+            </li>
+            <li class="clearfix">
+                <div class="avatar">
+                    <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/liantu.png" alt="" class="dw">        
+                </div>
+                <div class="info">
+                    <h2>南极的北极熊</h2>
+                    <p class="no"><i class="icons icon-male"></i>ID：25864980</p>
+                </div>
+                <p class="score">圆满值<span>10693</span>点</p>
+            </li>
+            <li class="clearfix">
+                <div class="avatar">
+                    <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/liantu.png" alt="" class="dw">        
+                </div>
+                <div class="info">
+                    <h2>南极的北极熊</h2>
+                    <p class="no"><i class="icons icon-male"></i>ID：25864980</p>
+                </div>
+                <p class="score">圆满值<span>10693</span>点</p>
+            </li>
+            <li class="clearfix">
+                <div class="avatar">
+                    <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/liantu.png" alt="" class="dw">        
+                </div>
+                <div class="info">
+                    <h2>南极的北极熊</h2>
+                    <p class="no"><i class="icons icon-male"></i>ID：25864980</p>
+                </div>
+                <p class="score">圆满值<span>10693</span>点</p>
+            </li>
+            <li class="clearfix">
+                <div class="avatar">
+                    <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/liantu.png" alt="" class="dw">        
+                </div>
+                <div class="info">
+                    <h2>南极的北极熊</h2>
+                    <p class="no"><i class="icons icon-male"></i>ID：25864980</p>
+                </div>
+                <p class="score">圆满值<span>10693</span>点</p>
+            </li>
+            <li class="clearfix">
+                <div class="avatar">
+                    <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/liantu.png" alt="" class="dw">        
+                </div>
+                <div class="info">
+                    <h2>南极的北极熊</h2>
+                    <p class="no"><i class="icons icon-male"></i>ID：25864980</p>
+                </div>
+                <p class="score">圆满值<span>10693</span>点</p>
+            </li>
+        </ul>
+        <a href="javascript:;" class="more down" id="j_more">显示更多</a>     
+    </div>
+    <!--活动说明-->
+    <div class="m-instr relative">
+        <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/halloween_04.png" alt="" class="dw dt">
+        <div class="wrap">
+            <ul class="m-list2 halloween">
+                <li>
+                <h2><img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/circular.png">鸡血值</h2>
+                    <p>1、活动期间，赠送主播两款鸡年限定礼物，主播可获得鸡血值。</p>
+                    <p>2、一个大红灯笼＝2点鸡血值，一个金鸡送福＝10点鸡血值。</p>
+                    <p>3、主播鸡血值越高，越有机会获得珍稀新年头衔。</p>
+                    <p>4、用户所赠送的鸡年限定礼物是可提现的。</p>
+                </li>
+                <li>
+                    <h2><img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/circular.png">称号</h2>
+                    <p>战斗鸡 —— 888点鸡血值</p>
+                    <p>雄鸡一唱 —— 1888点鸡血值</p>
+                    <p>山鸡舞镜 —— 2888点鸡血值</p>
+                    <p>闻鸡起舞 —— 4888点鸡血值</p>
+                    <p>金鸡报晓 —— 6888点鸡血值</p>
+                    <p>金鸡独立 —— 8888点鸡血值</p>
+                </li>
+                <li>
+                    <h2><img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/circular.png">活动奖励</h2>
+                    <p>新年鸡血榜第一名：【热门1】90分钟/次（共三次）加5000鲜花，送蜜播限量版抱枕一个。</p>
+                    <p>新年鸡血榜第二名：【热门2】60分钟/次（共三次）加3000鲜花，送蜜播限量版杯子一个。</p>
+                    <p>新年鸡血榜第三名：【热门3】30分钟/次（共三次）加2000鲜花，送蜜播限量版豪华手机壳一个。</p>
+                    <p>新年鸡血榜第四到十名： 1000鲜花，送蜜播限量版透明手机壳一个。</p>
+                    <p>特别说明：第一名主播必须达到金鸡独立称号；第二名主播必须达到金鸡报晓称号；第三名主播必须达到闻鸡起舞称号，活动奖励才予兑现。鲜花和实物奖励将在节后的10个工作日内发放。</p>
+                </li>
+                <!-- <li>
+                    <h2><img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/circular.png">特别奖励</h2>
+                    <p>万圣榜前10名主播，将有机会成为首批蜜播扶持的游戏主播</p>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/template" id="j_template">
+    <li class="clearfix {{clsName}}">
+        <div class="avatar">
+            <div class="avatar-img">
+                    <img src="{{pic}}" class="dw">  
+            </div>
+            <i class="{{clsName2}}"><span>{{label_name}}</span></i>   
+        </div>
+        <div class="info">
+            <h2>{{nick_name}}</h2>
+            <p class="no"><i class="icons icons-{{clsName3}}"></i>ID：{{client_no}}</p>
+        </div>
+        <p class="score">鸡血值<span>{{total_integral}}</span>点</p>
+    </li>
+</script>
+<script src="http://bmpic.matewish.cn/meibo-test/js/jquery-1.9.1.min.js"></script>
+<script src="js/artTemplate.js"></script>
+<script>
+$("#j_more").click(function(){
+    $this = $(this);
+         if($this.hasClass("down")){$("#j_list").removeClass("hide");
+        $this.removeClass("down").addClass("up");
+    }else{
+         $("#j_list").addClass("hide");
+        $this.removeClass("up").addClass("down");
+    }    
+})
+//获取签名信息
+function getQueryString(name) { 
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+    var r = window.location.search.substr(1).match(reg); 
+    if (r != null) return unescape(r[2]); return null; 
+} 
+
+
+var labelArr = ["金鸡独立","金鸡报晓","闻鸡起舞","山鸡舞镜","雄鸡一唱","战斗鸡"];
+var scoreArr = [8888,6888,4888,2888,1888,888];
+
+$.ajax({
+    url: '/mbliving/scoreboard',
+    type: 'post',
+    data: {
+        activity_id: getQueryString('activity_id'),
+        rand_str: getQueryString('rand_str'),
+        time: getQueryString('time'),
+        sign: getQueryString('sign'),
+        score_type : 1
+    },
+    success: function(data){
+        data = data && JSON.parse(data);
+    	console.log(data.msg);
+        var html = '';
+        $.each(data.msg, function(index, value){
+            
+            value.top = index;
+            //top样式名
+            value.clsName = index<3?"top top"+(index+1):"";
+            //level级别
+            var level=6;
+            for(var i = 0,len = scoreArr.length;i<len;i++){
+                if(value.total_integral>=scoreArr[i]){
+                    level = i;
+                    break;
+                }
+            }
+            level++;
+            //label样式名
+            value.label_name="";
+            if(index==0){
+                value.clsName2 = "label_yellow label_"+level;
+            }else if(index==1||index==2){
+                value.clsName2 = "label_purple label_"+level;
+            }else{
+                value.clsName2 = "label label_"+level;
+                value.label_name = labelArr[level-1]; 
+            }
+            //sex样式名
+            if(value.sex=="男"){
+                value.clsName3 = "male";
+            }else if(value.sex=="女"){
+                value.clsName3 = "female";
+            }else{
+                value.clsName3 = "";
+            }
+            console.log(value);
+            html += template("j_template", value); 
+        })
+        $("#j_rank_list").html(html);
+    }
+})
+
+
+ var max_height = $('.avatar .dw').width();
+ // alert(max_height);
+
+$('.top2 .avatar img').css("max-height",max_height);
+$('.top3 .avatar img').css("max-height",max_height);
+
+
+ window.onresize=function(){
+    Compute(max_height,".top2 .avatar img","max-height");
+    Compute(max_height,".top3 .avatar img","max-height");
+}
+
+
+
+</script>
+
+    <div class="close-advertisement"></div>
+	
+</body>
+</html>

@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="http://mibo.matewish.cn:80">
+    <meta name="format-detection"content="telephone=no, email=no" />
+    <title>我的等级</title>
+    <script src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/jquery-2.0.3.min.js"></script>
+    <link rel="stylesheet" href="css/weixin/grade.css" type="text/css" />
+    <style>
+            #aaa ~ *{
+                display: none;
+            }
+    </style>
+    <script type="text/javascript">
+        $(function(){
+            /* console.log($("#aaa").next()); */
+            if($("#aaa").next().length > 0)
+            {
+                    /* 
+                    alert("有广告");
+                    $("#advice_show").text("tagName:" + $("#aaa").next()[0].tagName + " content:" + $("#aaa").next().prop("outerHTML"));
+                    */
+            }
+        });
+    </script>
+</head>
+
+
+<body class="wrap">
+    <!--  html文件 -->
+    <div class="wrap-top">
+    </div>
+    <!-- 前端模板 -->
+    <script type="text/template" id="my-Level">
+        <div class="user">
+            <div class="user-grade">
+                <!-- <div class="user-image"><img src="<%= pic %>"></div> -->
+                <p>
+                    <!-- 当前等级: -->
+                    <span>LV<%= level_id %></span>
+                </p>
+            </div>
+            <div class="experience-article">
+                            <div>
+                <div class="load-bar"> 
+                    <div class="inner" data-loading="0">&nbsp;</div> 
+                            <!--
+                            <div class="inner-1"></div>
+                            <div class="inner-2"></div> 
+                            -->
+                </div>
+                <div class="counter">
+                        <p>@%</p>
+                        <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/counter.png" >
+                </div>
+                <div class="level-number">
+                    <span class="level-number1">LV<%= level_id %></span>
+                    <% if(level_id < 200) { %>
+                     <span class="level-number2">LV<%= next_level%></span>
+                    <% } %>
+                </div>
+                 </div>
+                
+            </div>
+        </div>
+        <!-- <div style="height: 15px;background-color: #ffbe00;line-height:15px;margin-top:20px;">&nbsp;</div> -->
+        <div class="experience-info">
+            <ul>
+                <li>
+                    <div class="info-icon">
+                        <img style="height:11px;" src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/mb_level_01.png" >
+                    </div>
+                    <p>当前经验值</p>
+                    <span><%= experience %></span>
+                </li>
+                <li>
+                    <div class="info-icon">
+                        <img style="height:20px; padding-left: 7.5px" src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/mb_level_02.png" >
+                    </div>
+                    <div class="level-add">
+                        <p>距升级还差</p>
+                        <% if(level_id < 200) { %><span><%= differ %></span><% } %>
+                    </div>
+                </li>
+                <li>
+                        <div class="info-icon">
+                            <img style="height:17px; padding-left: 6.5px" src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/mb_level_03.png" >
+                        </div>
+                        <p>荣誉勋章</p>
+                        <div id="icon-style" class="color" style="background-color:<%= level_bg %>">
+                            <img src="<%= level_pic %>">
+                        </div>
+                </li>
+                <li>
+
+                <div class="info-icon"><img style="height:22px; padding-left: 9.5px" src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/mb_level_04.png" ></div>
+                        <p style="color:#fff;position:absolute;bottom:25%;line-height:0px">即将获得</p>
+
+                    <div class="prompt">
+                        <% if(level_id < 80) { %>
+                            <!-- <span>@levelNunmer级可获得</span> -->
+                            <div id="icon-style" class="color" style="background-color:<%= next_level_bg %>">
+                                <img src="<%= next_level_pic %>">
+                            </div>
+                        <% } %>
+                    </div>  
+                </li>
+            </ul>
+            <div class="grade-bg">
+                    <img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/mb_grade_bg.png">
+            </div>
+        </div>
+        <div class="wrap-down">
+        <div class="level">
+            <h2 style="font-size:14px">等级权益</h2>
+            <p  style="font-size:12px">随着等级升高，您将可以获得进入至直播间提示、更酷的勋章、更尊贵的身份标识</p>
+        </div>
+        <div class="help">
+            <h2 style="font-size:14px">如何升级</h2>
+            <p>1.发直播和观看直播都可以获得经验值。</p>
+            <p>2.送礼物是最快的升级方式哦。</p>
+        </div>
+    </div>
+     </script>   
+     <script src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/backbone_underscore.js"></script>
+    
+    
+    <!-- backbone框架的使用 -->
+    <script>
+    /*window.onerror=fnErrorTrap;
+                function fnErrorTrap(sMsg,sUrl,sLine){
+                alert("<b>An error was thrown and caught.</b><p>");
+                alert("Error: " + sMsg + "<br>");
+                alert("Line: " + sLine + "<br>");
+                alert("URL: " + sUrl + "<br>");
+                return false;
+             }
+        $('body').on('click','.user-image',function(){
+                $(".wrap-down").text(document.body.innerHTML);
+        })
+        */
+    </script>   
+
+    <div id="advice_show"></div>
+   <script  type="text/javascript" src="js/pages/grade/grade_backbone.js"></script>
+
+
+   <div id="aaa"></div>
+
+    
+</body>
+</html>

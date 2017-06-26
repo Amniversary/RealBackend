@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="http://mibo.matewish.cn:80">
+    <meta name="format-detection"content="telephone=no, email=no" />
+    <title>积分商城</title>
+    <link rel="stylesheet" href="css/integral.css" type="text/css" />
+    
+</head>
+
+<body class="wrap">
+<!--  html文件 -->
+	<div class="user-info">
+	</div>
+	<ul class="integral-list">
+	</ul>
+	<div class="introduce">
+		<div class="mask"></div>
+		<div class="introduce-window">
+			<div class="introduce-window-top">
+				<div class="pic">
+					<img src="">
+				</div>
+				<p id="introduce-content">
+					介绍：<br/>
+					<span class="introduce-content"></span>
+				</p>
+				<p  id="introduce-grant">
+					发放：<br/>
+					<span class="introduce-grant"></span>
+				</p>
+				<p id="introduce-accept">
+					领奖提示:<br/>
+					<span class="introduce-accept"></span>
+				</p>
+			</div>
+			<div class="introduce-window-bottom">
+				<a>立即兑换</a>
+			</div>
+			<div class="close">
+				<div class="line">
+				</div>
+				<div class="close-btn">
+					<img src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/introduce-close.png">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="fictitious-hint">
+		<div class="fictitious-hint-mask"></div>
+		<div class="fictitious-hint-content">
+			<div class="fictitious-hint-top">
+				<p class="title">提示</p>
+				<p class="con">是否使用<span class="fictitious-hint-integral"></span>积分兑换<span class="fictitious-hint-gift-name"></span></p>
+			</div>
+			<div class="fictitious-hint-bottom">
+				<div class="fictitious-hint-bottom-close">取消</div>
+				<div class="fictitious-hint-bottom-confirm">确认</div>
+			</div>
+		</div>
+	</div>
+	<div class="success-hint">
+		<div class="hint-mask"></div>
+		<p>兑换成功</p>
+	</div>
+	<div class="error-hint">
+		<div class="hint-mask"></div>
+		<p>您的积分不足</p>
+	</div>
+
+<!--  积分商城个人信息前端模板 -->
+<script type="text/template" id="user">
+	<div class="user-nei">
+		<div class="user-left">
+			<img src="<%= obj.user_pic %>">
+		</div>
+		<div class="user-right">
+			<div class="user-right-top">
+				<span class="user-name"><%= obj.user_name %></span>
+				<img class="user-sex" src="<%= obj.user_sex %>">
+			</div>
+			<div class="user-right-bottom">
+				<p>积分：<span><%= obj.user_integral %></span></p>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!-- 商品展示列表前端模板 -->
+<script type="text/template" id="my-list">
+	<% _.each(list,function(obj){ %>
+	<li>
+		<div class="list-bor">
+			<div class="list-left">
+				<img src="<%= obj.gift_pic %>">
+			</div>
+			<div class="list-right">
+				<p class="name"><%= obj.gift_name %></p>
+				
+				<p class="num">剩余<span class="gift-num"><%= obj.gift_num %></span>个</p>
+				<div class="money">
+					<p>积分：<span class="gift_integral"><%= obj.gift_integral %></span></p>
+				</div>
+			</div>
+			<!-- 得到礼物的类型和排序号  在介绍页面需要用到 -->
+			<div class="gift-order"><%= obj.gift_order %></div>
+			<div class="gift-type"><%= obj.gift_type %></div>
+			<div class="gift_details"><%= obj.gift_details %></div>
+			<div class="gift_grant"><%= obj.gift_grant %></div>
+			<div class="gift_accept"><%= obj.gift_accept %></div>
+		</div>
+	</li>
+	<% }) %>
+</script>
+
+
+<script src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/jquery-2.0.3.min.js"></script>
+<script src="http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/js/backbone_underscore.js"></script>
+<!-- 商品展示列表和个人信息boackbone处理 -->
+<script type="text/javascript">
+
+	//列表模板
+	var M = Backbone.Model.extend({});
+	//用户模板
+	var M1 = Backbone.Model.extend({});
+
+	//列表集合
+	var C = Backbone.Collection.extend({
+		model:M,
+		url:"/integral/get_integral_list"
+	});
+	//用户集合
+	var C1 = Backbone.Collection.extend({
+		model:M1,
+		url:"/integral/get_integral_list"
+	});
+
+	//实例化列表集合
+	var Ep = new C();
+	//实例化用户集合
+	var Ug = new C();
+
+	//列表视图
+   	var V = Backbone.View.extend({
+       		template:_.template($("#my-list").html()),
+        		 render:function() {
+	            Model = {
+	                list:this.model
+	            };
+	            templates = this.template(Model);
+	            this.$el.html(templates);
+	            return this;
+	        }
+    	});
+   	//用户视图
+   	var V1 = Backbone.View.extend({
+       		template:_.template($("#user").html()),
+        		 render:function() {
+	            Model = this.model;
+	             if (Model.user_sex == "男") {
+	                Model.user_sex = "http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/ing_male.png";
+	            } else if (Model.user_sex == "女") {
+	                Model.user_sex = "http://mblive.oss-cn-hangzhou.aliyuncs.com/mblive/ing_female.png";
+	            }
+	            templates = this.template(Model);
+	            this.$el.html(templates);
+	            return this;
+	        }
+    	});
+
+
+
+    	var Vi = Backbone.View.extend({
+        		el:$("body"),
+        		initialize:function() {
+            		this.listenTo(Ug, "add", this.addOne);
+            		Ug.fetch({
+                		method:"post",
+                		data:{
+                			user_id : user_id_1,
+                			p_sign:sign_1,
+                			rand_str:rand_str_1
+                		},
+                		success:function() {
+                			//app_id_1 为1171658345时是密播特别版
+                			if(app_id_1 == 1172645364  || app_id_1 == 1177913201)
+                			{
+                				$(".user-info").css('background-color','#fc5176');
+                				$(".user-info .user-left").css('border','3px solid #E48C9F');
+                				$(".integral-list li .list-right .money span").css('color','#fc5176');
+                				$(".introduce .introduce-window .introduce-window-bottom").css('background-color','#fc5176');
+                			}
+                		}
+            		});
+        		},
+        		addOne:function(DATAS) {
+           			var error = DATAS.get("code");
+           			if (error == "0") {
+           				//列表视图
+                				DATAS1 = DATAS.get("msg")['gift_list'];
+                				view = new V({
+                    					model:DATAS1
+                				});
+                				// console.log(view);
+                				// console.log(view.render().el);
+                				this.$(".integral-list").append(view.render().el);
+
+					//用户视图	
+                				DATAS2 = DATAS.get("msg")['user_info'];
+                				view1 = new V1({
+                    					model:DATAS2
+                				});
+                				// console.log(view1);
+                				// console.log(view1.render().el);
+                				this.$(".user-info").append(view1.render().el);
+            			} 
+            			else 
+            			{
+                				alert(DATAS.get("error_msg"));
+           			}
+        		}
+    	});
+
+    var mystr = this.location.href;
+    //判断连接地址的最后一位是#符号，将其通过验证
+    if(mystr.substr(-1,1) == "#")
+    {
+    	mystr = mystr.slice(0,-1);
+    }
+    var user_id_1 = lookup("user_id");
+    var sign_1 = lookup("sign");
+    var rand_str_1 = lookup("rand_str");
+    var app_id_1 = lookup("app_id");
+
+
+    var myLevel = new Vi();
+
+    function lookup(x) {
+        var index1 = mystr.indexOf(x);
+        var index = x.length;
+        var index_1 = mystr.indexOf("&", index1);
+        if (index_1 == -1) {
+            index_1 = mystr.length;
+        }
+        var index1s = mystr.substring(index1 + index + 1, index_1);
+        return index1s;
+    }
+
+</script>
+
+<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+<script type="text/javascript" src="js/sweetalert.min.js"></script>
+<script type="text/javascript">
+	//设置计算的值，在点击兑换的时候有用到，不让多次点击
+	var count=1;
+
+	var width = $("body").width();
+
+	console.log($(window).width());
+
+	$(".mask").css("width", width + "px");
+
+	//虚拟物品点击取消
+	$(".fictitious-hint-bottom-close").click(function(){
+		count = 1;
+		$(".fictitious-hint").hide();
+		$('html,body').removeClass('ovfHiden');
+	})
+
+	//判断状态,当地址带有成功的状态显示提示半秒钟
+	if(lookup("is_success") == 1){
+		$(".success-hint").show();
+		setTimeout(function () {
+  			$(".success-hint").hide();
+		 }, 620);
+	}
+	else
+	{
+		//连接success字段如果不等于1 ，则记录连接地址；
+		localStorage.setItem('url', mystr);
+		var urls = localStorage.getItem("url");
+	}
+
+	//当地址已经是带有成功参数的地址，将签名不带参数的地址获取到
+	if(mystr.indexOf("&is_success") > -1)
+	{
+		mystr = mystr.slice(0,-13);
+	}
+
+	//判断用户是否是手动刷新
+	if(window.performance.navigation.type == 1)
+	{	
+		window.location.href = mystr;
+	};
+
+	//点击商品列表
+	$('.integral-list').on('click','li',function(){
+		//禁用滚动条
+		$('html,body').addClass('ovfHiden'); 
+		//获取商品图片的地址和介绍、发放和领奖提示
+		var pic = $(this).find('.list-left img').attr('src');
+		var details = $(this).find('.gift_details').text();
+		var grant = $(this).find('.gift_grant').text();
+		var accept = $(this).find('.gift_accept').text();
+		//获取商品图片的排序号和类型
+		var gift_type = $(this).find('.gift-type').text();
+		var order = $(this).find('.gift-order').text();
+		var integral = $(this).find('.gift_integral').text();
+		//获取礼物的名称obj.gift_num
+		var gift_name = $(this).find('.list-right .name').text();
+		var num = $(this).find('.gift-num').text();
+
+		
+		//如果数量小于1，则不能点击
+		if(num < 1){
+			$(".error-hint p").text("货存不足！");
+			$(".error-hint").show();
+			setTimeout(function () {
+	  			$(".error-hint").hide();
+			 }, 640);
+			$('html,body').removeClass('ovfHiden');
+			return false;
+		}
+		//将得到的商品信息放置到介绍详情弹窗里
+		$(".introduce-window-top .pic img").attr("src",pic);
+		$(".introduce-window-top .introduce-content").text(details);
+		$(".introduce-window-top .introduce-grant").text(grant);
+		$(".introduce-window-top .introduce-accept").text(accept);
+
+		//判断商品信息时候有空信息，如果有空信息就隐藏段落标题
+		if($(".introduce-accept").text() == ""){
+			$("#introduce-accept").hide();
+		}
+		if($(".introduce-content").text() == ""){
+			$("#introduce-content").hide();
+		}
+		if($(".introduce-grant").text() == ""){
+			$("#introduce-grant").hide();
+		}
+
+		//展示页面介绍详情弹窗
+		$('.introduce').show();
+		$('.introduce-window').addClass('animated bounceInUp');
+
+		$(".close-btn").click(function(){
+			//启用滚动条
+			$('html,body').removeClass('ovfHiden');
+			$('.introduce-window').removeClass('animated bounceInUp');
+			$('.introduce-window').addClass('animated bounceOutDown');
+          			 setTimeout(function () {
+          			      $('.introduce').hide();
+			      $('.introduce-window').removeClass('animated bounceOutDown');
+			      $("#introduce-accept").show();
+			      $("#introduce-content").show();
+			      $("#introduce-grant").show();
+			 }, 620);
+          		});
+	
+		//点击详情兑换
+		$('.introduce-window-bottom').unbind('click').bind('click',function(){
+			if(count){
+				count = 0;
+				 $.ajax({
+		                            url:"/integral/integral_change",
+		                             //请求的url地址
+		                            dataType: "json",   //返回格式为json
+		                            async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+		                            type: "post",   //请求方式
+		                            data:{'user_id':user_id_1,'gift_order':order},
+		                            success: function(data) {
+			                          //请求成功时处理
+			                          //code=1代表后端判断有错误输出
+		                              	if (data.code == "1") {
+		                              		$('html,body').removeClass('ovfHiden');
+		                              		count = 1;
+		                              		$('.introduce-window').removeClass('animated bounceInUp');
+						$('.introduce-window').addClass('animated bounceOutDown');
+						setTimeout(function () {
+			          			      $('.introduce').hide();
+						      $('.introduce-window').removeClass('animated bounceOutDown');
+						      $(".error-hint p").text(data.msg);
+		                              		      $(".error-hint").show();
+		                              		      $("#introduce-accept").show();
+						      $("#introduce-content").show();
+						      $("#introduce-grant").show();
+						 }, 620);
+						setTimeout(function () {
+				  			$(".error-hint").hide();
+						 }, 1240);
+		                              	}
+		                              	else if(data.code == "0"){
+		                              		if( gift_type > 0 && gift_type < 200){
+		                              			$('.introduce-window').removeClass('animated bounceInUp');
+							$('.introduce-window').addClass('animated bounceOutDown');
+				          			 setTimeout(function () {
+				          			      $('.introduce').hide();
+							      $('.introduce-window').removeClass('animated bounceOutDown');
+							 }, 620);
+				          			 setTimeout(function () {
+	 							$(".fictitious-hint").show();
+							 }, 620);
+				          			 $('.fictitious-hint-integral').text(integral);
+				          			$('.fictitious-hint-gift-name').text(gift_name);
+
+				          			 $(".fictitious-hint-bottom-confirm").unbind('click').bind('click',function(){
+								$.ajax({
+								                    url:"/integral/save_user_address",
+								                     //请求的url地址
+								                    dataType: "json",   //返回格式为json
+								                    async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+								                    type: "post",   //请求方式
+								                    data:{'user_id':user_id_1,'gift_name':gift_name,'gift_type':gift_type,'gift_order':order},
+								                    success: function(data) {
+								                      //请求成功时处理
+								                      	if (data.code == "1") {
+								                      		count = 1;
+								                      		alert(data.msg)
+									                          }
+									                          else if(data.code == "0"){
+						 						$(".fictitious-hint").hide();
+									   //                        	setTimeout(function () {
+											 //  		$(".success-hint").show();
+												// }, 500);
+									   //                        	setTimeout(function () {
+											 //  		$(".success-hint").hide();
+												// }, 1000);
+									                          	setTimeout(function () {
+											  		window.location.href = mystr + "&is_success=1";
+												}, 520);
+									                          };
+								                             
+								                    },
+								                    error: function() {
+								                        //请求出错处理
+								                        swal({
+								                            title: "出错了",
+								                            type: "error",
+								                            showCancelButton: false,
+								                            closeOnConfirm: false,
+								                            confirmButtonText: "确定",
+								                            confirmButtonColor: "#6ffabc"
+								                        },function(){
+								                         	window.location.href = urls;
+								                        })
+								                   }
+								                });
+								})
+		                              		}
+		                              		else if( gift_type == 200){
+		                              			window.location.href = "fictitious_address.html?user_id="+user_id_1+"&gift_order="+order;
+		                              		}
+		                              		else if( gift_type == 300){
+		                              			window.location.href = "red_packets_address.html?user_id="+user_id_1+"&gift_order="+order;
+		                              		}
+		                              		else if( gift_type == 400){
+		                              			window.location.href = "actual_address.html?user_id="+user_id_1+"&gift_order="+order;
+		                              		}
+		                              	};
+		                            },
+		                            error: function() {
+		                                //请求出错处理
+		                                swal({
+		                                    title: "出错了",
+		                                    type: "error",
+		                                    showCancelButton: false,
+		                                    closeOnConfirm: false,
+		                                    confirmButtonText: "确定",
+		                                    confirmButtonColor: "#6ffabc"
+		                                },function(){
+		                                 location.href = "/";
+		                                })
+		                           }
+		                        });
+
+				
+			}
+		});	
+	})
+</script>
+
+</body>
+</html>

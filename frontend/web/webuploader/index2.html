@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Webuploader-百度</title>
+	<!--引入CSS-->
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/webuploader.css">
+	<style>
+	#uploader-demo .thumbnail {
+    width: 110px;
+    height: 110px;
+}
+.file-item {
+    float: left;
+    position: relative;
+    margin: 0 20px 20px 0;
+    padding: 4px;
+}
+	</style>
+</head>
+<body>
+	<!--dom结构部分-->
+    <div id="uploader-demo">
+        <!--用来存放item-->
+        <div id="fileList" class="uploader-list"></div>
+        <div id="filePicker">选择图片</div>
+    </div>
+<!--引入JS-->
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/base64.js"></script>
+<script type="text/javascript" src="js/webuploader.js"></script>	
+<script>
+var policyText = {
+    "expiration": "2020-01-01T12:00:00.000Z", //设置该Policy的失效时间，超过这个失效时间之后，就没有办法通过这个policy上传文件了
+    "conditions": [["content-length-range", 0, 1048576000]]
+}
+var policyBase64 = Base64.encode(JSON.stringify(policyText));
+// 初始化Web Uploader
+var uploader = WebUploader.create({
+    // 选完文件后，是否自动上传。
+    auto: true,
+    swf: 'swf/Uploader.swf',
+    server: 'http://mibodemo.oss-cn-shanghai.aliyuncs.com',
+    formData:
+    {
+        'key' : "user-auth/${filename}",
+        'policy': 'eyJleHBpcmF0aW9uIjoiMjAxNi0wNC0yNlQxMjozODoyMloiLCJjb25kaXRpb25zIjpbWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsMCwxMDQ4NTc2MDAwXSxbInN0YXJ0cy13aXRoIiwiJGtleSIsInVzZXItYXV0aFwvIl1dfQ==',
+        'OSSAccessKeyId': 'ol6eFceGSKpCI7vZ',
+        'success_action_status' : '200',
+        'signature': 'x3BO1ct9KJUc6ssGpTKQAj4r4Zk='
+    },
+    pick: '#filePicker',
+    accept: {
+        title: 'Images',
+        extensions: 'gif,jpg,jpeg,bmp,png',
+        mimeTypes: 'image/*'
+    },
+    fileVal: 'upload_file'
+});
+
+$list = $('#fileList');
+uploader.on( 'fileQueued', function( file ) {
+    var $li = $(
+            '<div id="' + file.id + '" class="file-item thumbnail">' +
+                '<img>' +
+                '<div class="info">' + file.name + '</div>' +
+            '</div>'
+            ),
+        $img = $li.find('img');
+    $list.append( $li );
+    uploader.makeThumb( file, function( error, src ) {
+        if ( error ) {
+            $img.replaceWith('<span>不能预览</span>');
+            return;
+        }
+
+        $img.attr( 'src', src );
+    }, 200, 200 );
+});
+// 文件上传过程中创建进度条实时显示。
+uploader.on( 'uploadProgress', function( file, percentage ) {
+    var $li = $( '#'+file.id ),
+        $percent = $li.find('.progress span');
+
+    // 避免重复创建
+    if ( !$percent.length ) {
+        $percent = $('<p class="progress"><span></span></p>')
+                .appendTo( $li )
+                .find('span');
+    }
+
+    $percent.css( 'width', percentage * 100 + '%' );
+});
+
+// 文件上传成功，给item添加成功class, 用样式标记上传成功。
+uploader.on( 'uploadSuccess', function( file ) {
+    $( '#'+file.id ).addClass('upload-state-done');
+});
+
+// 文件上传失败，显示上传出错。
+uploader.on( 'uploadError', function( file ) {
+    var $li = $( '#'+file.id ),
+        $error = $li.find('div.error');
+
+    // 避免重复创建
+    if ( !$error.length ) {
+        $error = $('<div class="error"></div>').appendTo( $li );
+    }
+
+    $error.text('上传失败');
+});
+
+// 完成上传完了，成功或者失败，先删除进度条。
+uploader.on( 'uploadComplete', function( file ) {
+    $( '#'+file.id ).find('.progress').remove();
+});
+
+uploader.on( 'uploadSuccess', function( file, response ) {
+    console.log(response);
+})
+</script>
+</body>
+</html>
