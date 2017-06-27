@@ -22,7 +22,7 @@ class WXBizMsgCrypt
 	 * @param $encodingAesKey string 公众平台上，开发者设置的EncodingAESKey
 	 * @param $appId string 公众平台的appId
 	 */
-	public function WXBizMsgCrypt($token, $encodingAesKey, $appId)
+	public function __construct($token, $encodingAesKey, $appId)
 	{
 		$this->token = $token;
 		$this->encodingAesKey = $encodingAesKey;
@@ -48,7 +48,6 @@ class WXBizMsgCrypt
 	public function encryptMsg($replyMsg, $timeStamp, $nonce, &$encryptMsg)
 	{
 		$pc = new Prpcrypt($this->encodingAesKey);
-
 		//加密
 		$array = $pc->encrypt($replyMsg, $this->appId);
 		$ret = $array[0];
@@ -100,7 +99,6 @@ class WXBizMsgCrypt
 		}
 
 		$pc = new Prpcrypt($this->encodingAesKey);
-
 		//提取密文
 		$xmlparse = new XMLParse;
 		$array = $xmlparse->extract($postData);
@@ -130,7 +128,6 @@ class WXBizMsgCrypt
 		if ($signature != $msgSignature) {
 			return ErrorCode::$ValidateSignatureError;
 		}
-
 		$result = $pc->decrypt($encrypt, $this->appId);
 		if ($result[0] != 0) {
 			return $result[0];

@@ -1,5 +1,5 @@
 <?php
-include_once "wxBizMsgCrypt.php";
+include_once "WXBizMsgCrypt.php";
 
 // 第三方发送消息给公众平台
 $encodingAesKey = "63n65FMYpIdj2FvUiH7M9rhG0susnRrcKXzZg86h0fK";

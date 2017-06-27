@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "{{%_system_params}}".
  *
- * @property integer $params_id
+ * @property integer $record_id
  * @property integer $group_id
  * @property string $code
  * @property string $title
@@ -48,7 +48,7 @@ class SystemParams extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'params_id' => '参数ID',
+            'record_id' => '参数ID',
             'group_id' => '分组ID',
             'code' => '系统参数',
             'title' => '参数标题',
