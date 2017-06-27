@@ -23,19 +23,19 @@ class WxPayConfig
 	 * 获取地址：https://mp.weixin.qq.com/advanced/advanced?action=dev&t=advanced/dev&token=2005451881&lang=zh_CN
 	 * @var string
 	 */
-	const APPID = 'wx50cbf1dc9e28f460';//mibo-real:wx19f6ec4aec39c380 test:wx465dd7091f1904a9  real:wx1024c6215af20360  bh:wx36fb557b6766a884 八卦:wx1024c6215af20360 蜜播娱乐:wx50cbf1dc9e28f460
-	const MCHID = '1451566102'; //: 1451566102  real: 1358670802
-	const KEY = '4u406ckr11k6s87folqjj21ohjmrzh1h'; //娱乐: 4u406ckr11k6s87folqjj21ohjmrzh1h  real:alssa0kjlHKJH7623174kafjahwesakf
-	const APPSECRET = 'd497e6d35d765454530cc9e1045cffdb';//mibo-real:7249f6968a64f60128eb629e37748dcb  test:9f8e18ff2d5fff9855df7b2dbc9a0d31   real:6ef22c0208fda1188b7d5bfae09dfe19  bh:7c3e1c58327ffc4c8c8b2eda68cabe33 八卦:b6e176ce3b2f63b1d0bb13eafc617a82 蜜播娱乐:d497e6d35d765454530cc9e1045cffdb
+	const APPID = 'wx25d7fec30752314f';//
+	const MCHID = ''; //
+	const KEY = ''; //
+	const APPSECRET = '1ea949d73cdda25dda89566b46a944f0';//
 
 
 
 
     //app端支付需要的配置 wxf91a7e689f98d15c  Android
-    const APPID_APP = 'wxf91a7e689f98d15c';// real  wxf91a7e689f98d15c  old wx3cf21f506b7cd9ad
-    const APPSECRET_APP = '0680cbdae4c7ecef8f92c9fc17654af2';//real 0680cbdae4c7ecef8f92c9fc17654af2    old 18fd6025d3f52d8167e9f973f58c7332
-    const MCHID_APP = '1357976702';//real 1357976702    old 1302829601
-    const KEY_APP = '98lasfjd9asfd0asdfLASDF90asf8900';//real   98lasfjd9asfd0asdfLASDF90asf8900    old     duwpojfw23j02jrdfjWWEREW49676416
+    const APPID_APP = '';//
+    const APPSECRET_APP = '';//
+    const MCHID_APP = '';//
+    const KEY_APP = '';//
 
 	//=======【证书路径设置】=====================================
 	/**
@@ -74,10 +74,10 @@ class WxPayConfig
      * @var array 支付参数
      */
     private static $config = [
-        'APPID'        => 'wx99d2096812de10d1', //微信公众号ID
-        'MCHID'        => '1421882302', //微信商户号ID
-        'APPSECRET'    => '6906f81dbf3fd48bc974ad3a2698581c', //公众号secert
-        'KEY'          => 'hangzhoumibokejiwangluoyouxiango', //商户支付密钥
+        'APPID'        => '', //微信公众号ID
+        'MCHID'        => '', //微信商户号ID
+        'APPSECRET'    => '', //公众号secert
+        'KEY'          => '', //商户支付密钥
         'NOTIFY_URL'   => '/wxpay/wxpay_notify_app_other', //回调URL
         'SSLCERT_PATH' => '../cert/apiclient_cert.pem', //证书路径cert
         'SSLKEY_PATH'  => '../cert/apiclient_cert.pem', //证书路径key

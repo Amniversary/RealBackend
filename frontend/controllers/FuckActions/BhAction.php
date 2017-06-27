@@ -93,7 +93,9 @@ class BhAction extends Action
 {
     public function run()
     {
-
+        print_r(\Yii::$app->getBasePath());
+        echo "<br/>";
+        print_r(\Yii::$app->getVendorPath());
         exit;
         \Yii::$app->cache->set('aa','123');
         $rst = \Yii::$app->cache->get('aa');

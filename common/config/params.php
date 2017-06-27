@@ -19,4 +19,8 @@ return [
     'service_tel'=>'374529167',
     'is_maintain'=>'0', //TODO: 维护状态
     'activity_key'=>'Wg9Y3PRwr8eNOwMToQqpSrGpv9uw0jlPyMbVVTuT',
+    'wechat_params'=>[
+        'token'=>'hongbao',
+        'key'=>'63n65FMYpIdj2FvUiH7M9rhG0susnRrcKXzZg86h0fK',
+    ],
 ];
