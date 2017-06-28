@@ -1,5 +1,4 @@
 <?php
-
 namespace common\components\wxverify;
 /**
  * error code 说明.

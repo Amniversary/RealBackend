@@ -884,17 +884,17 @@ CREATE TABLE IF NOT EXISTS `mb_sum_reward_tickets` (
 CREATE TABLE IF NOT EXISTS `mb_system_params` (
 `params_id` int(11) NOT NULL,
   `group_id` int(11) DEFAULT NULL COMMENT '分组id',
-  `code` varchar(100) DEFAULT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `discribtion` varchar(100) DEFAULT NULL,
-  `value1` varchar(100) DEFAULT NULL,
-  `value2` varchar(100) DEFAULT NULL,
-  `value3` varchar(100) DEFAULT NULL,
-  `remark1` varchar(100) DEFAULT NULL,
-  `remark2` varchar(100) DEFAULT NULL,
-  `remark3` varchar(100) DEFAULT NULL,
-  `remark4` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=38 ;
+  `code` varchar(100) DEFAULT NULL COMMENT '系统code参数',
+  `title` varchar(100) DEFAULT NULL COMMENT '标题',
+  `discribtion` varchar(100) DEFAULT NULL COMMENT '信息描述',
+  `value1` varchar(100) DEFAULT NULL COMMENT '内容值1',
+  `value2` varchar(100) DEFAULT NULL COMMENT '内容值2',
+  `value3` varchar(100) DEFAULT NULL COMMENT '内容值3',
+  `remark1` varchar(100) DEFAULT NULL COMMENT '备用字段1',
+  `remark2` varchar(100) DEFAULT NULL COMMENT '备用字段2',
+  `remark3` varchar(100) DEFAULT NULL COMMENT '备用字段3',
+  `remark4` varchar(100) DEFAULT NULL COMMENT '备用字段4'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=0 ;
 
 --
 -- 转存表中的数据 `mb_system_params`

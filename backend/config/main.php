@@ -61,7 +61,7 @@ return [
             'showScriptName'=> false,//隐藏index.php
             //'suffix'=> '.html',//后缀，如果设置了此项，那么浏览器地址栏就必须带上.html后缀，否则会报404错误
             'rules'=> [
-                //'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+                'wechat/<appid:\w+>/callback'=>'wechat/callback',
             ],
         ],
     ],

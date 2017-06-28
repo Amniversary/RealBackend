@@ -1,8 +1,7 @@
 <?php
-
 namespace common\components\wxverify;
-use yii\base\Exception;
 
+use yii\base\Exception;
 
 /**
  * SHA1 class

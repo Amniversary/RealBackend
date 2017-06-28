@@ -54,12 +54,10 @@ class WXBizMsgCrypt
 		if ($ret != 0) {
 			return $ret;
 		}
-
 		if ($timeStamp == null) {
 			$timeStamp = time();
 		}
 		$encrypt = $array[1];
-
 		//生成安全签名
 		$sha1 = new SHA1;
 		$array = $sha1->getSHA1($this->token, $timeStamp, $nonce, $encrypt);
@@ -68,7 +66,6 @@ class WXBizMsgCrypt
 			return $ret;
 		}
 		$signature = $array[1];
-
 		//生成发送的xml
 		$xmlparse = new XMLParse;
 		$encryptMsg = $xmlparse->generate($encrypt, $signature, $timeStamp, $nonce);

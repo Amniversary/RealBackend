@@ -9,8 +9,10 @@
 namespace backend\controllers;
 
 
+use backend\business\WeChatUtil;
 use common\components\wxpay\lib\WxPayConfig;
 use common\components\wxverify\WXBizMsgCrypt;
+use common\models\Authorization;
 use yii\web\Controller;
 
 class AuthorizedController extends Controller
@@ -18,29 +20,32 @@ class AuthorizedController extends Controller
     public $enableCsrfValidation = false;
 
     public function actionTest(){
-        echo "<pre>";
-        $encrypt = 'k8laj0NvJbaUAsLH3VNIMVlSKIUzcoceGXO006ehVP+2PiMgBoNwBPkX9gcXre4o8nyCM0MROGZc67wdW13A0nTE1itdav4KqGqkoQYP/mzPK5/mphylL46U/EioEUvbPro4SpFTLZKX7a5QEqxIpfJsXZJaFJsLClHHTRgQoD/SIX1U4V1pb1bz64EaNCJnCuuioqxWxYx4l7XQ6yDhDPXyWefDdras1UyAnXMpWK2FcZJv8ce9tK1BusFp+DI/r5jt9zNiQnXq2MeJlYY9C3/CozpXWYXGqUh8twBdrLWCr4Fu7FNF4l5VdabSsD6IIQJqVEyWzhA8Ry/8JeD6Y+XTLX1OvYMYvrMxacHmwEFmM4BsyS5X37Qa3vFtbjphItiZvRzCK7/vfN1q5H2tR102ADaMqVCJCOw1XflZENAc2MFEY0lkiX5GqNtF2W5IQ1OoI9OjWmB/anZdO6tdxw==';
-        $format = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>";
-        $form_xml = sprintf($format,$encrypt);
-        var_dump('form_xml:   '.$form_xml);
-        echo "<br />";
-        print_r('encrypt :  '.$encrypt);
+
+        $AppInfo = Authorization::findOne(['app_id'=>WxPayConfig::APPID]);
+        $url = sprintf('https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=%s&pre_auth_code=%s&redirect_uri=%s',
+            $AppInfo->app_id,
+            $AppInfo->pre_auth_code,
+            'wxmp.gatao.cn\wxnotice\cellback'
+            );
+
+        echo '<a href="'.$url .'">点击授权</a>';
+
     }
 
     public function actionIndex(){
         echo "<pre>";
         //TODO: 获取$_GET参数
         $data = [
-            'signature' => '6737f3efa301eb09d47b3b46ea966709b3bd0db4',
-            'timestamp' => '1498543281',
-            'nonce' => '1302082950',
+            'signature' => '6554ee618d08ba93818e7858111c366c41445ad1',
+            'timestamp' => '1498546880',
+            'nonce' => '906464788',
             'encrypt_type' => 'aes',
-            'msg_signature' => '0547005e08fc300c710d0838f18c4ce4f7a032c1'
+            'msg_signature' => 'f3c5e6319a31a3b830e0eaa62fb1939c06161334',
         ];
         //TODO: 获取Xml数据信息
         $postStr = "<xml>
     <AppId><![CDATA[wx25d7fec30752314f]]></AppId>
-    <Encrypt><![CDATA[4gimhDmi0lwH6dN892u4FYzyYrox3bCeXehW+IRYZ/btgcNUjByw6d37zutmaczQoDtXIcbXeQUUDvOZ7yWO14bB7U4pSFX3hLwkq5DTOTfxXhXGYUv6B/AXstb3IKq+xMST2WUun9hvBpJ0xStDFGeR+AGo2YCCGH8T9XIXgPUYJE0zvLo6cxsRvGPIYekYNpIqIe3wqx8CRk+uNonLBH/IWMhH2bWfavnyjzDa9j5WE8cQZW1i1+h5xNSUAMF+Q6blK4s6GsJYf02Pm4wbSXr1B5xqGkCnakOI78pYZtQJxWfCiYMPhYDc7iPvFGkAeK0jLQZfWVg+gl2sZm8vJ8svBe3l4o7YlKGNz8Brg6s9/ruKspPgejoD6NqMsR0PpQkpKjf5K9baZe+56wf5Csdo9yDnGUBxBIN2/VtcBwmgkThIDY2v0HLTo7a5Ndpi6EEV2qVE7zGDm2/W5tJGGg==]]></Encrypt>
+    <Encrypt><![CDATA[xnRhwluCZmHuQpXv7yR/sXYVWuiDDaCqesSPdH5HLsZLGdec86KsiDfoBca/Qsuehk4AYJZgL30vavcJHUdBH928cYXzyG691Y0NY04wFx6yimn7MnHih2Wp61oWbLGPV0H5HdzKtOf3EvVdSosrPkYoVLg6R88oAT8Gpgh6fLQuqhNQI/yGRks1G/2EOfJ95z8FX76iKkQRY/lShUEPPz2C08MslWNy1AO4VrtPMyGGKqL3rIlViZsaVk0NOCoW6L84LaKT/MW1YhlblRgpuum8+k8UAc6wRXQv7mRNcl3JizYLab1VW0MtUZ1UD+ApWgF6NP1n465uU6t7HRFR8xDcWRqYiFPnVVFcmkXgove4pzXdg75seM/noeX0ETyJqqnYibfDvlTx7iKriJPBJjBSp+ViSuqmH428MshdIG4IKJgLZFM6QgrimVK5NlGqy9hQCKYdYMukDxLM1HHuVA==]]></Encrypt>
 </xml>";
         if(!empty($postStr)){
             $encryptMsg = $postStr;
@@ -93,6 +98,8 @@ class AuthorizedController extends Controller
             exit;
         }
         $encryptMsg = $postStr;
+        \Yii::error('Data: '.var_export($data,true));
+        \Yii::error('encrypt : '. $encryptMsg);
         //TODO:  判断加密类型
         if($data['encrypt_type'] == 'aes'){
             $xml_tree = new \DOMDocument();
@@ -109,14 +116,39 @@ class AuthorizedController extends Controller
             $decryptMsg = '';
             //TODO: 解密Xml内容
             $errorCode = $pc->decryptMsg($data['msg_signature'],$data['timestamp'],$data['nonce'],$form_xml,$decryptMsg);
+            \Yii::error('code : '.$errorCode);
             if($errorCode == 0){
                 $postObj = simplexml_load_string($decryptMsg,"SimpleXMLElement",LIBXML_NOCDATA);
                 $data = (array)$postObj;
                 \Yii::error("backData: ".var_export($data,true));
-                return $data;
+                $record = Authorization::findOne(['app_id'=>$data['AppId']]);
+                if($record){
+                    $record->create_time = $data['CreateTime'];
+                    $record->verify_ticket = $data['ComponentVerifyTicket'];
+                }else{
+                    $record = new Authorization();
+                    $record->app_id = $data['AppId'];
+                    $record->create_time = $data['CreateTime'];
+                    $record->verify_ticket = $data['ComponentVerifyTicket'];
+                }
+                if(!$record->save()){
+                    \Yii::error('保存授权码Ticket失败 ：'.var_export($record->getErrors(),true));
+                }
+                echo "success";
             }
         }
     }
+
+    public function actionGettoken()
+    {
+        $wechat = new WeChatUtil(WxPayConfig::APPID,WxPayConfig::APPSECRET);
+        if(!$wechat->getAuthCode($error)){
+            print_r($error);
+            exit;
+        }
+        echo "ok";
+    }
+
 }
 /*
         $_GET = [

@@ -45,7 +45,7 @@ return [
         ],
         'request' => [
             'enableCookieValidation' => false,
-            'enableCsrfValidation' => FALSE,
+            'enableCsrfValidation' => false,
         ],
     ],
     'params' => $params,
