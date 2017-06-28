@@ -27,6 +27,9 @@ class WxPayConfig
 	const MCHID = ''; //
 	const KEY = ''; //
 	const APPSECRET = '1ea949d73cdda25dda89566b46a944f0';//
+    const ENCRYPT_KEY = '63n65FMYpIdj2FvUiH7M9rhG0susnRrcKXzZg86h0fK';
+    const TOKEN = 'hongbao';//
+
 
 
 

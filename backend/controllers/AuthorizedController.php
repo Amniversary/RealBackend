@@ -10,6 +10,7 @@ namespace backend\controllers;
 
 
 use backend\business\WeChatUtil;
+use backend\components\WeChatComponent;
 use common\components\wxpay\lib\WxPayConfig;
 use common\components\wxverify\WXBizMsgCrypt;
 use common\models\Authorization;
@@ -25,7 +26,7 @@ class AuthorizedController extends Controller
         $url = sprintf('https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=%s&pre_auth_code=%s&redirect_uri=%s',
             $AppInfo->app_id,
             $AppInfo->pre_auth_code,
-            'wxmp.gatao.cn\wxnotice\cellback'
+            'http://wxmp.gatao.cn/wechat/callbackurl' //wechat/callbackurl
             );
 
         echo '<a href="'.$url .'">点击授权</a>';
@@ -81,62 +82,33 @@ class AuthorizedController extends Controller
 
     /**
      * 解密回调URl中XML的加密信息
-     * @return array
+     * @return string
      */
     public function actionNotice()
     {
-        //TODO: 获取$_GET参数
-        $data = $_REQUEST;
-        if(!isset($data)){
-            \Yii::error('data is not isset: '. var_export($data,true));
-            exit;
+        $WeChat = new WeChatComponent();
+        $record = Authorization::findOne(['app_id'=>$WeChat->appId]);
+        $data = $WeChat->decryptMsg;
+
+        $infoType = isset($data['InfoType']) ? $data['InfoType']: '';
+        if(!empty($infoType) && $infoType == 'unauthorized'){
+            $authorzer_appid = $data['AuthorizerAppid'];
+            return 'success';
         }
-        //TODO: 获取Xml数据信息
-        $postStr = file_get_contents("php://input");
-        if(empty($postStr)){
-            echo "Not Xml";
-            exit;
+        //TODO: 保存数据到数据库
+        if($record){
+            $record->create_time = $data['CreateTime'];
+            $record->verify_ticket = $data['ComponentVerifyTicket'];
+        }else{
+            $record = new Authorization();
+            $record->app_id = $data['AppId'];
+            $record->create_time = $data['CreateTime'];
+            $record->verify_ticket = $data['ComponentVerifyTicket'];
         }
-        $encryptMsg = $postStr;
-        \Yii::error('Data: '.var_export($data,true));
-        \Yii::error('encrypt : '. $encryptMsg);
-        //TODO:  判断加密类型
-        if($data['encrypt_type'] == 'aes'){
-            $xml_tree = new \DOMDocument();
-            $xml_tree->loadXML($encryptMsg);
-            $ary = $xml_tree->getElementsByTagName('Encrypt');
-            //TODO: 获取Xml里加密信息encrypt
-            $encrypt = $ary->item(0)->nodeValue;
-            //TODO: 转换成可用的Xml格式
-            $format = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>";
-            $form_xml = sprintf($format,$encrypt);
-            $app_id = WxPayConfig::APPID;
-            $wx_params = \Yii::$app->params['wechat_params'];
-            $pc = new WXBizMsgCrypt($wx_params['token'],$wx_params['key'],$app_id);
-            $decryptMsg = '';
-            //TODO: 解密Xml内容
-            $errorCode = $pc->decryptMsg($data['msg_signature'],$data['timestamp'],$data['nonce'],$form_xml,$decryptMsg);
-            \Yii::error('code : '.$errorCode);
-            if($errorCode == 0){
-                $postObj = simplexml_load_string($decryptMsg,"SimpleXMLElement",LIBXML_NOCDATA);
-                $data = (array)$postObj;
-                \Yii::error("backData: ".var_export($data,true));
-                $record = Authorization::findOne(['app_id'=>$data['AppId']]);
-                if($record){
-                    $record->create_time = $data['CreateTime'];
-                    $record->verify_ticket = $data['ComponentVerifyTicket'];
-                }else{
-                    $record = new Authorization();
-                    $record->app_id = $data['AppId'];
-                    $record->create_time = $data['CreateTime'];
-                    $record->verify_ticket = $data['ComponentVerifyTicket'];
-                }
-                if(!$record->save()){
-                    \Yii::error('保存授权码Ticket失败 ：'.var_export($record->getErrors(),true));
-                }
-                echo "success";
-            }
+        if(!$record->save()){
+            \Yii::error('保存授权码Ticket失败 ：'.var_export($record->getErrors(),true));
         }
+        return 'success';
     }
 
     public function actionGettoken()

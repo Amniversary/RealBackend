@@ -25,7 +25,7 @@ class WeChatUtil
     }
 
     /**
-     * 获取微信授权token
+     * 获取微信授权 component_access_token
      * @return bool
      */
     public function getToken(&$error)
@@ -43,7 +43,6 @@ class WeChatUtil
             $error = '没有获取到对应Token';
             return false;
         }
-        //\Yii::error('rst :'.var_export($rst,true));
         $AppInfo->access_token = $rst['component_access_token'];
         if(!$AppInfo->save()){
             $error = '保存微信Token失败';
@@ -78,4 +77,5 @@ class WeChatUtil
         }
         return true;
     }
+
 }

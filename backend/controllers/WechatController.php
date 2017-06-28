@@ -9,28 +9,47 @@
 namespace backend\controllers;
 
 
+use backend\business\WeChatUtil;
+use backend\components\WeChatComponent;
+use common\components\WeiXinUtil;
+use common\components\wxpay\lib\WxPayConfig;
+use common\models\Authorization;
 use yii\web\Controller;
 
 class WechatController extends Controller
 {
+    public $enableCsrfValidation = false;
+
     public function actionTest()
     {
         echo "ok";
         exit;
     }
 
+    /**
+     *  接收微信回调
+     */
     public function actionCallback()
     {
-        echo "<pre>";
-        echo "is callback";
-        echo "<br/>";
-        $rules = (\Yii::$app->request->getPathInfo());
-        $AppId = $this->getRulesAppid($rules);
-        print_r($rules);
-        echo "<br/>";
+        $WeChat = new WeChatComponent();
+        $data = $WeChat->decryptMsg;
+        \Yii::error('dataInfo:'.var_export($data,true));
+        \Yii::error('openid '. $WeChat->openid . '   AppId:' . $WeChat->AppId);
 
+
+        echo 'success';
         exit;
     }
+
+
+    public function actionCallbackurl()
+    {
+
+        $AppInfo = Authorization::findOne(['appid'=>WxPayConfig::APPID]);
+
+        echo 'success';
+    }
+
 
     /**
      * 截取微信回调的动态路由
