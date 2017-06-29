@@ -10,18 +10,22 @@ namespace backend\business;
 
 
 use common\components\UsualFunForNetWorkHelper;
+use common\components\wxpay\lib\WxPayConfig;
 use common\models\Authorization;
+use common\models\AuthorizationList;
 
 class WeChatUtil
 {
     private $appId;
     private $appsecret;
+    public $AppInfo;
 
 
-    public function __construct($app_id,$appsecret)
+    public function __construct()
     {
-        $this->appId = $app_id;
-        $this->appsecret = $appsecret;
+        $this->appId = WxPayConfig::APPID;
+        $this->appsecret = WxPayConfig::APPSECRET;
+        $this->AppInfo = Authorization::findOne(['app_id'=>WxPayConfig::APPID]);
     }
 
     /**
@@ -30,11 +34,10 @@ class WeChatUtil
      */
     public function getToken(&$error)
     {
-        $AppInfo = Authorization::findOne(['app_id'=>$this->appId]);
         $data = [
             'component_appid'=>$this->appId,
             'component_appsecret'=>$this->appsecret,
-            'component_verify_ticket'=>$AppInfo->verify_ticket
+            'component_verify_ticket'=>$this->AppInfo->verify_ticket
         ];
         $json = json_encode($data);
         $url = 'https://api.weixin.qq.com/cgi-bin/component/api_component_token';
@@ -43,10 +46,10 @@ class WeChatUtil
             $error = '没有获取到对应Token';
             return false;
         }
-        $AppInfo->access_token = $rst['component_access_token'];
-        if(!$AppInfo->save()){
+        $this->AppInfo->access_token = $rst['component_access_token'];
+        if(!$this->AppInfo->save()){
             $error = '保存微信Token失败';
-            \Yii::error($error. ' ：'. var_export($AppInfo->getErrors(),true));
+            \Yii::error($error. ' ：'. var_export($this->AppInfo->getErrors(),true));
             return false;
         }
         return true;
@@ -58,24 +61,128 @@ class WeChatUtil
      */
     public function getAuthCode(&$error)
     {
-        $AppInfo = Authorization::findOne(['app_id'=>$this->appId]);
         $data = [
             'component_appid'=>$this->appId
         ];
         $json = json_encode($data);
-        $url = sprintf('https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=%s',$AppInfo->access_token);
+        $url = sprintf('https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=%s',
+            $this->AppInfo->access_token);
         $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
         if(empty($rst)){
             $error = '获取预授权码auth_code失败';
             return false;
         }
-        $AppInfo->pre_auth_code = $rst['pre_auth_code'];
-        if(!$AppInfo->save()){
+        $this->AppInfo->pre_auth_code = $rst['pre_auth_code'];
+        if(!$this->AppInfo->save()){
             $error = '保存微信预授权码失败';
-            \Yii::error($error. ' ：'. var_export($AppInfo->getErrors(),true));
+            \Yii::error($error. ' ：'. var_export($this->AppInfo->getErrors(),true));
             return false;
         }
         return true;
     }
 
+    /**
+     * 使用授权码换取公众号的接口调用凭据和授权信息
+     * @param $query_auth
+     * @param $error
+     * @return bool
+     */
+    public function getQueryAuth($query_auth,&$rst,&$error)
+    {
+        $data = [
+            'component_appid'=>$this->appId,
+            'authorization_code'=>$query_auth,
+        ];
+        $json = json_encode($data);
+        $url = sprintf('https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=%s',
+            $this->AppInfo->access_token);
+        $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
+        if(empty($rst)){
+            $error = '获取接口调用凭据和授权信息失败';
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * 获取授权方的帐号基本信息
+     * @param $authorize_appid
+     * @param $outInfo
+     * @param $error
+     * @return bool
+     */
+    public function getAuthorizeInfo($authorize_appid,&$outInfo,&$error)
+    {
+        $data = [
+            'component_appid'=>$this->appId,
+            'authorizer_appid'=>$authorize_appid,
+        ];
+        $json = json_encode($data);
+        $url = sprintf('https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token=%s',
+            $this->AppInfo->access_token);
+        $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
+        if(empty($rst)){
+            $error = '获取授权公众号基础信息失败';
+            return false;
+        }
+        $outInfo = $rst;
+        return true;
+    }
+
+    /**
+     * 保存授权信息
+     * @param $AuthInfo
+     * @param $authorizer_info
+     * @param $error
+     * @return bool
+     */
+    public function SaveAuthInfo($AuthInfo,$authorizer_info,&$error)
+    {
+        $model = AuthorizationList::findOne(['authorizer_appid'=>$AuthInfo['authorizer_appid']]);
+        if($model){
+            $model->authorizer_access_token = $AuthInfo['authorizer_access_token'];
+            $model->authorizer_refresh_token = $AuthInfo['authorizer_refresh_token'];
+            $model->func_info = $AuthInfo['func_info'];
+            $model->nick_name = $authorizer_info['nick_name'];
+            $model->head_img = $authorizer_info['head_img'];
+            $model->service_type_info = $authorizer_info['service_type_info']['id'];
+            $model->verify_type_info = $authorizer_info['verify_type_info']['id'];
+            $model->alias = $authorizer_info['alias'];
+            $model->qrcode_url = $authorizer_info['qrcode_url'];
+            $model->business_info = json_encode($authorizer_info['business_info']);
+            $model->signature = $authorizer_info['signature'];
+            $model->authorization_info = json_encode($AuthInfo);
+            $model->update_time = date('Y-m-d H:i:s');
+        }else{
+            $model = new AuthorizationList();
+            $model->authorizer_appid = $AuthInfo['authorizer_appid'];
+            $model->authorizer_access_token = $AuthInfo['authorizer_access_token'];
+            $model->authorizer_refresh_token = $AuthInfo['authorizer_refresh_token'];
+            $model->func_info = json_encode($AuthInfo['func_info']);
+            $model->status = 1;
+            $model->user_id = \Yii::$app->user->id;
+            $model->nick_name = $authorizer_info['nick_name'];
+            $model->head_img = $authorizer_info['head_img'];
+            $model->service_type_info = $authorizer_info['service_type_info']['id'];
+            $model->verify_type_info = $authorizer_info['verify_type_info']['id'];
+            $model->user_name = $authorizer_info['user_name'];
+            $model->alias = $authorizer_info['alias'];
+            $model->qrcode_url = $authorizer_info['qrcode_url'];
+            $model->business_info = json_encode($authorizer_info['business_info']);
+            $model->idc = $authorizer_info['idc'];
+            $model->principal_name = $authorizer_info['principal_name'];
+            $model->signature = $authorizer_info['signature'];
+            $model->authorization_info = json_encode($AuthInfo);
+            $model->create_time = date('Y-m-d H:i:s');
+            $model->update_time = '';
+        }
+
+        if(!$model->save()) {
+            $error = '保存授权公众号信息失败';
+            \Yii::error($error .' ：' .var_export($model->getErrors(),true));
+            return false;
+        }
+        return true;
+    }
 }

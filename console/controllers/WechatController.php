@@ -10,7 +10,6 @@ namespace console\controllers;
 
 
 use backend\business\WeChatUtil;
-use common\components\wxpay\lib\WxPayConfig;
 use yii\console\Controller;
 
 class WechatController extends Controller
@@ -20,7 +19,7 @@ class WechatController extends Controller
      */
     public function actionGettoken()
     {
-        $wechat = new WeChatUtil(WxPayConfig::APPID,WxPayConfig::APPSECRET);
+        $wechat = new WeChatUtil();
         if(!$wechat->getToken($error)){
             echo "$error \n";
             exit;
@@ -35,7 +34,7 @@ class WechatController extends Controller
      */
     public function actionGetauthcode()
     {
-        $wechat = new WeChatUtil(WxPayConfig::APPID,WxPayConfig::APPSECRET);
+        $wechat = new WeChatUtil();
         if(!$wechat->getAuthCode($error)){
             echo "$error\n";
             exit;

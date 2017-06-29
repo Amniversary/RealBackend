@@ -10,10 +10,8 @@ namespace backend\controllers;
 
 
 use backend\business\WeChatUtil;
+use backend\components\ExitUtil;
 use backend\components\WeChatComponent;
-use common\components\WeiXinUtil;
-use common\components\wxpay\lib\WxPayConfig;
-use common\models\Authorization;
 use yii\web\Controller;
 
 class WechatController extends Controller
@@ -22,32 +20,59 @@ class WechatController extends Controller
 
     public function actionTest()
     {
-        echo "ok";
-        exit;
+
     }
 
     /**
-     *  接收微信回调
+     *  接收微信事件回调
      */
     public function actionCallback()
     {
+       /* data Array
+        (
+            [ToUserName] => gh_364f29031c56
+            [FromUserName] => ou0ZXv5uSoetzq_FeIjXYXrpOY_4
+            [CreateTime] => 1498640826
+            [MsgType] => event
+            [Event] => VIEW
+            [EventKey] => http://www.cswanda.com/movie/play.html
+            [MenuId] => 414144564
+        )*/
+        echo "<pre>";
         $WeChat = new WeChatComponent();
         $data = $WeChat->decryptMsg;
-        \Yii::error('dataInfo:'.var_export($data,true));
-        \Yii::error('openid '. $WeChat->openid . '   AppId:' . $WeChat->AppId);
+        \Yii::error('data:'.var_export($data,true));
 
-
-        echo 'success';
-        exit;
+        return 'success';
     }
 
-
+    /**
+     * 微信公众号授权成功回调接口
+     * @return \yii\web\Response
+     */
     public function actionCallbackurl()
     {
-
-        $AppInfo = Authorization::findOne(['appid'=>WxPayConfig::APPID]);
-
-        echo 'success';
+        $data = $_REQUEST;
+        if(empty($data['auth_code'])){
+            \Yii::error('auth_code is empty :' . var_export($data,true));
+            ExitUtil::ExitWithMessage('获取auth_code失败，auth_code为空');
+        }
+        $WeChat = new WeChatUtil();
+        //TODO: 获取授权公众号的授权数据
+        if(!$WeChat->getQueryAuth($data['auth_code'],$res,$error)){
+            ExitUtil::ExitWithMessage($error);
+        }
+        $AuthInfo = $res['authorization_info'];
+        //TODO: 获取授权人帐号基本信息和公众号的基本信息
+        if(!$WeChat->getAuthorizeInfo($AuthInfo['authorizer_appid'],$outInfo,$error)){
+            ExitUtil::ExitWithMessage($error);
+        }
+        $authorizer_info = $outInfo['authorizer_info'];
+        //TODO: 保存授权数据
+        if(!$WeChat->SaveAuthInfo($AuthInfo,$authorizer_info,$error)){
+            ExitUtil::ExitWithMessage($error);
+        }
+        return $this->redirect(['site/index']);
     }
 
 

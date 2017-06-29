@@ -1,0 +1,93 @@
+<?php
+
+namespace common\models;
+
+use Yii;
+
+/**
+ * This is the model class for table "{{%_authorization_list}}".
+ *
+ * @property integer $record_id
+ * @property string $authorizer_appid
+ * @property string $authorizer_access_token
+ * @property string $authorizer_refresh_token
+ * @property string $func_info
+ * @property integer $status
+ * @property integer $user_id
+ * @property string $nick_name
+ * @property string $head_img
+ * @property integer $service_type_info
+ * @property integer $verify_type_info
+ * @property string $user_name
+ * @property string $alias
+ * @property string $qrcode_url
+ * @property string $business_info
+ * @property integer $idc
+ * @property string $principal_name
+ * @property string $signature
+ * @property string $authorization_info
+ * @property string $create_time
+ * @property string $update_time
+ * @property string $remark1
+ * @property string $remark2
+ * @property string $remark3
+ * @property string $remark4
+ */
+class AuthorizationList extends \yii\db\ActiveRecord
+{
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '{{%_authorization_list}}';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['authorizer_appid', 'authorizer_access_token', 'authorizer_refresh_token', 'func_info', 'status', 'user_id', 'nick_name', 'head_img', 'service_type_info', 'verify_type_info', 'user_name', 'alias', 'qrcode_url', 'business_info', 'idc', 'principal_name', 'signature', 'authorization_info', 'create_time', 'update_time', 'remark1', 'remark2', 'remark3', 'remark4'], 'required'],
+            [['status', 'user_id', 'service_type_info', 'verify_type_info', 'idc'], 'integer'],
+            [['create_time', 'update_time'], 'safe'],
+            [['authorizer_appid', 'nick_name', 'user_name', 'alias', 'principal_name', 'signature', 'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
+            [['authorizer_access_token', 'authorizer_refresh_token', 'func_info', 'head_img', 'qrcode_url', 'business_info', 'authorization_info'], 'string', 'max' => 300],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'record_id' => '记录 ID',
+            'authorizer_appid' => '授权AppId',
+            'authorizer_access_token' => '授权令牌',
+            'authorizer_refresh_token' => '授权刷新令牌凭证',
+            'func_info' => '授权权限集json格式',
+            'status' => '状态',
+            'user_id' => '操作人ID',
+            'nick_name' => '授权方昵称',
+            'head_img' => '授权方头像',
+            'service_type_info' => '公众号类型',
+            'verify_type_info' => '认证类型',
+            'user_name' => '公众号原始ID',
+            'alias' => '公众微信号',
+            'qrcode_url' => '二维码Url',
+            'business_info' => '功能开通信息',
+            'idc' => 'Idc',
+            'principal_name' => '公众号主体类型',
+            'signature' => '功能签名',
+            'authorization_info' => '授权信息主体',
+            'create_time' => '授权时间',
+            'update_time' => '更新时间',
+            'remark1' => '备用字段1',
+            'remark2' => '备用字段2',
+            'remark3' => '备用字段3',
+            'remark4' => '备用字段4',
+        ];
+    }
+}

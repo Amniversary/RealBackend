@@ -9,10 +9,8 @@
 namespace backend\controllers;
 
 
-use backend\business\WeChatUtil;
 use backend\components\WeChatComponent;
 use common\components\wxpay\lib\WxPayConfig;
-use common\components\wxverify\WXBizMsgCrypt;
 use common\models\Authorization;
 use yii\web\Controller;
 
@@ -20,6 +18,9 @@ class AuthorizedController extends Controller
 {
     public $enableCsrfValidation = false;
 
+    /**
+     * 测试公众号授权接口
+     */
     public function actionTest(){
 
         $AppInfo = Authorization::findOne(['app_id'=>WxPayConfig::APPID]);
@@ -33,53 +34,6 @@ class AuthorizedController extends Controller
 
     }
 
-    public function actionIndex(){
-        echo "<pre>";
-        //TODO: 获取$_GET参数
-        $data = [
-            'signature' => '6554ee618d08ba93818e7858111c366c41445ad1',
-            'timestamp' => '1498546880',
-            'nonce' => '906464788',
-            'encrypt_type' => 'aes',
-            'msg_signature' => 'f3c5e6319a31a3b830e0eaa62fb1939c06161334',
-        ];
-        //TODO: 获取Xml数据信息
-        $postStr = "<xml>
-    <AppId><![CDATA[wx25d7fec30752314f]]></AppId>
-    <Encrypt><![CDATA[xnRhwluCZmHuQpXv7yR/sXYVWuiDDaCqesSPdH5HLsZLGdec86KsiDfoBca/Qsuehk4AYJZgL30vavcJHUdBH928cYXzyG691Y0NY04wFx6yimn7MnHih2Wp61oWbLGPV0H5HdzKtOf3EvVdSosrPkYoVLg6R88oAT8Gpgh6fLQuqhNQI/yGRks1G/2EOfJ95z8FX76iKkQRY/lShUEPPz2C08MslWNy1AO4VrtPMyGGKqL3rIlViZsaVk0NOCoW6L84LaKT/MW1YhlblRgpuum8+k8UAc6wRXQv7mRNcl3JizYLab1VW0MtUZ1UD+ApWgF6NP1n465uU6t7HRFR8xDcWRqYiFPnVVFcmkXgove4pzXdg75seM/noeX0ETyJqqnYibfDvlTx7iKriJPBJjBSp+ViSuqmH428MshdIG4IKJgLZFM6QgrimVK5NlGqy9hQCKYdYMukDxLM1HHuVA==]]></Encrypt>
-</xml>";
-        if(!empty($postStr)){
-            $encryptMsg = $postStr;
-            //TODO:  判断加密类型
-            if($data['encrypt_type'] == 'aes'){
-                $xml_tree = new \DOMDocument();
-                $xml_tree->loadXML($encryptMsg);
-                $ary = $xml_tree->getElementsByTagName('Encrypt');
-                //TODO: 获取Xml里加密信息encrypt
-                $encrypt = $ary->item(0)->nodeValue;
-                $format = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>";
-                $form_xml = sprintf($format,$encrypt);
-                $app_id = WxPayConfig::APPID;
-                $wx_params = \Yii::$app->params['wechat_params'];
-                $pc = new WXBizMsgCrypt($wx_params['token'],$wx_params['key'],$app_id);
-                $decryptMsg = '';
-                //TODO: 解密Xml内容
-                $errorCode = $pc->decryptMsg($data['msg_signature'],$data['timestamp'],$data['nonce'],$form_xml,$decryptMsg);
-                print_r('code : '.$errorCode);
-                echo "<br />";
-                if($errorCode == 0){
-                    $postObj = simplexml_load_string($decryptMsg,"SimpleXMLElement",LIBXML_NOCDATA);
-                    $data = (array)$postObj;
-                    print_r($data);
-                    exit;
-                }
-            }
-        }else{
-            echo "no postStr";
-            exit;
-        }
-    }
-
     /**
      * 解密回调URl中XML的加密信息
      * @return string
@@ -87,12 +41,13 @@ class AuthorizedController extends Controller
     public function actionNotice()
     {
         $WeChat = new WeChatComponent();
-        $record = Authorization::findOne(['app_id'=>$WeChat->appId]);
+        $record = Authorization::findOne(['app_id'=>$WeChat->webAppId]);
         $data = $WeChat->decryptMsg;
 
         $infoType = isset($data['InfoType']) ? $data['InfoType']: '';
         if(!empty($infoType) && $infoType == 'unauthorized'){
             $authorzer_appid = $data['AuthorizerAppid'];
+
             return 'success';
         }
         //TODO: 保存数据到数据库
@@ -109,16 +64,6 @@ class AuthorizedController extends Controller
             \Yii::error('保存授权码Ticket失败 ：'.var_export($record->getErrors(),true));
         }
         return 'success';
-    }
-
-    public function actionGettoken()
-    {
-        $wechat = new WeChatUtil(WxPayConfig::APPID,WxPayConfig::APPSECRET);
-        if(!$wechat->getAuthCode($error)){
-            print_r($error);
-            exit;
-        }
-        echo "ok";
     }
 
 }

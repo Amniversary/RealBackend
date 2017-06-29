@@ -45,7 +45,7 @@ class WeChatComponent extends Object
         $this->token = WxPayConfig::TOKEN;
         //TODO: 获取Xml数据信息
         $this->encryptMsg = file_get_contents("php://input");
-        $this->AppId = !empty($data['appid'])? $data['appid'] : '';
+        $this->AppId = \Yii::$app->request->get('appid','');
         $this->openid = !empty($data['openid'])? $data['openid'] : '';
         $this->encryptType = !empty($data['encrypt_type'])? $data['encrypt_type'] : '';
         $this->nonce = !empty($data['nonce'])? $data['nonce'] : '';
@@ -53,7 +53,7 @@ class WeChatComponent extends Object
         $this->signature = !empty($data['signature'])? $data['signature'] : '';
         $this->msgSignature = !empty($data['msg_signature'])? $data['msg_signature'] : '';
 
-        if(!empty($this->EncryptType)){
+        if(!empty($this->encryptType)){
             $encrypt = $this->XmlToArr($this->encryptMsg)['Encrypt'];
             $this->decryptMsg = $this->decryptArr($encrypt);
         } else{
@@ -92,12 +92,13 @@ class WeChatComponent extends Object
      */
     public function decrypt($encrypted,&$rst)
     {
+        $key = base64_decode($this->encryptKey . "=");
         try {
             //TODO: 使用BASE64对需要解密的字符串进行解码
             $ciphertext_dec = base64_decode($encrypted);
             $module = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
-            $iv = substr($this->key, 0, 16);
-            mcrypt_generic_init($module, $this->encryptKey, $iv);
+            $iv = substr($key, 0, 16);
+            mcrypt_generic_init($module, $key, $iv);
             //TODO: 解密
             $decrypted = mdecrypt_generic($module, $ciphertext_dec);
             mcrypt_generic_deinit($module);
