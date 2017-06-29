@@ -76,7 +76,7 @@ $gridColumns = [
         'filter'=>false
     ],
     [
-        'label'=>'登录时间',
+        'label'=>'最后登录时间',
         'attribute'=>'update_at',
         'value'=>function($model){
             return date('Y-m-d H:i:s',intval($model->update_at));

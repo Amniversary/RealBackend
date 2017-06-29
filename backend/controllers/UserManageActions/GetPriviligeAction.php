@@ -35,7 +35,7 @@ class GetpriviligeAction extends Action
             ->from(Menu::tableName() . 'mu')
             ->innerJoin(UserMenu::tableName(). 'um','mu.menu_id=um.menu_id')
             ->where([
-                'url'=>'usermanage/setprivelige',
+                'url'=>'usermanage/setprivilige',
                 'user_id' => \Yii::$app->user->identity->backend_user_id
             ])->one();
         return $this->controller->render('setpriviligelist',[

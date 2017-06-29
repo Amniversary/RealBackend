@@ -12,6 +12,7 @@ namespace backend\controllers;
 use backend\components\WeChatComponent;
 use common\components\wxpay\lib\WxPayConfig;
 use common\models\Authorization;
+use common\models\AuthorizationList;
 use yii\web\Controller;
 
 class AuthorizedController extends Controller
@@ -43,11 +44,15 @@ class AuthorizedController extends Controller
         $WeChat = new WeChatComponent();
         $record = Authorization::findOne(['app_id'=>$WeChat->webAppId]);
         $data = $WeChat->decryptMsg;
-
         $infoType = isset($data['InfoType']) ? $data['InfoType']: '';
         if(!empty($infoType) && $infoType == 'unauthorized'){
             $authorzer_appid = $data['AuthorizerAppid'];
-
+            $record = AuthorizationList::findOne(['authorzer_appid'=>$authorzer_appid]);
+            $record->status = 0;
+            $record->update_time = date('Y-m-d H:i:s');
+            if(!$record->save()){
+                \Yii::error('保存取消授权信息失败 ：'.var_export($record->getErrors(),true));
+            }
             return 'success';
         }
         //TODO: 保存数据到数据库

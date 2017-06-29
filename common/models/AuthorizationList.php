@@ -49,11 +49,12 @@ class AuthorizationList extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['authorizer_appid', 'authorizer_access_token', 'authorizer_refresh_token', 'func_info', 'status', 'user_id', 'nick_name', 'head_img', 'service_type_info', 'verify_type_info', 'user_name', 'alias', 'qrcode_url', 'business_info', 'idc', 'principal_name', 'signature', 'authorization_info', 'create_time', 'update_time', 'remark1', 'remark2', 'remark3', 'remark4'], 'required'],
+            [['authorizer_appid', 'authorizer_access_token', 'authorizer_refresh_token', 'authorization_info'], 'required'],
             [['status', 'user_id', 'service_type_info', 'verify_type_info', 'idc'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
             [['authorizer_appid', 'nick_name', 'user_name', 'alias', 'principal_name', 'signature', 'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
-            [['authorizer_access_token', 'authorizer_refresh_token', 'func_info', 'head_img', 'qrcode_url', 'business_info', 'authorization_info'], 'string', 'max' => 300],
+            [['authorizer_access_token', 'authorizer_refresh_token', 'head_img', 'qrcode_url', 'business_info'], 'string', 'max' => 300],
+            [['func_info', 'authorization_info'], 'string', 'max' => 1000],
         ];
     }
 
@@ -90,4 +91,20 @@ class AuthorizationList extends \yii\db\ActiveRecord
             'remark4' => '备用字段4',
         ];
     }
+
+    /**
+     * 获取公众号类型
+     * @param $status
+     * @return string
+     */
+    public function getServiceTypeInfo($status){
+        switch (intval($status)){
+            case 0: $rst = '订阅号';break;
+            case 1: $rst = '订阅号';break;
+            case 2: $rst = '服务号';break;
+            default: $rst = '未知类型';break;
+        }
+        return $rst;
+    }
+
 }
