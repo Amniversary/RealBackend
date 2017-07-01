@@ -52,9 +52,9 @@ class AuthorizationList extends \yii\db\ActiveRecord
             [['authorizer_appid', 'authorizer_access_token', 'authorizer_refresh_token', 'authorization_info'], 'required'],
             [['status', 'user_id', 'service_type_info', 'verify_type_info', 'idc'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
-            [['authorizer_appid', 'nick_name', 'user_name', 'alias', 'principal_name', 'signature', 'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
+            [['authorizer_appid', 'nick_name', 'user_name', 'alias', 'principal_name',  'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
             [['authorizer_access_token', 'authorizer_refresh_token', 'head_img', 'qrcode_url', 'business_info'], 'string', 'max' => 300],
-            [['func_info', 'authorization_info'], 'string', 'max' => 1000],
+            [['func_info', 'authorization_info','signature'], 'string', 'max' => 1000],
         ];
     }
 
@@ -107,4 +107,22 @@ class AuthorizationList extends \yii\db\ActiveRecord
         return $rst;
     }
 
+    /**
+     * 获取公众号认证类型
+     * @param $status
+     * @return string
+     */
+    public function getVerifyTypeInfo($status){
+        switch ($status){
+            case '-1': $rst = '未认证';break;
+            case '0': $rst = '已认证';break;
+            case '1': $rst = '已认证';break;
+            case '2': $rst = '已认证';break;
+            case '3': $rst = '未认证';break;
+            case '4': $rst = '未认证';break;
+            case '5': $rst = '未认证';break;
+            default: $rst = '未知类型';break;
+        }
+        return $rst;
+    }
 }

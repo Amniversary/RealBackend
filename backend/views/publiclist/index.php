@@ -7,6 +7,15 @@
         border:1px solid #00a65a;
         padding: 6px 12px;
     }
+    .back-btn{
+        display: inline-block;
+        font-size: 14px;
+        margin-bottom: 0px;
+        border-radius: 3px;
+        color: #00a65a;
+        border:1px solid #00a65a;
+        padding: 6px 12px;
+    }
 </style>
 <?php
 
@@ -14,7 +23,12 @@ use kartik\grid\GridView;
 use yii\bootstrap\Html;
 
 $gridColumns = [
-    ['class'=>'yii\grid\SerialColumn'],
+    [
+        'attribute'=>'record_id',
+        'vAlign'=>'middle',
+        'label'=>'#',
+        'width'=>'80px',
+    ],
     [
         'attribute'=>'nick_name',
         'vAlign'=>'middle',
@@ -41,12 +55,12 @@ $gridColumns = [
         'attribute'=>'verify_type_info',
         'vAlign'=>'middle',
         'value'=>function($model){
-            return $model->verify_type_info == '-1' ? '未认证':'已认证';
+            return $model->getVerifyTypeInfo($model->verify_type_info);
         },
         'filter'=>false,
     ],
     [
-        'width'=>'300px',
+        'width'=>'200px',
         'class' => 'kartik\grid\ActionColumn',
         'template'=>'{wxbackend}',
         'dropdown' => false,
@@ -57,16 +71,22 @@ $gridColumns = [
             switch($action)
             {
                 case 'wxbackend':
-                    $url = '/usermanage/update?user_id';
+                    $url = '/publiclist/status?record_id='.$model->record_id;
                     break;
             }
             return $url;
         },
         'buttons'=>[
             'wxbackend' => function ($url, $model, $key) {
-                return Html::a('进入管理后台',$url,['class'=>'back-a','data-toggle'=>'modal','data-target'=>'#contact-modal','style'=>'margin-left:10px;']);
+                $userId = Yii::$app->user->id;
+                $cacheInfo = Yii::$app->cache->get('app_backend_'.$userId);
+                $cacheInfo = json_decode($cacheInfo,true);
+                if(!empty($cacheInfo && $model->record_id == $cacheInfo['record_id'])){
+                    return Html::label('已选择','#',['class'=>'back-btn']);
+                }else{
+                    return Html::a('选择管理后台',$url,['class'=>'back-a','data-toggle'=>false]);
+                }
             },
-
         ],
     ]
 ];
@@ -85,7 +105,7 @@ echo GridView::widget([
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
     ],
-    'pjax' => true,
+    //'pjax' => true,
     'bordered' => true,
     'striped' => false,
     'condensed' => false,
@@ -96,3 +116,33 @@ echo GridView::widget([
         'type' => GridView::TYPE_INFO
     ],
 ]);
+
+$js='
+$(".back-a").on("click",function(){
+    $url = $(this).attr("href");
+            $.ajax({
+        type: "POST",
+        url: $url,
+        data: "",
+        success: function(data)
+            {
+               data = $.parseJSON(data);
+                if(data.code == "0")
+                {
+                    $("#public_list").yiiGridView("applyFilter");
+                }
+                else
+                {
+                    alert("选择失败：" + data.msg);
+                    
+                }
+            },
+        error: function (XMLHttpRequest, textStatus, errorThrown)
+            {
+                alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
+             }
+        });
+        return false;
+});
+';
+$this->registerJs($js,\yii\web\View::POS_END);

@@ -30,16 +30,11 @@ class WechatController extends Controller
     }
 
     /**
-     * 定时获取微信预授权码Pre_auth_code
+     * 刷新用户授权公众号access_token
      */
-    public function actionGetauthcode()
+    public function actionRefreshauthtoken()
     {
         $wechat = new WeChatUtil();
-        if(!$wechat->getAuthCode($error)){
-            echo "$error\n";
-            exit;
-        }
-        $time = date('Y-m-d H:i:s');
-        echo "get pre_auth_code success time:$time \n";
+        $wechat->refreshAuthToken();
     }
 }
