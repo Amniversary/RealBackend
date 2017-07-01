@@ -42,12 +42,17 @@ class AuthorizedController extends Controller
     public function actionNotice()
     {
         $WeChat = new WeChatComponent();
-        $record = Authorization::findOne(['app_id'=>$WeChat->webAppId]);
         $data = $WeChat->decryptMsg;
+        $record = Authorization::findOne(['app_id'=>$WeChat->webAppId]);
+        \Yii::error('Data::'.var_export($data,true));
         $infoType = isset($data['InfoType']) ? $data['InfoType']: '';
         if(!empty($infoType) && $infoType == 'unauthorized'){
             $authorzer_appid = $data['AuthorizerAppid'];
-            $record = AuthorizationList::findOne(['authorzer_appid'=>$authorzer_appid]);
+            $record = AuthorizationList::findOne(['authorizer_appid'=>$authorzer_appid]);
+            if(!$record){
+                \Yii::error('not record:'.var_export($record,true));
+                return 'success';
+            }
             $record->status = 0;
             $record->update_time = date('Y-m-d H:i:s');
             if(!$record->save()){
@@ -56,17 +61,19 @@ class AuthorizedController extends Controller
             return 'success';
         }
         //TODO: 保存数据到数据库
-        if($record){
-            $record->create_time = $data['CreateTime'];
-            $record->verify_ticket = $data['ComponentVerifyTicket'];
-        }else{
-            $record = new Authorization();
-            $record->app_id = $data['AppId'];
-            $record->create_time = $data['CreateTime'];
-            $record->verify_ticket = $data['ComponentVerifyTicket'];
-        }
-        if(!$record->save()){
-            \Yii::error('保存授权码Ticket失败 ：'.var_export($record->getErrors(),true));
+        if(isset($data['ComponentVerifyTicket'])){
+            if($record){
+                $record->create_time = $data['CreateTime'];
+                $record->verify_ticket = $data['ComponentVerifyTicket'];
+            }else{
+                $record = new Authorization();
+                $record->app_id = $data['AppId'];
+                $record->create_time = $data['CreateTime'];
+                $record->verify_ticket = $data['ComponentVerifyTicket'];
+            }
+            if(!$record->save()){
+                \Yii::error('保存授权码Ticket失败 ：'.var_export($record->getErrors(),true));
+            }
         }
         return 'success';
     }

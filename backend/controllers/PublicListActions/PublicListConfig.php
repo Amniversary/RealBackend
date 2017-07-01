@@ -2,5 +2,20 @@
 return [
     'index'=>[
         'class'=>'backend\controllers\PublicListActions\IndexAction',
+    ],
+    'create'=>[
+        'class'=>'backend\controllers\PublicListActions\CreateAction',
+    ],
+    'keyword'=>[
+        'class'=>'backend\controllers\PublicListActions\KeyWordAction',
+    ],
+    'custom'=>[
+        'class'=>'backend\controllers\PublicListActions\CustomAction',
+    ],
+    'attention'=>[
+        'class'=>'backend\controllers\PublicListActions\AttentionReplyAction',
+    ],
+    'status'=>[
+        'class'=>'backend\controllers\PublicListActions\StatusCacheAction',
     ]
 ];

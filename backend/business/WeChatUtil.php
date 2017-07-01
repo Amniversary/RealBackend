@@ -13,6 +13,7 @@ use common\components\UsualFunForNetWorkHelper;
 use common\components\wxpay\lib\WxPayConfig;
 use common\models\Authorization;
 use common\models\AuthorizationList;
+use yii\db\Query;
 
 class WeChatUtil
 {
@@ -55,11 +56,13 @@ class WeChatUtil
         return true;
     }
 
+
+
     /**
      * 获取微信预授权码 pre_auth_code
      * @return bool
      */
-    public function getAuthCode(&$error)
+    public function getAuthCode(&$rst,&$error)
     {
         $data = [
             'component_appid'=>$this->appId
@@ -72,6 +75,7 @@ class WeChatUtil
             $error = '获取预授权码auth_code失败';
             return false;
         }
+
         $this->AppInfo->pre_auth_code = $rst['pre_auth_code'];
         if(!$this->AppInfo->save()){
             $error = '保存微信预授权码失败';
@@ -130,6 +134,48 @@ class WeChatUtil
         return true;
     }
 
+
+    /**
+     * 用授权refresh_Token刷新凭证令牌
+     * @return bool
+     */
+    public function refreshAuthToken()
+    {
+        $query = (new Query())
+            ->select(['authorizer_appid','authorizer_refresh_token'])
+            ->from('wc_authorization_list')
+            ->all();
+        if(empty($query)) exit('没有数据');
+        $date = date('Y-m-d H:i:s');
+        $k = 0;
+        foreach ($query as $item){
+            $data = [
+                'component_appid'=>$this->appId,
+                'authorizer_appid'=>$item['authorizer_appid'],
+                'authorizer_refresh_token'=>$item['authorizer_refresh_token']
+            ];
+            $url = sprintf('https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token=%s',
+                $this->AppInfo->access_token);
+            $json = json_encode($data);
+            $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
+            if(empty($rst)){
+                echo '刷新授权方令牌失败: AppId:'.$item['authorizer_appid']."time : $date\n";
+                continue;
+            }
+            $AuthAppid = AuthorizationList::findOne(['authorizer_appid'=>$item['authorizer_appid']]);
+            $AuthAppid->authorizer_access_token = $rst['authorizer_access_token'];
+            $AuthAppid->authorizer_refresh_token = $rst['authorizer_refresh_token'];
+            if(!$AuthAppid->save()){
+                \Yii::error('保存授权数据失败: '.var_export($AuthAppid->getErrors(),true));
+                echo '保存授权新数据失败: '."time: $date\n";
+                continue;
+            }
+            $k++;
+        }
+        echo "刷新授权公众号AppId完成，记录数: $k ,  time:  $date \n";
+    }
+
+
     /**
      * 保存授权信息
      * @param $AuthInfo
@@ -185,4 +231,6 @@ class WeChatUtil
         }
         return true;
     }
+
+
 }
