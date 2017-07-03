@@ -20,8 +20,8 @@ class PubliclistController extends Controller
         return require (__DIR__.'/PublicListActions/PublicListConfig.php');
     }
 
-    /*public function behaviors()
+    public function behaviors()
     {
         return require (__DIR__.'/PublicListActions/PublicListBehaviors.php');
-    }*/
+    }
 }

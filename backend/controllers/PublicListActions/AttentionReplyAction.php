@@ -1,20 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: a123
- * Date: 17/6/30
- * Time: 下午6:43
- */
-
 namespace backend\controllers\PublicListActions;
 
 
+use backend\models\AttentionMsgSearch;
 use yii\base\Action;
+
 
 class AttentionReplyAction extends Action
 {
     public function run()
     {
-
+        $this->controller->getView()->title = '关注消息回复';
+        $searchModel = new AttentionMsgSearch();
+        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+        return $this->controller->render('attentionevent',[
+            'searchModel'=>$searchModel,
+            'dataProvider'=>$dataProvider,
+        ]);
     }
 }

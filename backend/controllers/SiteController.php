@@ -28,7 +28,7 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error','testok1','noprivilige','statisticapilog'],
+                        'actions' => ['login', 'error','testok1','noprivilige','statisticapilog','nocache'],
                         'allow' => true
                     ],
                     [
@@ -123,5 +123,10 @@ class SiteController extends Controller
     public function actionNoprivilige()
     {
         return $this->render('no_privilige');
+    }
+
+    public function actionNocache()
+    {
+        return $this->render('no_cache_privilige');
     }
 }

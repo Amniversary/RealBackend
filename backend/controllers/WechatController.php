@@ -21,7 +21,6 @@ class WechatController extends Controller
     public $enableCsrfValidation = false;
 
     public $error = '公众号授权异常：';
-
     public function actionTest(){
         $postData['query_auth_code'] =  111;
         $postData['openid'] = 'dsadsadsadas';
@@ -40,10 +39,10 @@ class WechatController extends Controller
         $post = \Yii::$app->request->post();
         $query_auth_code = $post['query_auth_code'];
         $openid = $post['openid'];
-        \Yii::error('POST::'.var_export($post,true));
+        //\Yii::error('POST::'.var_export($post,true));
         $WeChat = new WeChatUtil();
         $WeChat->getQueryAuth($query_auth_code,$rst,$error);
-        \Yii::error('AUTH_INFO::'.var_export($rst['authorization_info'],true));
+        //\Yii::error('AUTH_INFO::'.var_export($rst['authorization_info'],true));
         $AuthInfo = $rst['authorization_info'];
         $content = $query_auth_code.'_from_api';
         $url = sprintf('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s',
@@ -53,7 +52,7 @@ class WechatController extends Controller
             'msgtype'=>'text',
             'text'=>['content'=>$content]
         ];
-        \Yii::error('curlData::'.var_export($data,true));
+        //\Yii::error('curlData::'.var_export($data,true));
         $json = json_encode($data);
         $rst = UsualFunForNetWorkHelper::HttpsPost($url,$json);
         \Yii::error('全网回调：'.var_export($rst,true));
@@ -64,53 +63,45 @@ class WechatController extends Controller
      */
     public function actionCallback()
     {
-       /* data Array
-        (
-            [ToUserName] => gh_364f29031c56
-            [FromUserName] => ou0ZXv5uSoetzq_FeIjXYXrpOY_4
-            [CreateTime] => 1498640826
-            [MsgType] => event
-            [Event] => VIEW
-            [EventKey] => http://www.cswanda.com/movie/play.html
-            [MenuId] => 414144564
-        )*/
         $WeChat = new WeChatComponent();
-        $ReceiveType = new ReceiveType();
+        $Receive = new ReceiveType();
         $data = $WeChat->decryptMsg;
+        $data['openid'] = $WeChat->openid;
+        $data['appid'] = $WeChat->AppId;
         \Yii::error('data:'.var_export($data,true));
         switch ($WeChat->MsgType)
         {
             case 'text':
-                $resultStr = $ReceiveType->Text($data);
+                $resultXml = $Receive->Text($data);
                 break;
             case 'image':
-                $resultStr = $ReceiveType->Image($data);
+                $resultXml = $Receive->Image($data);
                 break;
             case 'location':
-                $resultStr = $ReceiveType->Location($data);
+                $resultXml = $Receive->Location($data);
                 break;
             case 'voice':
-                $resultStr = $ReceiveType->Voice($data);
+                $resultXml = $Receive->Voice($data);
                 break;
             case 'video':
-                $resultStr = $ReceiveType->Video($data);
+                $resultXml = $Receive->Video($data);
                 break;
             case 'link':
-                $resultStr = $ReceiveType->Link($data);
+                $resultXml = $Receive->Link($data);
                 break;
             case 'event':
-                $resultStr = $ReceiveType->Event($data);
+                $resultXml = $Receive->Event($data);
                 break;
             default:
-                $resultStr = null;
+                $resultXml = null;
                 break;
         }
 
-
-        \Yii::error('resultStr:'.$resultStr);
-        if($resultStr == null) return '';
-        if(!$WeChat->encryptMsg($resultStr,$encryptMsg)){
-            return $WeChat->getErrorMsg($WeChat->errorCode);
+        if($resultXml == null) return null;
+        if(!$WeChat->encryptMsg($resultXml,$encryptMsg)){
+            $errMsg = $WeChat->getErrorMsg($WeChat->errorCode);
+            \Yii::error('errMsg : '. $errMsg);
+            return null;
         }
         \Yii::error('encrypt:'.$encryptMsg);
         return $encryptMsg;
@@ -149,5 +140,23 @@ class WechatController extends Controller
         return $this->redirect(['publiclist/index']);
     }
 
-
+    /**
+     * 消息回复模版
+     * @param $arr
+     * @param $content
+     * @param int $flag
+     * @return string
+     */
+    public function transmitText($arr, $content, $flag = 0)
+    {
+        if($content == null){
+            return null;
+        }
+        if(strpos($content,'from_callback')){
+            $arr['MsgType'] = 'text';
+        }
+        $textXml = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[%s]]></MsgType><Content><![CDATA[%s]]></Content><FunFlag>%s</FunFlag></xml>";
+        $resultStr = sprintf($textXml, $arr['FromUserName'], $arr['ToUserName'], time(), $arr['MsgType'],$content,$flag);
+        return $resultStr;
+    }
 }

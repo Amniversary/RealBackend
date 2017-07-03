@@ -26,6 +26,14 @@ if (Yii::$app->controller->action->id === 'login') {
 
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
     $pic = \Yii::$app->session['pic_'.\Yii::$app->user->id];
+    $json = Yii::$app->cache->get('app_backend_'.Yii::$app->user->id);
+    if($json == false){
+        $cache = '';
+    }else{
+        $cache = json_decode($json,true);
+    }
+
+
     empty($pic) ? $pic = Yii::$app->user->identity->pic : $pic;
     ?>
     <?php $this->beginPage() ?>
@@ -46,7 +54,8 @@ if (Yii::$app->controller->action->id === 'login') {
             'header.php',
             [
                 'directoryAsset' => $directoryAsset,
-                'pic'=>$pic
+                'pic'=>$pic,
+                'authInfo'=>$cache
             ]
         ) ?>
 

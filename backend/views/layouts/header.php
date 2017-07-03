@@ -19,9 +19,25 @@ use yii\helpers\Html;
 
             <ul class="nav navbar-nav">
 
-
-                <!-- User Account: style can be found in dropdown.less -->
-
+                <?php if (!empty($authInfo)) { ?>
+                <!-- 公众号头部 -->
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="<?= $authInfo['head_img']; ?>" class="user-image" alt="User Image"/>
+                        <span class="hidden-xs"><?= $authInfo['nick_name']; ?></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- User image -->
+                        <li class="user-header">
+                            <img src="<?= $authInfo['head_img']; ?>" class="img-circle" alt="User Image"/>
+                            <p>
+                                <?= date('Y-m-d') ?>
+                             <h4 style="color: #FFF"><?= $authInfo['nick_name'] ?></h4>
+                            </p>
+                        </li>
+                    </ul>
+                </li>
+                <?php } ?>
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= $pic ?>" class="user-image" alt="User Image"/>
@@ -30,9 +46,7 @@ use yii\helpers\Html;
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="<?= $pic ?>" class="img-circle"
-                                 alt="User Image"/>
-
+                            <img src="<?= $pic ?>" class="img-circle" alt="User Image"/>
                             <p>
                                 <?= date('Y-m-d') ?>
                                 <h4 style="color: #FFF">Real数据平台</h4>

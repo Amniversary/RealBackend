@@ -147,6 +147,7 @@ class WeChatUtil
             ->all();
         if(empty($query)) exit('没有数据');
         $date = date('Y-m-d H:i:s');
+        $max = count($query);
         $k = 0;
         foreach ($query as $item){
             $data = [
@@ -154,12 +155,12 @@ class WeChatUtil
                 'authorizer_appid'=>$item['authorizer_appid'],
                 'authorizer_refresh_token'=>$item['authorizer_refresh_token']
             ];
-            $url = sprintf('https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token=%s',
+            $url = sprintf('https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=%s',
                 $this->AppInfo->access_token);
             $json = json_encode($data);
             $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
             if(empty($rst)){
-                echo '刷新授权方令牌失败: AppId:'.$item['authorizer_appid']."time : $date\n";
+                echo '刷新授权方令牌失败: AppId : '.$item['authorizer_appid']."  time : $date\n";
                 continue;
             }
             $AuthAppid = AuthorizationList::findOne(['authorizer_appid'=>$item['authorizer_appid']]);
@@ -172,7 +173,7 @@ class WeChatUtil
             }
             $k++;
         }
-        echo "刷新授权公众号AppId完成，记录数: $k ,  time:  $date \n";
+        echo "刷新授权公众号AppId完成，共 $max 条记录 , 成功刷新记录数: $k 条,  time:  $date \n";
     }
 
 

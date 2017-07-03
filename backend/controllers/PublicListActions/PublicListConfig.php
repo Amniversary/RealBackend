@@ -17,5 +17,11 @@ return [
     ],
     'status'=>[
         'class'=>'backend\controllers\PublicListActions\StatusCacheAction',
+    ],
+    'createmsg'=>[
+        'class'=>'backend\controllers\PublicListActions\CreateMsgAction',
+    ],
+    'delete'=>[
+        'class'=>'backend\controllers\PublicListActions\DeleteEventAction'
     ]
 ];

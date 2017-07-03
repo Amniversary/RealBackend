@@ -15,6 +15,9 @@ class KeyWordAction extends Action
 {
     public function run()
     {
+        $this->controller->getView()->title = '关键字回复';
 
+
+        return $this->controller->render('keyword');
     }
 }

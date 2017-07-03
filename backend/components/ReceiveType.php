@@ -10,6 +10,7 @@ namespace backend\components;
 
 
 use backend\business\WeChatUtil;
+use backend\components\WeChatClass\EventClass;
 use common\components\UsualFunForNetWorkHelper;
 
 class ReceiveType
@@ -20,7 +21,7 @@ class ReceiveType
     public function Text($arr,$flag = 0)
     {
         $contentStr = $arr['Content'];
-        if($arr['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT'){
+        if($arr['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT'){ //TODO: 全网测试消息
             $contentStr = $arr['Content'].'_callback';
         }elseif (strpos($arr['Content'],'QUERY_AUTH_CODE:') !== false){
             $postData['query_auth_code'] =  str_replace('QUERY_AUTH_CODE:', '', $arr['Content']);
@@ -81,7 +82,8 @@ class ReceiveType
         switch ($arr['Event'])
         {
             case 'subscribe':
-                $contentStr = null;
+                $Event = new EventClass($arr);
+                $contentStr = $Event->subscribe();
                 break;
             case 'unsubscribe':
                 $contentStr = null;
@@ -112,7 +114,13 @@ class ReceiveType
         if(strpos($content,'from_callback')){
             $arr['MsgType'] = 'text';
         }
-        $textXml = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[%s]]></MsgType><Content><![CDATA[%s]]></Content><FunFlag>%s</FunFlag></xml>";
+        $textXml = "<xml>
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[%s]]></FromUserName>
+                        <CreateTime>%s</CreateTime><MsgType><![CDATA[%s]]></MsgType>
+                        <Content><![CDATA[%s]]></Content>
+                        <FunFlag>%s</FunFlag>
+                    </xml>";
         $resultStr = sprintf($textXml, $arr['FromUserName'], $arr['ToUserName'], time(), $arr['MsgType'],$content,$flag);
         return $resultStr;
     }

@@ -9,6 +9,7 @@
 namespace backend\controllers\PublicListActions;
 
 
+use common\models\AuthorizationList;
 use yii\base\Action;
 
 class StatusCacheAction extends Action
@@ -21,13 +22,10 @@ class StatusCacheAction extends Action
             echo json_encode($rst);
             exit;
         }
-
         $user_id = \Yii::$app->user->id;
-
-        $data = [
-            'record_id'=>$record_id,
-            'backend_id'=>$user_id,
-        ];
+        $AuthInfo = AuthorizationList::findOne(['record_id'=>$record_id]);
+        $data = $AuthInfo->attributes;
+        $data['backend_user_id'] = $user_id;
 
         \Yii::$app->cache->set('app_backend_'.$user_id,json_encode($data));
         $rst['code'] = 0;
