@@ -38,6 +38,20 @@ $gridColumns = [
         'value'=>function($model){
             return $model->getMsgType($model->msg_type);
         },
+        'filter'=>['0'=>'文本消息','1'=>'图文消息'],
+    ],
+    [
+        'attribute'=>'event_id',
+        'vAlign'=>'事件 ID',
+    ],
+    [
+        'attribute'=>'title',
+        'vAlign'=>'middle',
+        'filter'=>false,
+    ],
+    [
+        'attribute'=>'description',
+        'vAlign'=>'middle',
         'filter'=>false,
     ],
     [
@@ -70,10 +84,9 @@ $gridColumns = [
             }
             return $url;
         },
-        'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'delete'=>function($url, $model){
-                return Html::a('删除',$url,['title'=>'删除','class'=>'delete','id'=>'delete-btn','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
+                return Html::a('删除',$url,['title'=>'删除','class'=>'delete','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-pjax'=>'0']);
             }
         ],
     ],
@@ -94,7 +107,7 @@ echo GridView::widget([
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
     ],
-    //'pjax' => true,
+    'pjax' => true,
     'bordered' => true,
     'striped' => false,
     'condensed' => false,
@@ -107,7 +120,7 @@ echo GridView::widget([
 ]);
 
 $js='
-$("#delete-btn").on("click",function(){
+$("#attention_event-pjax").on("click",".delete",function(){
     $url = $(this).attr("href");
             $.ajax({
         type: "POST",
@@ -131,7 +144,7 @@ $("#delete-btn").on("click",function(){
                 alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
              }
         });
-       
+       return false;
 });
 ';
 $this->registerJs($js,\yii\web\View::POS_END);
