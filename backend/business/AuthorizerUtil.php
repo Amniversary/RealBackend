@@ -9,8 +9,10 @@
 namespace backend\business;
 
 
+use common\models\AttentionEvent;
 use common\models\AuthorizationList;
 use common\models\Client;
+use yii\db\Query;
 
 class AuthorizerUtil
 {
@@ -36,7 +38,22 @@ class AuthorizerUtil
     }
 
     /**
-     * 
+     * 获取消息列表
+     * @param $id
+     * @return array
+     */
+    public static function getAttentionMsg($id)
+    {
+        $query = (new Query())
+            ->select(['record_id','app_id','content','msg_type','flag'])
+            ->from('wc_attention_event')
+            ->where(['app_id'=>$id,'flag'=>0])
+            ->all();
+        return $query;
+    }
+
+    /**
+     * 获取用户基础信息模型
      * @param $data
      * @param $app_id
      * @param bool $flag

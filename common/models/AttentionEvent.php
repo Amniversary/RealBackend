@@ -10,9 +10,14 @@ use yii\db\Query;
  * This is the model class for table "{{%_attention_event}}".
  *
  * @property integer $record_id
+ * @property integer $event_id
  * @property integer $app_id
  * @property string $content
  * @property integer $msg_type
+ * @property string $title
+ * @property string $description
+ * @property string $url
+ * @property string $picurl
  * @property string $create_time
  * @property integer $flag
  * @property string $remark1
@@ -37,8 +42,8 @@ class AttentionEvent extends ActiveRecord
     {
         return [
             [['app_id'], 'required'],
-            [['app_id', 'msg_type', 'flag'], 'integer'],
-            [['create_time'], 'safe'],
+            [['app_id', 'msg_type', 'flag', 'event_id'], 'integer'],
+            [['create_time','title','description','url','picurl'], 'safe'],
             [['content', 'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
         ];
     }
@@ -51,9 +56,14 @@ class AttentionEvent extends ActiveRecord
         return [
             'record_id' => '记录 ID',
             'app_id' => '公众号',
+            'event_id' => '事件 ID',
             'content' => '消息内容',
             'msg_type' => '消息类型',
             'create_time' => '创建时间',
+            'title' => '标题',
+            'description' => '内容描述',
+            'url' => '外链Url',
+            'picurl' => '图片Url',
             'flag' => 'Flag',
             'remark1' => 'Remark1',
             'remark2' => 'Remark2',

@@ -9,8 +9,13 @@
 namespace backend\controllers;
 
 
+use backend\business\AuthorizerUtil;
 use backend\business\UserMenuUtil;
+use backend\business\WeChatUserUtil;
+use backend\business\WeChatUtil;
 use common\components\Des3Crypt;
+use common\components\UsualFunForNetWorkHelper;
+use common\models\Client;
 use common\models\Menu;
 use common\models\User;
 use common\models\UserMenu;
@@ -20,8 +25,6 @@ class FuckController extends Controller
 {
     public function actionIndex()
     {
-        phpinfo();
-        exit;
         echo "<pre>";
         $key = 'user_menu_1';
         $cnt = \Yii::$app->cache->get($key);
@@ -30,6 +33,28 @@ class FuckController extends Controller
         print_r(json_decode($cnt,true));
         print_r(json_decode($cnt1,true));
         exit;
+        echo "<pre>";
+        $rst = AuthorizerUtil::getAttentionMsg(1);
+        print_r($rst);
+        exit;
+        $content = '换一你过嘎洒点';
+        $data = ['msgType'=>'text','content'=>$content];
+        $json = json_encode($data,JSON_UNESCAPED_UNICODE);
+
+        print_r($json);
+        exit;
+        $rst = new WeChatUtil();
+        $rst->getAuthorizeInfo('wxfb4431191609bd1e',$out,$error);
+        print_r($out);
+                exit;
+
+
+        $access = '9LkcKIAHZRbwkx6pK0CXo3V1NpStvVJI6-5j_yUG0n4ysOMOGs9fprMv7XtET5QFA33WwMqy-oyBhvHoUHmkq2WvRzv7_HrpBCQuCZxJc3GbfOgiffNaBIo8uvU77VB6GHKiAIDWXA';
+        $rst = WeChatUserUtil::getUserInfo($access,'oB4Z-wf0FYMlI7fW4ZvD90Y06RxA');//oB4Z-wf0FYMlI7fW4ZvD90Y06RxA
+         echo "<br />";
+         print_r($rst);
+        exit;
+
         $a = [];
         empty($a) ?  var_dump(1) : var_dump(2) ;
 
@@ -53,30 +78,50 @@ class FuckController extends Controller
     }
 
     public function actionWxtest(){
-        $wechat = \Yii::$app->wechat;
-        print_r($wechat->accessToken);
+        $setMenuPower = (new Query())
+            ->select(['mu.menu_id'])
+            ->from(Menu::tableName() . 'mu')
+            ->innerJoin(UserMenu::tableName(). 'um','mu.menu_id=um.menu_id')
+            ->where([
+                'url'=>'usermanage/setprivilige',
+                'user_id' => 1
+            ])->one();
+        print_r(!empty($setMenuPower));
     }
 
-    public function actionTest()
+    public function actionDelete()
     {
 
-        exit;
-        echo "<pre>";
-        $pwd = 'admin';
-        $pwd = $pwd.strval(time());
-        $key = \Yii::$app->params['pwd_crypt_key'];
-        $rst = Des3Crypt::des_encrypt($pwd,$key);
 
-        echo $rst;
+
+
+        exit;
+        \Yii::$app->cache->delete('app_backend_1');
+        echo 'OK';
     }
 
+    public function actionSet()
+    {
+        $json = \Yii::$app->cache->get('app_backend_1');
+        $cache = json_decode($json,true);
+        var_dump($cache);
+    }
     public function actionBh(){
         echo "<pre>";
-        $key = 'user_menu_1';
-        $key2 = 'user_power_1';
-        \Yii::$app->cache->delete($key);
-        \Yii::$app->cache->delete($key2);
-        echo 'OK';
+        $appid = 'wx1024c6215af20360';
+        $openid = 'oB4Z-wf0FYMlI7fW4ZvD90Y06RxA';
+        $openInfo = AuthorizerUtil::getAuthOne($appid);
+        $access_token = $openInfo->authorizer_access_token;
+        $url = sprintf('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s',
+            $access_token);
+
+        $data = WeChatUserUtil::msgNews($openid);
+        $json = json_encode($data,JSON_UNESCAPED_UNICODE);
+        print_r($data);
+        echo "<br />";
+        $rst = UsualFunForNetWorkHelper::HttpsPost($url,$json);
+        echo "发送客服消息：";
+        print_r($rst);
 
         exit;
         $sql = '';

@@ -66,10 +66,14 @@ class EventClass
             $content = null;
         }
         //TODO: 处理回复消息逻辑 走客服消息接口 回复多条消息
-        /*$content = '';
-        for ($i = 0; $i < 3 ; $i++){
-            WeChatUserUtil::sendCustomerMsg($openInfo->authorizer_access_token,$openid,['msgType'=>'text','content'=>$content]);
-        }*/
+        if(true){
+            $msgData = AuthorizerUtil::getAttentionMsg($openInfo->record_id);
+            if(!empty($msgData)){
+                foreach ($msgData as $item){
+                    WeChatUserUtil::sendCustomerMsg($openInfo->authorizer_access_token,$openid,$item);
+                }
+            }
+        }
 
         //$resultXml = ReceiveType::transmitText($this->data,$content);
         return null;

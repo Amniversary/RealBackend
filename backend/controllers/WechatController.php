@@ -140,23 +140,5 @@ class WechatController extends Controller
         return $this->redirect(['publiclist/index']);
     }
 
-    /**
-     * 消息回复模版
-     * @param $arr
-     * @param $content
-     * @param int $flag
-     * @return string
-     */
-    public function transmitText($arr, $content, $flag = 0)
-    {
-        if($content == null){
-            return null;
-        }
-        if(strpos($content,'from_callback')){
-            $arr['MsgType'] = 'text';
-        }
-        $textXml = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[%s]]></MsgType><Content><![CDATA[%s]]></Content><FunFlag>%s</FunFlag></xml>";
-        $resultStr = sprintf($textXml, $arr['FromUserName'], $arr['ToUserName'], time(), $arr['MsgType'],$content,$flag);
-        return $resultStr;
-    }
+
 }

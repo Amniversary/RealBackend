@@ -115,6 +115,7 @@ class SiteController extends Controller
 
     public function actionLogout()
     {
+        Yii::$app->cache->delete('app_backend_'.Yii::$app->user->id);
         Yii::$app->user->logout();
 
         return $this->goHome();
