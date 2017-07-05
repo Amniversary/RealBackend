@@ -51,6 +51,10 @@ class EventClass
         //TODO: 如果已关注 查出用户信息
         $UserInfo = AuthorizerUtil::getAuthOneForOpenId($openid,$appid);
         $openInfo = AuthorizerUtil::getAuthOne($appid);
+        if(empty($openInfo)){
+            \Yii::error('找不到对应的公众号信息 ： AppId:'.$appid );
+            return null;
+        }
         if(empty($UserInfo) && !isset($UserInfo)){
             //TODO: 未关注重新请求用户信息
             $UserInfo = WeChatUserUtil::getUserInfo($openInfo->authorizer_access_token,$openid);

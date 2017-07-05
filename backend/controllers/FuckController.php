@@ -20,6 +20,8 @@ use common\models\Keywords;
 use common\models\Menu;
 use common\models\User;
 use common\models\UserMenu;
+use Qiniu\Auth;
+use Qiniu\Storage\UploadManager;
 use yii\db\Query;
 use yii\web\Controller;
 class FuckController extends Controller
@@ -180,6 +182,18 @@ class FuckController extends Controller
         }
 
     }
+
+    public function actionTestupload()
+    {
+        $key = \Yii::$app->params['QiNiu'];
+        $auth = new Auth($key['ak'],$key['sk']);
+        $bucket = 'realtech-test';
+        $token = $auth->uploadToken($bucket);
+        print_r($token);
+        exit;
+        $uploadMgr = new UploadManager();
+    }
+
     public function actionBh(){
         echo "<pre>";
         $appid = 'wx1024c6215af20360';

@@ -122,4 +122,18 @@ class AuthorizerUtil
         $model->update_time = date('Y-m-d H:i:s');
         return $model;
     }
+
+    /**
+     *
+     * @param $app_id
+     * @return array
+     */
+    public static function getAppMsg($app_id)
+    {
+        $query = (new Query())
+            ->select(['key_id','keyword','rule'])
+            ->from('wc_keywords')
+            ->where(['app_id'=>$app_id])->all();
+        return $query;
+    }
 }

@@ -43,10 +43,6 @@ class TextClass
         $appid = $this->data['appid'];
         $text = $this->data['Content'];
         $AppInfo = AuthorizerUtil::getAuthOne($appid);
-        $query = (new Query())
-            ->select(['key_id','keyword','rule'])
-            ->from('wc_keywords')
-            ->where(['app_id'=>$AppInfo->record_id])->all();
         $flag = null;
         if(!empty($query))
         {
@@ -57,18 +53,17 @@ class TextClass
                 }else{
                     if(strpos($item['keyword'],$text) !== false) $flag = true;
                 }
-
                 if($flag)
                 {
                     //TODO:处理消息回复逻辑
-                    $msgData = AuthorizerUtil::getAttentionMsg($AppInfo->authorizer_access_token,1,$item['key_id']);
+                    $msgData = AuthorizerUtil::getAttentionMsg($AppInfo->record_id,1,$item['key_id']);
                     if(!empty($msgData))
                     {
                         foreach ($msgData as $info)
                         {
                             if(!isset($info['msg_type']))
                                 $info['msg_type'] = 1;
-                            WeChatUserUtil::sendCustomerMsg($AppInfo->authorizer_access_token,$openid,$item);
+                            WeChatUserUtil::sendCustomerMsg($AppInfo->authorizer_access_token,$openid,$info);
                         }
                     }
                 }

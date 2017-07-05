@@ -35,16 +35,7 @@ use common\components\tenxunlivingsdk\TimRestApi;
 class ClientUtil
 {
     /**
-     * 根据用户id获取客户的七牛信息记录
-     * @param $client_id
-     * @return null|static
-     */
-    public static function GetQiNiuInfoByClientId($client_id)
-    {
-        return ClientQiniu::findOne(['user_id'=>$client_id]);
-    }
-    /**
-     * 获取需要生成图片的用户生
+     * 获取需要生成图片的用户
      */
     public static function GetShouldGenPicClients($limit=100)
     {
@@ -164,38 +155,6 @@ class ClientUtil
         return true;
     }
 
-
-    /**
-     * 更换unique_no
-     * @param $unique_no
-     * @param $client_id
-     * @throws \yii\db\Exception
-     */
-    public static function UpdateUniqueNo($unique_no,$client_id)
-    {
-        $sql = 'update mb_client set remark4=unique_no, unique_no=:uid where client_id=:cid';
-        $rst =\Yii::$app->db->createCommand($sql,[':uid'=>$unique_no,':cid'=>$client_id])->execute();
-        if($rst <= 0)
-        {
-            \Yii::getLogger()->log('更换unique_no失败：'.\Yii::$app->db->createCommand($sql,[':uid'=>$unique_no,':cid'=>$client_id])->rawSql,Logger::LEVEL_ERROR);
-        }
-        $sql = 'update mb_client_other set other_id=:uid where user_id=:cid';
-        $rst =\Yii::$app->db->createCommand($sql,[':uid'=>$unique_no,':cid'=>$client_id])->execute();
-        if($rst <= 0)
-        {
-            \Yii::getLogger()->log('更换mb_client_other.other_id：'.\Yii::$app->db->createCommand($sql,[':uid'=>$unique_no,':cid'=>$client_id])->rawSql,Logger::LEVEL_ERROR);
-        }
-    }
-
-    /**
-     * 根据新浪id获取用户信息
-     * @param $uid
-     * @return Client|null
-     */
-    public static function GetClientInfoByXinLangUid($uid)
-    {
-        return Client::findOne(['xinlang_uid'=>$uid]);
-    }
     /**
      * 搜索用户
      * @param $key_word
@@ -447,148 +406,7 @@ living_bean_to_experience
         return true;
     }
 
-    /**
-     * 根据唯一标识获取用户数据
-     * @param $unique
-     * @return array|null|\yii\db\ActiveRecord
-     */
-    public static function GetUserByUniqueId($unique)
-    {
-        $uniqueNo = Client::find()->where('unique_no=:uno',[':uno'=>$unique])->one();
-        return $uniqueNo;
-    }
 
-
-    /**
-     * 用户注册
-     * @param $uniqueNo
-     * @param $deviceNo
-     * @param $data
-     * @param $error
-     * @param bool $isInner
-     * @return bool
-     */
-    public static function RegisterUser($uniqueNo,$deviceNo, $data,$getui_id,&$error,$isInner = false)
-    {
-        $phpLock = new PhpLock('register_user_'.$uniqueNo);
-        $phpLock->lock();
-        $ac = self::GetUserByUniqueId($uniqueNo);
-        if(isset($ac))
-        {
-            $error = '用户已经注册';
-            $phpLock->unlock();
-            return false;
-        }
-        if(!self::CouldRegisterByDeviceNo($deviceNo,$error))
-        {
-            $phpLock->unlock();
-            return false;
-        }
-        if($data['register_type'] == '3')
-        {
-            $error = '微博注册完善中，暂停注册';
-            $phpLock->unlock();
-            return false;
-        }
-/*      if($data['register_type'] == '2')
-        {
-            $error = '微信注册完善中，暂停注册';
-            return false;
-        }*/
-        $nick_name = ((!empty($data['nick_name'])) ? $data['nick_name'] : '');
-        $sex = ((!empty($data['sex'])) ? $data['sex'] : '未设置');
-        $pic = ((!empty($data['pic'])) ? $data['pic'] : '');
-        $deviceType = ((!empty($data['device_type'])) ? $data['device_type']: '');
-        $phoneNo = (($data['register_type'] == 1 )? $uniqueNo : '');
-        $is_bind_wx = (($data['register_type'] == 2)? 2:1);
-        $client_no =WaterNumUtil::GetUniqueIdFromTable($error);
-        if($client_no === false)
-        {
-            $error = '系统繁忙蜜播号生成失败1';
-            return false;
-        }
-        $model = new Client();
-        $model->unique_no = $uniqueNo;
-        $model->client_no =$client_no;// WaterNumUtil::GetRandUniqueNo();// WaterNumUtil::GenWaterNum('NO.',false,false,'2016-04-25',8);
-        $model->register_type = $data['register_type'];
-        $model->city = '';
-        $model->nick_name = $nick_name;
-        $model->pic = $pic;
-        $model->main_pic = '';
-        $model->icon_pic = '';
-        $model->is_pic_deal = 0;
-        $model->age = '';
-        $model->sign_name = '没有个性，暂不签名!';
-        $model->phone_no = $phoneNo;
-        $model->device_no = $deviceNo;
-        $model->device_type = $deviceType;
-        $model->sex = $sex;
-        $model->status = 1;
-        $model->create_time = date('Y-m-d H:i:s');
-        $model->is_inner = ((!$isInner)?1:2);
-        $model->is_bind_weixin = $is_bind_wx;
-        $model->is_bind_alipay = 1;
-        $model->is_contract = 1;
-        $model->is_centification = 1;
-        $model->client_type = 1;
-        $model->getui_id = $getui_id;
-
-
-        $transActions[] = new RegisterSaveForReward($model);
-        if(!RewardUtil::RewardSaveByTransaction($transActions,$outInfo,$error))
-        {
-            return false;
-        }
-        //大转盘抽奖活动机会表处理列表
-        if($outInfo->register_type == 2)
-        {
-            $activity_info = ActivityUtil::GetActivityByType(3);
-            $date = date('Y-m-d');
-            if(($activity_info->start_time <= $date) && ($activity_info->end_time <= $date) && ($activity_info->status == 2))
-            {
-                $chance_data = [
-                    'user_id' => $outInfo->client_id,
-                ];
-                if(!JobUtil::AddCustomJob('ActivityChanceBeanstalk','activity_chance',$chance_data,$error))
-                {
-                    \Yii::getLogger()->log($error,Logger::LEVEL_ERROR);
-                }
-                $prize_data = [
-                    'activity_id' => $activity_info->activity_id,
-                    'field' => 'user_id'
-                ];
-                if(!JobUtil::AddCustomJob('ActivityChanceBeanstalk','activity_statistic',$prize_data,$error))
-                {
-                    \Yii::getLogger()->log($error,Logger::LEVEL_ERROR);
-                }
-            }
-        }
-
-        if(!empty($pic))
-        {
-            $client_id = $model->client_id;
-            if(!JobUtil::AddPicJob('deal_client_pic',['client_id'=>$client_id,'pic'=>$pic],$error))
-            {
-                \Yii::getLogger()->log($error.' pic job save error',Logger::LEVEL_ERROR);
-                return false;
-            }
-        }
-
-        $imData = [
-            'key_word'=>'set_tencent_im',
-            'user_id'=>$outInfo->client_id,
-            'nick_name'=>$outInfo->nick_name,
-            'pic'=>$outInfo->pic,
-        ];
-        \Yii::getLogger()->log('$outInfo===:'.var_export($outInfo,true),Logger::LEVEL_ERROR);
-        //注册腾讯用户
-        if(!JobUtil::AddImJob('tencent_im',$imData,$error))
-        {
-            \Yii::getLogger()->log('im job save error :'.$error,Logger::LEVEL_ERROR);
-        }
-
-        return true;
-    }
 
 
     /**
@@ -716,30 +534,6 @@ values(:rid,4,0,0,:ctime,0,0,"",:uid,:cname,:cno,"")';
             }
         }
 
-        //大转盘抽奖活动机会表处理列表
-        /*if($outInfo->register_type == 2)
-        {
-            $activity_info = ActivityUtil::GetActivityByType(3);
-            $date = date('Y-m-d');
-            if(($activity_info->start_time <= $date) && ($activity_info->end_time >= $date) && ($activity_info->status == 2))
-            {
-                $chance_data = [
-                    'user_id' => $outInfo->client_id,
-                ];
-                if(!JobUtil::AddCustomJob('ActivityChanceBeanstalk','activity_chance',$chance_data,$error))
-                {
-                    \Yii::getLogger()->log($error,Logger::LEVEL_ERROR);
-                }
-                $prize_data = [
-                    'activity_id' => $activity_info->activity_id,
-                    'field' => 'user_id'
-                ];
-                if(!JobUtil::AddCustomJob('ActivityChanceBeanstalk','activity_statistic',$prize_data,$error))
-                {
-                    \Yii::getLogger()->log($error,Logger::LEVEL_ERROR);
-                }
-            }
-        }*/
 
         /***注册完成人物统计处理队列***/
         $ticket_data = [
@@ -914,18 +708,7 @@ values(:rid,4,0,0,:ctime,0,0,"",:uid,:cname,:cno,"")';
         return Client::findOne(['unique_no'=>$unique_no]);
     }
 
-    /**
-     * 根据手机号获取用户信息
-     * @param $phoneNo
-     * @return array|null|\yii\db\ActiveRecord
-     */
-    public static function GetClientByPhoneNo($phoneNo)
-    {
-        $user = Client::find()->where('phone_no=:pno',array(
-            ':pno'=>$phoneNo
-        ))->one();
-        return $user;
-    }
+
     /**
      * 获取同一个设备号注册的数量
      * @param $device_no
@@ -1005,38 +788,6 @@ values(:rid,4,0,0,:ctime,0,0,"",:uid,:cname,:cno,"")';
         return true;
     }
 
-    /**
-     * 根据用户id获取用户信息
-     * @param $user_id
-     * @return Client|null
-     */
-    public static function GetClientById($user_id)
-    {
-        $ac = Client::findOne(['and',['client_id'=>$user_id]]);
-        return $ac;
-    }
-
-    /**
-     * 查询用户ID/昵称/pic/等级
-     * @param $userId
-     * @return array|bool
-     */
-    public static function getClientActive($userId)
-    {
-        $query=(new Query())
-            ->select(['client_id as user_id','nick_name','IFNULL(nullif(c.icon_pic,\'\'),c.pic) as pic','level_no','client_type'])
-            ->from('mb_client c')
-            ->innerJoin('mb_client_active ca','c.client_id=ca.user_id')
-            ->where('c.client_id = :ud',[':ud'=>$userId])->one();
-        return $query;
-    }
-    /**
-     * 根据用户ID获取账户活跃信息
-     */
-    public static function GetClientByIdActive($user_id){
-        return ClientActive::findOne(['user_id'=>$user_id]);
-    }
-
 
     /**
      * 得到前端签名sign
@@ -1054,25 +805,7 @@ values(:rid,4,0,0,:ctime,0,0,"",:uid,:cname,:cno,"")';
         $str .= 'key='.$token;
         return sha1($str);
     }
-    /**
-     * 根据第三方id 获取用户信息
-     * @param $open_id
-     * @return ClientOther|null
-     */
-    public static function GetClientOtherInfo($open_id)
-    {
-        return ClientOther::findOne(['other_id'=>$open_id]);
-    }
 
-    /**
-     * 获取用户微信绑定账号信息
-     * @param $openid
-     * @return null|static
-     */
-    public static function GetClientPay($openid)
-    {
-        return ClientPay::findOne(['other_id'=>$openid]);
-    }
 
     /**
      * 禁用用户或者解封
@@ -1150,235 +883,6 @@ values(:rid,4,0,0,:ctime,0,0,"",:uid,:cname,:cno,"")';
     }
 
     /**
-     * 保存用户信息
-     * @param $client
-     * @param $error
-     * @return bool
-     */
-    public static function SaveClient($client, &$error)
-    {
-        if(!($client instanceof Client))
-        {
-            $error = '不是用户记录';
-            return false;
-        }
-
-        if(!$client->save())
-        {
-            $error = '用户记录保存失败';
-            \Yii::getLogger()->log($error.' :'.var_export($client->getErrors(),true),Logger::LEVEL_ERROR);
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 判断主播是否是签约主播 如果是签约主播就向签约主播薪资表插入一条数据
-     * @param $client
-     * @param $error
-     * @return bool
-     * @throws \yii\db\Exception
-     */
-    public static function InsertClient($client, &$error)
-    {
-
-        if(! ($client instanceof Client))
-        {
-            $error = '不是用户对象';
-            return false;
-        }
-        //拿到用户信息，看签约主播薪资表改主播是否已经签约
-        $rst = ClientSalary::find()->where(['user_id'=>$client->client_id])->one();
-
-
-        if($client->is_contract == '2')
-        {
-            //如果没有签约则向主播薪资表里面插入一条数据，如果已签约，则修改数据
-            if(!$rst)
-            {
-                $time = date("Y-m-d");
-                $sql = 'INSERT INTO mb_client_salary(user_id, anchor_salary,anchor_time,is_del) VALUES (:user_id,1,:times,0)';
-                \Yii::$app->db->createCommand($sql,[
-                    ':user_id' => $client->client_id,
-                    ':times' => $time,
-                ])->execute();
-            }
-            else
-            {
-                    $sql = 'update mb_client_salary set is_del=0 WHERE user_id=:user_id';
-                    \Yii::$app->db->createCommand($sql,[
-                        ':user_id' => $client->client_id,
-                    ])->execute();
-            }
-        }
-        else
-        {
-
-            if($rst)
-            {
-                \Yii::getLogger()->log('client_id:'.$client->client_id,Logger::LEVEL_ERROR);
-                $sql = 'update mb_client_salary set is_del=1 WHERE user_id=:user_id';
-                \Yii::$app->db->createCommand($sql,[
-                        ':user_id' => $client->client_id,
-                ])->execute();
-            }
-        }
-
-        return true;
-    }
-
-
-    /**
-     * 判断该设备是否已经被禁用
-     * @param $device_no
-     * @return null|static
-     */
-    public static function GetClientDeviceNoIsRes($device_no)
-    {
-        return Client::findOne(['device_no' => $device_no,'status'=>0]);
-    }
-
-    /**
-     * 更具用户账号获取用户信息
-     * @param $client_no
-     * @return Client|null
-     */
-    public static function GetClientNo($client_no)
-    {
-        return Client::findOne(['client_no'=>$client_no]);
-    }
-
-
-    /**
-     * 更具用户id获取用户第三方信息
-     * @param $user_id
-     * @return static[]
-     */
-    public static function GetClientOtherByUserId($user_id)
-    {
-        return ClientOther::findAll(['user_id'=>$user_id]);
-    }
-
-    /**
-     * @param $params => [
-     *      @client_no  封禁用户蜜播id
-     *      @nick_name  封禁用户昵称
-     *      @manage_id  管理员id
-     *      @manage_name  管理员昵称
-     *      @operate_type  操作类型  1前端  2后台
-     *      @create_time   创建时间
-     * ]
-     * @param $error
-     * @return bool
-     */
-    public static function CreateCloseUserByLog($params,&$error)
-    {
-        $model = new CloseIdLog();
-        $model->attributes = $params;
-
-        if(!$model->save())
-        {
-            $error = '记录禁用日志信息错误';
-            \Yii::getLogger()->log($error.' :'.var_export($model->getErrors(),true),Logger::LEVEL_ERROR);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 更新用户每次登陆时，记录其登陆的app_id,方便个推
-     * @param $userID
-     * @param $appID
-     * @return bool
-     */
-    public static function BatchCheckClient($client,$check_rst,&$error)
-    {
-        if($check_rst == 2)
-        {
-            $client->status = 0;
-
-            if(!self::SaveClient($client,$error))
-            {
-                return false;
-            }
-            $user_info = ClientUtil::GetClientById($client->client_id);
-            if($user_info->status == 0) {
-                $params = [
-                    'client_no' => $client->client_no,
-                    'nick_name' => $client->nick_name,
-                    'manage_id' => \Yii::$app->user->id,
-                    'manage_name' => \Yii::$app->user->identity->username,
-                    'operate_type' => 2,
-                    'management_type' => 1,
-                    'create_time' => date('Y-m-d H:i:s')
-                ];
-                //增加禁用日志
-                if (!self::CreateCloseUserByLog($params, $error)) {
-                    return false;
-                }
-            }
-            if($client->status == 0)
-            {
-                $living_info = LivingUtil::GetClientLivingInfoByLivingMasterId($client->client_id);
-                $finishInfo = null;
-                if(!LivingUtil::SetBanClientFinishLiving($living_info['living_id'],$finishInfo,$living_info['living_master_id'],$living_info['other_id'],$outInfo,$error))
-                {
-                    return false;
-                }
-            }
-        }
-        else
-        {
-            $client->status = 1;
-            if(!self::SaveClient($client,$error))
-            {
-                return false;
-            }
-            //增加解封日志
-
-            $params = [
-                'client_no' => $client->client_no,
-                'nick_name' => $client->nick_name,
-                'manage_id' => \Yii::$app->user->id,
-                'manage_name' => \Yii::$app->user->identity->username,
-                'operate_type' => 2,
-                'management_type' => 2,
-                'create_time' => date('Y-m-d H:i:s')
-            ];
-
-            if (!self::CreateCloseUserByLog($params, $error)) {
-                return false;
-            }
-
-        }
-        return true;
-    }
-
-    /**
-     * 更新用户每次登陆时，记录其登陆的app_id,方便个推
-     * @param $userID
-     * @param $appID
-     * @return bool
-     */
-    public static function UpdateClientAppIDToLogin( $userID,$appID )
-    {
-        $updateSQL = " UPDATE   mb_client SET  app_id=:app_id  WHERE client_id=:client_id";
-        $retVal    = \Yii::$app->db->createCommand($updateSQL, [
-            ":app_id"=>$appID,
-            ":client_id"=>$userID
-        ])->execute();
-
-        if( $retVal< 0 )
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-
-    /**
      * 检测用户名是否被占用
      * @param $name
      * @param $user_id
@@ -1404,72 +908,4 @@ values(:rid,4,0,0,:ctime,0,0,"",:uid,:cname,:cno,"")';
         return true;
     }
 
-    /**
-     * 记录活跃用户
-     * @param $user_id
-     * @throws \yii\db\Exception
-     */
-    public static function AddActiveUser($user_id)
-    {
-        $sql = 'insert ignore into mb_login_info (user_id,login_time,record_time) VALUES (:uid,:ltime,:rtime)';
-        \Yii::$app->db->createCommand($sql,[
-            ':uid'=>$user_id,
-            ':ltime'=>date('Y-m-d H:i:s'),
-            ':rtime'=>date('Y-m-d')
-        ])->execute();
-
-        $update_sql = 'update mb_login_info set login_time=:ltime,record_time=:rtime WHERE user_id=:uid AND record_time != :utime';
-        \Yii::$app->db->createCommand($update_sql,[
-            ':uid'=>$user_id,
-            ':ltime'=>date('Y-m-d H:i:s'),
-            ':rtime'=>date('Y-m-d'),
-            ':utime' => date('Y-m-d')
-        ])->execute();
-    }
-
-
-    /**
-     * 记录在线人数
-     * @param $num
-     * @throws \yii\db\Exception
-     */
-    public static function AddOnlineUser($num)
-    {
-        $datetime = date('Y-m-d H', mktime(date('H') - 1));
-
-        $sql = 'insert ignore into mb_statistic_online_num (statistic_time,statistic_num) VALUES (:stime,:num)';
-        $result = \Yii::$app->db->createCommand($sql,[
-            ':stime'=>$datetime,
-            ':num'=>$num
-        ])->execute();
-        if($result <= 0)
-        {
-            \Yii::getLogger()->log('sql === '.\Yii::$app->db->createCommand($sql)->rawSql,Logger::LEVEL_ERROR);
-            $error = '数据插入失败';
-            return false;
-        }
-    }
-
-
-    /**
-     * 判断日期是否已经统计过
-     * @param $type
-     * @param $statistic_time
-     * @param $error
-     * @return bool
-     */
-    public static function CheckDateIsExist($statistic_time,&$error){
-        $query = (new Query())
-            ->select(['record_id'])
-            ->from('mb_statistic_online_num')
-            ->where('statistic_time = :stime',[
-                ':stime' => $statistic_time
-            ])
-            ->one();
-        if(!empty($query['record_id'])){
-            $error = '数据已经统计过了';
-            return false;
-        }
-        return true;
-    }
 } 
