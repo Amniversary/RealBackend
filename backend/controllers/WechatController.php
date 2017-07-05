@@ -140,5 +140,15 @@ class WechatController extends Controller
         return $this->redirect(['publiclist/index']);
     }
 
-
+    /**
+     * 截取微信回调的动态路由
+     * @param $rules //请求Url地址 去掉host test：wechat/wx1283196321321/callback
+     * @return string  //AppId 微信公众号的原始ID
+     */
+    private function getRulesAppid($rules)
+    {
+        $strstr = strstr($rules,"/");
+        $strrpos = strtok($strstr,"/");
+        return $strrpos;
+    }
 }

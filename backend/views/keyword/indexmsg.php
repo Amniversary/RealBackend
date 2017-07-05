@@ -17,7 +17,6 @@
         padding: 6px 12px;
     }
 </style>
-
 <?php
 
 use kartik\grid\GridView;
@@ -30,6 +29,7 @@ if(!$is_verify){
         ]
     ]);
 }
+
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
     [
@@ -41,6 +41,14 @@ $gridColumns = [
         'filter'=>false,
     ],
     [
+        'attribute'=>'key_id',
+        'vAlign'=>'middle',
+        'value'=>function($model){
+            return \common\models\Keywords::getKeyName($model->key_id);
+        },
+        'filter'=>false,
+    ],
+    [
         'attribute'=>'msg_type',
         'vAlign'=>'middle',
         'value'=>function($model){
@@ -48,10 +56,7 @@ $gridColumns = [
         },
         'filter'=>['0'=>'文本消息','1'=>'图文消息'],
     ],
-    [
-        'attribute'=>'event_id',
-        'vAlign'=>'事件 ID',
-    ],
+
     [
         'attribute'=>'title',
         'vAlign'=>'middle',
@@ -77,6 +82,10 @@ $gridColumns = [
         'filter'=>false,
     ],
     [
+        'attribute'=>'event_id',
+        'vAlign'=>'middle',
+    ],
+    [
         'attribute'=>'create_time',
         'vAlign'=>'middle',
         'filterType'=>'\yii\jui\DatePicker',
@@ -96,10 +105,10 @@ $gridColumns = [
             $url = '';
             switch ($action){
                 case 'update':
-                    $url = '/publiclist/update?record_id='.strval($model->record_id);
+                    $url = '/keyword/updatemsg?record_id='.strval($model->record_id);
                     break;
                 case 'delete':
-                    $url = '/publiclist/delete?record_id='.strval($model->record_id);
+                    $url = '/keyword/deletemsg?record_id='.strval($model->record_id);
                     break;
             }
             return $url;
@@ -108,10 +117,10 @@ $gridColumns = [
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'update'=>function($url, $model){
-                return Html::a('修改', $url,['title'=>'修改信息','class'=>'back-a','style'=>'margin-right:10px']);
+                return Html::a('修改', $url,['class'=>'back-a','style'=>'margin-right:10px']);
             },
             'delete'=>function($url, $model){
-                return Html::a('删除',$url,['title'=>'删除','class'=>'delete back-a','data-toggle'=>false]);
+                return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false]);
             }
         ],
     ],
@@ -119,7 +128,7 @@ $gridColumns = [
 ];
 
 echo GridView::widget([
-    'id'=>'attention_event',
+    'id'=>'keywordMsg',
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'columns' =>$gridColumns,
@@ -127,7 +136,7 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('添加回复',['type'=>'button','title'=>'添加回复', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('publiclist/createmsg').'";return false;']),
+            'content'=> Html::button('添加回复消息',['id'=>'cry-msg','type'=>'button','title'=>'添加回复', 'class'=>'btn btn-success']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
@@ -152,7 +161,28 @@ echo \yii\bootstrap\Modal::widget([
 );
 
 $js='
-$("#attention_event-pjax").on("click",".delete",function(){
+$("#cry-msg").on("click",function(){
+    $url = "http://"+ window.location.host + "/keyword/check";
+    $.ajax({
+        type:"POST",
+        url:$url,
+        data: "",
+        success: function(data){
+            data = $.parseJSON(data);
+            if(data.code == "0"){
+                location="'.\Yii::$app->urlManager->createUrl('keyword/createmsg').'";
+                return false;
+            }else{
+                alert(data.msg);
+                return false;
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
+        }
+    })
+});
+$("#keywordMsg-pjax").on("click",".delete",function(){
 if(!confirm("确定要删除该记录吗？"))
     {
         return false;
@@ -167,7 +197,7 @@ if(!confirm("确定要删除该记录吗？"))
                data = $.parseJSON(data);
                 if(data.code == "0")
                 {
-                    $("#attention_event").yiiGridView("applyFilter");
+                    $("#keywordMsg").yiiGridView("applyFilter");
                 }
                 else
                 {
@@ -182,5 +212,6 @@ if(!confirm("确定要删除该记录吗？"))
         });
        return false;
 });
+
 ';
 $this->registerJs($js,\yii\web\View::POS_END);

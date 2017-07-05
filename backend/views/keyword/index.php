@@ -17,11 +17,13 @@
         padding: 6px 12px;
     }
 </style>
-
 <?php
 
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
+/**
+ *  @var $model common\models\Keywords
+ */
 if(!$is_verify){
     echo \yii\bootstrap\Alert::widget([
         'body'=>'公众号未认证，无法进行相应操作！',
@@ -31,60 +33,27 @@ if(!$is_verify){
     ]);
 }
 $gridColumns = [
-    ['class' => 'kartik\grid\SerialColumn'],
+    ['class'=>'kartik\grid\SerialColumn'],
     [
         'attribute'=>'app_id',
         'vAlign'=>'middle',
         'value'=>function($model){
-            return $model::getKeyAppId($model->app_id);
+            return \common\models\AttentionEvent::getKeyAppId($model->app_id);
         },
         'filter'=>false,
     ],
     [
-        'attribute'=>'msg_type',
+        'attribute'=>'keyword',
+        'vAlign'=>'middle',
+        'filter'=>false,
+    ],
+    [
+        'attribute'=>'rule',
         'vAlign'=>'middle',
         'value'=>function($model){
-            return $model->getMsgType($model->msg_type);
+            return  ($model->rule == 1 ? '精准匹配' : '模糊匹配');
         },
-        'filter'=>['0'=>'文本消息','1'=>'图文消息'],
-    ],
-    [
-        'attribute'=>'event_id',
-        'vAlign'=>'事件 ID',
-    ],
-    [
-        'attribute'=>'title',
-        'vAlign'=>'middle',
-        'filter'=>false,
-    ],
-    [
-        'attribute'=>'description',
-        'vAlign'=>'middle',
-        'value'=>function($model){
-            $len = strlen($model->description);
-            if($len > 10){
-                return mb_substr($model->description,0,15) . '....';
-            }else{
-                return $model->description;
-            }
-        },
-        'filter'=>false,
-    ],
-    [
-        'attribute'=>'content',
-        'vAlign'=>'middle',
-        'format'=>'html',
-        'filter'=>false,
-    ],
-    [
-        'attribute'=>'create_time',
-        'vAlign'=>'middle',
-        'filterType'=>'\yii\jui\DatePicker',
-        'filterWidgetOptions'=>[
-            'language'=>'zh-CN',
-            'dateFormat'=>'yyyy-MM-dd',
-            'options'=>['class'=>'form-control','style'=>'display:inline-block;']
-        ],
+        'filter'=>false
     ],
     [
         'class'=>'kartik\grid\ActionColumn',
@@ -92,14 +61,14 @@ $gridColumns = [
         'dropdown'=>false,
         'vAlign'=>'middle',
         'width'=>'200px',
-        'urlCreator'=> function($action, $model , $key , $index){
+        'urlCreator'=>function($action, $model, $key, $index){
             $url = '';
             switch ($action){
                 case 'update':
-                    $url = '/publiclist/update?record_id='.strval($model->record_id);
+                    $url = '/keyword/update?key_id='.strval($model->key_id);
                     break;
                 case 'delete':
-                    $url = '/publiclist/delete?record_id='.strval($model->record_id);
+                    $url = '/keyword/delete?key_id='.strval($model->key_id);
                     break;
             }
             return $url;
@@ -108,18 +77,19 @@ $gridColumns = [
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'update'=>function($url, $model){
-                return Html::a('修改', $url,['title'=>'修改信息','class'=>'back-a','style'=>'margin-right:10px']);
+                return Html::a('修改', $url,['title'=>'修改信息','style'=>'margin-right:10px','class'=>'back-a']);
             },
             'delete'=>function($url, $model){
-                return Html::a('删除',$url,['title'=>'删除','class'=>'delete back-a','data-toggle'=>false]);
+                return Html::a('删除',$url,['title'=>'删除','class'=>'delete back-a','data-toggle'=>false,'data-pjax'=>'0']);
             }
         ],
-    ],
+    ]
+
 
 ];
 
 echo GridView::widget([
-    'id'=>'attention_event',
+    'id'=>'keyword_list',
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'columns' =>$gridColumns,
@@ -127,7 +97,7 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('添加回复',['type'=>'button','title'=>'添加回复', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('publiclist/createmsg').'";return false;']),
+            'content'=> Html::button('添加关键词',['type'=>'button','title'=>'添加关键词', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('keyword/create').'";return false;']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
@@ -144,16 +114,9 @@ echo GridView::widget([
     ],
 ]);
 
-echo \yii\bootstrap\Modal::widget([
-        'id' => 'contact-modal',
-        'clientOptions' => false,
-        'size'=>\yii\bootstrap\Modal::SIZE_LARGE,
-    ]
-);
-
 $js='
-$("#attention_event-pjax").on("click",".delete",function(){
-if(!confirm("确定要删除该记录吗？"))
+$("#keyword_list-pjax").on("click",".delete",function(){
+ if(!confirm("确定要删除该记录吗？"))
     {
         return false;
     }
@@ -167,12 +130,11 @@ if(!confirm("确定要删除该记录吗？"))
                data = $.parseJSON(data);
                 if(data.code == "0")
                 {
-                    $("#attention_event").yiiGridView("applyFilter");
+                    $("#keyword_list").yiiGridView("applyFilter");
                 }
                 else
                 {
                     alert("删除失败：" + data.msg);
-                    
                 }
             },
         error: function (XMLHttpRequest, textStatus, errorThrown)
@@ -180,7 +142,7 @@ if(!confirm("确定要删除该记录吗？"))
                 alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
              }
         });
-       return false;
+        return false;
 });
 ';
 $this->registerJs($js,\yii\web\View::POS_END);

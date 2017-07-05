@@ -16,6 +16,7 @@ use backend\business\WeChatUtil;
 use common\components\Des3Crypt;
 use common\components\UsualFunForNetWorkHelper;
 use common\models\Client;
+use common\models\Keywords;
 use common\models\Menu;
 use common\models\User;
 use common\models\UserMenu;
@@ -26,6 +27,8 @@ class FuckController extends Controller
     public function actionIndex()
     {
         echo "<pre>";
+        \Yii::$app->cache->delete('app_backend_1');
+        exit;
         $key = 'user_menu_1';
         $cnt = \Yii::$app->cache->get($key);
         $key2 = 'user_power_1';
@@ -49,7 +52,7 @@ class FuckController extends Controller
                 exit;
 
 
-        $access = '9LkcKIAHZRbwkx6pK0CXo3V1NpStvVJI6-5j_yUG0n4ysOMOGs9fprMv7XtET5QFA33WwMqy-oyBhvHoUHmkq2WvRzv7_HrpBCQuCZxJc3GbfOgiffNaBIo8uvU77VB6GHKiAIDWXA';
+         $access = '9LkcKIAHZRbwkx6pK0CXo3V1NpStvVJI6-5j_yUG0n4ysOMOGs9fprMv7XtET5QFA33WwMqy-oyBhvHoUHmkq2WvRzv7_HrpBCQuCZxJc3GbfOgiffNaBIo8uvU77VB6GHKiAIDWXA';
         $rst = WeChatUserUtil::getUserInfo($access,'oB4Z-wf0FYMlI7fW4ZvD90Y06RxA');//oB4Z-wf0FYMlI7fW4ZvD90Y06RxA
          echo "<br />";
          print_r($rst);
@@ -89,39 +92,126 @@ class FuckController extends Controller
         print_r(!empty($setMenuPower));
     }
 
-    public function actionDelete()
+    public function actionTest1()
     {
-
-
-
-
-        exit;
-        \Yii::$app->cache->delete('app_backend_1');
-        echo 'OK';
+        echo "<pre>";
+        $query = (new Query())
+            ->select(['app_id','event_id','content','msg_type','title','description','url','picurl'])
+            ->from('wc_attention_event')
+            ->where(['app_id'=>3,'flag'=>0])->all();
+        //print_r($query);
+        $data = [];
+        foreach ($query as $list){
+            if($list['msg_type'] == 0){
+                $data[] = ['content'=>$list['content'],'msg_type'=>$list['msg_type']];
+            }
+        }
+        $articles = [];
+        foreach ($query as $item){
+            if($item['msg_type'] == 1){
+                $articles[$item['event_id']][] = [
+                    'title' => $item['title'],
+                    'description' => $item['description'],
+                    'url' => $item['url'],
+                    'picurl' => $item['picurl']
+                ];
+            }
+        }
+        foreach ($articles as $key){
+            $data[] = $key;
+        }
+        print_r($data);
     }
 
     public function actionSet()
     {
-        $json = \Yii::$app->cache->get('app_backend_1');
-        $cache = json_decode($json,true);
-        var_dump($cache);
-    }
-    public function actionBh(){
         echo "<pre>";
         $appid = 'wx1024c6215af20360';
         $openid = 'oB4Z-wf0FYMlI7fW4ZvD90Y06RxA';
         $openInfo = AuthorizerUtil::getAuthOne($appid);
         $access_token = $openInfo->authorizer_access_token;
-        $url = sprintf('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s',
-            $access_token);
+        $text = '11';
+        $query = (new Query())
+            ->select(['key_id','keyword','rule'])
+            ->from('wc_keywords')
+            ->where(['app_id'=>3])->all();
+        $flag = null;
+        if(!empty($query))
+        {
+            foreach ($query as $item){
+                $flag = false;
+                if($item['rule'] == 1){
+                    if($text == $item['keyword']) $flag = true;
+                }else{
+                    if(strpos($item['keyword'],$text) !== false) $flag = true;
+                }
+                print_r($item);
+                var_dump($flag);
 
-        $data = WeChatUserUtil::msgNews($openid);
-        $json = json_encode($data,JSON_UNESCAPED_UNICODE);
-        print_r($data);
-        echo "<br />";
-        $rst = UsualFunForNetWorkHelper::HttpsPost($url,$json);
-        echo "发送客服消息：";
-        print_r($rst);
+                if($flag){
+                    //TODO:处理消息回复逻辑
+                    $msgData = AuthorizerUtil::getAttentionMsg(3,1,$item['key_id']);
+                    print_r($msgData);
+                    if(!empty($msgData)){
+                        foreach ($msgData as $info){
+                            if(!isset($info['msg_type']))
+                                $info['msg_type'] = 1;
+
+                            $url = sprintf('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s',
+                                $access_token);
+                            switch ($info['msg_type']) {
+                                case '0':
+                                    $data = WeChatUserUtil::msgText($openid,$info['content']);
+                                    break;
+                                case '1':
+                                    $data = WeChatUserUtil::msgNews($openid,$info);
+                                    break;
+                            }
+                            $json = json_encode($data,JSON_UNESCAPED_UNICODE);
+                            echo "<br />";
+                            print_r($data);
+                            $rst = UsualFunForNetWorkHelper::HttpsPost($url,$json);
+                            echo "发送客服消息：";
+                            print_r($rst);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    public function actionBh(){
+        echo "<pre>";
+        $appid = 'wx1024c6215af20360';
+        $openid = 'oB4Z-wUNBqNHzQDbQkjA6XXwOPMg';
+        $openInfo = AuthorizerUtil::getAuthOne($appid);
+        $access_token = $openInfo->authorizer_access_token;
+
+        $msgInfo = AuthorizerUtil::getAttentionMsg(3);
+
+        foreach ($msgInfo as $info){
+            if(!isset($info['msg_type'])){
+                $info['msg_type'] = 1;
+            }
+            $url = sprintf('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s',
+                $access_token);
+            switch ($info['msg_type']) {
+                case '0':
+                    $data = WeChatUserUtil::msgText($openid,$info['content']);
+                    break;
+                case '1':
+                    $data = WeChatUserUtil::msgNews($openid,$info);
+                    break;
+            }
+            $json = json_encode($data,JSON_UNESCAPED_UNICODE);
+            echo "<br />";
+            print_r($data);
+            $rst = UsualFunForNetWorkHelper::HttpsPost($url,$json);
+            echo "发送客服消息：";
+            print_r($rst);
+
+        }
+
 
         exit;
         $sql = '';

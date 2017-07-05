@@ -166,6 +166,7 @@ class WeChatUtil
             $AuthAppid = AuthorizationList::findOne(['authorizer_appid'=>$item['authorizer_appid']]);
             $AuthAppid->authorizer_access_token = $rst['authorizer_access_token'];
             $AuthAppid->authorizer_refresh_token = $rst['authorizer_refresh_token'];
+            $AuthAppid->update_time = $date;
             if(!$AuthAppid->save()){
                 \Yii::error('保存授权数据失败: '.var_export($AuthAppid->getErrors(),true));
                 echo '保存授权新数据失败: '."time: $date\n";

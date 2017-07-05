@@ -51,7 +51,7 @@ class EventClass
         //TODO: 如果已关注 查出用户信息
         $UserInfo = AuthorizerUtil::getAuthOneForOpenId($openid,$appid);
         $openInfo = AuthorizerUtil::getAuthOne($appid);
-        if(empty($UserInfo)){
+        if(empty($UserInfo) && !isset($UserInfo)){
             //TODO: 未关注重新请求用户信息
             $UserInfo = WeChatUserUtil::getUserInfo($openInfo->authorizer_access_token,$openid);
             $UserInfo['open_id'] = $UserInfo['openid'];
@@ -66,12 +66,13 @@ class EventClass
             $content = null;
         }
         //TODO: 处理回复消息逻辑 走客服消息接口 回复多条消息
-        if(true){
-            $msgData = AuthorizerUtil::getAttentionMsg($openInfo->record_id);
-            if(!empty($msgData)){
-                foreach ($msgData as $item){
-                    WeChatUserUtil::sendCustomerMsg($openInfo->authorizer_access_token,$openid,$item);
+        $msgData = AuthorizerUtil::getAttentionMsg($openInfo->record_id);
+        if(!empty($msgData)){
+            foreach ($msgData as $item){
+                if(!isset($item['msg_type'])){
+                    $item['msg_type'] = 1;
                 }
+                WeChatUserUtil::sendCustomerMsg($openInfo->authorizer_access_token,$openid,$item);
             }
         }
 
@@ -79,9 +80,19 @@ class EventClass
         return null;
     }
 
-
+    /**
+     * 处理用户取消关注
+     */
     public function unSubscribe()
     {
+        $appid = $this->data['appid'];
+        $openid = $this->data['FromUserName'];
+        //TODO: 如果已关注 查出用户信息
+        $UserInfo = AuthorizerUtil::getAuthOneForOpenId($openid,$appid);
+        if(!empty($UserInfo)){
+            $UserInfo->subscribe = 0;
+            $UserInfo->save();
+        }
         return null;
     }
 }

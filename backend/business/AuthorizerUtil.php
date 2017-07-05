@@ -40,16 +40,51 @@ class AuthorizerUtil
     /**
      * 获取消息列表
      * @param $id
-     * @return array
+     * @param $flag
+     * @param $key
+     * @return array|bool
      */
-    public static function getAttentionMsg($id)
+    public static function getAttentionMsg($id,$flag = 0,$key = null)
     {
+        if(!empty($key)){
+            $condition = sprintf('app_id=%s and flag=%s and key_id=%s',
+                $id,$flag,$key);
+        }else{
+            $condition = sprintf('app_id=%s and flag=%s',
+                $id,$flag);
+        }
+
         $query = (new Query())
-            ->select(['record_id','app_id','content','msg_type','flag'])
+            ->select(['app_id','event_id','content','msg_type','title','description','url','picurl'])
             ->from('wc_attention_event')
-            ->where(['app_id'=>$id,'flag'=>0])
-            ->all();
-        return $query;
+            ->where($condition)->all();
+
+        if(empty($query)){
+            return false;
+        }
+        $data = [];
+        foreach ($query as $list){
+            if($list['msg_type'] == 0){
+                $data[] = ['content'=>$list['content'],'msg_type'=>$list['msg_type']];
+            }
+        }
+        $articles = [];
+        foreach ($query as $item){
+            if($item['msg_type'] == 1){
+                $articles[$item['event_id']][] = [
+                    'title' => $item['title'],
+                    'description' => $item['description'],
+                    'url' => $item['url'],
+                    'picurl' => $item['picurl']
+                ];
+            }
+        }
+        if(!empty($articles)){
+            foreach ($articles as $key){
+                $data[] = $key;
+            }
+        }
+        return $data;
     }
 
     /**
@@ -64,7 +99,10 @@ class AuthorizerUtil
         $model = $data;
         if(!$flag){
             $model = new Client();
-            $model->open_id = $data['open_id'];
+            if(!isset($data['open_id'])){
+                \Yii::error('not OpenId: '.var_export($data,true));
+            }
+            $model->open_id = isset($data['open_id'])? $data['open_id'] : '';
             $model->app_id = $app_id;
             $model->create_time = date('Y-m-d H:i:s');
         }

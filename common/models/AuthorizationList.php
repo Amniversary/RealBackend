@@ -100,7 +100,7 @@ class AuthorizationList extends \yii\db\ActiveRecord
     public function getServiceTypeInfo($status){
         switch (intval($status)){
             case 0: $rst = '订阅号';break;
-            case 1: $rst = '订阅号';break;
+            case 1: $rst = '订阅号';break;//代表老账号升级后都订阅号
             case 2: $rst = '服务号';break;
             default: $rst = '未知类型';break;
         }
@@ -114,13 +114,13 @@ class AuthorizationList extends \yii\db\ActiveRecord
      */
     public function getVerifyTypeInfo($status){
         switch ($status){
-            case '-1': $rst = '未认证';break;
-            case '0': $rst = '已认证';break;
-            case '1': $rst = '已认证';break;
-            case '2': $rst = '已认证';break;
-            case '3': $rst = '未认证';break;
-            case '4': $rst = '未认证';break;
-            case '5': $rst = '未认证';break;
+            case '-1': $rst = '未认证';break; //未认证
+            case '0': $rst = '已认证';break; //微信认证
+            case '1': $rst = '未认证';break; //新浪微博认证
+            case '2': $rst = '未认证';break; //腾讯微博认证
+            case '3': $rst = '已认证';break; //资质认证,未名称认证
+            case '4': $rst = '已认证';break; //资质认证,未名称认证,新浪微博认证
+            case '5': $rst = '已认证';break; //资质认证,未名称认证,腾讯微博认证
             default: $rst = '未知类型';break;
         }
         return $rst;

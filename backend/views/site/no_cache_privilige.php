@@ -7,7 +7,7 @@
  */
 $this->title = 'Real数据平台';
 echo \yii\bootstrap\Alert::widget([
-    'body'=>'您没有选择公众号，无法进行相应操作！',
+    'body'=>'您没有选择公众号或公众号令牌已重新刷新，请重新选择公众号！',
     'options'=>[
         'class'=>'alert-danger',
     ]

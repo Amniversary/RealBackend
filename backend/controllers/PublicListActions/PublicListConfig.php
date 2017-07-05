@@ -23,5 +23,8 @@ return [
     ],
     'delete'=>[
         'class'=>'backend\controllers\PublicListActions\DeleteEventAction'
-    ]
+    ],
+    'update'=>[
+        'class'=>'backend\controllers\PublicListActions\UpdateAction',
+    ],
 ];

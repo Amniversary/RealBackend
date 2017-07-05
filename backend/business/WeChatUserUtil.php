@@ -34,23 +34,20 @@ class WeChatUserUtil
      * 发送客服消息
      * @param $access_token
      * @param $openid
-     * @param $keyWord
+     * @param $msgData
      */
-    public static function sendCustomerMsg($access_token,$openid,$keyWord)
+    public static function sendCustomerMsg($access_token,$openid,$msgData)
     {
         $url = sprintf('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s',
             $access_token);
-        switch ($keyWord['msg_type']) {
+
+        switch ($msgData['msg_type']) {
             case '0':
-                $data = self::msgText($openid,$keyWord['content']);
+                $data = self::msgText($openid,$msgData['content']);
                 break;
             case '1':
-                $data = self::msgImage($openid,$keyWord['content']);
+                $data = self::msgNews($openid,$msgData);
                 break;
-            case '2':
-                $data = self::msgNews($openid,$keyWord);
-                break;
-
         }
         $json = json_encode($data,JSON_UNESCAPED_UNICODE);
         \Yii::error('data :' . $json);
@@ -61,26 +58,14 @@ class WeChatUserUtil
     /**
      * 图文消息模版
      */
-    public static function msgNews($openid)
+    public static function msgNews($openid,$msgData)
     {
+        unset($msgData['msg_type']);
         $data = [
             'touser'=>$openid,
             'msgtype'=>'news',
             'news'=>[
-                'articles'=>[
-                    [
-                        'title'=>'Happy Day',
-                        'description'=>'Is Really A Happy Day',
-                        'url'=>'http://img1.comic.zongheng.com/comic/image/2008/11/narakunoyaqi/500_500/20081216112049812011.jpg',
-                        'picurl'=>'http://img1.comic.zongheng.com/comic/image/2008/11/narakunoyaqi/500_500/20081216112049812011.jpg',
-                    ],
-                    [
-                        'title'=>'6666 ～',
-                        'description'=>'点点点进来快哦',
-                        'url'=>'http://img1.comic.zongheng.com/comic/image/2008/11/narakunoyaqi/500_500/20081216112049812011.jpg',
-                        'picurl'=>'http://img1.comic.zongheng.com/comic/image/2008/11/narakunoyaqi/500_500/20081216112049812011.jpg',
-                    ],
-                ],
+                'articles'=>$msgData
             ],
         ];
         return $data;
@@ -89,7 +74,7 @@ class WeChatUserUtil
     /**
      * 返回文本消息格式
      */
-    public function msgText($openid,$content)
+    public static function msgText($openid,$content)
     {
         $dataMsg = [
             'touser'=>$openid,

@@ -18,6 +18,7 @@ use yii\db\Query;
  * @property string $description
  * @property string $url
  * @property string $picurl
+ * @property string $key_id
  * @property string $create_time
  * @property integer $flag
  * @property string $remark1
@@ -42,9 +43,10 @@ class AttentionEvent extends ActiveRecord
     {
         return [
             [['app_id'], 'required'],
-            [['app_id', 'msg_type', 'flag', 'event_id'], 'integer'],
+            [['app_id', 'msg_type', 'flag', 'event_id','key_id'], 'integer'],
             [['create_time','title','description','url','picurl'], 'safe'],
-            [['content', 'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
+            [['remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
+            [['content'], 'string', 'max'=>1000],
         ];
     }
 
@@ -64,7 +66,8 @@ class AttentionEvent extends ActiveRecord
             'description' => '内容描述',
             'url' => '外链Url',
             'picurl' => '图片Url',
-            'flag' => 'Flag',
+            'key_id' => '关键字ID',
+            'flag' => '0 关注类型  1关键词类型 2自定义菜单',
             'remark1' => 'Remark1',
             'remark2' => 'Remark2',
             'remark3' => 'Remark3',
@@ -78,7 +81,7 @@ class AttentionEvent extends ActiveRecord
      * @param $record_id
      * @return string
      */
-    public function getKeyAppId($record_id)
+    public static function getKeyAppId($record_id)
     {
         $query = (new Query())
             ->select(['record_id','nick_name'])
