@@ -19,7 +19,10 @@ use yii\db\Query;
  * @property string $url
  * @property string $picurl
  * @property string $key_id
+ * @property string $media_id
+ * @property integer $update_time
  * @property string $create_time
+ * @property integer $order_no
  * @property integer $flag
  * @property string $remark1
  * @property string $remark2
@@ -43,8 +46,8 @@ class AttentionEvent extends ActiveRecord
     {
         return [
             [['app_id'], 'required'],
-            [['app_id', 'msg_type', 'flag', 'event_id','key_id'], 'integer'],
-            [['create_time','title','description','url','picurl'], 'safe'],
+            [['app_id', 'msg_type', 'update_time','flag', 'event_id','key_id','order_no'], 'integer'],
+            [['create_time','title','description','url','picurl','media_id'], 'safe'],
             [['remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
             [['content'], 'string', 'max'=>1000],
         ];
@@ -59,14 +62,17 @@ class AttentionEvent extends ActiveRecord
             'record_id' => '记录 ID',
             'app_id' => '公众号',
             'event_id' => '事件 ID',
-            'content' => '消息内容',
+            'content' => '文本内容',
             'msg_type' => '消息类型',
             'create_time' => '创建时间',
-            'title' => '标题',
+            'title' => '图文标题',
             'description' => '内容描述',
             'url' => '外链Url',
             'picurl' => '图片Url',
             'key_id' => '关键字ID',
+            'media_id' => '图片media_id',
+            'order_no'=>'排序号',
+            'update_time' => '更新media_id的时间',
             'flag' => '0 关注类型  1关键词类型 2自定义菜单',
             'remark1' => 'Remark1',
             'remark2' => 'Remark2',
@@ -101,7 +107,7 @@ class AttentionEvent extends ActiveRecord
         switch (intval($status)){
             case 0: $rst = '文本消息'; break;
             case 1: $rst = '图文消息'; break;
-            case 2: $rst = '跳转链接'; break;
+            case 2: $rst = '图片消息'; break;
             default: $rst = '未知类型'; break;
         }
         return $rst;

@@ -12,10 +12,10 @@ use yii\filters\AccessControl;
 return [
     'access' => [
         'class' => AccessControl::className(),
-        'only' => ['attention'],
+        'only' => ['index','attention','create'],
         'rules' => [
             [
-                'actions' => ['attention'],
+                'actions' => ['index','attention','create'],
                 'allow' => true,
                 'roles' => ['@'],
             ],
@@ -28,4 +28,5 @@ return [
             'setstatus'=>['post'],
         ],
     ],
+
 ];

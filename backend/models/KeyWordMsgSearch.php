@@ -22,7 +22,7 @@ class KeyWordMsgSearch extends AttentionEvent
     public function rules()
     {
         return [
-            [['app_id', 'msg_type', 'flag','key_id'], 'integer'],
+            [['event_id','app_id', 'msg_type', 'flag','key_id'], 'integer'],
             [['create_time','content' ,'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
         ];
     }
@@ -64,6 +64,7 @@ class KeyWordMsgSearch extends AttentionEvent
         }
         $query->andFilterWhere([
             'msg_type' => $this->msg_type,
+            'event_id' =>$this->event_id,
         ]);
 
         return $dataProvider;

@@ -48,23 +48,23 @@ class EventClass
     {
         $appid = $this->data['appid'];
         $openid = $this->data['FromUserName'];
+        $flag = true;
         //TODO: 如果已关注 查出用户信息
-        $UserInfo = AuthorizerUtil::getAuthOneForOpenId($openid,$appid);
         $openInfo = AuthorizerUtil::getAuthOne($appid);
-        if(empty($openInfo)){
+        $UserInfo = AuthorizerUtil::getUserForOpenId($openid,$openInfo->record_id);
+        if(empty($openInfo) || !isset($openInfo)){
             \Yii::error('找不到对应的公众号信息 ： AppId:'.$appid );
             return null;
         }
-        if(empty($UserInfo) && !isset($UserInfo)){
-            //TODO: 未关注重新请求用户信息
-            $UserInfo = WeChatUserUtil::getUserInfo($openInfo->authorizer_access_token,$openid);
-            $UserInfo['open_id'] = $UserInfo['openid'];
-            unset($UserInfo['openid']);
-            $flag = false;
-        }else{
-            $flag = true;
-        }
-        $model = AuthorizerUtil::genModel($UserInfo,$appid,$flag);
+        // 未关注重新请求用户信息
+        $getData = WeChatUserUtil::getUserInfo($openInfo->authorizer_access_token,$openid);
+        if($getData['errcode'] != 0 ) return null;
+        $getData['open_id'] = $getData['openid'];
+        unset($getData['openid']);
+        if(empty($UserInfo) || !isset($UserInfo)) $flag = false;
+        if(!isset($getData['open_id'])) return null;
+        $getData['app_id'] = $openInfo['record_id'];
+        $model = AuthorizerUtil::genModel($UserInfo,$getData,$flag);
         if(!$model->save()){
             \Yii::error('保存微信用户信息失败：'.var_export($model->getErrors(),true));
             $content = null;
@@ -89,12 +89,13 @@ class EventClass
      */
     public function unSubscribe()
     {
-        $appid = $this->data['appid'];
+        $AuthInfo = AuthorizerUtil::getAuthOne($this->data['appid']);
         $openid = $this->data['FromUserName'];
         //TODO: 如果已关注 查出用户信息
-        $UserInfo = AuthorizerUtil::getAuthOneForOpenId($openid,$appid);
+        $UserInfo = AuthorizerUtil::getUserForOpenId($openid,$AuthInfo->record_id);
         if(!empty($UserInfo)){
             $UserInfo->subscribe = 0;
+            $UserInfo->update_time = date('Y-m-d H:i:s');
             $UserInfo->save();
         }
         return null;

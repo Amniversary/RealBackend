@@ -9,10 +9,37 @@
 namespace common\components;
 //include  __DIR__.'/oss/sdk.class.php';
 use common\components\oss\ALIOSS;
+use Qiniu\Auth;
+use Qiniu\Storage\UploadManager;
 use yii\log\Logger;
 
 class OssUtil
 {
+    /**
+     * 上传图片到七牛oss
+     * @param $fileName  //上传成功后返回到图片名 加后缀
+     * @param $file   //上传图片的物理路径
+     * @param $picUrl
+     * @param $error
+     * @return bool
+     */
+    public static function UploadQiniuFile($fileName,$file,&$picUrl,&$error)
+    {
+        $params = \Yii::$app->params['QiNiuOss'];
+        $auth = new Auth($params['ak'],$params['sk']);
+        $bucket = $params['bucket'];
+        $token = $auth->uploadToken($bucket);
+        $uploadMgr = new UploadManager();
+        list($picUrl, $error) = $uploadMgr->putFile($token, $fileName, $file);
+        if($error !== null) {
+            $error = '上传失败';
+            return false;
+        }
+        $picUrl = $params['link'].$picUrl['key'];
+        return true;
+    }
+
+
     /**
      * 上传图片到oss
      * @param $picName  图片名称不包含后缀名

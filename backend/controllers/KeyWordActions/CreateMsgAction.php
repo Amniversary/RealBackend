@@ -10,10 +10,13 @@ namespace backend\controllers\KeyWordActions;
 
 
 use backend\business\WeChatUserUtil;
+use backend\business\WeChatUtil;
 use backend\components\ExitUtil;
+use common\components\UsualFunForNetWorkHelper;
 use common\models\AttentionEvent;
 use common\models\Keywords;
 use yii\base\Action;
+use yii\web\HttpException;
 
 class CreateMsgAction extends Action
 {
@@ -27,6 +30,12 @@ class CreateMsgAction extends Action
         $model->create_time = date('Y-m-d H:i:s');
 
         if($model->load(\Yii::$app->request->post()) && $model->save()){
+            if($model->msg_type == 2){
+                $rst = (new WeChatUtil())->UploadWeChatImg($model->picurl);
+                $model->media_id = $rst['media_id'];
+                $model->update_time = $rst['created_at'];
+                $model->save();
+            }
             return $this->controller->redirect('keyword');
         }else{
             return $this->controller->render('createmsg',[

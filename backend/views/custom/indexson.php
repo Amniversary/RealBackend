@@ -21,55 +21,49 @@
 
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
-/**
- *  @var $model common\models\Keywords
- *  @var $is_verify
- */
-if(!$is_verify){
-    echo \yii\bootstrap\Alert::widget([
-        'body'=>'公众号未认证，无法进行相应操作！',
-        'options'=>[
-            'class'=>'alert-warning',
-        ]
-    ]);
-}
+
 $gridColumns = [
     ['class'=>'kartik\grid\SerialColumn'],
     [
-        'attribute'=>'app_id',
+        'attribute'=>'name',
+        'vAlign'=>'middle',
+        'filter'=>false,
+    ],
+    [
+        'attribute'=>'type',
         'vAlign'=>'middle',
         'value'=>function($model){
-            return \common\models\AttentionEvent::getKeyAppId($model->app_id);
+            $rst = '';
+            switch ($model->type){
+                case 'click': $rst = '点击事件';break;
+                case 'view': $rst = '跳转链接';break;
+            }
+            return empty($model->type) ? '': $rst;
         },
         'filter'=>false,
     ],
     [
-        'attribute'=>'keyword',
-        'vAlign'=>'middle',
-        'filter'=>false,
-    ],
-    [
-        'attribute'=>'rule',
+        'attribute'=>'url',
         'vAlign'=>'middle',
         'value'=>function($model){
-            return  ($model->rule == 1 ? '精准匹配' : '模糊匹配');
+            return empty($model->url) ? '':$model->url;
         },
         'filter'=>false
     ],
-    [
+    /*[
         'class'=>'kartik\grid\ActionColumn',
-        'template'=>'{update}&nbsp;&nbsp;&nbsp;{delete}',
+        'template'=>'{son}&nbsp;&nbsp;&nbsp;',
         'dropdown'=>false,
         'vAlign'=>'middle',
         'width'=>'200px',
         'urlCreator'=>function($action, $model, $key, $index){
             $url = '';
             switch ($action){
-                case 'update':
-                    $url = '/keyword/update?key_id='.strval($model->key_id);
+                case 'son':
+                    $url = '/keyword/update?key_id='.strval($model->menu_id);
                     break;
                 case 'delete':
-                    $url = '/keyword/delete?key_id='.strval($model->key_id);
+                    $url = '/keyword/delete?key_id='.strval($model->menu_id);
                     break;
             }
             return $url;
@@ -77,20 +71,23 @@ $gridColumns = [
         'updateOptions'=>['title'=>'编辑','label'=>'编辑', 'data-toggle'=>false],
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
-            'update'=>function($url, $model){
-                return Html::a('修改', $url,['title'=>'修改信息','style'=>'margin-right:10px','class'=>'back-a']);
+            'son'=>function($url, $model){
+                if($model->is_list == 1){
+                    return Html::a('二级菜单管理', $url,['title'=>'修改信息','class'=>'back-a']);
+                }
+                return '';
             },
             'delete'=>function($url, $model){
                 return Html::a('删除',$url,['title'=>'删除','class'=>'delete back-a','data-toggle'=>false,'data-pjax'=>'0']);
             }
         ],
-    ]
+    ]*/
 
 
 ];
 
 echo GridView::widget([
-    'id'=>'keyword_list',
+    'id'=>'customson_list',
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'columns' =>$gridColumns,
@@ -98,7 +95,7 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('添加关键词',['type'=>'button','title'=>'添加关键词', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('keyword/create').'";return false;']),
+            'content'=> Html::button('返回',['type'=>'button','class'=>'btn btn-success','onclick'=>'location="'.\Yii::$app->urlManager->createUrl('custom/index').'";return false;']).'&nbsp;&nbsp;&nbsp;&nbsp;'.Html::button('添加关键词',['type'=>'button','title'=>'添加关键词', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('keyword/create').'";return false;']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
@@ -116,7 +113,7 @@ echo GridView::widget([
 ]);
 
 $js='
-$("#keyword_list-pjax").on("click",".delete",function(){
+$("#customson_list-pjax").on("click",".delete",function(){
  if(!confirm("确定要删除该记录吗？"))
     {
         return false;
@@ -131,7 +128,7 @@ $("#keyword_list-pjax").on("click",".delete",function(){
                data = $.parseJSON(data);
                 if(data.code == "0")
                 {
-                    $("#keyword_list").yiiGridView("applyFilter");
+                    $("#customson_list").yiiGridView("applyFilter");
                 }
                 else
                 {

@@ -14,21 +14,38 @@ use backend\business\UserMenuUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use common\components\Des3Crypt;
+use common\components\OssUtil;
 use common\components\UsualFunForNetWorkHelper;
 use common\models\Client;
 use common\models\Keywords;
 use common\models\Menu;
 use common\models\User;
 use common\models\UserMenu;
+
+use frontend\business\ClientUtil;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
 use yii\db\Query;
 use yii\web\Controller;
 class FuckController extends Controller
 {
+
+    public $enableCsrfValidation = false;
+
+    public function actions()
+    {
+        return require (__DIR__.'/FuckActions/FuckActionConfig.php');
+    }
+
     public function actionIndex()
     {
         echo "<pre>";
+        $rst = AuthorizerUtil::getAttentionMsg(3);
+        if(empty($rst)){
+            exit('没有数据');
+        }
+        print_r($rst);
+        exit;
         \Yii::$app->cache->delete('app_backend_1');
         exit;
         $key = 'user_menu_1';
@@ -39,9 +56,7 @@ class FuckController extends Controller
         print_r(json_decode($cnt1,true));
         exit;
         echo "<pre>";
-        $rst = AuthorizerUtil::getAttentionMsg(1);
-        print_r($rst);
-        exit;
+
         $content = '换一你过嘎洒点';
         $data = ['msgType'=>'text','content'=>$content];
         $json = json_encode($data,JSON_UNESCAPED_UNICODE);
@@ -128,6 +143,11 @@ class FuckController extends Controller
     public function actionSet()
     {
         echo "<pre>";
+        $file = 'http://7xld1x.com1.z0.glb.clouddn.com/858390311.jpg';
+        $we = new WeChatUtil();
+        $we->Upload($file,$rst,$error);
+        print_r($rst);
+        exit;
         $appid = 'wx1024c6215af20360';
         $openid = 'oB4Z-wf0FYMlI7fW4ZvD90Y06RxA';
         $openInfo = AuthorizerUtil::getAuthOne($appid);
@@ -147,13 +167,12 @@ class FuckController extends Controller
                 }else{
                     if(strpos($item['keyword'],$text) !== false) $flag = true;
                 }
-                print_r($item);
-                var_dump($flag);
 
                 if($flag){
                     //TODO:处理消息回复逻辑
                     $msgData = AuthorizerUtil::getAttentionMsg(3,1,$item['key_id']);
                     print_r($msgData);
+                    exit;
                     if(!empty($msgData)){
                         foreach ($msgData as $info){
                             if(!isset($info['msg_type']))
@@ -168,13 +187,16 @@ class FuckController extends Controller
                                 case '1':
                                     $data = WeChatUserUtil::msgNews($openid,$info);
                                     break;
+                                case '2':
+                                    $data = WeChatUserUtil::msgImage($openid,'');
+                                    break;
                             }
-                            $json = json_encode($data,JSON_UNESCAPED_UNICODE);
+                            /*$json = json_encode($data,JSON_UNESCAPED_UNICODE);
                             echo "<br />";
                             print_r($data);
                             $rst = UsualFunForNetWorkHelper::HttpsPost($url,$json);
                             echo "发送客服消息：";
-                            print_r($rst);
+                            print_r($rst);*/
                         }
                     }
                 }
@@ -183,15 +205,88 @@ class FuckController extends Controller
 
     }
 
+    public function actionTest2(){
+        //$wechat = new WeChatUtil();
+        echo "<pre>";
+        //$media_id = 'cpGUzwnhfmo29Am7-3dhpHdqtaUm2KKjaZ4Ybo6GwFgJw6Z-tENbQFMHY4mTUVGw';
+        //$access_token = '44tmwzyxd9bSFpTUequlHAjACSAaukCq2-Pp7eYQNg3mY20d_mDMr9XOA0oZcVal2y5a76mzJKI6ycmwhl2pjbvGnqRfCFCAR98m3VAnk1yFRu6NRR-EreOpOzgjQREdQBSeAFAHSJ';
+        print_r(\Yii::$app->getBasePath().'/web/wximages/');
+        exit;
+        $url = "http://7xld1x.com1.z0.glb.clouddn.com/858390311.jpg";
+        $file = basename($url);
+        $rst = UsualFunForNetWorkHelper::HttpGetImg($url,$content_type,$error);
+        if(empty($rst)){
+            print_r('error');
+            exit;
+        }
+        //求出文件格式
+        $filename = $file;
+        $dirname = "./wximages/";
+        if(!file_exists($dirname)){
+            mkdir($dirname,0777,true);
+        }
+        file_put_contents($dirname.$filename,$rst);
+        print_r($dirname.$filename);
+
+
+
+    }
+
     public function actionTestupload()
     {
-        $key = \Yii::$app->params['QiNiu'];
-        $auth = new Auth($key['ak'],$key['sk']);
-        $bucket = 'realtech-test';
-        $token = $auth->uploadToken($bucket);
-        print_r($token);
+        echo "<pre>";
+        $file = (__DIR__ . '/20081216112049812011.jpg');
+        $items = explode('\\', $file);
+       /* Array
+        (
+            [0] => /Users/a123/PhpstormProjects/version2/RealBackend/backend/controllers/20081216112049812011.jpg
+)*/
+        $len = count($items);
+        $file_name = $items[$len - 1];
+        if (strpos($file_name, '.jpg') === false) {
+            echo "not .jpg";
+            exit;
+        }
+        $fName = basename($file_name); //20081216112049812011.jpg
+        $picUrl = '';
+        $error = '';
+        // 初始化 UploadManager 对象并进行文件的上传
+        if (!OssUtil::UploadQiniuFile($fName, $file, $picUrl, $error)) {
+            print_r($error);
+            exit;
+        }
+        print_r($picUrl);
+
         exit;
-        $uploadMgr = new UploadManager();
+        $dir = \Yii::$app->getBasePath().'/web/tttt';
+        $picList = [];
+        $files = scandir($dir);
+        $picStrList = '';
+        foreach($files as $file) {
+            $items = explode('\\', $file);
+            $len = count($items);
+            $file_name = $items[$len - 1];
+            if (strpos($file_name, '.jpg') === false) {
+                echo "not .jpg";
+                exit;
+            }
+            $fName = str_replace('.jpg', '', $file_name);
+            $suffix = 'jpg';
+            $picUrl = '';
+            $error = '';
+            //print_r($thumb_files);
+            $key = 'user-admin.png';
+            // 初始化 UploadManager 对象并进行文件的上传
+            if (!OssUtil::UploadQiniuFile($file_name, $file, $picUrl, $error)) {
+                return false;
+            }
+            $picStrList .= $picUrl."\r\n";
+            $picList[]=$picUrl;
+        }
+        var_dump($picList);
+        $fileStore = $dir.'/picurl.txt';
+        file_put_contents($fileStore,$picStrList);
+        exit;
     }
 
     public function actionBh(){
@@ -235,4 +330,6 @@ class FuckController extends Controller
         $sql .= sprintf('insert into %s_user_menu(user_id,menu_id) values(%s,%s);',$table,$str1,$str2);
         print_r($sql);
     }
+
+
 }

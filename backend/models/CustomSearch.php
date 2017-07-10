@@ -2,19 +2,19 @@
 /**
  * Created by PhpStorm.
  * User: a123
- * Date: 17/7/2
- * Time: 下午10:03
+ * Date: 17/7/7
+ * Time: 下午4:40
  */
 
 namespace backend\models;
 
 
 use backend\business\WeChatUserUtil;
-use common\models\AttentionEvent;
+use common\models\AuthorizationMenu;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-class AttentionMsgSearch extends AttentionEvent
+class CustomSearch extends AuthorizationMenu
 {
     /**
      * @inheritdoc
@@ -22,8 +22,8 @@ class AttentionMsgSearch extends AttentionEvent
     public function rules()
     {
         return [
-            [['key_id','app_id', 'msg_type', 'flag'], 'integer'],
-            [['event_id','create_time','content' ,'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
+            [['app_id','is_list'], 'integer'],
+            [['name', 'type', 'key_type', 'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
         ];
     }
 
@@ -45,7 +45,7 @@ class AttentionMsgSearch extends AttentionEvent
     public function search($params)
     {
         $cacheInfo = WeChatUserUtil::getCacheInfo();
-        $query = AttentionEvent::find()->where(['app_id'=>$cacheInfo['record_id'],'flag'=>0]);
+        $query = AuthorizationMenu::find()->where(['app_id'=>$cacheInfo['record_id']]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,14 +57,8 @@ class AttentionMsgSearch extends AttentionEvent
             return $dataProvider;
         }
 
-        if(!empty($this->create_time)){
-            $start_time = date('Y-m-d 00:00:00',strtotime($this->create_time));
-            $end_time = date('Y-m-d 23:00:00',strtotime($this->create_time));
-            $query->andFilterWhere(['between' , 'create_time', $start_time, $end_time]);
-        }
         $query->andFilterWhere([
-            'msg_type' => $this->msg_type,
-            'event_id' =>$this->event_id,
+
         ]);
 
         return $dataProvider;

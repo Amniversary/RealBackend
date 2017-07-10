@@ -1,4 +1,8 @@
 <style>
+    .user-pic{
+        width: 60px;
+        height: 60px;
+    }
     .back-a{
         display: inline-block;
         font-size: 14px;
@@ -32,14 +36,14 @@ if(!$is_verify){
 
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
-    [
+    /*[
         'attribute'=>'app_id',
         'vAlign'=>'middle',
         'value'=>function($model){
             return $model::getKeyAppId($model->app_id);
         },
         'filter'=>false,
-    ],
+    ],*/
     [
         'attribute'=>'key_id',
         'vAlign'=>'middle',
@@ -54,9 +58,14 @@ $gridColumns = [
         'value'=>function($model){
             return $model->getMsgType($model->msg_type);
         },
-        'filter'=>['0'=>'文本消息','1'=>'图文消息'],
+        'filter'=>['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息'],
     ],
-
+    [
+        'attribute'=>'content',
+        'vAlign'=>'middle',
+        'format'=>'html',
+        'filter'=>false,
+    ],
     [
         'attribute'=>'title',
         'vAlign'=>'middle',
@@ -67,23 +76,51 @@ $gridColumns = [
         'vAlign'=>'middle',
         'value'=>function($model){
             $len = strlen($model->description);
-            if($len > 10){
-                return mb_substr($model->description,0,15) . '....';
-            }else{
-                return $model->description;
-            }
+            return $len > 10 ? mb_substr($model->description,0,15) . '....': $model->description;
         },
         'filter'=>false,
     ],
     [
-        'attribute'=>'content',
+        'attribute'=>'url',
         'vAlign'=>'middle',
+        'width'=>'100px',
+        'value'=>function($model){
+            $len = strlen($model->url);
+            return $len > 10 ? mb_substr($model->url,0,15) . '....' : $model->url;
+        }
+    ],
+    [
+        'attribute'=>'picurl',
+        'vAlign'=>'middle',
+        'width'=>'100px',
         'format'=>'html',
-        'filter'=>false,
+        'value'=>function($model){
+            $url = empty($model->picurl) ? '': $model->picurl;
+            return empty($url) ? Html::label('') :Html::img($url,['class'=>'user-pic']);
+        }
     ],
     [
         'attribute'=>'event_id',
         'vAlign'=>'middle',
+        'value'=>function($model){
+            return empty($model->event_id) ? '':$model->event_id;
+        },
+        'width'=>'100px',
+    ],
+    [
+        'class' => 'kartik\grid\EditableColumn',
+        'attribute'=>'order_no',
+        'vAlign'=>'middle',
+        'width'=>'100px',
+        'editableOptions'=>function($model)
+        {
+            return [
+                'formOptions'=>['action'=>'/keyword/order_no?record_id='.strval($model->record_id)],
+                'size'=>'min',
+                'inputType'=>\kartik\editable\Editable::INPUT_TEXT,
+            ];
+        },
+        'refreshGrid'=>true,
     ],
     [
         'attribute'=>'create_time',

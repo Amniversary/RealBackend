@@ -20,7 +20,7 @@ use Yii;
  * @property integer $subscribe_time
  * @property string $unionid
  * @property string $groupid
- * @property string $app_id
+ * @property integer $app_id
  * @property string $create_time
  * @property string $update_time
  * @property string $remark
@@ -45,10 +45,10 @@ class Client extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'subscribe', 'sex',  'subscribe_time'], 'integer'],
+            [[ 'app_id','subscribe', 'sex',  'subscribe_time'], 'integer'],
             [['create_time','groupid', 'update_time'], 'safe'],
-            [['open_id', 'unionid', 'app_id'], 'string', 'max' => 200],
-            [['nick_name','city','country', 'language', 'province',  'remark', 'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
+            [['unionid', ], 'string', 'max' => 200],
+            [['open_id', 'nick_name','city','country', 'language', 'province',  'remark', 'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
             [['headimgurl'], 'string', 'max' => 500],
         ];
     }

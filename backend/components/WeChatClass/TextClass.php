@@ -43,6 +43,7 @@ class TextClass
         $appid = $this->data['appid'];
         $text = $this->data['Content'];
         $AppInfo = AuthorizerUtil::getAuthOne($appid);
+        $query = AuthorizerUtil::getAppMsg($AppInfo->record_id);
         $flag = null;
         if(!empty($query))
         {

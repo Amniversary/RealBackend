@@ -127,7 +127,7 @@ $gridColumns = [
             'delete'=>function($url,$model)
             {
                 if($model->backend_user_id === 1 || $model->username === 'admin') return '';
-                return Html::a('删除',$url,['title'=>'删除','class'=>'delete','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
+                return Html::a('删除',$url,['class'=>'delete','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
             },
             'setprivilige'=>function($url, $model,$key)
             {

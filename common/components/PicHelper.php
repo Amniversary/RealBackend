@@ -17,8 +17,8 @@ class PicHelper
     /**
      * 取得文件扩展
      *
-     * @param $filename 文件名
-     * @return 扩展名
+     * @param $filename //文件名
+     * @return string //扩展名
      */
     public static function FileExt($filename)
     {
@@ -84,7 +84,7 @@ class PicHelper
         $data = UsualFunForNetWorkHelper::HttpGetImg($url,$cnt_type,$error);
         if($data === false)
         {
-            //$error = '无法访问的图片或不是图片';
+            $error = '无法访问的图片或不是图片';
             return false;
         }
         $type = self::FileExt($url);
@@ -98,6 +98,7 @@ class PicHelper
                 return false;
             }
         }
+
         $name = uniqid('web_pic_').'.'.$type;
         $fileName = __DIR__.'/../tmppic/'.$name;
         $len = file_put_contents($fileName,$data);

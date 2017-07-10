@@ -21,6 +21,7 @@ class WechatController extends Controller
     public $enableCsrfValidation = false;
 
     public $error = '公众号授权异常：';
+
     public function actionTest(){
         $postData['query_auth_code'] =  111;
         $postData['openid'] = 'dsadsadsadas';
@@ -65,8 +66,7 @@ class WechatController extends Controller
     {
         $WeChat = new WeChatComponent();
         $Receive = new ReceiveType();
-        $data = $WeChat->decryptMsg;
-        $data['openid'] = $WeChat->openid;
+        $data = $WeChat->decryptMsg;;
         $data['appid'] = $WeChat->AppId;
         \Yii::error('data:'.var_export($data,true));
         switch ($WeChat->MsgType)
@@ -103,7 +103,7 @@ class WechatController extends Controller
             \Yii::error('errMsg : '. $errMsg);
             return null;
         }
-        \Yii::error('encrypt:'.$encryptMsg);
+        \Yii::error('encrypt:'.$resultXml);
         return $encryptMsg;
     }
 

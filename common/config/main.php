@@ -16,11 +16,12 @@ return [
                   ],
               ],
         ],
-        'wechat' => [
-            'class' => 'callmez\wechat\sdk\Wechat',
+        'WeChat' => [
+            'class' => 'callmez\wechat\sdk\MpWechat',
             'appId' => 'wx25d7fec30752314f', //test: wx25d7fec30752314f
             'appSecret' => '1ea949d73cdda25dda89566b46a944f0',//test: 1ea949d73cdda25dda89566b46a944f0
-            'token' => 'hongbao'
+            'token' => 'hongbao',
+            'encodingAesKey'=>'63n65FMYpIdj2FvUiH7M9rhG0susnRrcKXzZg86h0fK'
         ],
         /*'im' => [
             'class'  => 'common\components\rongcloudsdk\RongCloud',

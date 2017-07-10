@@ -43,7 +43,23 @@ class ClientUtil
         $data = \Yii::$app->db->createCommand($sql)->queryAll();
         return $data;
     }
-
+    /**
+     * @param $client_id
+     * @param $main_pic
+     * @param $icon_pic
+     * @param $middle_pic
+     */
+    public static function UpdateClientPicInfo($client_id,$main_pic,$icon_pic,$middle_pic)
+    {
+        if(empty($main_pic) ||empty($icon_pic) || empty($middle_pic))
+        {
+            $sql_null = 'update mb_client set pic=\'\', is_pic_deal=1 where client_id=:cid';
+            \Yii::$app->db->createCommand($sql_null,[':cid'=>$client_id])->execute();
+            return;
+        }
+        $sql = 'update mb_client set main_pic=:mpic, icon_pic=:ipic,middle_pic=:mipic,is_pic_deal=1 where client_id=:cid';
+        \Yii::$app->db->createCommand($sql,[':mpic'=>$main_pic,':ipic'=>$icon_pic,':mipic'=>$middle_pic,':cid'=>$client_id])->execute();
+    }
     /**
      * 生成用户图片缩略图
      * @param $client_id
@@ -63,23 +79,7 @@ class ClientUtil
         return true;
     }
 
-    /**
-     * @param $client_id
-     * @param $main_pic
-     * @param $icon_pic
-     * @param $middle_pic
-     */
-    public static function UpdateClientPicInfo($client_id,$main_pic,$icon_pic,$middle_pic)
-    {
-        if(empty($main_pic) ||empty($icon_pic) || empty($middle_pic))
-        {
-            $sql_null = 'update mb_client set pic=\'\', is_pic_deal=1 where client_id=:cid';
-            \Yii::$app->db->createCommand($sql_null,[':cid'=>$client_id])->execute();
-            return;
-        }
-        $sql = 'update mb_client set main_pic=:mpic, icon_pic=:ipic,middle_pic=:mipic,is_pic_deal=1 where client_id=:cid';
-        \Yii::$app->db->createCommand($sql,[':mpic'=>$main_pic,':ipic'=>$icon_pic,':mipic'=>$middle_pic,':cid'=>$client_id])->execute();
-    }
+
 
     /**
      * 获取图像缩略图
@@ -89,6 +89,7 @@ class ClientUtil
      */
     public static function GetClientIconThumbFromUrl($url,&$thumb_files,&$error)
     {
+        //保存网络图片写到本地
         if(!PicHelper::SavePicFromWeb($url,$picFile,$error))
         {
             //更新图片字段为空，要求从新更新图片
@@ -96,8 +97,9 @@ class ClientUtil
             $thumb_files[]='';
             $thumb_files[]='';
             $thumb_files[]='';
-            return true;
+            return false;
         }
+
         if(!self::IsShouldDealPic($picFile))
         {
             $thumb_files[]=$url;
@@ -111,7 +113,6 @@ class ClientUtil
             unlink($picFile);
             return false;
         }
-        //var_dump($tmp_files);
         unlink($picFile);
         $thumb_files =[];
         //上传图片

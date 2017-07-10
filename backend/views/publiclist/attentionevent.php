@@ -1,4 +1,8 @@
 <style>
+    .user-pic{
+        width: 60px;
+        height: 60px;
+    }
     .back-a{
         display: inline-block;
         font-size: 14px;
@@ -32,25 +36,27 @@ if(!$is_verify){
 }
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
-    [
+    /*[
         'attribute'=>'app_id',
         'vAlign'=>'middle',
         'value'=>function($model){
             return $model::getKeyAppId($model->app_id);
         },
         'filter'=>false,
-    ],
+    ],*/
     [
         'attribute'=>'msg_type',
         'vAlign'=>'middle',
         'value'=>function($model){
             return $model->getMsgType($model->msg_type);
         },
-        'filter'=>['0'=>'文本消息','1'=>'图文消息'],
+        'filter'=>['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息'],
     ],
     [
-        'attribute'=>'event_id',
-        'vAlign'=>'事件 ID',
+        'attribute'=>'content',
+        'vAlign'=>'middle',
+        'format'=>'html',
+        'filter'=>false,
     ],
     [
         'attribute'=>'title',
@@ -70,15 +76,38 @@ $gridColumns = [
         },
         'filter'=>false,
     ],
+
     [
-        'attribute'=>'content',
+        'attribute'=>'url',
+        'vAlign'=>'middle',
+        'width'=>'100px',
+        'value'=>function($model){
+            $len = strlen($model->url);
+            return $len > 10 ? mb_substr($model->url,0,15) . '....' : $model->url;
+        }
+    ],
+    [
+        'attribute'=>'picurl',
         'vAlign'=>'middle',
         'format'=>'html',
-        'filter'=>false,
+        'width'=>'100px',
+        'value'=>function($model){
+            $url = empty($model->picurl) ? '': $model->picurl;
+            return empty($url) ? Html::label('') :Html::img($url,['class'=>'user-pic']);
+        },
+    ],
+    [
+        'attribute'=>'event_id',
+        'vAlign'=>'事件 ID',
+        'width'=>'100px',
+        'value'=>function($model){
+            return empty($model->event_id)? '': $model->event_id;
+        }
     ],
     [
         'attribute'=>'create_time',
         'vAlign'=>'middle',
+        'width'=>'160px',
         'filterType'=>'\yii\jui\DatePicker',
         'filterWidgetOptions'=>[
             'language'=>'zh-CN',
@@ -108,10 +137,10 @@ $gridColumns = [
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'update'=>function($url, $model){
-                return Html::a('修改', $url,['title'=>'修改信息','class'=>'back-a','style'=>'margin-right:10px']);
+                return Html::a('修改', $url,['class'=>'back-a','style'=>'margin-right:10px']);
             },
             'delete'=>function($url, $model){
-                return Html::a('删除',$url,['title'=>'删除','class'=>'delete back-a','data-toggle'=>false]);
+                return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false]);
             }
         ],
     ],

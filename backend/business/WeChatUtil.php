@@ -14,6 +14,7 @@ use common\components\wxpay\lib\WxPayConfig;
 use common\models\Authorization;
 use common\models\AuthorizationList;
 use yii\db\Query;
+use yii\web\HttpException;
 
 class WeChatUtil
 {
@@ -234,5 +235,58 @@ class WeChatUtil
         return true;
     }
 
+    /**
+     * 上传微信临时素材
+     * @param $file  //上传素材的物理路径(本地)
+     * @param $rst  //返回的结果
+     * @param $error  //错误信息
+     * @param string $type //上传文件类型
+     * @return bool
+     */
+    public function Upload($file,&$rst,&$error,$type = 'image')
+    {
+        $access_token = $this->AppInfo->access_token;
+        $data['media'] = class_exists('\CURLFile') ? new \CURLFile(realpath($file)): '@'.realpath($file);
+        $url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=$access_token&type=$type";
+        $rst = @json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$data),true);
+        if(!isset($rst['media_id'])){
+            $error = '上传微信文件失败，没有获取到对应 media_id, Code:'.$rst['errcode']. ' msg:'.$rst['errmsg'];
+            return false;
+        }
+        return true;
+    }
 
+    /**
+     * 上传微信素材
+     * @param $picUrl   //上传图片Url
+     * @return bool|int|array  [
+     *                              'type'=>type
+     *                              'media_id'=>media_id
+     *                              'created_at'=>created_at
+     *                          ]
+     * @throws HttpException
+     */
+    public function UploadWeChatImg($picUrl)
+    {
+        $file = basename($picUrl);
+        $rst = UsualFunForNetWorkHelper::HttpGetImg($picUrl,$content_type,$error);
+        if(empty($rst) || $rst == false){
+            throw new HttpException(500,'获取不到对应网络图片');
+        }
+        $filename = $file;
+        $dirname = \Yii::$app->getBasePath().'/web/wximages/';
+        if(!file_exists($dirname)){
+            mkdir($dirname,0777,true);
+        }
+        $fileDir = $dirname.$filename;
+        file_put_contents($fileDir,$rst);
+        if(!file_exists($fileDir)){
+            throw new HttpException(500,'保存七牛图片到本地失败.');
+        }
+        if(!$this->Upload($fileDir,$rst,$error)){
+            throw new HttpException(500,$error);
+        }
+        unlink($fileDir);
+        return $rst;
+    }
 }

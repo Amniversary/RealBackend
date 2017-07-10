@@ -62,7 +62,7 @@ class UploadAction extends Action
             exit;
         }
         $suffix = $typeItems[1];
-        if(!in_array($suffix,['x-icon','png','gif','jpeg']))
+        if(!in_array($suffix,['x-icon','png','gif','jpeg','jpg']))
         {
             $rst['msg'] = '不是图片文件';
             echo json_encode($rst);
@@ -76,15 +76,20 @@ class UploadAction extends Action
         {
             $suffix = 'jpg';
         }
-        $picName = sha1(UsualFunForStringHelper::CreateGUID().date('YmdHis'));
+        //$picName = sha1(UsualFunForStringHelper::CreateGUID().date('YmdHis'));
+        $picName = $_FILES['upload_file']['name'];
         $picUrl = '';
         $error = '';
-        if(!OssUtil::UploadFile($picName,$suffix,$pic_type,$tmpFile,$picUrl,$error))
+        $rst['code'] = '0';
+        $rst['msg'] = $picUrl;
+        if(!OssUtil::UploadQiniuFile($picName,$tmpFile,$picUrl,$error))
         {
             $rst['msg'] = $error;
             echo json_encode($rst);
             exit;
         }
+
+
         $rst['code'] = '0';
         $rst['msg'] = $picUrl;
         echo json_encode($rst);

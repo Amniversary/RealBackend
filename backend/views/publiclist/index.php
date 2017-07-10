@@ -40,7 +40,7 @@ $gridColumns = [
             $url = empty($model->head_img)?'http://oss.aliyuncs.com/meiyuan/wish_type/default.png':$model->head_img;
             return Html::img($url,['class'=>'user-pic','style'=>'width:40px','value'=>$model->nick_name]).'&nbsp'. Html::label($model->nick_name);
         },
-        'filter'=>false,
+        'filter'=>true,
     ],
     [
         'attribute'=>'service_type_info',

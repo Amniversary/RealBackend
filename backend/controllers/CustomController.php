@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: a123
- * Date: 17/7/4
- * Time: 下午1:27
+ * Date: 17/7/7
+ * Time: 下午3:52
  */
 
 namespace backend\controllers;
@@ -11,18 +11,17 @@ namespace backend\controllers;
 
 use yii\web\Controller;
 
-class KeywordController extends Controller
+class CustomController extends Controller
 {
     public $enableCsrfValidation = false;
 
     public function actions()
     {
-        return require (__DIR__.'/KeyWordActions/KeyWordConfig.php');
+        return require (__DIR__.'/CustomActions/CustomConfig.php');
     }
-
 
     public function behaviors()
     {
-        return require (__DIR__.'/KeyWordActions/KeyWordBehaviors.php');
+        return require (__DIR__.'/CustomActions/CustomBehaviors.php');
     }
 }

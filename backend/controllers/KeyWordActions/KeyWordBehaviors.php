@@ -12,10 +12,10 @@ use yii\filters\AccessControl;
 return [
     'access' => [
         'class' => AccessControl::className(),
-        'only' => [],
+        'only' => ['keyword','createkey'],
         'rules' => [
             [
-                'actions' => '',
+                'actions' => ['keyword','createkey'],
                 'allow' => true,
                 'roles' => ['@'],
             ],

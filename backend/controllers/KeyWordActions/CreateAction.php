@@ -10,6 +10,7 @@ namespace backend\controllers\KeyWordActions;
 
 
 use backend\business\WeChatUserUtil;
+use backend\business\WeChatUtil;
 use common\models\Keywords;
 use yii\base\Action;
 

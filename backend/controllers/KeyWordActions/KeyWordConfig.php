@@ -26,5 +26,8 @@ return [
     ],
     'check'=>[
         'class'=>'backend\controllers\KeyWordActions\CheckMsgAction'
+    ],
+    'order_no'=>[
+        'class'=>'backend\controllers\KeyWordActions\OrderNoAction'
     ]
 ];
