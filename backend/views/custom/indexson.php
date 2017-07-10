@@ -3,9 +3,9 @@
         display: inline-block;
         font-size: 14px;
         border-radius: 3px;
-        color: #00a65a;
-        border:1px solid #00a65a;
-        padding: 6px 12px;
+        color: #00a7d0;
+        border:1px solid #00a7d0;
+        padding: 3px 5px;
     }
     .back-btn{
         display: inline-block;
@@ -18,7 +18,6 @@
     }
 </style>
 <?php
-
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
 
@@ -50,40 +49,35 @@ $gridColumns = [
         },
         'filter'=>false
     ],
-    /*[
+    [
         'class'=>'kartik\grid\ActionColumn',
-        'template'=>'{son}&nbsp;&nbsp;&nbsp;',
+        'template'=>'{son}&nbsp;&nbsp;&nbsp;{update}&nbsp;&nbsp;&nbsp;{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
         'width'=>'200px',
         'urlCreator'=>function($action, $model, $key, $index){
             $url = '';
             switch ($action){
-                case 'son':
-                    $url = '/keyword/update?key_id='.strval($model->menu_id);
+                case 'update':
+                    $url = '/custom/updateson?record_id='.strval($model->record_id);
                     break;
                 case 'delete':
-                    $url = '/keyword/delete?key_id='.strval($model->menu_id);
+                    $url = '/custom/deleteson?record_id='.strval($model->record_id);
                     break;
             }
             return $url;
         },
-        'updateOptions'=>['title'=>'编辑','label'=>'编辑', 'data-toggle'=>false],
+        'updateOptions'=>['title'=>'修改','label'=>'修改', 'data-toggle'=>false],
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
-            'son'=>function($url, $model){
-                if($model->is_list == 1){
-                    return Html::a('二级菜单管理', $url,['title'=>'修改信息','class'=>'back-a']);
-                }
-                return '';
+            'update'=>function($url, $model){
+                return Html::a('修改', $url,['class'=>'back-a']);
             },
             'delete'=>function($url, $model){
-                return Html::a('删除',$url,['title'=>'删除','class'=>'delete back-a','data-toggle'=>false,'data-pjax'=>'0']);
+                return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false,'data-pjax'=>'0']);
             }
         ],
-    ]*/
-
-
+    ]
 ];
 
 echo GridView::widget([
@@ -95,7 +89,7 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('返回',['type'=>'button','class'=>'btn btn-success','onclick'=>'location="'.\Yii::$app->urlManager->createUrl('custom/index').'";return false;']).'&nbsp;&nbsp;&nbsp;&nbsp;'.Html::button('添加关键词',['type'=>'button','title'=>'添加关键词', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('keyword/create').'";return false;']),
+            'content'=> Html::button('返回',['type'=>'button','class'=>'btn btn-success','onclick'=>'location="'.\Yii::$app->urlManager->createUrl('custom/index').'";return false;']).'&nbsp;&nbsp;&nbsp;&nbsp;'.Html::button('新增子菜单',['type'=>'button', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl(['custom/createson','menu_id'=>$menu_id]).'";return false;']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']

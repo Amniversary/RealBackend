@@ -21,26 +21,7 @@ class EventClass
     {
         $this->data = $data;
     }
-    /* Array
-(
-  [subscribe] => 1
-[openid] => oB4Z-wf0FYMlI7fW4ZvD90Y06RxA
-[nickname] => Gavean
-[sex] => 1
-[language] => zh_CN
-[city] => 杭州
-[province] => 浙江
-[country] => 中国
-[headimgurl] => http://wx.qlogo.cn/mmopen/UVzXBswyibFh7ib0qClxDP6Y5EFUGSgrw7FIUNcB7K60LAIpKHpqHxJa7ta10HKYYIVSCPSQy0IBzGib9zgn9NE00vaHbVydjpY/0
-[subscribe_time] => 1498896058
-[unionid] => oVKOWs5xZRtfQNm73g5A4Fk7HO0M
-[remark] =>
-[groupid] => 0
-[tagid_list] => Array
-(
-)
 
-)*/
     /**
      * 处理微信关注事件
      */
@@ -79,8 +60,6 @@ class EventClass
                 WeChatUserUtil::sendCustomerMsg($openInfo->authorizer_access_token,$openid,$item);
             }
         }
-
-        //$resultXml = ReceiveType::transmitText($this->data,$content);
         return null;
     }
 
@@ -100,4 +79,25 @@ class EventClass
         }
         return null;
     }
+
+    /* Array
+(
+[subscribe] => 1
+[openid] => oB4Z-wf0FYMlI7fW4ZvD90Y06RxA
+[nickname] => Gavean
+[sex] => 1
+[language] => zh_CN
+[city] => 杭州
+[province] => 浙江
+[country] => 中国
+[headimgurl] => http://wx.qlogo.cn/mmopen/UVzXBswyibFh7ib0qClxDP6Y5EFUGSgrw7FIUNcB7K60LAIpKHpqHxJa7ta10HKYYIVSCPSQy0IBzGib9zgn9NE00vaHbVydjpY/0
+[subscribe_time] => 1498896058
+[unionid] => oVKOWs5xZRtfQNm73g5A4Fk7HO0M
+[remark] =>
+[groupid] => 0
+[tagid_list] => Array
+(
+)
+
+)*/
 }

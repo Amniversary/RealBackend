@@ -17,11 +17,7 @@
         /*margin-bottom: 20px;*/
 
     }
-    #list-type > label {
-        padding-right: 20px;
-        color: #333;
-    }
-    #authorizationmenu-type > label{
+    #authorizationmenuson-type > label{
         padding-right: 20px;
         color: #333;
     }
@@ -34,21 +30,15 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\AuthorizationMenu */
+/* @var $model common\models\AuthorizationMenuSon */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $cache */
-$data = [$cache['record_id']=>$cache['nick_name']];
 ?>
 
     <div class="user-form">
-
         <?php $form = ActiveForm::begin(); ?>
-        <?= $form->field($model,'app_id')->dropDownList($data,['disabled'=>'disabled','style'=>'width:200px']) ?>
-        <hr>
         <?= $form->field($model, 'name')->textInput(['style'=>'width:200px']) ?>
         <hr>
-        <?= $form->field($model, 'is_list')->radioList(['0'=>'否','1'=>'是'],['id'=>'list-type','style'=>'width:200px']) ?>
-        <hr/>
         <div id="type">
             <?= $form->field($model, 'type')->radioList(['view'=>'跳转链接','click'=>'点击事件'],['class'=>'event','style'=>"width:200px"]) ?>
         <hr>
@@ -63,43 +53,25 @@ $data = [$cache['record_id']=>$cache['nick_name']];
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? '新增' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['custom/index']), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['custom/indexson','menu_id'=>$menu_id]), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
-
         <?php ActiveForm::end(); ?>
 
     </div>
 <?php
 $js = '
 $(function(){
-    $type = $("#list-type input[name=\'AuthorizationMenu[is_list]\']:checked").val();
-    $event = $(".event input[name=\'AuthorizationMenu[type]\']:checked").val();
-    if($type == 0){
-        if($event != "view"){
-            $("#url").hide();
-            $("#event").show();
-        }else{
-            $("#url").show();
-            $("#event").hide();
-        }
-    }else{
-        $("#type").hide();
-        $("#url").hide();
-        $("#event").hide();
-    }
-});
-$("#list-type input[type=\'radio\']").on("click",function(){
-    $vue = $("#list-type input[type=\'radio\']:checked").val();
-    if($vue == 1){
-        $("#type").hide();
-        $("#url").hide();
-    }else{
-        $("#type").show();
+    $vue = $("#authorizationmenuson-type input[type=\'radio\']:checked").val()
+    if($vue == "view"){
         $("#url").show();
+        $("#event").hide();
+    }else{
+        $("#url").hide();
+        $("#event").show();
     }
 })
-$(".event input[type=\'radio\']").on("click",function(){
-    $vue = $(".event input[type=\'radio\']:checked").val();
+$("#authorizationmenuson-type input[type=\'radio\']").on("click",function(){
+    $vue = $("#authorizationmenuson-type input[type=\'radio\']:checked").val()
     if($vue == "view"){
         $("#url").show();
         $("#event").hide();
@@ -110,4 +82,3 @@ $(".event input[type=\'radio\']").on("click",function(){
 })
 ';
 $this->registerJs($js,\yii\web\View::POS_END);
-//$type = $("#list-type input[name='AuthorizationMenu[is_list]']:checked").val();

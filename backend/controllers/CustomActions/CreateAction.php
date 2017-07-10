@@ -25,10 +25,15 @@ class CreateAction extends Action
         $model->app_id = $cacheInfo['record_id'];
         $model->is_list = 0;
         $model->type = 'view';
-        $model->key_type = 'click';
         if($model->load(\Yii::$app->request->post())){
             if($model->is_list == 1){
                 $model->type = '';
+                $model->url = '';
+                $model->key_type = '';
+            }
+            if($model->type == 'view'){
+                $model->key_type = '';
+            }else{
                 $model->url = '';
             }
             if(!$model->save()){

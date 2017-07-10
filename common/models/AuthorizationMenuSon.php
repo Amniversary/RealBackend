@@ -32,6 +32,7 @@ class AuthorizationMenuSon extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name'], 'required'],
             [['menu_id'], 'integer'],
             [['name', 'type', 'key_type', 'remark1', 'remark2'], 'string', 'max' => 100],
             [['url'], 'string', 'max' => 300],

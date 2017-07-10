@@ -16,12 +16,14 @@ class IndexSonAction extends Action
 {
     public function run()
     {
+        $menu_id = \Yii::$app->request->get('menu_id');
         $this->controller->getView()->title = '自定义菜单';
         $searchModel = new CustomSonSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
         return $this->controller->render('indexson',[
             'searchModel'=>$searchModel,
             'dataProvider'=>$dataProvider,
+            'menu_id'=>$menu_id
         ]);
     }
 }

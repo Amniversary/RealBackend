@@ -8,6 +8,23 @@
     #btn-style{
 
     }
+    .back-a{
+        display: inline-block;
+        font-size: 14px;
+        border-radius: 3px;
+        color: #00a7d0;
+        border:1px solid #00a7d0;
+        padding: 3px 5px;
+    }
+    .back-btn{
+        display: inline-block;
+        font-size: 14px;
+        margin-bottom: 0px;
+        border-radius: 3px;
+        color: #00a7d0;
+        border:1px solid #00a7d0;
+        padding: 3px 5px;
+    }
 </style>
 <?php
 /**
@@ -114,7 +131,7 @@ $gridColumns = [
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'resetpwd' => function ($url, $model, $key) {
-                return Html::a('重置密码',$url,[ 'data-toggle'=>'modal','data-target'=>'#contact-modal','style'=>'margin-left:10px;']);
+                return Html::a('重置密码',$url,['class'=>'back-a', 'data-toggle'=>'modal','data-target'=>'#contact-modal']);
             },
             /*'setcheckno' => function ($url, $model, $key) {
                 return Html::a('设置审核号',$url,[ 'data-toggle'=>'modal','data-target'=>'#contact-modal','style'=>'margin-left:10px;']);
@@ -122,16 +139,16 @@ $gridColumns = [
             'update'=>function($url,$model)
             {
                 if($model->backend_user_id === 1 || $model->username === 'admin') return '';
-                return Html::a('编辑',$url);
+                return Html::a('编辑',$url,['class'=>'back-a']);
             },
             'delete'=>function($url,$model)
             {
                 if($model->backend_user_id === 1 || $model->username === 'admin') return '';
-                return Html::a('删除',$url,['class'=>'delete','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
+                return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
             },
             'setprivilige'=>function($url, $model,$key)
             {
-                return Html::a('权限',$url,[ 'data-toggle'=>'modal','data-target'=>'#contact-modal','style'=>'margin-left:10px;']);
+                return Html::a('权限',$url,['class'=>'back-a', 'data-toggle'=>'modal','data-target'=>'#contact-modal']);
             }
         ],
     ],

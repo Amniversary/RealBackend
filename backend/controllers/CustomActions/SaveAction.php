@@ -27,8 +27,13 @@ class SaveAction extends Action
             echo json_encode($rst);
             exit;
         }
-        $res = WeChatUserUtil::setMenuList($query,$cacheInfo['authorizer_access_token']);
-        if($res['errcode'] != 0){
+        $res = WeChatUserUtil::setMenuList($query,$cacheInfo['authorizer_access_token'],$error);
+        if(!$res){
+            $rst['msg'] = $error;
+            echo json_encode($rst);
+            exit;
+        }
+        if($res['errcode'] != 0 || !$res){
             $rst['msg'] = '设置失败:'. $res['errmsg'];
             echo json_encode($rst);
             exit;

@@ -175,7 +175,7 @@ class WeChatUserUtil
     /**
      * 设置微信菜单
      */
-    public static function setMenuList($query,$access_token)
+    public static function setMenuList($query,$access_token,&$error)
     {
         $data = [];
         foreach ($query as $key => $v){
@@ -185,6 +185,10 @@ class WeChatUserUtil
                 $data['button'][$key]['type'] = $v['type'];
             }else{
                 $sql = AuthorizerUtil::getMenuSonList($v['menu_id']);
+                if(empty($sql)){
+                    $error = '没有找到二级菜单信息，菜单名称：'.$v['name'];
+                    return false;
+                }
                 $data['button'][$key] = [
                     'name'=>$v['name'],
                 ];
@@ -197,7 +201,8 @@ class WeChatUserUtil
                 $data['button'][$key]['sub_button'] = $info;
             }
         }
-
+       \Yii::error('msg:'.var_export($data,true));
+        exit;
         $json = json_encode($data,JSON_UNESCAPED_UNICODE);
         $url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=$access_token";
         $res = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);

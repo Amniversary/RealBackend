@@ -3,9 +3,9 @@
         display: inline-block;
         font-size: 14px;
         border-radius: 3px;
-        color: #00a65a;
-        border:1px solid #00a65a;
-        padding: 6px 12px;
+        color: #00a7d0;
+        border:1px solid #00a7d0;
+        padding: 3px 5px;
     }
     .back-btn{
         display: inline-block;
@@ -98,7 +98,7 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('添加关键词',['type'=>'button','title'=>'添加关键词', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('keyword/create').'";return false;']),
+            'content'=> !empty($is_verify)?Html::button('添加关键词',['type'=>'button','title'=>'添加关键词', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('keyword/create').'";return false;']):'',
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']

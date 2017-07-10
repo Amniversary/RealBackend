@@ -3,18 +3,18 @@
         display: inline-block;
         font-size: 14px;
         border-radius: 3px;
-        color: #00a65a;
-        border:1px solid #00a65a;
-        padding: 6px 12px;
+        color: #00a7d0;
+        border:1px solid #00a7d0;
+        padding: 3px 5px;
     }
     .back-btn{
         display: inline-block;
         font-size: 14px;
         margin-bottom: 0px;
         border-radius: 3px;
-        color: #00a65a;
-        border:1px solid #00a65a;
-        padding: 6px 12px;
+        color: #00a7d0;
+        border:1px solid #00a7d0;
+        padding: 3px 5px;
     }
 </style>
 <?php

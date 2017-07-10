@@ -48,5 +48,6 @@ class DeleteAction extends Action
         }
         $rst['code'] = '0';
         echo json_encode($rst);
+        exit;
     }
 }

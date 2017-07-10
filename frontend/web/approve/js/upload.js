@@ -1,15 +1,15 @@
 
-accessid = ''
-accesskey = ''
-host = ''
-policyBase64 = ''
-signature = ''
-callbackbody = ''
-filename = ''
-key = ''
-expire = 0
-g_object_name = ''
-g_object_name_type = ''
+accessid = '';
+accesskey = '';
+host = '';
+policyBase64 = '';
+signature = '';
+callbackbody = '';
+filename = '';
+key = '';
+expire = 0;
+g_object_name = '';
+g_object_name_type = '';
 now = timestamp = Date.parse(new Date()) / 1000; 
 
 function send_request()

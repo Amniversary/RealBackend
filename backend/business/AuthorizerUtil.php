@@ -98,18 +98,6 @@ class AuthorizerUtil
 
         }
 
-        /*//处理图文消息格式
-        $articles = [];
-        foreach ($query as $item){
-            if($item['msg_type'] == 1){
-                $articles[$item['event_id']][] = [
-                    'title' => $item['title'],
-                    'description' => $item['description'],
-                    'url' => $item['url'],
-                    'picurl' => $item['picurl']
-                ];
-            }
-        }*/
         //print_r($articles);
         if(!empty($articles)){
             foreach ($articles as $key){

@@ -10,7 +10,11 @@ namespace console\controllers;
 
 
 use backend\business\WeChatUtil;
+use common\models\AuthorizationList;
+use common\models\User;
+use common\models\UserMenu;
 use yii\console\Controller;
+use yii\db\Query;
 
 class WechatController extends Controller
 {
@@ -36,5 +40,18 @@ class WechatController extends Controller
     {
         $wechat = new WeChatUtil();
         $wechat->refreshAuthToken();
+        $query = (new Query())->select(['backend_user_id'])->from('wc_user')->all();
+        foreach ($query as $item) {
+            $get = \Yii::$app->cache->get('app_backend_'.$item['backend_user_id']);
+            if(!$get){
+               $decode = json_decode($get,true);
+               if(!empty($decode)){
+                   $AuthInfo = AuthorizationList::findOne(['record_id'=>$decode['record_id']]);
+                   $data = $AuthInfo->attributes;
+                   $data['backend_user_id'] = $decode['backend_user_id'];
+                   \Yii::$app->cache->set('app_backend_'.$decode['backend_user_id'],json_encode($data));
+               }
+            }
+        }
     }
 }

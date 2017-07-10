@@ -24,5 +24,17 @@ return [
     ],
     'check'=>[
         'class'=>'backend\controllers\CustomActions\CheckMenuNumAction',
+    ],
+    'createson'=>[
+        'class'=>'backend\controllers\CustomActions\CreateSonAction',
+    ],
+    'deleteson'=>[
+        'class'=>'backend\controllers\CustomActions\DeleteSonAction',
+    ],
+    'update'=>[
+        'class'=>'backend\controllers\CustomActions\UpdateAction',
+    ],
+    'updateson'=>[
+        'class'=>'backend\controllers\CustomActions\UpdateSonAction',
     ]
 ];

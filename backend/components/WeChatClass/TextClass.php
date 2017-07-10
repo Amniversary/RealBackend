@@ -25,15 +25,6 @@ class TextClass
         $this->data = $data;
     }
 
-/*'ToUserName' => 'gh_7318204277d9',
-'FromUserName' => 'oB4Z-wf0FYMlI7fW4ZvD90Y06RxA',
-'CreateTime' => '1499163720',
-'MsgType' => 'text',
-'Content' => '1',
-'MsgId' => '6438859149194371730',
-'openid' => 'oB4Z-wf0FYMlI7fW4ZvD90Y06RxA',
-'appid' => 'wx1024c6215af20360',
-)*/
     /**
      * 处理文本事件
      */

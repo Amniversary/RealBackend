@@ -3,9 +3,9 @@
         display: inline-block;
         font-size: 14px;
         border-radius: 3px;
-        color: #00a65a;
-        border:1px solid #00a65a;
-        padding: 6px 12px;
+        color: #00a7d0;
+        border:1px solid #00a7d0;
+        padding: 3px 5px;
     }
     .back-btn{
         display: inline-block;
@@ -14,7 +14,7 @@
         border-radius: 3px;
         color: #00a65a;
         border:1px solid #00a65a;
-        padding: 6px 12px;
+        padding: 3px 3px;
     }
 </style>
 <?php
@@ -54,6 +54,11 @@ $gridColumns = [
         'filter'=>false,
     ],
     [
+        'attribute'=>'key_type',
+        'vAlign'=>'middle',
+        'filter'=>false,
+    ],
+    [
         'attribute'=>'url',
         'vAlign'=>'middle',
         'value'=>function($model){
@@ -82,8 +87,8 @@ $gridColumns = [
         'refreshGrid'=>true,
     ],
     [
-        'class'=>'kartik\grid\ActionColumn',
-        'template'=>'{son}&nbsp;&nbsp;&nbsp;{delete}',
+        'class' => 'kartik\grid\ActionColumn',
+        'template'=>'{son}&nbsp;&nbsp;&nbsp;{update}&nbsp;&nbsp;&nbsp;{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
         'width'=>'250px',
@@ -93,23 +98,30 @@ $gridColumns = [
                 case 'son':
                     $url = '/custom/indexson?menu_id='.strval($model->menu_id);
                     break;
+                case 'update':
+                    $url = '/custom/update?menu_id='.strval($model->menu_id);
+                    break;
                 case 'delete':
                     $url = '/custom/delete?menu_id='.strval($model->menu_id);
                     break;
             }
             return $url;
         },
+        'viewOptions'=>['title'=>'查看', 'data-toggle'=>'tooltip'],
         'updateOptions'=>['title'=>'编辑','label'=>'编辑', 'data-toggle'=>false],
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'son'=>function($url, $model){
                 if($model->is_list == 1){
-                    return Html::a('二级菜单管理', $url,['title'=>'修改信息','class'=>'back-a']);
+                    return Html::a('二级菜单管理', $url,['title'=>'修改信息','class'=>'back-a','data-toggle'=>false]);
                 }
                 return '';
             },
+            'update'=>function($url, $model){
+                return Html::a('编辑',$url,['class'=>'back-a']);
+            },
             'delete'=>function($url, $model){
-                return Html::a('删除菜单',$url,['title'=>'删除','class'=>'delete back-a','data-toggle'=>false,'data-pjax'=>'0']);
+                return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
             }
         ],
     ]
@@ -126,10 +138,10 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=>
+            'content'=> !empty($is_verify)?
                 Html::button('保存菜单', ['id'=>'save-menu','type'=>'button', 'class'=>'btn btn-success']).
                 Html::button('加载菜单配置', ['type'=>'button', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('custom/download').'";return false;']).
-                Html::button('新增菜单',['id'=>'create-menu','type'=>'button','class'=>'btn btn-success']),
+                Html::button('新增菜单',['id'=>'create-menu','type'=>'button','class'=>'btn btn-success']):'',
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
@@ -147,7 +159,7 @@ echo GridView::widget([
 ]);
 
 $js='
-$("#create-menu").on("click",function(){
+$(document).on("click","#create-menu",function(){
     $url = "http://"+ window.location.host + "/custom/check";
     $.ajax({
         type:"POST",
@@ -156,7 +168,8 @@ $("#create-menu").on("click",function(){
         success: function(data){
             data = $.parseJSON(data);
             if(data.code == "0"){
-                location = "'.\Yii::$app->urlManager->createUrl('custom/create').'";
+                location = "'.\Yii::$app->urlManager->createUrl('custom/create').'"; 
+                return false;
             }else{
                 alert(data.msg);
             }
@@ -186,9 +199,10 @@ $("#save-menu").on("click",function(){
             alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
         }
     })
+    return false;
 });
 $("#custom_list-pjax").on("click",".delete",function(){
- if(!confirm("确定要删除该记录吗？"))
+if(!confirm("确定要删除该记录吗？"))
     {
         return false;
     }

@@ -15,6 +15,7 @@ use backend\business\WeChatUtil;
 use common\components\UsualFunForNetWorkHelper;
 use common\models\AuthorizationMenu;
 use common\models\AuthorizationMenuSon;
+use common\models\User;
 use yii\base\Action;
 use yii\db\Query;
 
@@ -23,6 +24,12 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        $rst = date('Y-m-d H:i:s',1499676884);
+        print_r($rst);
+        exit;
+        $query = (new Query())->select(['backend_user_id'])->from('wc_user')->all();
+        print_r($query);
+        exit;
         $rst = AuthorizerUtil::getMenuCount(3);
         print_r($rst);
         exit;
