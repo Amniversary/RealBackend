@@ -34,7 +34,7 @@ class WechatController extends Controller
     }
 
     /**
-     * 刷新用户授权公众号access_token
+     * 定时刷新用户授权公众号access_token  并覆盖缓存
      */
     public function actionRefreshauthtoken()
     {
@@ -43,14 +43,14 @@ class WechatController extends Controller
         $query = (new Query())->select(['backend_user_id'])->from('wc_user')->all();
         foreach ($query as $item) {
             $get = \Yii::$app->cache->get('app_backend_'.$item['backend_user_id']);
-            if(!$get){
-               $decode = json_decode($get,true);
-               if(!empty($decode)){
-                   $AuthInfo = AuthorizationList::findOne(['record_id'=>$decode['record_id']]);
-                   $data = $AuthInfo->attributes;
-                   $data['backend_user_id'] = $decode['backend_user_id'];
-                   \Yii::$app->cache->set('app_backend_'.$decode['backend_user_id'],json_encode($data));
-               }
+            if($get != false){
+                $decode = json_decode($get,true);
+                if(!empty($decode)){
+                    $AuthInfo = AuthorizationList::findOne(['record_id'=>$decode['record_id']]);
+                    $data = $AuthInfo->attributes;
+                    $data['backend_user_id'] = $decode['backend_user_id'];
+                    \Yii::$app->cache->set('app_backend_'.$decode['backend_user_id'],json_encode($data));
+                }
             }
         }
     }

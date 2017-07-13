@@ -10,6 +10,7 @@ namespace console\controllers\BackendActions;
 
 
 use common\components\tenxunlivingsdk\TimRestApi;
+use common\models\AuthorizationList;
 use frontend\business\JobUtil;
 use yii\base\Action;
 use yii\db\Query;
@@ -19,7 +20,23 @@ class TestBhAction extends Action
 {
     public function run()
     {
+        $query = (new Query())->select(['backend_user_id'])->from('wc_user')->all();
+        foreach ($query as $item) {
+            $get = \Yii::$app->cache->get('app_backend_'.$item['backend_user_id']);
+            if($get != false){
+                $decode = json_decode($get,true);
+                if(!empty($decode)){
+                    $AuthInfo = AuthorizationList::findOne(['record_id'=>$decode['record_id']]);
+                    $data = $AuthInfo->attributes;
+                    $data['backend_user_id'] = $decode['backend_user_id'];
+                    print_r($data);
+                    \Yii::$app->cache->set('app_backend_'.$decode['backend_user_id'],json_encode($data));
+                }
+            }
+        }
 
+        echo "ok";
+        exit;
         if(!TimRestApi::group_forbid_send_msg('@TGS#3TYTIZKEW',strval(1663777),0,$error))
         {
             return false;

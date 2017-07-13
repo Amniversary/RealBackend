@@ -19,6 +19,7 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string $auth_key
  * @property integer $status
+ * @property integer $user_type
  * @property string $pic
  * @property integer $create_at
  * @property integer $update_at
@@ -28,6 +29,7 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
+    const STATUS_CUSTOM = 2;
 
     /**
      * @inheritdoc
@@ -69,7 +71,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['password','match','pattern'=>'/^[a-zA-Z0-9_]+$/','message'=>'密码必须是字母、数字、下划线','on'=>'create'],
             ['password','string','length'=>[6,20],'message'=>'密码至少6位','on'=>'create'],
             ['email','email'],
-            ['pic','safe'],
+            [['pic','user_type'],'safe'],
             [['status'], 'default', 'value' => '0'],
             [['status'], 'in', 'range' => [0, 1]],
         ];
@@ -95,11 +97,12 @@ class User extends ActiveRecord implements IdentityInterface
      * Finds user by username
      *
      * @param string $username
+     * @param int $status
      * @return static|null
      */
-    public static function findByUsername($username)
+    public static function findByUsername($username,$status = self::STATUS_ACTIVE)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['and',['username' =>$username],['or',['user_type'=>$status],['user_type'=>0]]]);
     }
 
     /**
@@ -192,6 +195,7 @@ class User extends ActiveRecord implements IdentityInterface
             \Yii::error('password:'.$password.'; soucePwd:'.$soucePwd);
             return false;
         }
+
         return Yii::$app->security->validatePassword($password, $this->pwd_hash);
     }
 
@@ -258,5 +262,17 @@ class User extends ActiveRecord implements IdentityInterface
         $crypt_key = \Yii::$app->params['pwd_crypt_key'];
         $pwd = $this->password.strval(time());
         $this->password = Des3Crypt::des_encrypt($pwd,$crypt_key);
+    }
+
+    /**
+     * 后台名称
+     */
+    public function BackendName($status){
+        switch (intval($status)){
+            case 0: $rst = '';break;
+            case 1: $rst = '公众号平台';break;
+            case 2: $rst = '微信后台';break;
+        }
+        return $rst;
     }
 }

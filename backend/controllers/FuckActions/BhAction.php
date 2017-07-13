@@ -10,12 +10,19 @@ namespace backend\controllers\FuckActions;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\JobUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
+use callmez\wechat\sdk\MpWechat;
+use callmez\wechat\sdk\Wechat;
 use common\components\UsualFunForNetWorkHelper;
+use common\models\AuthorizationList;
 use common\models\AuthorizationMenu;
 use common\models\AuthorizationMenuSon;
 use common\models\User;
+
+use Qiniu\Auth;
+use udokmeci\yii2beanstalk\Beanstalk;
 use yii\base\Action;
 use yii\db\Query;
 
@@ -24,6 +31,99 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        $item['rule'] = 1;
+        $item['keyword'] = '';
+        $text = '';
+        $flag = $item['rule'] == 1 ?
+            $text == $item['keyword'] ? true:false :
+            strpos($item['key_id'],$text) !== false ? true:false;
+        var_dump($flag);
+        exit;
+        //TODO: 处理回复消息逻辑 走客服消息接口 回复多条消息
+        $auth = AuthorizationList::findOne(['record_id'=>3]);
+        $item = [
+            'msg_type'=>'2',
+            'media_id'=>'sRc34mo9KOo4XiPGhZ33oivTle80mXAM2cWDn96XqU7krMdSmkDM8Kg1_uMBADBb',
+        ];
+        $paramData  = [
+            'key_word'=>'wechat',
+            'open_id'=>'oB4Z-wf0FYMlI7fW4ZvD90Y06RxA',
+            'authorizer_access_token'=>$auth->authorizer_access_token,
+            'item'=>$item
+        ];
+        if(!JobUtil::AddCustomJob('wechatBeanstalk','wechat',$paramData,$error)){
+            print_r($error);
+            exit;
+        }
+        echo "ok";
+        exit;
+        //$msgData = AuthorizerUtil::getAttentionMsg(3,1,11);
+        $auth = AuthorizationList::findOne(['record_id'=>3]);
+        $url = sprintf('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s',
+            $auth->authorizer_access_token);
+        $openid = 'oB4Z-wf0FYMlI7fW4ZvD90Y06RxA';
+        $data = [
+            'touser'=>$openid,
+            'msgtype'=>'text',
+            'text'=>[
+                'content'=>'eeee'
+            ]
+        ];
+        $data = [
+            'touser'=>$openid,
+            'msgtype'=>'news',
+            'news'=>[
+                'articles'=>[[
+                    'title'=>'qqq',
+                    'description'=>'sasaaaa',
+                    'url'=>'www.aaa.com',
+                    'picurl'=>'qwqewqewq',
+                ]
+                ]
+            ],
+        ];
+        $data = [
+            'touser'=>$openid,
+            'msgtype'=>'image',
+            'image'=>[
+                'media_id'=>'sRc34mo9KOo4XiPGhZ33oivTle80mXAM2cWDn96XqU7krMdSmkDM8Kg1_uMBADBb'
+            ]
+        ];
+        $json = json_encode($data,JSON_UNESCAPED_UNICODE);
+        $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
+        print_r($rst);
+        exit;
+        //\Yii::error('curlData::'.var_export($data,true));
+
+
+        $wx = new WeChatUtil();
+        $rst = $wx->UploadWeChatImg('http://7xld1x.com1.z0.glb.clouddn.com/headbg1.jpg','E1APCI4AD4kk4kgjQybt6wwEQ9IM0Qy5wPa0hUFJVFRHO6Jok12MUwvcljKOI9BkElnXWXPQMbc1v8Y3qWCK10axeNf7n9nmSVvhG_uHmCRRapAWnWKbHUQxO8K80IBTYGSfAKDCKW');
+        print_r($rst);
+        exit;
+        $wx = new WeChatUtil();
+        $rst = $wx->UploadWeChatImg('http://7xld1x.com1.z0.glb.clouddn.com/headbg1.jpg');
+        print_r($rst);
+        exit;
+        //      增加消息队列
+        if(!JobUtil::AddCustomJob('beanstalk','tube','',$error)){
+            print_r($error);
+            exit;
+        }
+        echo "ok";
+        exit;
+        $params = \Yii::$app->params['QiNiuOss'];
+        $auth = new Auth($params['ak'],$params['sk']);
+        $bucket = $params['bucket'];
+        print_r($bucket);exit;
+        $token = $auth->uploadToken($bucket);
+        $cache = WeChatUserUtil::getCacheInfo();
+        $rst = WeChatUserUtil::getWxFansAccumulate($cache['authorizer_access_token']);
+        $res = WeChatUserUtil::getWxFansSummary($cache['authorizer_access_token']);
+        print_r($rst);
+        print_r($res);
+
+        exit;
+
         $rst = date('Y-m-d H:i:s',1499676884);
         print_r($rst);
         exit;

@@ -1,18 +1,17 @@
 <?php
 namespace console\controllers;
+
 use udokmeci\yii2beanstalk\BeanstalkController;
-use yii\helpers\Console;
-use Yii;
 
 class WorkerController extends BeanstalkController
 {
   // Those are the default values you can override
 
-  const DELAY_PRIORITY = "1000"; //Default priority
-  const DELAY_TIME = 5; //Default delay time
+      const DELAY_PRIORITY = "1000"; //Default priority
+      const DELAY_TIME = 5; //Default delay time
 
-  // Used for Decaying. When DELAY_MAX reached job is deleted or delayed with 
-  const DELAY_MAX = 3;
+      // Used for Decaying. When DELAY_MAX reached job is deleted or delayed with
+      const DELAY_MAX = 3;
 
     public function listenTubes(){
       return require(__DIR__ . '/BeanstalkActions/ListenTubesConfig.php');

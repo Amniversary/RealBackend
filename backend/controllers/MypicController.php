@@ -37,7 +37,7 @@ class MypicController extends Controller
                 'class' => Cors::className(),
                 'cors'=>[
                     'Origin'=>['*'],
-                    'Access-Control-Request-Method'=>['GET','HEAD','OPTIONS'],
+                    'Access-Control-Request-Method'=>['GET','POST','HEAD','OPTIONS'],
 
                 ]
             ],

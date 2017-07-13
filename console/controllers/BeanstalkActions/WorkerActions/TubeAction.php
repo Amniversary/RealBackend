@@ -22,12 +22,9 @@ class TubeAction extends Action
         fwrite(STDOUT, Console::ansiFormat("---tube-- in job id:[$jobId]----"."\n", [Console::FG_GREEN]));
         try {
             // something useful here
-            $test = var_export($sentData);
-            //\Yii::getLogger()->log('dsadasdas:'.var_export($sentData,true),Logger::LEVEL_ERROR);
-            //\Yii::getLogger()->flush(true);
             $everthingIsAllRight = true;
             if($everthingIsAllRight == true){
-                fwrite(STDOUT, Console::ansiFormat("{$test} ---tube--  Everything is allright"."\n", [Console::FG_GREEN]));
+                fwrite(STDOUT, Console::ansiFormat(" ---tube--  Everything is allright"."\n", [Console::FG_GREEN]));
                 //Delete the job from beanstalkd
                 return BeanstalkController::DELETE;
             }

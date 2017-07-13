@@ -6,7 +6,7 @@
  * Time: 13:15
  */
 
-namespace frontend\business;
+namespace backend\business;
 
 
 use common\models\Job;
@@ -18,18 +18,7 @@ class JobUtil
     const DEAL_STATUS=1;//受理中
     const FINISH_STATUS=3;//完成
     CONST FAIL_STATUS=2;//失败
-    /**
-     * 获取job新模型
-     * @param $attrs
-     * @return Job
-     */
-    public static function GetNewModel($attrs)
-    {
-        $model = new Job();
-        $model->attributes = $attrs;
-        $model->create_time=date('Y-m-d H:i:s');
-        return $model;
-    }
+
 
     /**
      * 根据id获取任务

@@ -6,15 +6,10 @@
  * Time: 9:37
  */
 
-namespace console\controllers\ImActions\WorkerActions;
+namespace console\controllers\WeChatActions\WorkerActions;
 
 
-use common\components\UsualFunForStringHelper;
-use common\models\Job;
-use frontend\business\AttentionUtil;
-use frontend\business\JobUtil;
-use frontend\business\SendGiftIm;
-use frontend\business\SendImUtil;
+use backend\business\WeChatUserUtil;
 use udokmeci\yii2beanstalk\BeanstalkController;
 use yii\base\Action;
 use yii\helpers\Console;
@@ -22,22 +17,25 @@ use yii\log\Logger;
 
 /**
  * hbh
- * 注册腾讯云
- * @package console\controllers\BeanstalkActions\WorkerActions
+ * Class WeChatMsgAction 微信消息
+ * @package console\controllers\WeChatActions\WorkerActions
  */
-class TencentImAction extends Action
+class WeChatMsgAction extends Action
 {
     public function run($job)
     {
         $jobId = $job->getId();
         $sentData = $job->getData();
-        //$new_job_id =  UsualFunForStringHelper::CreateGUID();
         fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."---$sentData->key_word-- in job id:[$jobId]---"."\n", [Console::FG_GREEN]));
         try {
-
-
-            if(!SendImUtil::GetSendImParams($sentData,$sentData->key_word,$error))
+            $openid = $sentData->open_id;
+            $item = json_decode(json_encode($sentData->item),true);
+            $json = WeChatUserUtil::getMsgTemplate($item,$openid);
+            $rst = WeChatUserUtil::sendCustomerMsg($sentData->authorizer_access_token,$json);
+            //fwrite(STDOUT, Console::ansiFormat(var_export($rst,true)."\n", [Console::FG_GREEN]));
+            if($rst['errcode'] != 0)
             {
+                $error = 'Code:'. $rst['errcode']. ' Msg:'.$rst['errmsg'];
                 $error1 = $error;
                 if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
                 {
@@ -45,7 +43,7 @@ class TencentImAction extends Action
                 }
                 fwrite(STDOUT, Console::ansiFormat(" --$sentData->key_word-- $error no jobrecord "."\n", [Console::FG_GREEN]));
                 \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.'--- :'.$error,Logger::LEVEL_ERROR);
-
+                \Yii::getLogger()->flush(true);
                 return BeanstalkController::DELETE;
             }
 

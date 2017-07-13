@@ -29,7 +29,9 @@
         "kartik-v/yii2-mpdf": "*",
         "callmez/yii2-wechat-sdk": "dev-master",
 		"yiisoft/yii2-sphinx": "~2.0.0",
-        "yiisoft/yii2-redis": "^2.0"
+        "yiisoft/yii2-redis": "^2.0",
+        "overtrue/wechat": "~3.1",
+        "udokmeci/yii2-beanstalk": "^1.2@dev"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
@@ -44,6 +46,12 @@
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",
             "bower-asset-library": "vendor/bower"
+        }
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
         }
     }
 }

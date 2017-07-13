@@ -30,6 +30,18 @@ class AuthorizerUtil
     }
 
     /**
+     * 验证公众号认证状态
+     */
+    public static function isVerify($num)
+    {
+        $num = intval($num);
+        $arr = [0,3,4,5];
+        if(!in_array($num,$arr)){
+            return false;
+        }
+        return true;
+    }
+    /**
      * 获取微信用户基本信息
      * @param $openid
      * @param $appid
@@ -84,7 +96,8 @@ class AuthorizerUtil
                 case 2:
                     $outTime = intval(($time - $list['update_time'])/84600);
                     if($outTime >= 3){
-                        $rst = (new WeChatUtil())->UploadWeChatImg($list['picurl']);
+                        $auth = AuthorizationList::findOne(['record_id'=>$list['app_id']]);
+                        $rst = (new WeChatUtil())->UploadWeChatImg($list['picurl'],$auth->authorizer_access_token);
                         $model = AttentionEvent::findOne(['record_id'=>$list['record_id']]);
                         $model->media_id = $rst['media_id'];
                         $model->update_time = $rst['created_at'];
@@ -98,13 +111,11 @@ class AuthorizerUtil
 
         }
 
-        //print_r($articles);
         if(!empty($articles)){
             foreach ($articles as $key){
                 $data[] = $key;
             }
         }
-        //print_r($data);
         return $data;
     }
 

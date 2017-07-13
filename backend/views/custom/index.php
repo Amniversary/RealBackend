@@ -25,14 +25,14 @@ use yii\bootstrap\Html;
  *  @var $model common\models\Keywords
  *  @var $is_verify
  */
-if(!$is_verify){
+/*if(!$is_verify){
     echo \yii\bootstrap\Alert::widget([
         'body'=>'公众号未认证，无法进行相应操作！',
         'options'=>[
             'class'=>'alert-warning',
         ]
     ]);
-}
+}*/
 $gridColumns = [
     ['class'=>'kartik\grid\SerialColumn'],
     [
@@ -138,10 +138,10 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> !empty($is_verify)?
+            'content'=>
                 Html::button('保存菜单', ['id'=>'save-menu','type'=>'button', 'class'=>'btn btn-success']).
                 Html::button('加载菜单配置', ['type'=>'button', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('custom/download').'";return false;']).
-                Html::button('新增菜单',['id'=>'create-menu','type'=>'button','class'=>'btn btn-success']):'',
+                Html::button('新增菜单',['id'=>'create-menu','type'=>'button','class'=>'btn btn-success']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
@@ -179,7 +179,7 @@ $(document).on("click","#create-menu",function(){
         }
     })
 });
-$("#save-menu").on("click",function(){
+$(document).on("click","#save-menu",function(){
     $url = "http://"+ window.location.host + "/custom/save";
     $.ajax({
         type:"POST",

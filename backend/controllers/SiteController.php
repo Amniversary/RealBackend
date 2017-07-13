@@ -117,7 +117,6 @@ class SiteController extends Controller
     {
         Yii::$app->cache->delete('app_backend_'.Yii::$app->user->id);
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 
@@ -125,6 +124,8 @@ class SiteController extends Controller
     {
         return $this->render('no_privilige');
     }
+
+
 
     public function actionNocache()
     {

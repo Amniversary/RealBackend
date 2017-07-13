@@ -15,6 +15,7 @@ class CreateAction extends Action
         $model = new User();
         $model->scenario = 'create';
         $model->pic = '';
+        $model->user_type = 1;
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
             return $this->controller->redirect(['index']);
         } else {

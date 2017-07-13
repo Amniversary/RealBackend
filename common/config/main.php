@@ -16,8 +16,8 @@ return [
                   ],
               ],
         ],
-        'WeChat' => [
-            'class' => 'callmez\wechat\sdk\MpWechat',
+        'wechat' => [
+            'class' => 'callmez\wechat\sdk\Wechat',
             'appId' => 'wx25d7fec30752314f', //test: wx25d7fec30752314f
             'appSecret' => '1ea949d73cdda25dda89566b46a944f0',//test: 1ea949d73cdda25dda89566b46a944f0
             'token' => 'hongbao',
@@ -35,5 +35,12 @@ return [
             'connectTimeout'=> 1,
             'sleep' => 0, // or int for usleep after every job
         ],
+        'wechatBeanstalk'=>[
+            'class'=>'udokmeci\yii2beanstalk\Beanstalk',
+            'host'=>"127.0.0.1",
+            'port'=>11301,
+            'connectTimeout'=>1,
+            'sleep'=> 0,
+        ]
     ],
 ];

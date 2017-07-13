@@ -10,6 +10,7 @@ namespace backend\components\WeChatClass;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\JobUtil;
 use backend\business\WeChatUserUtil;
 use backend\components\ReceiveType;
 
@@ -48,16 +49,22 @@ class EventClass
         $model = AuthorizerUtil::genModel($UserInfo,$getData,$flag);
         if(!$model->save()){
             \Yii::error('保存微信用户信息失败：'.var_export($model->getErrors(),true));
-            $content = null;
+            return null;
         }
         //TODO: 处理回复消息逻辑 走客服消息接口 回复多条消息
         $msgData = AuthorizerUtil::getAttentionMsg($openInfo->record_id);
         if(!empty($msgData)){
             foreach ($msgData as $item){
-                if(!isset($item['msg_type'])){
-                    $item['msg_type'] = 1;
+                if(!isset($item['msg_type'])) $item['msg_type'] = 1;
+                $paramData  = [
+                    'key_word'=>'wechat',
+                    'open_id'=>$openid,
+                    'authorizer_access_token'=>$openInfo->authorizer_access_token,
+                    'item'=>$item
+                ];
+                if(!JobUtil::AddCustomJob('wechatBeanstalk','wechat',$paramData,$error)){
+                    \Yii::error('WeChat job is error ::'. $error);
                 }
-                WeChatUserUtil::sendCustomerMsg($openInfo->authorizer_access_token,$openid,$item);
             }
         }
         return null;

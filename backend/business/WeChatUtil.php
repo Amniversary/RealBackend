@@ -238,14 +238,14 @@ class WeChatUtil
     /**
      * 上传微信临时素材
      * @param $file  //上传素材的物理路径(本地)
+     * @param $access_token //公众号token
      * @param $rst  //返回的结果
      * @param $error  //错误信息
      * @param string $type //上传文件类型
      * @return bool
      */
-    public function Upload($file,&$rst,&$error,$type = 'image')
+    public function Upload($file,$access_token,&$rst,&$error,$type = 'image')
     {
-        $access_token = $this->AppInfo->access_token;
         $data['media'] = class_exists('\CURLFile') ? new \CURLFile(realpath($file)): '@'.realpath($file);
         $url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=$access_token&type=$type";
         $rst = @json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$data),true);
@@ -259,6 +259,7 @@ class WeChatUtil
     /**
      * 上传微信素材
      * @param $picUrl   //上传图片Url
+     * @param $access_token //微信token
      * @return bool|int|array  [
      *                              'type'=>type
      *                              'media_id'=>media_id
@@ -266,7 +267,7 @@ class WeChatUtil
      *                          ]
      * @throws HttpException
      */
-    public function UploadWeChatImg($picUrl)
+    public function UploadWeChatImg($picUrl,$access_token)
     {
         $file = basename($picUrl);
         $rst = UsualFunForNetWorkHelper::HttpGetImg($picUrl,$content_type,$error);
@@ -283,7 +284,7 @@ class WeChatUtil
         if(!file_exists($fileDir)){
             throw new HttpException(500,'保存七牛图片到本地失败.');
         }
-        if(!$this->Upload($fileDir,$rst,$error)){
+        if(!$this->Upload($fileDir,$access_token,$rst,$error)){
             throw new HttpException(500,$error);
         }
         unlink($fileDir);

@@ -9,18 +9,21 @@
 namespace backend\controllers;
 
 
+use backend\business\SaveByTransUtil;
+use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveAuthorizeInfoByTrans;
 use backend\business\WeChatUtil;
 use backend\components\ExitUtil;
 use backend\components\ReceiveType;
 use backend\components\WeChatComponent;
 use common\components\UsualFunForNetWorkHelper;
 use yii\web\Controller;
+use yii\web\HttpException;
 
 class WechatController extends Controller
 {
     public $enableCsrfValidation = false;
-
     public $error = '公众号授权异常：';
+
 
     public function actionTest(){
         $postData['query_auth_code'] =  111;
@@ -32,6 +35,7 @@ class WechatController extends Controller
         UsualFunForNetWorkHelper::HttpsPost($url,$postData);
         echo "ok";
     }
+
     /**
      * 全网发布测试 发送客服信息
      */
@@ -116,12 +120,12 @@ class WechatController extends Controller
         $data = $_REQUEST;
         if(empty($data['auth_code'])){
             \Yii::error('auth_code is empty :' . var_export($data,true));
-            ExitUtil::ExitWithMessage('获取auth_code失败，auth_code为空');
+            throw new HttpException(500,'获取auth_code失败，auth_code为空');
         }
         $WeChat = new WeChatUtil();
         //TODO: 获取授权公众号的授权数据
         if(!$WeChat->getQueryAuth($data['auth_code'],$res,$error)){
-            ExitUtil::ExitWithMessage($error);
+            throw new HttpException(500,$error);
         }
         $AuthInfo = $res['authorization_info'];
         empty($AuthInfo['authorizer_appid'])?ExitUtil::ExitWithMessage($this->error.'无法获取授权AppId'):'';
@@ -130,13 +134,16 @@ class WechatController extends Controller
 
         //TODO: 获取授权人帐号基本信息和公众号的基本信息
         if(!$WeChat->getAuthorizeInfo($AuthInfo['authorizer_appid'],$outInfo,$error)){
-            ExitUtil::ExitWithMessage($error);
+            throw new HttpException(500,$error);
         }
         $authorizer_info = $outInfo['authorizer_info'];
         //TODO: 保存授权数据
-        if(!$WeChat->SaveAuthInfo($AuthInfo,$authorizer_info,$error)){
-            ExitUtil::ExitWithMessage($error);
+        //TODO: 处理公众号粉丝数据统计
+        $transActions[] = new SaveAuthorizeInfoByTrans($AuthInfo,$authorizer_info);
+        if(!SaveByTransUtil::RewardSaveByTransaction($transActions,$error,$out)){
+            throw new HttpException(500,$error);
         }
+
         return $this->redirect(['publiclist/index']);
     }
 
