@@ -1,5 +1,5 @@
 <?php
-//require_once "WxPay.Config.php";
+//require_once "WxPay.BeanstalkConfig.php";
 //require_once "WxPay.Exception.php";
 namespace common\components\wxpay\lib;
 

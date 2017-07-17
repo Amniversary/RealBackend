@@ -98,7 +98,7 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('添加关键词',['type'=>'button','title'=>'添加关键词', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('keyword/create').'";return false;']),
+            'content'=> Html::button('添加关键词',['type'=>'button', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('keyword/create').'";return false;']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']

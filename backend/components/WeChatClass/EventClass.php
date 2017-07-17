@@ -11,7 +11,10 @@ namespace backend\components\WeChatClass;
 
 use backend\business\AuthorizerUtil;
 use backend\business\JobUtil;
+use backend\business\SaveByTransUtil;
+use backend\business\SaveRecordByTransactions\SaveByTransaction\StatisticFansUserByTrans;
 use backend\business\WeChatUserUtil;
+use backend\components\MessageComponent;
 use backend\components\ReceiveType;
 
 class EventClass
@@ -30,19 +33,22 @@ class EventClass
     {
         $appid = $this->data['appid'];
         $openid = $this->data['FromUserName'];
+        $msgObj = new MessageComponent($this->data);
         $flag = true;
         //TODO: 如果已关注 查出用户信息
         $openInfo = AuthorizerUtil::getAuthOne($appid);
         $UserInfo = AuthorizerUtil::getUserForOpenId($openid,$openInfo->record_id);
-        if(empty($openInfo) || !isset($openInfo)){
-            \Yii::error('找不到对应的公众号信息 ： AppId:'.$appid );
+        //TODO: 处理用户关注统计
+        $DataPrams =['key_word'=>'attention','app_id'=>$openInfo->record_id, 'type'=>1];
+        if(!JobUtil::AddCustomJob('attentionBeanstalk','attention',$DataPrams,$error))
+            \Yii::error($error);
+        //TODO: 获取用户基本信息
+        $getData = WeChatUserUtil::getUserInfo($openInfo->authorizer_access_token,$openid);
+        if($getData['errcode'] != 0 ) {
+            \Yii::error('获取用户信息：'.var_export($getData,true));
             return null;
         }
-        // 未关注重新请求用户信息
-        $getData = WeChatUserUtil::getUserInfo($openInfo->authorizer_access_token,$openid);
-        if($getData['errcode'] != 0 ) return null;
-        $getData['open_id'] = $getData['openid'];
-        unset($getData['openid']);
+        $getData['open_id'] = $getData['openid']; unset($getData['openid']);
         if(empty($UserInfo) || !isset($UserInfo)) $flag = false;
         if(!isset($getData['open_id'])) return null;
         $getData['app_id'] = $openInfo['record_id'];
@@ -52,22 +58,8 @@ class EventClass
             return null;
         }
         //TODO: 处理回复消息逻辑 走客服消息接口 回复多条消息
-        $msgData = AuthorizerUtil::getAttentionMsg($openInfo->record_id);
-        if(!empty($msgData)){
-            foreach ($msgData as $item){
-                if(!isset($item['msg_type'])) $item['msg_type'] = 1;
-                $paramData  = [
-                    'key_word'=>'wechat',
-                    'open_id'=>$openid,
-                    'authorizer_access_token'=>$openInfo->authorizer_access_token,
-                    'item'=>$item
-                ];
-                if(!JobUtil::AddCustomJob('wechatBeanstalk','wechat',$paramData,$error)){
-                    \Yii::error('WeChat job is error ::'. $error);
-                }
-            }
-        }
-        return null;
+        $msgData = $msgObj->VerifySendAttentionMessage();
+        return $msgData;
     }
 
     /**
@@ -76,8 +68,16 @@ class EventClass
     public function unSubscribe()
     {
         $AuthInfo = AuthorizerUtil::getAuthOne($this->data['appid']);
+        if(empty($AuthInfo) || !isset($AuthInfo)){
+            \Yii::error('找不到对应的公众号信息 ： AppId:'.$this->data['appid'] );
+            return null;
+        }
         $openid = $this->data['FromUserName'];
         //TODO: 如果已关注 查出用户信息
+        $DataPrams =['key_word'=>'attention','app_id'=>$AuthInfo->record_id, 'type'=>2];
+        if(!JobUtil::AddCustomJob('attentionBeanstalk','attention',$DataPrams,$error))
+            \Yii::error($error);
+
         $UserInfo = AuthorizerUtil::getUserForOpenId($openid,$AuthInfo->record_id);
         if(!empty($UserInfo)){
             $UserInfo->subscribe = 0;

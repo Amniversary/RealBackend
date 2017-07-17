@@ -32,6 +32,11 @@ class ReceiveType
         }else{
             $Text = new TextClass($arr);
             $contentStr = $Text->Text();
+            if($contentStr['msg_type'] == 1){
+                return $this->transmitNews($arr,$contentStr);
+            }elseif($contentStr['msg_type'] == 2){
+                return $this->transmitImg($arr,$contentStr);
+            }
         }
         $resultStr = $this->transmitText($arr, $contentStr, $flag);
         return $resultStr;
@@ -98,6 +103,12 @@ class ReceiveType
                 $contentStr = $arr['Event'].'from_callback';
                 break;
         }
+        \Yii::error('subscribe:' .var_export($contentStr,true));
+        if($contentStr['msg_type'] == 1){
+            return $this->transmitNews($arr,$contentStr);
+        }elseif($contentStr['msg_type'] == 2){
+            return $this->transmitImg($arr,$contentStr);
+        }
         $resultStr = $this->transmitText($arr, $contentStr);
         return $resultStr;
     }
@@ -114,17 +125,72 @@ class ReceiveType
         if($content == null){
             return null;
         }
+        if(is_array($content)){
+            $content = $content['content'];
+        }
         if(strpos($content,'from_callback')){
             $arr['MsgType'] = 'text';
         }
         $textXml = "<xml>
                         <ToUserName><![CDATA[%s]]></ToUserName>
                         <FromUserName><![CDATA[%s]]></FromUserName>
-                        <CreateTime>%s</CreateTime><MsgType><![CDATA[%s]]></MsgType>
+                        <CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType>
                         <Content><![CDATA[%s]]></Content>
                         <FunFlag>%s</FunFlag>
                     </xml>";
-        $resultStr = sprintf($textXml, $arr['FromUserName'], $arr['ToUserName'], time(), $arr['MsgType'],$content,$flag);
+        $resultStr = sprintf($textXml, $arr['FromUserName'], $arr['ToUserName'], time(),$content,$flag);
+        return $resultStr;
+    }
+
+
+    /**
+     * 图文回复模版
+     * @param $arr
+     * @param $content
+     * @return null|string
+     */
+    public function transmitNews($arr, $content){
+        if($content ==null) return null;
+        $count = count($content);
+        $newsXml = "<xml>
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[%s]]></FromUserName>
+                        <CreateTime>%s</CreateTime>
+                        <MsgType><![CDATA[news]]></MsgType>
+                        <ArticleCount>%s</ArticleCount>
+                        <Articles>";
+        foreach($content as $item){
+            $newsXml .= "<item>
+                            <Title><![CDATA[".$item['title']."]]></Title>
+                            <Description><![CDATA[".$item['description']."]]></Description>
+                            <PicUrl><![CDATA[".$item['url']."]]></PicUrl>
+                            <Url><![CDATA[".$item['picurl']."]]></Url>
+                        </item>";
+        }
+        $newsXml .= "</Articles></xml>";
+        $resultStr = sprintf($newsXml,$arr['FromUserName'],$arr['ToUserName'],time(),$count);
+        return $resultStr;
+    }
+
+
+    /**
+     * 图片消息模版
+     * @param $arr
+     * @param $content
+     * @return null|string
+     */
+    public function transmitImg($arr,$content){
+        if($content == null) return null;
+        $imgXml = "<xml>
+                    <ToUserName><![CDATA[%s]]></ToUserName>
+                    <FromUserName><![CDATA[%s]]></FromUserName>
+                    <CreateTime>%s</CreateTime>
+                    <MsgType><![CDATA[image]]></MsgType>
+                    <Image>
+                    <MediaId><![CDATA[%s]]></MediaId>
+                    </Image>
+                   </xml>";
+        $resultStr = sprintf($imgXml,$arr['FromUserName'],$arr['ToUserName'],time(),$content['media_id']);
         return $resultStr;
     }
 }

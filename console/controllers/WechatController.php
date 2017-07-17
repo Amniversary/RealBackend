@@ -9,8 +9,11 @@
 namespace console\controllers;
 
 
+use backend\business\AuthorizerUtil;
+use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use common\models\AuthorizationList;
+use common\models\FansStatistics;
 use common\models\User;
 use common\models\UserMenu;
 use yii\console\Controller;
@@ -53,5 +56,52 @@ class WechatController extends Controller
                 }
             }
         }
+    }
+
+    /**
+     * 获取前一天微信粉丝统计
+     */
+    public function actionFansnum()
+    {
+        $query = (new Query())
+            ->select(['record_id','authorizer_access_token','verify_type_info'])->from('wc_authorization_list')->all();
+        if(empty($query)){
+            echo "没有找到公众号信息 \n";
+            exit;
+        }
+        $num = count($query);
+        $i = 0;
+        foreach ($query as $item){
+            if(!AuthorizerUtil::isVerify($item['verify_type_info'])){
+                echo "公众号未认证:  ID --".$item['record_id'] ."\n";
+                continue;
+            }
+            if(!WeChatUserUtil::getWxFansAccumulate($item['authorizer_access_token'],$rst,$error)){
+                continue;
+            }
+            $fans = $this->getFansRecord($item['record_id']);
+            if(empty($fans)){
+                $fans = new FansStatistics();
+                $fans->app_id = $item['record_id'];
+                $fans->new_user = 0;
+                $fans->cancel_user = 0;
+                $fans->net_user = 0;
+
+            }
+            $fans->total_user = strval($rst['list'][0]['cumulate_user']);
+            $fans->statistics_date = date('Y-m-d');
+            $fans->save();
+
+            $i ++;
+        }
+        echo "一共 $num 条记录，更新成功 $i 条记录\n";
+    }
+
+
+    /**
+     * @return null|FansStatistics
+     */
+    private function getFansRecord($record_id){
+        return FansStatistics::findOne(['app_id'=>$record_id,'statistics_date'=>date('Y-m-d')]);
     }
 }

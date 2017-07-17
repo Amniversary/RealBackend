@@ -12,6 +12,7 @@ use yii\db\Query;
  * @property string $keyword
  * @property integer $app_id
  * @property integer $rule
+ * @property integer $global
  * @property string $remark1
  * @property string $remark2
  * @property string $remark3
@@ -33,7 +34,7 @@ class Keywords extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['app_id','rule'], 'integer'],
+            [['app_id','rule','global'], 'integer'],
             [['keyword', 'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
         ];
     }
@@ -48,6 +49,7 @@ class Keywords extends \yii\db\ActiveRecord
             'keyword' => '关键词',
             'rule' => '匹配规则',
             'app_id' => '公众号',
+            'global' => '批量设置',
             'remark1' => '备用字段1',
             'remark2' => '备用字段2',
             'remark3' => '备用字段3',

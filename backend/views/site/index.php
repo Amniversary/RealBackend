@@ -1,7 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
-
+/* @var $model */
 $this->title = 'Real数据平台';
  \common\assets\ArtDialogAsset::register($this);
 ?>
@@ -13,13 +13,13 @@ $this->title = 'Real数据平台';
     #w4{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}
     #w5{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}
 </style>
-<h1 style="text-align: center">Real数据平台</h1>
-<!--<div class="row">
+
+<div class="row">
     <div class="col-lg-3 col-xs-6">
         <div class="small-box bg-aqua">
             <div class="inner">
-                <h3><?/*= 0 */?></h3>
-                <p>今日新增用户</p>
+                <h3><?= $model['new_user'] ?></h3>
+                <p>今日新增粉丝</p>
             </div>
             <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -30,9 +30,9 @@ $this->title = 'Real数据平台';
     <div class="col-lg-3 col-xs-6">
         <div class="small-box bg-green">
             <div class="inner">
-                <h3><?/*= 0 */?></h3>
+                <h3><?= $model['net_user'] ?></h3>
 
-                <p>今日活跃用户</p>
+                <p>今日净增粉丝</p>
             </div>
             <div class="icon">
                 <i class="ion ion-stats-bars"></i>
@@ -43,9 +43,9 @@ $this->title = 'Real数据平台';
     <div class="col-lg-3 col-xs-6">
         <div class="small-box bg-yellow">
             <div class="inner">
-                <h3><?/*= 0 */?></h3>
+                <h3><?= $model['count'] ?></h3>
 
-                <p>今日充值</p>
+                <p>粉丝总数</p>
             </div>
             <div class="icon">
                 <i class="ion ion-person-add"></i>
@@ -56,9 +56,9 @@ $this->title = 'Real数据平台';
     <div class="col-lg-3 col-xs-6">
         <div class="small-box bg-red">
             <div class="inner">
-                <h3><?/*= 0 */?></h3>
+                <h3><?= $model['cumulate_user']?></h3>
 
-                <p>今日活跃主播</p>
+                <p>累计粉丝总数</p>
             </div>
             <div class="icon">
                 <i class="ion ion-pie-graph"></i>
@@ -66,7 +66,8 @@ $this->title = 'Real数据平台';
             <a href="/operatestatis/index_activeanchor" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
-</div>-->
+</div>
+<h1 style="text-align: center">Real数据平台</h1>
 <?php
 
 //日统计表

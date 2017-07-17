@@ -63,17 +63,17 @@ $data = [$cache['record_id']=>$cache['nick_name']];
     <hr/>
     </div>
     <div id="content">
-    <label style="color: red;font-weight: bold;">1.超链接中 href 为链接Url，例：< a href="http://wxmp.gatao.cn">Real后台< /a><br/>
+    <label style="color: red;font-weight: bold;">1.超链接中 href 为链接Url，例：< a href="http://wxmp.gatao.cn" _href="http://wxmp.gatao.cn" >Real后台< /a><br/>
     2.回车即代表换行</label>
     <?= $form->field($model, 'content')->textarea() ?>
     </div>
     <div id="img">
         <div class="form-group field-user-pic1 <?=($model->getFirstError('picurl') === null?'has-success':'has-error')?>">
             <label class="control-label" for="user-pic1">图片(建议图片大小350*550)</label> <a class="pic-del" href="javascript:delpic('pic')">删除</a>
-            <input type="hidden" name="AttentionEvent[picurl]" id="user_pic" value="<?=$model->picurl?>"/>
+            <input type="hidden" name="AttentionEvent[picurl1]" id="user_pic" value="<?=$model->picurl?>"/>
             <input class="backend-pic-input user-pic-file" type="file" id="pic-file-pic"  targetctr="pic" />
             <a target="_blank" href="#" id="a-pic" style="<?=empty($model->picurl)?'display: none;':''?>">
-                <img class="user-pic" src="<?=$model->picurl?>" alt="图像">
+                <img class="user-pic" src="<?=$model->picurl ?>" alt="图像">
             </a>
             <div class="help-block"><?=$model->getFirstError('picurl')?></div>
         </div>
@@ -131,7 +131,7 @@ $("input[type=\'radio\']").on("click",function(){
 });
 $("#super-link").on("click",function(){
     $text = $("#attentionevent-content").val();
-    $("#attentionevent-content").val($text + "<a href=\"\"></a>");
+    $("#attentionevent-content").val($text + "<a href=\"\" _href=\"\"></a>");
 })
 function delpic(targetKey)
 {

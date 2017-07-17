@@ -21,6 +21,7 @@ class CreateAction extends Action
         $model = new Keywords();
         $Cache = WeChatUserUtil::getCacheInfo();
         $model->app_id = $Cache['record_id'];
+        $model->global = 0;
         if($model->load(\Yii::$app->request->post()) && $model->save()){
             return $this->controller->redirect('createkey');
         }else{

@@ -1,0 +1,1453 @@
+2017-07-13 10:14:07 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 10:14:07 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123/PhpstormProjects/version2'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499912047.2746
+    'REQUEST_TIME' => 1499912047
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 10:17:12 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 10:17:12 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123/PhpstormProjects/version2'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499912232.8194
+    'REQUEST_TIME' => 1499912232
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 10:19:55 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 10:19:55 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499912395.186
+    'REQUEST_TIME' => 1499912395
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 10:20:35 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 10:20:38 [-][-][-][error][application] 任务处理失败，jobid：16--- :Code: Msg:
+    in /Users/a123/PhpstormProjects/version2/RealBackend/console/controllers/WeChatActions/WorkerActions/WeChatMsgAction.php:45
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:409
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:352
+2017-07-13 10:20:35 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499912435.7987
+    'REQUEST_TIME' => 1499912435
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 10:21:43 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 10:21:43 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499912503.5547
+    'REQUEST_TIME' => 1499912503
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 10:22:25 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 10:22:25 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499912545.3385
+    'REQUEST_TIME' => 1499912545
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 10:22:40 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 10:22:41 [-][-][-][error][application] 任务处理失败，jobid：19--- :Code:40007 Msg:invalid media_id hint: [7hQZGa0562ge25]
+    in /Users/a123/PhpstormProjects/version2/RealBackend/console/controllers/WeChatActions/WorkerActions/WeChatMsgAction.php:45
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:409
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:352
+2017-07-13 10:22:40 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499912560.7546
+    'REQUEST_TIME' => 1499912560
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 10:36:48 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 10:36:56 [-][-][-][error][application] 任务处理失败，jobid：20--- :Code:40007 Msg:invalid media_id hint: [efHoza0417ge25]
+    in /Users/a123/PhpstormProjects/version2/RealBackend/console/controllers/WeChatActions/WorkerActions/WeChatMsgAction.php:45
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:409
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:352
+2017-07-13 10:36:48 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499913408.7103
+    'REQUEST_TIME' => 1499913408
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 10:51:12 [-][-][-][error][application] 任务处理失败，jobid：21--- :Code:40007 Msg:invalid media_id hint: [rCbFZa0272ge20]
+    in /Users/a123/PhpstormProjects/version2/RealBackend/console/controllers/WeChatActions/WorkerActions/WeChatMsgAction.php:45
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:409
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:352
+2017-07-13 10:36:48 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499913408.7103
+    'REQUEST_TIME' => 1499913408
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 10:51:17 [-][-][-][error][application] 任务处理失败，jobid：22--- :Code:40007 Msg:invalid media_id hint: [DicBiA0277ge20]
+    in /Users/a123/PhpstormProjects/version2/RealBackend/console/controllers/WeChatActions/WorkerActions/WeChatMsgAction.php:45
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:409
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:352
+2017-07-13 10:36:48 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499913408.7103
+    'REQUEST_TIME' => 1499913408
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 11:22:44 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 11:22:44 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499916164.4978
+    'REQUEST_TIME' => 1499916164
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 11:46:09 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 11:46:09 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:05C5DFFE-C792-47CE-85CB-9F627D43A6DC'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499917569.2047
+    'REQUEST_TIME' => 1499917569
+    'argv' => [
+        0 => 'yii'
+        1 => 'wechatmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:27:29 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:27:29 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499930849.4526
+    'REQUEST_TIME' => 1499930849
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:29:50 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:29:50 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499930990.0125
+    'REQUEST_TIME' => 1499930990
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:30:45 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:30:45 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499931045.7809
+    'REQUEST_TIME' => 1499931045
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:32:57 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:32:57 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499931177.0748
+    'REQUEST_TIME' => 1499931177
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:34:23 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:34:23 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499931263.1039
+    'REQUEST_TIME' => 1499931263
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:35:57 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:35:57 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499931357.1775
+    'REQUEST_TIME' => 1499931357
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:36:40 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:36:40 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499931400.2407
+    'REQUEST_TIME' => 1499931400
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:38:28 [-][-][-][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'array_merge(): Argument #2 is not an array' in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:102
+Stack trace:
+#0 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php(268): udokmeci\yii2beanstalk\BeanstalkController->getTubes()
+#1 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Controller.php(152): udokmeci\yii2beanstalk\BeanstalkController->beforeAction()
+#2 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Controller.php(108): yii\base\Controller->runAction()
+#3 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Module.php(454): yii\console\Controller->runAction()
+#4 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(167): yii\base\Module->runAction()
+#5 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(143): yii\console\Application->runAction()
+#6 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Application.php(379): yii\console\Application->handleRequest()
+#7 /Users/a123/PhpstormProjects/version2/RealBackend/yii(27): yii\base\Application->run()
+#8 {main}
+2017-07-13 15:38:28 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499931508.2849
+    'REQUEST_TIME' => 1499931508
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:38:44 [-][-][-][error][yii\console\Exception] exception 'yii\console\Exception' with message '函数缺少参数：job' in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Controller.php:146
+Stack trace:
+#0 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/InlineAction.php(49): yii\console\Controller->bindActionParams(Object(yii\base\InlineAction), Array)
+#1 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#2 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Controller.php(108): yii\base\Controller->runAction('attention', Array)
+#3 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Module.php(454): yii\console\Controller->runAction('attention', Array)
+#4 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(167): yii\base\Module->runAction('workerattention...', Array)
+#5 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(143): yii\console\Application->runAction('workerattention...', Array)
+#6 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Application.php(379): yii\console\Application->handleRequest(Object(yii\console\Request))
+#7 /Users/a123/PhpstormProjects/version2/RealBackend/yii(27): yii\base\Application->run()
+#8 {main}
+2017-07-13 15:38:44 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499931524.9159
+    'REQUEST_TIME' => 1499931524
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention/attention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:41:08 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:41:08 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499931668.6707
+    'REQUEST_TIME' => 1499931668
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:41:14 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:41:14 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499931674.0662
+    'REQUEST_TIME' => 1499931674
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:42:03 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:42:03 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499931723.5207
+    'REQUEST_TIME' => 1499931723
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerwxmsg'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:51:48 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:51:47 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499932307.8823
+    'REQUEST_TIME' => 1499932307
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:51:58 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:51:58 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499932318.1521
+    'REQUEST_TIME' => 1499932318
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:52:01 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:52:01 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499932321.3857
+    'REQUEST_TIME' => 1499932321
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-13 15:53:48 [-][-][-][error][yii\i18n\PhpMessageSource::loadFallbackMessages] The message file for category 'udokmeci.beanstalkd' does not exist: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh-CN/udokmeci.beanstalkd.php Fallback file does not exist as well: /Users/a123/PhpstormProjects/version2/RealBackend/console/messages/zh/udokmeci.beanstalkd.php
+    in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/udokmeci/yii2-beanstalk/src/udokmeci/yii2beanstalk/BeanstalkController.php:306
+2017-07-13 15:53:48 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.P1hwTgzxdI/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.oy1x1XZE8C/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:53864A41-E467-4B7B-B519-948905672E2E'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/usr/local/php5/bin/php'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1499932428.2808
+    'REQUEST_TIME' => 1499932428
+    'argv' => [
+        0 => 'yii'
+        1 => 'workerattention'
+    ]
+    'argc' => 2
+]
+2017-07-14 15:12:14 [-][-][-][error][yii\db\Exception] exception 'PDOException' with message 'SQLSTATE[HY000] [1049] Unknown database 'yii2_advanced_tests'' in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php:600
+Stack trace:
+#0 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(600): PDO->__construct('mysql:host=loca...', 'root', 'root', NULL)
+#1 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(542): yii\db\Connection->createPdoInstance()
+#2 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(861): yii\db\Connection->open()
+#3 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(848): yii\db\Connection->getMasterPdo()
+#4 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(219): yii\db\Connection->getSlavePdo()
+#5 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(834): yii\db\Command->prepare(true)
+#6 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(362): yii\db\Command->queryInternal('fetchAll', NULL)
+#7 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/mysql/Schema.php(198): yii\db\Command->queryAll()
+#8 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/mysql/Schema.php(97): yii\db\mysql\Schema->findColumns(Object(yii\db\TableSchema))
+#9 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Schema.php(146): yii\db\mysql\Schema->loadTableSchema('wcmigration')
+#10 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/MigrateController.php(132): yii\db\Schema->getTableSchema('{{%migration}}', true)
+#11 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/BaseMigrateController.php(680): yii\console\controllers\MigrateController->getMigrationHistory(NULL)
+#12 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/BaseMigrateController.php(123): yii\console\controllers\BaseMigrateController->getNewMigrations()
+#13 [internal function]: yii\console\controllers\BaseMigrateController->actionUp(0)
+#14 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/InlineAction.php(55): call_user_func_array(Array, Array)
+#15 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#16 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Controller.php(108): yii\base\Controller->runAction('', Array)
+#17 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Module.php(454): yii\console\Controller->runAction('', Array)
+#18 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(167): yii\base\Module->runAction('migrate', Array)
+#19 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(143): yii\console\Application->runAction('migrate', Array)
+#20 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Application.php(379): yii\console\Application->handleRequest(Object(yii\console\Request))
+#21 /Users/a123/PhpstormProjects/version2/RealBackend/tests/codeception/bin/yii(22): yii\base\Application->run()
+#22 {main}
+
+Next exception 'yii\db\Exception' with message 'SQLSTATE[HY000] [1049] Unknown database 'yii2_advanced_tests'' in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php:547
+Stack trace:
+#0 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(861): yii\db\Connection->open()
+#1 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(848): yii\db\Connection->getMasterPdo()
+#2 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(219): yii\db\Connection->getSlavePdo()
+#3 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(834): yii\db\Command->prepare(true)
+#4 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(362): yii\db\Command->queryInternal('fetchAll', NULL)
+#5 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/mysql/Schema.php(198): yii\db\Command->queryAll()
+#6 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/mysql/Schema.php(97): yii\db\mysql\Schema->findColumns(Object(yii\db\TableSchema))
+#7 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Schema.php(146): yii\db\mysql\Schema->loadTableSchema('wcmigration')
+#8 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/MigrateController.php(132): yii\db\Schema->getTableSchema('{{%migration}}', true)
+#9 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/BaseMigrateController.php(680): yii\console\controllers\MigrateController->getMigrationHistory(NULL)
+#10 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/BaseMigrateController.php(123): yii\console\controllers\BaseMigrateController->getNewMigrations()
+#11 [internal function]: yii\console\controllers\BaseMigrateController->actionUp(0)
+#12 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/InlineAction.php(55): call_user_func_array(Array, Array)
+#13 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#14 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Controller.php(108): yii\base\Controller->runAction('', Array)
+#15 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Module.php(454): yii\console\Controller->runAction('', Array)
+#16 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(167): yii\base\Module->runAction('migrate', Array)
+#17 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(143): yii\console\Application->runAction('migrate', Array)
+#18 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Application.php(379): yii\console\Application->handleRequest(Object(yii\console\Request))
+#19 /Users/a123/PhpstormProjects/version2/RealBackend/tests/codeception/bin/yii(22): yii\base\Application->run()
+#20 {main}
+Additional Information:
+
+2017-07-14 15:12:14 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w0t0p0:B90DDAA4-889D-4EEB-977D-B4ACBD830196'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.bqfKONetiz/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.0vGovAplBJ/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend/tests/codeception/bin'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w0t0p0:B90DDAA4-889D-4EEB-977D-B4ACBD830196'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123/PhpstormProjects/version2/RealBackend/tests/codeception'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    '_' => '/Users/a123/PhpstormProjects/version2/RealBackend/tests/codeception/bin/./yii'
+    'PHP_SELF' => './yii'
+    'SCRIPT_NAME' => './yii'
+    'SCRIPT_FILENAME' => './yii'
+    'PATH_TRANSLATED' => './yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1500016334.3453
+    'REQUEST_TIME' => 1500016334
+    'argv' => [
+        0 => './yii'
+        1 => 'migrate'
+    ]
+    'argc' => 2
+]
+2017-07-14 16:17:11 [-][-][-][error][yii\db\Exception] exception 'PDOException' with message 'SQLSTATE[HY000] [1049] Unknown database 'yii2_advanced_tests'' in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php:600
+Stack trace:
+#0 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(600): PDO->__construct('mysql:host=loca...', 'root', 'root', NULL)
+#1 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(542): yii\db\Connection->createPdoInstance()
+#2 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(861): yii\db\Connection->open()
+#3 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(848): yii\db\Connection->getMasterPdo()
+#4 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(219): yii\db\Connection->getSlavePdo()
+#5 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(834): yii\db\Command->prepare(true)
+#6 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(362): yii\db\Command->queryInternal('fetchAll', NULL)
+#7 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/mysql/Schema.php(198): yii\db\Command->queryAll()
+#8 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/mysql/Schema.php(97): yii\db\mysql\Schema->findColumns(Object(yii\db\TableSchema))
+#9 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Schema.php(146): yii\db\mysql\Schema->loadTableSchema('wcmigration')
+#10 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/MigrateController.php(132): yii\db\Schema->getTableSchema('{{%migration}}', true)
+#11 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/BaseMigrateController.php(680): yii\console\controllers\MigrateController->getMigrationHistory(NULL)
+#12 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/BaseMigrateController.php(123): yii\console\controllers\BaseMigrateController->getNewMigrations()
+#13 [internal function]: yii\console\controllers\BaseMigrateController->actionUp(0)
+#14 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/InlineAction.php(55): call_user_func_array(Array, Array)
+#15 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#16 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Controller.php(108): yii\base\Controller->runAction('', Array)
+#17 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Module.php(454): yii\console\Controller->runAction('', Array)
+#18 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(167): yii\base\Module->runAction('migrate', Array)
+#19 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(143): yii\console\Application->runAction('migrate', Array)
+#20 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Application.php(379): yii\console\Application->handleRequest(Object(yii\console\Request))
+#21 /Users/a123/PhpstormProjects/version2/RealBackend/tests/codeception/bin/yii(22): yii\base\Application->run()
+#22 {main}
+
+Next exception 'yii\db\Exception' with message 'SQLSTATE[HY000] [1049] Unknown database 'yii2_advanced_tests'' in /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php:547
+Stack trace:
+#0 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(861): yii\db\Connection->open()
+#1 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Connection.php(848): yii\db\Connection->getMasterPdo()
+#2 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(219): yii\db\Connection->getSlavePdo()
+#3 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(834): yii\db\Command->prepare(true)
+#4 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Command.php(362): yii\db\Command->queryInternal('fetchAll', NULL)
+#5 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/mysql/Schema.php(198): yii\db\Command->queryAll()
+#6 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/mysql/Schema.php(97): yii\db\mysql\Schema->findColumns(Object(yii\db\TableSchema))
+#7 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/db/Schema.php(146): yii\db\mysql\Schema->loadTableSchema('wcmigration')
+#8 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/MigrateController.php(132): yii\db\Schema->getTableSchema('{{%migration}}', true)
+#9 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/BaseMigrateController.php(680): yii\console\controllers\MigrateController->getMigrationHistory(NULL)
+#10 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/controllers/BaseMigrateController.php(123): yii\console\controllers\BaseMigrateController->getNewMigrations()
+#11 [internal function]: yii\console\controllers\BaseMigrateController->actionUp(0)
+#12 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/InlineAction.php(55): call_user_func_array(Array, Array)
+#13 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#14 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Controller.php(108): yii\base\Controller->runAction('', Array)
+#15 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Module.php(454): yii\console\Controller->runAction('', Array)
+#16 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(167): yii\base\Module->runAction('migrate', Array)
+#17 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/console/Application.php(143): yii\console\Application->runAction('migrate', Array)
+#18 /Users/a123/PhpstormProjects/version2/RealBackend/vendor/yiisoft/yii2/base/Application.php(379): yii\console\Application->handleRequest(Object(yii\console\Request))
+#19 /Users/a123/PhpstormProjects/version2/RealBackend/tests/codeception/bin/yii(22): yii\base\Application->run()
+#20 {main}
+Additional Information:
+
+2017-07-14 16:17:10 [-][-][-][info][application] $_SERVER = [
+    'TERM_SESSION_ID' => 'w1t0p0:EAAEAF81-6555-4280-AB4E-086C410AE725'
+    'SSH_AUTH_SOCK' => '/private/tmp/com.apple.launchd.bqfKONetiz/Listeners'
+    'Apple_PubSub_Socket_Render' => '/private/tmp/com.apple.launchd.0vGovAplBJ/Render'
+    'COLORFGBG' => '12;8'
+    'ITERM_PROFILE' => 'Default'
+    'XPC_FLAGS' => '0x0'
+    'LANG' => 'zh_CN.UTF-8'
+    'PWD' => '/Users/a123/PhpstormProjects/version2/RealBackend/tests/codeception/bin'
+    'SHELL' => '/usr/local/bin/zsh'
+    'TERM_PROGRAM_VERSION' => '3.0.15'
+    'TERM_PROGRAM' => 'iTerm.app'
+    'PATH' => '/Users/a123/PhpstormProjects/version2/RealBackend/vendor/bin:/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    'TERM' => 'xterm-256color'
+    'HOME' => '/Users/a123'
+    'TMPDIR' => '/var/folders/f2/ppkvz9xd62x6drsfds4hk3c40000gp/T/'
+    'USER' => 'a123'
+    'XPC_SERVICE_NAME' => '0'
+    'LOGNAME' => 'a123'
+    'ITERM_SESSION_ID' => 'w1t0p0:EAAEAF81-6555-4280-AB4E-086C410AE725'
+    '__CF_USER_TEXT_ENCODING' => '0x1F6:0x19:0x34'
+    'SHLVL' => '1'
+    'OLDPWD' => '/Users/a123/PhpstormProjects/version2'
+    'ZSH' => '/Users/a123/.oh-my-zsh'
+    'PAGER' => 'less'
+    'LESS' => '-R'
+    'LC_CTYPE' => 'zh_CN.UTF-8'
+    'LSCOLORS' => 'Gxfxcxdxbxegedabagacad'
+    'PAth' => '/Users/a123/PhpstormProjects/version2/RealBackend/vendor/bin:/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/Cellar/beanstalkd/1.10/bin:/usr/local/php5/bin:/usr/local/php5/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:export PATH=/usr/local/php5/bin:/usr/local/php5/sbin:$PATH:/usr/local/go/bin'
+    '_' => '/Users/a123/PhpstormProjects/version2/RealBackend/tests/codeception/bin/./yii'
+    'PHP_SELF' => './yii'
+    'SCRIPT_NAME' => './yii'
+    'SCRIPT_FILENAME' => './yii'
+    'PATH_TRANSLATED' => './yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1500020230.9233
+    'REQUEST_TIME' => 1500020230
+    'argv' => [
+        0 => './yii'
+        1 => 'migrate'
+    ]
+    'argc' => 2
+]

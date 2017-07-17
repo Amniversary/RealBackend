@@ -26,9 +26,28 @@ class AuthorizerUtil
      */
     public static function getAuthOne($appid)
     {
-        return AuthorizationList::findOne(['authorizer_appid'=>$appid]);
+        return AuthorizationList::findOne(['authorizer_appid'=>$appid,'status'=>1]);
     }
 
+
+
+    /**
+     * 根据记录Id 获取公众号信息
+     * @param $record_id
+     * @return null|AuthorizationList
+     */
+    public static function getAuthByOne($record_id){
+        return AuthorizationList::findOne(['record_id'=>$record_id,'status'=>1]);
+    }
+
+    /**
+     * 获取事件消息
+     * @param $record_id
+     * @return null|AttentionEvent
+     */
+    public static function getEventMsg($record_id){
+        return AttentionEvent::findOne(['record_id'=>$record_id]);
+    }
     /**
      * 验证公众号认证状态
      */
@@ -52,72 +71,6 @@ class AuthorizerUtil
         return Client::findOne(['open_id'=>$openid,'app_id'=>$appid]);
     }
 
-    /**
-     * 获取消息列表
-     * @param $id
-     * @param $flag
-     * @param $key
-     * @return array|bool
-     */
-    public static function getAttentionMsg($id,$flag = 0,$key = null)
-    {
-        if(!empty($key)){
-            $condition = sprintf('app_id=%s and flag=%s and key_id=%s',
-                $id,$flag,$key);
-        }else{
-            $condition = sprintf('app_id=%s and flag=%s',
-                $id,$flag);
-        }
-
-        $query = (new Query())
-            ->select(['record_id','app_id','event_id','content','msg_type','title','description','url','picurl','media_id','update_time'])
-            ->from('wc_attention_event')
-            ->where($condition)->orderBy('order_no asc')->all();
-        //没有消息
-        if(empty($query)){
-            return false;
-        }
-
-        //处理文本消息格式
-        $data = [];
-        $articles = [];
-        $time = time();
-        foreach ($query as $list){
-            switch ($list['msg_type']){
-                case 0:
-                    $data[] = ['content'=>$list['content'],'msg_type'=>$list['msg_type']]; break;
-                case 1:
-                    $articles[$list['event_id']][] = [
-                        'title' => $list['title'],
-                        'description' => $list['description'],
-                        'url' => $list['url'],
-                        'picurl' => $list['picurl']
-                    ]; break;
-                case 2:
-                    $outTime = intval(($time - $list['update_time'])/84600);
-                    if($outTime >= 3){
-                        $auth = AuthorizationList::findOne(['record_id'=>$list['app_id']]);
-                        $rst = (new WeChatUtil())->UploadWeChatImg($list['picurl'],$auth->authorizer_access_token);
-                        $model = AttentionEvent::findOne(['record_id'=>$list['record_id']]);
-                        $model->media_id = $rst['media_id'];
-                        $model->update_time = $rst['created_at'];
-                        $model->save();
-                        $data[] = ['msg_type'=>$list['msg_type'],'media_id'=>$rst['media_id']];
-                    }else{
-                        $data[] = ['msg_type'=>$list['msg_type'],'media_id'=>$list['media_id']];
-                    }
-                    break;
-            }
-
-        }
-
-        if(!empty($articles)){
-            foreach ($articles as $key){
-                $data[] = $key;
-            }
-        }
-        return $data;
-    }
 
     /**
      * 获取用户基础信息模型
@@ -157,16 +110,16 @@ class AuthorizerUtil
     }
 
     /**
-     *
+     * 获取关键子列表
      * @param $app_id
      * @return array
      */
-    public static function getAppMsg($app_id)
+    public static function getKeyword($app_id)
     {
         $query = (new Query())
             ->select(['key_id','keyword','rule'])
             ->from('wc_keywords')
-            ->where(['app_id'=>$app_id])->all();
+            ->where('app_id = :appid or key_id in (select key_id from wc_batch_keyword_list where app_id = :appid)',[':appid'=>$app_id])->all();
         return $query;
     }
 
@@ -249,4 +202,32 @@ class AuthorizerUtil
     {
         return AuthorizationMenuSon::find()->select(['count(1) as num'])->where(['menu_id'=>$menu_id])->limit(1)->scalar();
     }
+
+    /**
+     * 组装客服消息扔到队列中
+     * @param $openInfo
+     * @param $openid
+     */
+    public static function sendCustomMessage($openInfo,$openid)
+    {
+        $msgData = AuthorizerUtil::getWxMessage($openInfo->record_id);
+        if(!empty($msgData)) return false;
+        AuthorizerUtil::getMessageModel($msgData);
+
+        foreach ($msgData as $item)
+        {
+            (!isset($item['msg_type']) ? $item['msg_type'] = 1 :'');
+            $paramData  = [
+                'key_word'=>'wechat',
+                'open_id'=>$openid,
+                'authorizer_access_token'=>$openInfo->authorizer_access_token,
+                'item'=>$item
+            ];
+            if(!JobUtil::AddCustomJob('wechatBeanstalk','wechat',$paramData,$error))
+                    \Yii::error('WeChat job is error ::'. $error);
+        }
+        return true;
+    }
+
+
 }

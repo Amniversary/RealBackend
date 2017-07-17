@@ -12,16 +12,16 @@ namespace backend\models;
 use common\models\AuthorizationList;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\db\Query;
 
-class PublicListSearch extends AuthorizationList
+class PublicListSearch extends PublicListForm
 {
 
     public function rules()
     {
         return [
-            [['status', 'user_id', 'service_type_info', 'verify_type_info'], 'integer'],
-            [['authorizer_appid', 'authorizer_access_token', 'authorizer_refresh_token','nick_name','user_name',
-                'alias','qrcode_url','principal_name','create_time','head_img', 'signature', 'update_time'], 'safe'],
+            [['service_type_info', 'verify_type_info'], 'integer'],
+            [['nick_name','head_img'], 'safe'],
         ];
 
     }
@@ -43,7 +43,11 @@ class PublicListSearch extends AuthorizationList
      */
     public function search($params)
     {
-        $query = AuthorizationList::find();
+        $query = (new Query())
+            ->select(['al.record_id','nick_name','service_type_info','verify_type_info','head_img','ifnull(new_user,0) as new_user','ifnull(net_user,0) as net_user','ifnull(count_user,0) as count_user'])
+            ->from('wc_authorization_list al')
+            ->innerJoin('wc_statistics_count sc','al.record_id = sc.app_id')
+            ->leftJoin('wc_fans_statistics fs','al.record_id = fs.app_id and fs.statistics_date =:date',[':date'=>date('Y-m-d')]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,7 +61,6 @@ class PublicListSearch extends AuthorizationList
 
         $query->andFilterWhere([
             'record_id'=>$this->record_id,
-            'head_img'=>$this->head_img,
             'service_type_info'=>$this->service_type_info,
             'verify_type_info'=>$this->verify_type_info
         ]);

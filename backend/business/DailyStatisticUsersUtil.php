@@ -219,4 +219,18 @@ class DailyStatisticUsersUtil {
         }
         return true;
     }
+
+    /**
+     * 获取首页公众号统计信息
+     * @return array
+     */
+    public static function getCount()
+    {
+        $sql = 'select SUM(count_user) as count,SUM(cumulate_user) as cumulate_user from `wc_statistics_count`';
+        $rst = \Yii::$app->db->createCommand($sql)->queryOne();
+        $count = 'select ifnull(sum(new_user),0) as new_user, ifnull(sum(net_user),0) as net_user from wc_fans_statistics WHERE statistics_date = :date';
+        $res =\Yii::$app->db->createCommand($count,[':date'=>date('Y-m-d')])->queryOne();
+        $arr = array_merge($rst,$res);
+        return $arr;
+    }
 }

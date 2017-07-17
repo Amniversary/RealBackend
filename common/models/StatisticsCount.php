@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $record_id
  * @property integer $app_id
- * @property integer $count_user
+ * @property double $count_user
  * @property integer $cumulate_user
  * @property string $update_time
  * @property string $remark1
@@ -32,7 +32,8 @@ class StatisticsCount extends \yii\db\ActiveRecord
     {
         return [
             [['app_id'], 'required'],
-            [['app_id', 'count_user', 'cumulate_user'], 'integer'],
+            [['app_id', 'cumulate_user'], 'integer'],
+            [['count_user'], 'number'],
             [['update_time'], 'safe'],
             [['remark1', 'remark2'], 'string', 'max' => 100],
             [['app_id'], 'unique'],

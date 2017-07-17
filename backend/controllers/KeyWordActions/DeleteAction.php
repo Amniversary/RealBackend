@@ -10,8 +10,10 @@ namespace backend\controllers\KeyWordActions;
 
 
 use backend\components\ExitUtil;
+use common\models\AttentionEvent;
 use common\models\Keywords;
 use yii\base\Action;
+use yii\base\Exception;
 
 class DeleteAction extends Action
 {
@@ -30,13 +32,23 @@ class DeleteAction extends Action
             exit;
         }
 
-        if($model->delete() === false) {
-            $rst['msg']='删除失败';
-            \Yii::error('删除失败:'.var_export($model->getErrors(),true));
+        try{
+            $trans = \Yii::$app->db->beginTransaction();
+            if($model->delete() === false) {
+                $rst['msg']='删除失败';
+                \Yii::error('删除失败:'.var_export($model->getErrors(),true));
+                echo json_encode($rst);
+                exit;
+            }
+            AttentionEvent::deleteAll(['key_id'=>$model->key_id]);
+            $trans->commit();
+        }
+        catch (Exception $e){
+            $trans->rollBack();
+            $rst['msg'] = $e->getMessage();
             echo json_encode($rst);
             exit;
         }
-
         $rst['code'] = '0';
         echo json_encode($rst);
         exit;

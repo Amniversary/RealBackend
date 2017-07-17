@@ -97,7 +97,7 @@ class AuthorizationList extends \yii\db\ActiveRecord
      * @param $status
      * @return string
      */
-    public function getServiceTypeInfo($status){
+    public static function getServiceTypeInfo($status){
         switch (intval($status)){
             case 0: $rst = '订阅号';break;
             case 1: $rst = '订阅号';break;//代表老账号升级后都订阅号
@@ -112,7 +112,7 @@ class AuthorizationList extends \yii\db\ActiveRecord
      * @param $status
      * @return string
      */
-    public function getVerifyTypeInfo($status){
+    public static function getVerifyTypeInfo($status){
         switch ($status){
             case '-1': $rst = '未认证';break; //未认证
             case '0': $rst = '已认证';break; //微信认证

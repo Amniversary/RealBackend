@@ -45,7 +45,7 @@ class KeyWordMsgSearch extends AttentionEvent
     public function search($params)
     {
         $cacheInfo = WeChatUserUtil::getCacheInfo();
-        $query = AttentionEvent::find()->where(['app_id'=>$cacheInfo['record_id'],'flag'=>1]);
+        $query = AttentionEvent::find()->where(['app_id'=>$cacheInfo['record_id'],'flag'=>1])->orderBy('order_no asc,event_id asc');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

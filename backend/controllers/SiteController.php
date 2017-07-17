@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use backend\business\DailyStatisticUsersUtil;
 use backend\business\UserMenuUtil;
 use common\components\WeiXinUtil;
 use frontend\business\ApiLogUtil;
@@ -86,7 +87,10 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $rst = DailyStatisticUsersUtil::getCount();
+        return $this->render('index',[
+            'model'=>$rst
+        ]);
     }
 
     public function actionLogin()

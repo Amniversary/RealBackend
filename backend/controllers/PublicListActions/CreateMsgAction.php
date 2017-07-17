@@ -17,8 +17,13 @@ class CreateMsgAction extends Action
         $model->flag = 0;
         $model->msg_type = 0;
         $model->create_time = date('Y-m-d H:i:s');
-
-        if($model->load(\Yii::$app->request->post()) && $model->save()){
+        $load = \Yii::$app->request->post();
+        if(!empty($load)){
+            if($load['AttentionEvent']['msg_type'] == 2){
+                $load['AttentionEvent']['picurl'] = $load['AttentionEvent']['picurl1'];
+            }
+        }
+        if($model->load($load) && $model->save()){
             if($model->msg_type == 2){
                 $rst = (new WeChatUtil())->UploadWeChatImg($model->picurl,$Cache['authorizer_access_token']);
                 $model->media_id = $rst['media_id'];

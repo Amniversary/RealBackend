@@ -1,0 +1,34 @@
+<?php
+return [
+    'index'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\IndexAction'
+    ],
+    'create'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\CreateAction'
+    ],
+    'delete'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\DeleteAction'
+    ],
+    'update'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\UpdateAction'
+    ],
+    'indexson'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\IndexMsgAction'
+    ],
+    'createmsg'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\CreateMsgAction'
+    ],
+    'deletemsg'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\DeleteMsgAction'
+    ],
+    'updatemsg'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\UpdateMsgAction'
+    ],
+    'order_no'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\OrderNoAction'
+    ],
+    'setauthlist'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\SetAuthListAction'
+    ]
+
+];

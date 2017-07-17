@@ -11,7 +11,7 @@ namespace console\controllers;
 
 use udokmeci\yii2beanstalk\BeanstalkController;
 
-class WechatmsgController extends BeanstalkController
+class WorkerwxmsgController extends BeanstalkController
 {
     const DELAY_PRIORITY = "1000";
     const DELAY_TIME = 5;

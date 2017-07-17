@@ -10,15 +10,18 @@ namespace backend\controllers\FuckActions;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\DailyStatisticUsersUtil;
 use backend\business\JobUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
+use backend\components\MessageComponent;
 use callmez\wechat\sdk\MpWechat;
 use callmez\wechat\sdk\Wechat;
 use common\components\UsualFunForNetWorkHelper;
 use common\models\AuthorizationList;
 use common\models\AuthorizationMenu;
 use common\models\AuthorizationMenuSon;
+use common\models\StatisticsCount;
 use common\models\User;
 
 use Qiniu\Auth;
@@ -31,13 +34,20 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
-        $item['rule'] = 1;
-        $item['keyword'] = '';
-        $text = '';
-        $flag = $item['rule'] == 1 ?
-            $text == $item['keyword'] ? true:false :
-            strpos($item['key_id'],$text) !== false ? true:false;
-        var_dump($flag);
+        $data  = [1,2,3,4,5,6];
+        foreach($data as $item){
+            print_r($item);
+            break;
+        }
+
+        exit;
+        $data = ['appid'=>'wx1024c6215af20360'];
+        $msgData = new MessageComponent($data,0);
+        $sr = $msgData->getMessageModel();
+        print_r($sr);
+        exit;
+        $AuthInfo = AuthorizerUtil::getAuthOne('wxfb4431191609bd1e');
+        print_r($AuthInfo);
         exit;
         //TODO: 处理回复消息逻辑 走客服消息接口 回复多条消息
         $auth = AuthorizationList::findOne(['record_id'=>3]);

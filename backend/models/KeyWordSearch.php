@@ -61,6 +61,7 @@ class KeyWordSearch extends Keywords
             'rule'=>$this->rule,
         ]);
 
+
         return $dataProvider;
     }
 }

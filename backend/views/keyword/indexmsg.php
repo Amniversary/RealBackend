@@ -3,6 +3,14 @@
         width: 60px;
         height: 60px;
     }
+    .alert{
+        padding: 10px;
+
+    }
+    .content-header{
+        position: relative;
+        padding: 1px 15px 0 15px;
+    }
     .back-a{
         display: inline-block;
         font-size: 14px;
@@ -25,15 +33,13 @@
 
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
-/*if(!$is_verify){
-    echo \yii\bootstrap\Alert::widget([
-        'body'=>'公众号未认证，无法进行相应操作！',
-        'options'=>[
-            'class'=>'alert-warning',
-        ]
-    ]);
-}*/
 
+echo \yii\bootstrap\Alert::widget([
+    'body'=>'未认证公众号，默认回复第一条消息！',
+    'options'=>[
+        'class'=>'alert-warning',
+    ]
+]);
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
     /*[
@@ -198,7 +204,7 @@ echo \yii\bootstrap\Modal::widget([
 );
 
 $js='
-$("#cry-msg").on("click",function(){
+$(document).on("click","#cry-msg",function(){
     $url = "http://"+ window.location.host + "/keyword/check";
     $.ajax({
         type:"POST",

@@ -98,7 +98,7 @@ $gridColumns = [
     ],
     [
         'attribute'=>'event_id',
-        'vAlign'=>'事件 ID',
+        'vAlign'=>'middle',
         'width'=>'100px',
         'value'=>function($model){
             return empty($model->event_id)? '': $model->event_id;

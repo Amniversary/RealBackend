@@ -53,6 +53,7 @@ $data = [$cache['record_id']=>$cache['nick_name']];
     <?= $form->field($model, 'title')->textInput() ?>
     <?= $form->field($model, 'description')->textInput() ?>
     <?= $form->field($model, 'url')->textInput() ?>
+    <?= $form->field($model, 'picurl')->textInput() ?>
     <label style="color: red;font-weight: bold;">相同的事件ID会以一条消息列表展示！</label>
     <?= $form->field($model, 'event_id')->textInput() ?>
     <hr/>
@@ -63,10 +64,10 @@ $data = [$cache['record_id']=>$cache['nick_name']];
     <div id="img">
         <div class="form-group field-user-pic1 <?=($model->getFirstError('picurl') === null?'has-success':'has-error')?>">
             <label class="control-label" for="user-pic1">图片(建议图片大小350*550)</label> <a class="pic-del" href="javascript:delpic('pic')">删除</a>
-            <input type="hidden" name="AttentionEvent[picurl]" id="user_pic" value="<?=$model->picurl?>"/>
+            <input type="hidden" name="AttentionEvent[picurl1]" id="user_pic" value="<?=$model->picurl?>"/>
             <input class="backend-pic-input user-pic-file" type="file" id="pic-file-pic"  targetctr="pic" />
             <a target="_blank" href="#" id="a-pic" style="<?=empty($model->picurl)?'display: none;':''?>">
-                <img class="user-pic" src="<?=$model->picurl?>" alt="图像">
+                <img class="user-pic" src="<?=$model->picurl ?>" alt="图像">
             </a>
             <div class="help-block"><?=$model->getFirstError('picurl')?></div>
         </div>
