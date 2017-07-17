@@ -24,12 +24,6 @@ class CreateMsgAction extends Action
             }
         }
         if($model->load($load) && $model->save()){
-            if($model->msg_type == 2){
-                $rst = (new WeChatUtil())->UploadWeChatImg($model->picurl,$Cache['authorizer_access_token']);
-                $model->media_id = $rst['media_id'];
-                $model->update_time = $rst['created_at'];
-                $model->save();
-            }
             return $this->controller->redirect('attention');
         }else{
             return $this->controller->render('createmsg',[

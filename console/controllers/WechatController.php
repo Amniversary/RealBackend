@@ -64,19 +64,21 @@ class WechatController extends Controller
     public function actionFansnum()
     {
         $query = (new Query())
-            ->select(['record_id','authorizer_access_token','verify_type_info'])->from('wc_authorization_list')->all();
+            ->select(['record_id','authorizer_access_token','verify_type_info','nick_name'])->from('wc_authorization_list')->all();
         if(empty($query)){
             echo "没有找到公众号信息 \n";
             exit;
         }
         $num = count($query);
         $i = 0;
+        $time = date('Y-m-d H:i:s');
         foreach ($query as $item){
             if(!AuthorizerUtil::isVerify($item['verify_type_info'])){
-                echo "公众号未认证:  ID --".$item['record_id'] ."\n";
+                echo "公众号未认证 ID:".$item['nick_name'] ."\n";
                 continue;
             }
             if(!WeChatUserUtil::getWxFansAccumulate($item['authorizer_access_token'],$rst,$error)){
+                echo "$error \n";
                 continue;
             }
             $fans = $this->getFansRecord($item['record_id']);
@@ -90,11 +92,12 @@ class WechatController extends Controller
             }
             $fans->total_user = strval($rst['list'][0]['cumulate_user']);
             $fans->statistics_date = date('Y-m-d');
+            $fans->remark1 = $time;
             $fans->save();
 
             $i ++;
         }
-        echo "一共 $num 条记录，更新成功 $i 条记录\n";
+        echo "一共 $num 条记录，更新成功 $i 条记录   时间: $time\n";
     }
 
 

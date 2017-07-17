@@ -43,7 +43,7 @@ class BatchKeyWordMsgSearch extends AttentionEvent
      */
     public function search($params)
     {
-        $query = AttentionEvent::find()->where(['key_id'=>$params['key_id'],'flag'=>1])->orderBy('order_no asc,event_id asc');
+        $query = AttentionEvent::find()->where(['key_id'=>$params['key_id'],'flag'=>1])->orderBy('order_no asc,create_time asc');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

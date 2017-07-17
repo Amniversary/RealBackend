@@ -34,12 +34,11 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
-        $data  = [1,2,3,4,5,6];
-        foreach($data as $item){
-            print_r($item);
-            break;
+        if(!WeChatUserUtil::getWxFansAccumulate('yrP4t2AdRJ6qrDdfi4Xrg80OLYqlAQF6O3CHC1zFnZnyZy5ctYRDensz_w24hbPKZfCjVYpIBHCFi46scFABRt8eJtNlxMmzdeHwYFu440_Vq6Xn1wO-7-Cf9xgdi7X1ELUfAIDVCL',$rst,$error)){
+            print_r($error);
+            exit;
         }
-
+        print_r($rst);
         exit;
         $data = ['appid'=>'wx1024c6215af20360'];
         $msgData = new MessageComponent($data,0);

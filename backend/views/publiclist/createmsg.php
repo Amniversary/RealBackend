@@ -8,6 +8,9 @@
     {
         margin-bottom: 10px;
     }
+    .backend-pic{
+        margin-bottom: 10px;
+    }
     .user-form{
         border-radius: 5px;
         position: relative;
@@ -53,21 +56,30 @@ $data = [$cache['record_id']=>$cache['nick_name']];
     <?= $form->field($model, 'title')->textInput() ?>
     <?= $form->field($model, 'description')->textInput() ?>
     <?= $form->field($model, 'url')->textInput() ?>
-    <?= $form->field($model, 'picurl')->textInput() ?>
+    <div class="form-group field-user-pic1 <?=($model->getFirstError('picurl') === null?'has-success':'has-error')?>">
+        <label class="control-label" for="user-pic1">图片(建议图片大小不要超过2MB)</label> <a class="pic-del" href="javascript:delpic('pic')">删除</a>
+        <input type="hidden" name="AttentionEvent[picurl]" id="user_pic" value="<?=$model->picurl?>"/>
+        <input class="backend-pic-input user-pic-file" type="file" id="pic-file-pic"  targetctr="pic" />
+        <a target="_blank" href="#" id="a-pic" style="<?=empty($model->picurl)?'display: none;':''?>">
+            <img class="user-pic" src="<?=$model->picurl ?>" alt="图像">
+        </a>
+        <div class="help-block"><?=$model->getFirstError('picurl')?></div>
+    </div>
     <label style="color: red;font-weight: bold;">相同的事件ID会以一条消息列表展示！</label>
     <?= $form->field($model, 'event_id')->textInput() ?>
     <hr/>
     </div>
     <div id="content">
+        <label style="color: red;font-weight: bold;">1.超链接中 href 为链接Url，例：< a href="http://wxmp.gatao.cn" >Real后台< /a><br/>
     <?= $form->field($model, 'content')->textarea(['style'=>'width:100%']) ?>
     </div>
     <div id="img">
         <div class="form-group field-user-pic1 <?=($model->getFirstError('picurl') === null?'has-success':'has-error')?>">
-            <label class="control-label" for="user-pic1">图片(建议图片大小350*550)</label> <a class="pic-del" href="javascript:delpic('pic')">删除</a>
-            <input type="hidden" name="AttentionEvent[picurl1]" id="user_pic" value="<?=$model->picurl?>"/>
-            <input class="backend-pic-input user-pic-file" type="file" id="pic-file-pic"  targetctr="pic" />
-            <a target="_blank" href="#" id="a-pic" style="<?=empty($model->picurl)?'display: none;':''?>">
-                <img class="user-pic" src="<?=$model->picurl ?>" alt="图像">
+            <label class="control-label" for="user-pic1">图片(建议图片大小350*550)</label> <a class="pic-del" href="javascript:deletepic('pic')">删除</a>
+            <input type="hidden" name="AttentionEvent[picurl1]" id="b-user_pic" value="<?=$model->picurl  ?>"/>
+            <input class="backend-pic user-pic-file" type="file" id="pic-file-pic"  targetctr="pic" />
+            <a target="_blank" href="#" id="b-pic" style="<?=empty($model->picurl)?'display: none;':''?>">
+                <img class="b-user-pic" src="<?=$model->picurl ?>" alt="图像">
             </a>
             <div class="help-block"><?=$model->getFirstError('picurl')?></div>
         </div>
@@ -76,6 +88,8 @@ $data = [$cache['record_id']=>$cache['nick_name']];
         <?= Html::submitButton($model->isNewRecord ? '新增' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['publiclist/attention']), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <?= Html::button('添加超链接标签', ['id'=>'super-link','class' =>'btn btn-primary']) ?>
     </div>
     <?php ActiveForm::end(); ?>
 
@@ -114,6 +128,22 @@ $("input[type=\'radio\']").on("click",function(){
         $("#img-text").hide();
     }
 });
+$("#super-link").on("click",function(){
+    $text = $("#attentionevent-content").val();
+    $("#attentionevent-content").val($text + "<a href=\"\"></a>");
+})
+function deletepic(targetKey)
+{
+    if(confirm("确定删除该图片吗"))
+    {
+        key = "b-" + targetKey;
+        console.log(key);
+        $("#" + key).hide();
+        $("#" + key).attr("href", "");
+        $("#" + key + " img").attr("src","");
+        $("#b-user_" + targetKey).val("");
+    }
+}
 function delpic(targetKey)
 {
     if(confirm("确定删除该图片吗"))
@@ -146,7 +176,7 @@ $(function(){
         {
             return;
         }
-        var targetKey = $(this).attr("targetctr");
+        var targetKey = $(this).attr("targetctr");  //pic
         $.ajax({
             url:"/mypic/upload_pic?pic_type=back_user",
             type:"POST",
@@ -167,6 +197,58 @@ $(function(){
                     $("#" + key).attr("href", data.msg);
                     $("#" + key + " img").attr("src",data.msg);
                     $("#user_" + targetKey).val(data.msg);
+                }
+                else
+                {
+                    alert(data.msg);
+                }
+                console.log(data);
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown)
+            {
+                alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
+                 file = $(this);
+                 file.after(file.clone().val(""));
+                 file.remove();
+             }
+        });
+    });
+    $(document).on("change",".backend-pic",function(){
+        //创建FormData对象
+        var data = new FormData();
+        //为FormData对象添加数据
+        //
+        hasFile = false;
+        $.each($(this)[0].files, function(i, file) {
+            data.append("upload_file", file);
+            hasFile = true;
+        });
+        if(!hasFile)
+        {
+            return;
+        }
+        var targetKey = $(this).attr("targetctr");
+        $.ajax({
+            url:"/mypic/upload_pic?pic_type=back_user",
+            type:"POST",
+            data:data,
+            cache: false,
+            contentType: false,    //不可缺
+            processData: false,    //不可缺
+            success:function(data)
+            {
+                file = $("#pic-file-"+ targetKey);
+                file.after(file.clone().val(""));
+                file.remove();
+                data = $.parseJSON(data);
+                if(data.code == "0")
+                {
+                    key = "b-" + targetKey;
+                    $("#" + key).show();
+                    $("#" + key).attr("href", data.msg);
+                    $("#" + key + " img").attr("src",data.msg);
+                    $("#b-user_" + targetKey).val(data.msg);
                 }
                 else
                 {

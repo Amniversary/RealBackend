@@ -1,15 +1,14 @@
 <style>
-    .user-pic
-    {
-        width: 80px;
-        height: 80px;
-    }
+
     .backend-pic-input
     {
         margin-bottom: 10px;
     }
     #attentionevent-content{
         height: 200px;
+    }
+    .backend-pic{
+        margin-bottom: 10px;
     }
     .user-form{
         border-radius: 5px;
@@ -57,23 +56,31 @@ $data = [$cache['record_id']=>$cache['nick_name']];
     <?= $form->field($model, 'title')->textInput() ?>
     <?= $form->field($model, 'description')->textInput() ?>
     <?= $form->field($model, 'url')->textInput() ?>
-    <?= $form->field($model, 'picurl')->textInput() ?>
+    <div class="form-group field-user-pic1 <?=($model->getFirstError('picurl') === null?'has-success':'has-error')?>">
+        <label class="control-label" for="user-pic1">图片(建议图片大小350*550)</label> <a class="pic-del" href="javascript:delpic('pic')">删除</a>
+        <input type="hidden" name="AttentionEvent[picurl]" id="user_pic" value="<?=$model->picurl?>"/>
+        <input class="backend-pic-input user-pic-file" type="file" id="pic-file-pic"  targetctr="pic" />
+        <a target="_blank" href="#" id="a-pic" style="<?=empty($model->picurl)?'display: none;':''?>">
+            <img class="user-pic" src="<?=$model->picurl ?>" alt="图像">
+        </a>
+        <div class="help-block"><?=$model->getFirstError('picurl')?></div>
+    </div>
     <label style="color: red;font-weight: bold;">相同的事件ID会以一条消息列表展示！</label>
     <?= $form->field($model, 'event_id')->textInput() ?>
     <hr/>
     </div>
     <div id="content">
-    <label style="color: red;font-weight: bold;">1.超链接中 href 为链接Url，例：< a href="http://wxmp.gatao.cn" _href="http://wxmp.gatao.cn" >Real后台< /a><br/>
+    <label style="color: red;font-weight: bold;">1.超链接中 href 为链接Url，例：< a href="http://wxmp.gatao.cn" >Real后台< /a><br/>
     2.回车即代表换行</label>
     <?= $form->field($model, 'content')->textarea() ?>
     </div>
     <div id="img">
         <div class="form-group field-user-pic1 <?=($model->getFirstError('picurl') === null?'has-success':'has-error')?>">
-            <label class="control-label" for="user-pic1">图片(建议图片大小350*550)</label> <a class="pic-del" href="javascript:delpic('pic')">删除</a>
-            <input type="hidden" name="AttentionEvent[picurl1]" id="user_pic" value="<?=$model->picurl?>"/>
-            <input class="backend-pic-input user-pic-file" type="file" id="pic-file-pic"  targetctr="pic" />
-            <a target="_blank" href="#" id="a-pic" style="<?=empty($model->picurl)?'display: none;':''?>">
-                <img class="user-pic" src="<?=$model->picurl ?>" alt="图像">
+            <label class="control-label" for="user-pic1">图片(建议图片大小350*550)</label> <a class="pic-del" href="javascript:deletepic('pic')">删除</a>
+            <input type="hidden" name="AttentionEvent[picurl1]" id="b-user_pic" value="<?=$model->picurl  ?>"/>
+            <input class="backend-pic user-pic-file" type="file" id="pic-file-pic"  targetctr="pic" />
+            <a target="_blank" href="#" id="b-pic" style="<?=empty($model->picurl)?'display: none;':''?>">
+                <img class="b-user-pic" src="<?=$model->picurl ?>" alt="图像">
             </a>
             <div class="help-block"><?=$model->getFirstError('picurl')?></div>
         </div>
@@ -131,8 +138,20 @@ $("input[type=\'radio\']").on("click",function(){
 });
 $("#super-link").on("click",function(){
     $text = $("#attentionevent-content").val();
-    $("#attentionevent-content").val($text + "<a href=\"\" _href=\"\"></a>");
+    $("#attentionevent-content").val($text + "<a href=\"\"></a>");
 })
+function deletepic(targetKey)
+{
+    if(confirm("确定删除该图片吗"))
+    {
+        key = "b-" + targetKey;
+        console.log(key);
+        $("#" + key).hide();
+        $("#" + key).attr("href", "");
+        $("#" + key + " img").attr("src","");
+        $("#b-user_" + targetKey).val("");
+    }
+}
 function delpic(targetKey)
 {
     if(confirm("确定删除该图片吗"))
@@ -203,7 +222,58 @@ $(function(){
              }
         });
     });
+    $(document).on("change",".backend-pic",function(){
+        //创建FormData对象
+        var data = new FormData();
+        //为FormData对象添加数据
+        //
+        hasFile = false;
+        $.each($(this)[0].files, function(i, file) {
+            data.append("upload_file", file);
+            hasFile = true;
+        });
+        if(!hasFile)
+        {
+            return;
+        }
+        var targetKey = $(this).attr("targetctr");
+        $.ajax({
+            url:"/mypic/upload_pic?pic_type=back_user",
+            type:"POST",
+            data:data,
+            cache: false,
+            contentType: false,    //不可缺
+            processData: false,    //不可缺
+            success:function(data)
+            {
+                file = $("#pic-file-"+ targetKey);
+                file.after(file.clone().val(""));
+                file.remove();
+                data = $.parseJSON(data);
+                if(data.code == "0")
+                {
+                    key = "b-" + targetKey;
+                    $("#" + key).show();
+                    $("#" + key).attr("href", data.msg);
+                    $("#" + key + " img").attr("src",data.msg);
+                    $("#b-user_" + targetKey).val(data.msg);
+                }
+                else
+                {
+                    alert(data.msg);
+                }
+                console.log(data);
 
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown)
+            {
+                alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
+                 file = $(this);
+                 file.after(file.clone().val(""));
+                 file.remove();
+             }
+        });
+    });
 });
 ';
 $this->registerJs($js,\yii\web\View::POS_END);

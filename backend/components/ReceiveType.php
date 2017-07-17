@@ -32,6 +32,7 @@ class ReceiveType
         }else{
             $Text = new TextClass($arr);
             $contentStr = $Text->Text();
+            \Yii::error('contentStr:::'.var_export($contentStr,true));
             if($contentStr['msg_type'] == 1){
                 return $this->transmitNews($arr,$contentStr);
             }elseif($contentStr['msg_type'] == 2){
@@ -151,6 +152,7 @@ class ReceiveType
      */
     public function transmitNews($arr, $content){
         if($content ==null) return null;
+        unset($content['msg_type']);
         $count = count($content);
         $newsXml = "<xml>
                         <ToUserName><![CDATA[%s]]></ToUserName>

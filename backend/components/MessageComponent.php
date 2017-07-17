@@ -122,10 +122,10 @@ class MessageComponent
     public function getWxMessage(){
         $condition = sprintf('app_id=%s and flag=%s', $this->auth->record_id,$this->flag);
         if($this->key !== null)
-            $condition .= sprintf(' and key_id=%s', $this->key);
+            $condition .= sprintf(' or key_id=%s', $this->key);
         $query = (new Query())->from('wc_attention_event')
             ->select(['record_id','app_id','event_id','content','msg_type','title','description','url','picurl','media_id','update_time'])
-            ->where($condition)->orderBy('order_no asc')->all();
+            ->where($condition)->orderBy('order_no asc,create_time asc')->all();
         if(empty($query))
             return false;
         return $query;
