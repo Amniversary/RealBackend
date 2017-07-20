@@ -8,4 +8,6 @@
 
 return [
     'wechat',
+    'get_qrcode',
+    'delete_msg',
 ];

@@ -20,6 +20,9 @@ class TestBhAction extends Action
 {
     public function run()
     {
+
+        print_r(\Yii::$app->basePath);
+        exit;
         $query = (new Query())->select(['backend_user_id'])->from('wc_user')->all();
         foreach ($query as $item) {
             $get = \Yii::$app->cache->get('app_backend_'.$item['backend_user_id']);

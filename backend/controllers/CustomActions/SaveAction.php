@@ -34,7 +34,7 @@ class SaveAction extends Action
             exit;
         }
         if($res['errcode'] != 0 || !$res){
-            $rst['msg'] = '设置失败:'. $res['errmsg'];
+            $rst['msg'] = '设置失败: Code: '.$res['errcode'] . ' '. $res['errmsg'];
             echo json_encode($rst);
             exit;
         }

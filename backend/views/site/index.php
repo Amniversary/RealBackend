@@ -6,6 +6,7 @@ $this->title = 'Real数据平台';
  \common\assets\ArtDialogAsset::register($this);
 ?>
 <style>
+    .content-header{position: relative;  padding: 1px 15px 0 15px;}
     #w0{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}
     #w1{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}
     #w2{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}

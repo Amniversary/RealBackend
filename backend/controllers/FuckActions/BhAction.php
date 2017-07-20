@@ -11,16 +11,20 @@ namespace backend\controllers\FuckActions;
 
 use backend\business\AuthorizerUtil;
 use backend\business\DailyStatisticUsersUtil;
+use backend\business\ImageUtil;
 use backend\business\JobUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use backend\components\MessageComponent;
 use callmez\wechat\sdk\MpWechat;
 use callmez\wechat\sdk\Wechat;
+use common\components\OssUtil;
+use common\components\SystemParamsUtil;
 use common\components\UsualFunForNetWorkHelper;
 use common\models\AuthorizationList;
 use common\models\AuthorizationMenu;
 use common\models\AuthorizationMenuSon;
+use common\models\QrcodeImg;
 use common\models\StatisticsCount;
 use common\models\User;
 
@@ -28,12 +32,206 @@ use Qiniu\Auth;
 use udokmeci\yii2beanstalk\Beanstalk;
 use yii\base\Action;
 use yii\db\Query;
+use yii\web\Cookie;
 
 class BhAction extends Action
 {
     public function run()
     {
         echo "<pre>";
+        $sta  = microtime(true);
+        $data= [
+            'ToUserName'=>'gh_7318204277d9',
+            'FromUserName'=>'oB4Z-wf0FYMlI7fW4ZvD90Y06RxA',
+            'CreateTime'=>'1500542620',
+            'MsgType'=>'event',
+            'Event'=>'CLICK',
+            'EventKey'=>'get_qrcode',
+            'appid'=>'wx1024c6215af20360',
+        ];
+        $openid = $data['FromUserName'];
+        $auth = AuthorizerUtil::getAuthOne($data['appid']);
+        $access_token = $auth->authorizer_access_token;
+        $client = AuthorizerUtil::getUserForOpenId($openid,$auth->record_id);
+        $img = ImageUtil::GetQrcodeImg($client->client_id);
+
+        if(!isset($img)) {  //TODO: 如果图片不存在  重新生成并上传
+            $q = microtime(true);
+            $userData = WeChatUserUtil::getUserInfo($access_token,$openid);
+            if(!WeChatUserUtil::getQrcodeSendImg($access_token,$openid,$userData['headimgurl'],$qrcode_file,$pic_file)) {
+                print_r('不行');
+                exit;
+            }
+            echo "获取2张图片";
+            print_r(microtime(true) - $q);echo "<br/>";
+            print_r(microtime(true) - $sta);echo "<br/>";
+            $text = $userData['nickname'];
+            $w = microtime(true);
+            if(!ImageUtil::imagemaking($qrcode_file,$pic_file,$text,$bg_img,$error)){
+                \Yii::error('generate Qrcode Img Error: ',var_export($error,true));
+                print_r($error);
+                exit;
+            }
+            echo "组装图片";
+            print_r(microtime(true) - $w);echo "<br />";
+            print_r(microtime(true) - $sta);echo "<br />";
+            $name = basename($bg_img);
+            $e = microtime(true);
+            if(!OssUtil::UploadQiniuFile($name,$bg_img,$bg_url,$error)){  //TODO: 背景图上传七牛
+                print_r($error);
+                exit;
+            }
+            echo "上传七牛 ";
+            print_r(microtime(true) - $e ); echo "<br />";
+            print_r(microtime(true) - $sta);echo "<br />";
+            $wechat = new WeChatUtil();
+            $r = microtime(true);
+            if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
+                print_r($error);
+                exit;
+            }
+            echo "上传微信";
+            print_r(microtime(true) - $r ); echo "<br />";
+            print_r(microtime(true) - $e ); echo "<br />";
+            /*$model = new QrcodeImg();
+            $model->client_id = $client->client_id;
+            $model->media_id = $rst['media_id'];
+            $model->pic_url = $bg_url;
+            $model->update_time = $rst['created_at'];
+            $model->save();*/
+            $media_id =  '';//$model->media_id;
+            @unlink($qrcode_file);
+            @unlink($pic_file);
+        } else {
+            $time = time();
+            $outTime = intval(($time - $img->update_time) / 84600);
+            if($outTime >= 3){
+                $rst = (new WeChatUtil())->UploadWeChatImg($img->pic_url,$access_token);
+                $img->media_id = $rst['media_id'];
+                $img->update_time = $rst['created_at'];
+                $img->save();
+            }
+            $media_id = $img->media_id;
+        }
+
+        print_r($media_id);
+        $end = microtime(true);
+        $rst = $end-$sta;
+        echo "<br />";
+        print_r($rst);
+        exit;
+        $msgObj = new MessageComponent($this->data);
+        $msgData[] = [
+            'msg_type'=>'2',
+            'media_id'=>$media_id,
+        ];
+        $msgObj->sendMessageCustom($msgData,$openid);
+
+
+        exit;
+        phpinfo();
+        exit;
+        $stat = microtime(true);
+
+        $data = [
+            'nick_name'=>'Gavean',
+            'pic'=>'http://wx.qlogo.cn/mmopen/UVzXBswyibFh7ib0qClxDP6Y5EFUGSgrw7FIUNcB7K60LAIpKHpqHxJa7ta10HKYYIVSCPSQy0IBzGib9zgn9NE00vaHbVydjpY/0',
+        ];
+        $qrcode = 'http://mmbiz.qpic.cn/mmbiz_jpg/6SPlDzxhRsQZgoUE4507ibia0hcWdicibxPLU2JvGjreoJMA9JDzyQK1IFNQb7OrZDx0HsIjgfuL2pJQe4PXrzIUdg/0';
+        $rst = UsualFunForNetWorkHelper::HttpGetImg($data['pic'],$content_type,$error);
+        if(!$rst) {
+            echo "rst :"."<br />";
+            print_r($error);exit;
+        }
+        $res = UsualFunForNetWorkHelper::HttpGet($qrcode);
+        if(!$res) {
+            echo "res:";
+            print_r($error);exit;
+        }
+        $text = $data['nick_name'];
+        $time = time();
+        $filename = \Yii::$app->basePath.'/web/wswh/img/pic_'.$time.'.png';
+        $qrcodename = \Yii::$app->basePath.'/web/wswh/img/qrcode_'.$time.'.png';
+        file_put_contents($filename,$rst);
+        file_put_contents($qrcodename,$res);
+
+        if(!ImageUtil::imagemaking($qrcodename,$filename,$text,$faaa,$error)){
+            print_r($error);exit;
+        }
+
+        @unlink($filename);
+        @unlink($qrcodename);
+        $end = microtime(true);
+        $return = $end - $stat;
+        echo "<br/>";
+        print_r($return);
+        exit;
+
+        if(!function_exists('imagecreatefromjpeg')){
+            echo "no";exit;
+        }
+        echo "ok";
+
+        exit;
+        $rst = \Yii::$app->basePath.'/web/wswh/img/121e21.jpg';
+        $sss = basename($rst);
+        print_r($sss);
+        exit;
+        $userData = WeChatUserUtil::getUserInfo('DRT1eWCeFYoCIn9rm6PvCogwtq0N_clZGYO0di145z-t720_8Lyv2FqyTTsH5bIMEWl8GHLvEMc2GV7pGFUdc-QWkoUcIysViE6KS2_aIL2QbYmeuIliON_mlT4Iv4RyCXQbADDWRK','oB4Z-wf0FYMlI7fW4ZvD90Y06RxA');
+        print_r($userData);
+        exit;
+        $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'value1');
+        $rst =  sprintf($msg,(5-3));
+        print_r($rst);
+        exit;
+        $num = 1;
+        ++ $num;
+        print_r($num);
+        exit;
+        if(!WeChatUserUtil::getWxFansAccumulate('OHa-A3h6P8WswEjgTAPt3YST5q-wqgBwCyYAcEU_JQ752xyO5WHxdKkF5wybPgHD_Of2Fhkdj5Hn0B4TOfrHOyAqfFUVJ-HkhNh0x3T39gZDKyMkM21loCVFre1BJV1pTETfAGDLWL',$rst,$error)){
+            echo "$error \n";
+            exit;
+        }
+        print_r($rst);
+        exit;
+        $num = AuthorizerUtil::getAttention(3);
+        print_r($num);
+        exit;
+        $data = ['EventKey' => 'qrscene_oB4Z-wf0FYMlI7fW4ZvD90Y06RxA'];
+        if(strpos($data['EventKey'],'qrscene_') !== false) {
+            $str = str_replace('qrscene_','',$data['EventKey']);
+            $str = trim($str);
+        }
+
+        exit;
+        $srt = microtime(true);
+/*
+Array
+(
+    [ticket] => gQGO7zwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyTUh6THc3NzZkLTExbnJWSnhwY00AAgSveG1ZAwQsAQAA
+    [expire_seconds] => 300
+    [url] => http://weixin.qq.com/q/02MHzLw776d-11nrVJxpcM
+)*/
+        $auth = AuthorizerUtil::getAuthByOne(3);
+        $rst = WeChatUserUtil::getQrcodeTickt($auth->authorizer_access_token,$error);
+        if(!$rst) {
+            print_r($error);exit;
+        }
+        if(!WeChatUserUtil::getQrcodeImg($rst['ticket'],$file)){
+            exit('no');
+        }
+        $end = microtime(true);
+        $time = $end -$srt;
+        print_r($time);
+        print_r($file);
+        exit;
+
+
+
+        exit;
+        imagejpeg($source_image);
+        //imagedestroy($source_image);
+        exit;
         if(!WeChatUserUtil::getWxFansAccumulate('yrP4t2AdRJ6qrDdfi4Xrg80OLYqlAQF6O3CHC1zFnZnyZy5ctYRDensz_w24hbPKZfCjVYpIBHCFi46scFABRt8eJtNlxMmzdeHwYFu440_Vq6Xn1wO-7-Cf9xgdi7X1ELUfAIDVCL',$rst,$error)){
             print_r($error);
             exit;

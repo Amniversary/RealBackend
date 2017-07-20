@@ -21,4 +21,7 @@ return [
     'update'=>[
         'class'=>'backend\controllers\PublicListActions\UpdateAction',
     ],
+    'set_count'=>[
+        'class'=>'backend\controllers\PublicListActions\SetCountAction',
+    ]
 ];

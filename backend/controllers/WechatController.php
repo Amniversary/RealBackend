@@ -72,7 +72,7 @@ class WechatController extends Controller
         $Receive = new ReceiveType();
         $data = $WeChat->decryptMsg;
         $data['appid'] = $WeChat->AppId;
-        \Yii::error('data:'.var_export($data,true));
+        //\Yii::error('data:'.var_export($data,true));
         switch ($WeChat->MsgType)
         {
             case 'text':

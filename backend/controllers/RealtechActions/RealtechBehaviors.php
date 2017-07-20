@@ -17,5 +17,6 @@ return [
               'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'HEAD', 'OPTIONS'],
               'Access-Control-Request-Headers' => ['*'],
         ],
+        
     ],
 ];

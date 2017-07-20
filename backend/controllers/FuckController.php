@@ -27,6 +27,8 @@ use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
 use yii\db\Query;
 use yii\web\Controller;
+use yii\web\Cookie;
+
 class FuckController extends Controller
 {
 
@@ -224,6 +226,7 @@ class FuckController extends Controller
         $dirname = "./wximages/";
         if(!file_exists($dirname)){
             mkdir($dirname,0777,true);
+
         }
         file_put_contents($dirname.$filename,$rst);
         print_r($dirname.$filename);
@@ -331,5 +334,17 @@ class FuckController extends Controller
         print_r($sql);
     }
 
+    public function actionCookies(){
+        /*$cookies = \Yii::$app->response->cookies;
+
+        $cookies->add(new Cookie([
+            'name' => 'username',
+            'value' => 'yiiuser',
+        ]));*/
+
+
+        //setcookie('username','', time() - 3600);
+        print_r(\Yii::$app->session['111']);
+    }
 
 }

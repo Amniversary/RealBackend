@@ -73,10 +73,23 @@ $gridColumns = [
         'vAlign'=>'middle',
     ],
     [
+        'class' => 'kartik\grid\EditableColumn',
         'label'=>'总粉丝数',
         'attribute'=>'count_user',
         'vAlign'=>'middle',
         'width'=>'100px',
+
+        'editableOptions'=>function($model)
+        {
+            return [
+                'formOptions'=>['action'=>'/publiclist/set_count?app_id='.strval($model['record_id'])],
+                'size'=>'min',
+                'value'=>$model['count_user'],
+                'name'=>'count_user',
+                'inputType'=>\kartik\editable\Editable::INPUT_TEXT,
+            ];
+        },
+        'refreshGrid'=>true,
     ],
     [
         'width'=>'200px',

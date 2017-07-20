@@ -14,6 +14,7 @@ use common\models\AuthorizationList;
 use common\models\AuthorizationMenu;
 use common\models\AuthorizationMenuSon;
 use common\models\Client;
+use common\models\QrcodeShare;
 use function Qiniu\waterImg;
 use yii\db\Query;
 
@@ -28,7 +29,6 @@ class AuthorizerUtil
     {
         return AuthorizationList::findOne(['authorizer_appid'=>$appid,'status'=>1]);
     }
-
 
 
     /**
@@ -79,17 +79,19 @@ class AuthorizerUtil
      * @param bool $flag
      * @return Client|null
      */
-    public static function genModel($data,$getData,$flag = false)
+    public static function genModel($data,$getData)
     {
         $model = $data;
-        if(!$flag){
+        if(empty($model) || !isset($model)){
             $model = new Client();
-            if(!isset($getData['open_id'])){
+            if(!isset($getData['openid'])){
                 \Yii::error('not OpenId: '.var_export($getData,true));
             }
-            $model->open_id = isset($getData['open_id'])? $getData['open_id'] : '';
+            $model->open_id = isset($getData['openid'])? $getData['openid'] : '';
             $model->app_id = $getData['app_id'];
             $model->create_time = date('Y-m-d H:i:s');
+            $model->invitation = 0;
+            $model->is_vip = 0;
         }
 
 
@@ -106,6 +108,8 @@ class AuthorizerUtil
         $model->province = isset($getData['province'])? $getData['province'] : '';
         $model->subscribe_time = isset($getData['subscribe_time'])? $getData['subscribe_time'] : '';
         $model->update_time = date('Y-m-d H:i:s');
+
+
         return $model;
     }
 
@@ -203,31 +207,43 @@ class AuthorizerUtil
         return AuthorizationMenuSon::find()->select(['count(1) as num'])->where(['menu_id'=>$menu_id])->limit(1)->scalar();
     }
 
-    /**
-     * 组装客服消息扔到队列中
-     * @param $openInfo
-     * @param $openid
-     */
-    public static function sendCustomMessage($openInfo,$openid)
-    {
-        $msgData = AuthorizerUtil::getWxMessage($openInfo->record_id);
-        if(!empty($msgData)) return false;
-        AuthorizerUtil::getMessageModel($msgData);
 
-        foreach ($msgData as $item)
-        {
-            (!isset($item['msg_type']) ? $item['msg_type'] = 1 :'');
-            $paramData  = [
-                'key_word'=>'wechat',
-                'open_id'=>$openid,
-                'authorizer_access_token'=>$openInfo->authorizer_access_token,
-                'item'=>$item
-            ];
-            if(!JobUtil::AddCustomJob('wechatBeanstalk','wechat',$paramData,$error))
-                    \Yii::error('WeChat job is error ::'. $error);
+    /**
+     * 保存粉丝基础信息
+     * @param $access_token
+     * @param $openid
+     * @param $appid
+     * @return bool
+     */
+    public static function SaveUserInfo($access_token,$openid,$appid,$UserInfo){
+        $getData = WeChatUserUtil::getUserInfo($access_token,$openid); //TODO: 请求获取用户信息
+        if(isset($getData['errcode']) && $getData['errcode'] != 0) {
+            \Yii::error('获取用户信息：'.var_export($getData,true));
+            return false;
+        }
+        $getData['appid'] = $appid;
+        $model = AuthorizerUtil::genModel($UserInfo,$getData);
+        if(!$model->save()){
+            \Yii::error('保存微信用户信息失败：'.var_export($model->getErrors(),true));
+            return false;
         }
         return true;
     }
+
+    /**
+     * 获取用户是否被邀请关注
+     * @param $attention_id
+     * @return bool|string
+     */
+    public static function isAttention($attention_id)
+    {
+        $num = QrcodeShare::find()->select(['count(1) as num'])->limit(1)->where(['other_user_id'=>$attention_id])->scalar();
+        if($num > 0) {
+           return false;
+        }
+        return true;
+    }
+
 
 
 }

@@ -1,3 +1,10 @@
+<style>
+    .user-panel>.image>img {
+        width: 100%;
+        max-width: 45px;
+        height: 40px;
+    }
+</style>
 <aside class="main-sidebar">
 
     <section class="sidebar">

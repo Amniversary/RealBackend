@@ -11,6 +11,7 @@ namespace backend\controllers\RealtechActions;
 
 use backend\models\RealtechLoginSearch;
 use yii\base\Action;
+use yii\web\Cookie;
 
 class LoginAction extends Action
 {
@@ -39,7 +40,14 @@ class LoginAction extends Action
             echo json_encode($rst);
             exit;
         }
+
+        $token = md5($model->username.'123123123');
+        \Yii::$app->cache->set($token,$model->username, 60 * 60 * 12);
         $rst['code'] = '0';
+        $rst['msg'] = [
+            'username'=>$model->username,
+            'token'=>$token
+        ];
         echo json_encode($rst);
     }
 }

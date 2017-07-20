@@ -11,7 +11,10 @@ namespace backend\components;
 
 use backend\business\AuthorizerUtil;
 use backend\business\JobUtil;
+use backend\business\SaveByTransUtil;
+use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveUserShareByTrans;
 use backend\business\WeChatUtil;
+use common\components\SystemParamsUtil;
 use yii\db\Query;
 
 class MessageComponent
@@ -64,7 +67,7 @@ class MessageComponent
     public function VerifySendAttentionMessage(){
         if(AuthorizerUtil::isVerify($this->auth->verify_type_info)) {
             $msgData = $this->getMessageModel();
-            $this->sendMessageCustom($msgData);
+            $this->sendMessageCustom($msgData,$this->data['FromUserName']);
             return null;
         } else {
             $msgData = $this->getMessageModel();
@@ -74,6 +77,46 @@ class MessageComponent
         return $rst;
     }
 
+
+    /**
+     * 扫描二维码事件
+     * @return null
+     */
+    public function sendQrcodeMessage($model){
+        //TODO: 判断用户是否扫二维码关注
+        if(isset($this->data['EventKey']) && !empty($this->data['EventKey'])) {
+            $user_id = $this->data['EventKey'];
+            if(strpos($user_id,'qrscene_') !== false) {
+                $str = str_replace('qrscene_','',$this->data['EventKey']);
+                $user_id = trim($str);
+            }
+            //TODO: 获取被扫者用户基本信息
+            $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);
+            $is_attention = AuthorizerUtil::isAttention($model->client_id); //TODO:  是否扫过其他人
+            if($is_attention)
+            {
+                if($user_id != $model->client_id)
+                {
+                    $transActions[] = new SaveUserShareByTrans($userData,$model);
+                    if(!SaveByTransUtil::RewardSaveByTransaction($transActions,$error,$out))
+                    {
+                        \Yii::error($error);
+                        return null;
+                    }
+                    $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);
+                    if($userData->invitation < 5) {
+                        $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',false,'value1');
+                        $Qcmsg[] = [
+                            'msg_type'=>0,
+                            'content'=>sprintf($msg,(5-$userData->invitation)),
+                        ];
+                        $this->sendMessageCustom($Qcmsg,$userData->open_id);
+                    }
+                }
+            }
+        }
+        return null;
+    }
     /**
      * 组装消息格式
      * @return array
@@ -169,7 +212,7 @@ class MessageComponent
             if($touch){
                 $this->key = $item['key_id'];
                 $msgData = $this->getMessageModel();
-                $this->sendMessageCustom($msgData);
+                $this->sendMessageCustom($msgData,$this->data['FromUserName']);
             }
         }
     }
@@ -177,13 +220,13 @@ class MessageComponent
     /**
      * 发送自定义消息
      */
-    public function sendMessageCustom($msgData){
+    public function sendMessageCustom($msgData,$openid){
         if(!empty($msgData)) {
             foreach ($msgData as $item)
             {
                 $paramData = [
                     'key_word'=>'key_word',
-                    'open_id'=>$this->data['FromUserName'],
+                    'open_id'=>$openid,
                     'authorizer_access_token'=>$this->auth->authorizer_access_token,
                     'item'=>$item,
                 ];
@@ -195,4 +238,17 @@ class MessageComponent
         return true;
     }
 
+    /**
+     * 保存用户数据.
+     * @return bool
+     */
+    public function SaveClient(){
+        $UserInfo = AuthorizerUtil::getUserForOpenId($this->data['FromUserName'],$this->auth->record_id);
+        if(empty($UserInfo)) {
+            if(!AuthorizerUtil::SaveUserInfo($this->auth->authorizer_access_token,$this->data['FromUserName'],$this->auth->record_id,$UserInfo)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

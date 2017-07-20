@@ -173,6 +173,7 @@ class WeChatUserUtil
     }
 
     /**
+     * 获取微信配置自定菜单
      * @param $access_token
      * @param $app_id
      * @return bool
@@ -183,7 +184,12 @@ class WeChatUserUtil
         self::DeleteCustom();
         $rst = self::getCustomMenu($access_token,$error);
         if(!$rst) throw new HttpException(500,$error);
+        if($rst['is_menu_open'] == 0) throw new HttpException(500,'自定义菜单未开启');
         $data = $rst['selfmenu_info']['button'];
+        if(empty($data)){
+            throw new HttpException(500,'自定义菜单列表为空');
+        }
+
         $trans = \Yii::$app->db->beginTransaction();
         try{
             foreach ($data as $item) {
@@ -221,14 +227,14 @@ class WeChatUserUtil
     /**
      * 设置微信菜单
      */
-    public static function setMenuList($query,$access_token,&$error)
+    public static function  setMenuList($query,$access_token,&$error)
     {
         $data = [];
         foreach ($query as $key => $v){
             if(!$v['is_list']){
                 $data['button'][$key] = $v['type'] == 'click' ? ['key'=>$v['key_type']] :['url'=>$v['key_type']];
-                $data['button'][$key]['name'] = $v['name'];
                 $data['button'][$key]['type'] = $v['type'];
+                $data['button'][$key]['name'] = $v['name'];
             }else{
                 $sql = AuthorizerUtil::getMenuSonList($v['menu_id']);
                 if(empty($sql)){
@@ -241,8 +247,9 @@ class WeChatUserUtil
                 $info = [];
                 foreach ($sql as $q => $value){
                     $info[$q] = $value['type'] == 'click'? ['key'=>$value['key_type']]:['url'=>$value['url']];
-                    $info[$q]['name'] = $value['name'];
                     $info[$q]['type'] = $value['type'];
+                    $info[$q]['name'] = $value['name'];
+
                 }
                 $data['button'][$key]['sub_button'] = $info;
             }
@@ -288,4 +295,94 @@ class WeChatUserUtil
         return $rst;
     }
 
+
+    /**
+     * 获取临时二维码Ticket 参数
+     * @param $access_token  //授权access_token
+     * @param $expire_seveonds  //二维码过期时间
+     * @param $action_name  //二维码请求类型参数值  [
+     *                          QR_SCENE临时整型
+     *                          QR_STR_SCENE 临时字符型
+     *                          QR_LIMIT_SCENE永久整型
+     *                          QR_LIMIT_STR_SCENE永久字符型
+     *                      ]
+     * @param $action_info  //二维码详细信息
+     * @param $error
+     * @return [
+     *              ticket=>'',           获取二维码的Ticket
+     *              expire_seconds=>'',   二维码的有效期限 // 临时型二维码时需要
+     *              url=>''               二维码解析后的地址, 可以使用自行生成二维码
+     *          ]
+     *
+     */
+    public static function getQrcodeTickt($access_token,$openid,&$error,$actionName = 'QR_LIMIT_STR_SCENE',$expire = 7200)
+    {
+        $url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=$access_token";
+        $data = [
+            'action_name'=>$actionName,
+            'action_info'=>[
+                'scene'=>['scene_str'=>$openid],
+            ]
+        ];
+        if(in_array($actionName,['QR_SCENE','QR_STR_SCENE']))
+            $data['expire_seconds'] = $expire;
+        $json = json_encode($data);
+        $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
+        if(isset($rst['errcode'])){
+            $error = 'Code :'.$rst['errcode'] . ' msg : '. $rst['errmsg'];
+            return false;
+        }
+        return $rst;
+    }
+
+    /**
+     *  生成二维码本地文件
+     * @param $ticket
+     * @return bool
+     */
+    public static function getQrcodeImg($ticket,&$file)
+    {
+        $ticket =  urlencode($ticket);
+        $url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=$ticket";
+        $rst = UsualFunForNetWorkHelper::HttpGet($url);
+        if(!$rst) {
+            return false;
+        }
+        $file = \Yii::$app->basePath.'/runtime/source/qrcode_'.time().'.png';
+        if(!file_put_contents($file,$rst)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 获取要发送的二维码图片
+     * @param $access_token
+     * @param $file
+     * @return bool
+     */
+    public static function getQrcodeSendImg($access_token,$openid,$pic,&$qrcode_file,&$pic_file)
+    {
+        $rst_ticket = self::getQrcodeTickt($access_token,$openid,$error);
+        if(!$rst_ticket){
+            \Yii::error('get ticket : '.var_export($error,true));
+            return false;
+        }
+        $ticket = $rst_ticket['ticket'];
+        if(!self::getQrcodeImg($ticket,$qrcode_file)) {
+            \Yii::error('get Qrcode img Error');
+            return false;
+        }
+        $rst = UsualFunForNetWorkHelper::HttpGetImg($pic,$content_type,$error);
+        if(!$rst) {
+            \Yii::error('Create - Img:'.var_export($error,true));
+            return null;
+        }
+        $pic_file = \Yii::$app->basePath.'/runtime/source/pic_'.time().'.png';
+        if(!file_put_contents($pic_file,$rst)) {
+            \Yii::error('get Pic img Error');
+            return false;
+        }
+        return true;
+    }
 }

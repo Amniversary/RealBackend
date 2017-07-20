@@ -21,6 +21,8 @@ use Yii;
  * @property string $unionid
  * @property string $groupid
  * @property integer $app_id
+ * @property integer $is_vip
+ * @property integer $invitation
  * @property string $create_time
  * @property string $update_time
  * @property string $remark
@@ -45,7 +47,7 @@ class Client extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'app_id','subscribe', 'sex',  'subscribe_time'], 'integer'],
+            [[ 'app_id','subscribe', 'sex',  'subscribe_time','is_vip','invitation'], 'integer'],
             [['create_time','groupid', 'update_time'], 'safe'],
             [['unionid', ], 'string', 'max' => 200],
             [['open_id', 'nick_name','city','country', 'language', 'province',  'remark', 'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
@@ -73,6 +75,8 @@ class Client extends \yii\db\ActiveRecord
         'unionid' => '唯一 ID',
         'groupid' => '群组 ID',
         'app_id' => 'App ID',
+        'is_vip' => '是否会员',
+        'invitation' => '邀请人数量',
         'create_time' => '创建时间',
         'update_time' => '更新时间',
         'remark' => '备注信息',

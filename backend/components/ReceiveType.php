@@ -9,6 +9,7 @@
 namespace backend\components;
 
 
+use backend\business\JobUtil;
 use backend\components\WeChatClass\EventClass;
 use backend\components\WeChatClass\TextClass;
 use common\components\UsualFunForNetWorkHelper;
@@ -21,9 +22,9 @@ class ReceiveType
     public function Text($arr,$flag = 0)
     {
         $contentStr = null;
-        if($arr['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT'){ //TODO: 全网测试消息
+        if($arr['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT'){ //TODO: 全网测试文本消息
             $contentStr = $arr['Content'].'_callback';
-        }elseif (strpos($arr['Content'],'QUERY_AUTH_CODE:') !== false){
+        }elseif (strpos($arr['Content'],'QUERY_AUTH_CODE:') !== false){  //TODO: 全网发布测试客服消息回复
             $postData['query_auth_code'] =  str_replace('QUERY_AUTH_CODE:', '', $arr['Content']);
             $postData['openid'] = $arr['FromUserName'];
             $url = 'http://wxmp.gatao.cn/wechat/index';
@@ -32,7 +33,6 @@ class ReceiveType
         }else{
             $Text = new TextClass($arr);
             $contentStr = $Text->Text();
-            \Yii::error('contentStr:::'.var_export($contentStr,true));
             if($contentStr['msg_type'] == 1){
                 return $this->transmitNews($arr,$contentStr);
             }elseif($contentStr['msg_type'] == 2){
@@ -98,17 +98,26 @@ class ReceiveType
                 $contentStr = $Event->unSubscribe();
                 break;
             case 'CLICK':
+                \Yii::error('Click:'.var_export($arr,true));
                 $contentStr = null;
+                if($arr['EventKey'] == 'get_qrcode') {
+                    $params = ['key_word' => 'get_qrcode', 'data' => $arr];
+                    if(!JobUtil::AddCustomJob('wechatBeanstalk','get_qrcode',$params,$error)) {
+                        \Yii::error($error);
+                    }
+                    $contentStr = null;
+                }
                 break;
             default:
-                $contentStr = $arr['Event'].'from_callback';
+                $contentStr = null;//$arr['Event'].'from_callback';
                 break;
         }
-        \Yii::error('subscribe:' .var_export($contentStr,true));
-        if($contentStr['msg_type'] == 1){
-            return $this->transmitNews($arr,$contentStr);
-        }elseif($contentStr['msg_type'] == 2){
-            return $this->transmitImg($arr,$contentStr);
+        if(is_array($contentStr) && isset($contentStr['msg_type'])) {
+            if($contentStr['msg_type'] == 1){
+                return $this->transmitNews($arr,$contentStr);
+            }elseif($contentStr['msg_type'] == 2){
+                return $this->transmitImg($arr,$contentStr);
+            }
         }
         $resultStr = $this->transmitText($arr, $contentStr);
         return $resultStr;

@@ -10,12 +10,21 @@ namespace backend\components\WeChatClass;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\ImageUtil;
 use backend\business\JobUtil;
 use backend\business\SaveByTransUtil;
+use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveUserShareByTrans;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\StatisticFansUserByTrans;
 use backend\business\WeChatUserUtil;
+use backend\business\WeChatUtil;
 use backend\components\MessageComponent;
 use backend\components\ReceiveType;
+use common\components\OssUtil;
+use common\components\UsualFunForNetWorkHelper;
+use common\models\QrcodeImg;
+use common\models\QrcodeShare;
+use EasyWeChat\MiniProgram\QRCode\QRCode;
+use Qiniu\Auth;
 
 class EventClass
 {
@@ -32,33 +41,37 @@ class EventClass
     public function subscribe()
     {
         $appid = $this->data['appid'];
-        $openid = $this->data['FromUserName'];
+        $openid = $this->data['FromUserName'];  //TODO: 触发事件用户openId
         $msgObj = new MessageComponent($this->data);
-        $flag = true;
-        //TODO: 如果已关注 查出用户信息
-        $openInfo = AuthorizerUtil::getAuthOne($appid);
-        $UserInfo = AuthorizerUtil::getUserForOpenId($openid,$openInfo->record_id);
-        //TODO: 处理用户关注统计
-        $DataPrams =['key_word'=>'attention','app_id'=>$openInfo->record_id, 'type'=>1];
-        if(!JobUtil::AddCustomJob('attentionBeanstalk','attention',$DataPrams,$error))
-            \Yii::error($error);
-        //TODO: 获取用户基本信息
-        $getData = WeChatUserUtil::getUserInfo($openInfo->authorizer_access_token,$openid);
-        if($getData['errcode'] != 0 ) {
-            \Yii::error('获取用户信息：'.var_export($getData,true));
-            return null;
+
+        $auth = AuthorizerUtil::getAuthOne($appid); //TODO: 获取公众号信息
+        $access_token = $auth->authorizer_access_token;
+        if(empty($auth)) return null;   //TODO: 如果公众号不存在
+        if(isset($auth->record_id)) {   //TODO: 处理用户关注统计
+            $DataPrams =['key_word'=>'attention','app_id'=>$auth->record_id, 'type'=>1];
+            if(!JobUtil::AddCustomJob('attentionBeanstalk','attention',$DataPrams,$error))
+                \Yii::error($error);
         }
-        $getData['open_id'] = $getData['openid']; unset($getData['openid']);
-        if(empty($UserInfo) || !isset($UserInfo)) $flag = false;
-        if(!isset($getData['open_id'])) return null;
-        $getData['app_id'] = $openInfo['record_id'];
-        $model = AuthorizerUtil::genModel($UserInfo,$getData,$flag);
-        if(!$model->save()){
-            \Yii::error('保存微信用户信息失败：'.var_export($model->getErrors(),true));
-            return null;
+
+        $UserInfo = AuthorizerUtil::getUserForOpenId($openid,$auth->record_id);
+        //TODO: 获取用户基本信息
+        if(AuthorizerUtil::isVerify($auth->verify_type_info)) {
+            $getData = WeChatUserUtil::getUserInfo($access_token,$openid); //TODO: 请求获取用户信息
+            if(isset($getData['errcode']) && $getData['errcode'] != 0) {
+                \Yii::error('获取用户信息：'.var_export($getData,true));
+                return null;
+            }
+            $getData['app_id'] = $auth->record_id;
+            $model = AuthorizerUtil::genModel($UserInfo,$getData);
+            if(!$model->save()){
+                \Yii::error('保存微信用户信息失败：'.var_export($model->getErrors(),true));
+                return null;
+            }
+            $msgObj->sendQrcodeMessage($model);
         }
         //TODO: 处理回复消息逻辑 走客服消息接口 回复多条消息
         $msgData = $msgObj->VerifySendAttentionMessage();
+
         return $msgData;
     }
 
@@ -74,7 +87,7 @@ class EventClass
         }
         $openid = $this->data['FromUserName'];
         //TODO: 如果已关注 查出用户信息
-        $DataPrams =['key_word'=>'attention','app_id'=>$AuthInfo->record_id, 'type'=>2];
+        $DataPrams =['key_word'=>'cancel_attention','app_id'=>$AuthInfo->record_id, 'type'=>2];
         if(!JobUtil::AddCustomJob('attentionBeanstalk','attention',$DataPrams,$error))
             \Yii::error($error);
 
@@ -87,24 +100,68 @@ class EventClass
         return null;
     }
 
-    /* Array
-(
-[subscribe] => 1
-[openid] => oB4Z-wf0FYMlI7fW4ZvD90Y06RxA
-[nickname] => Gavean
-[sex] => 1
-[language] => zh_CN
-[city] => 杭州
-[province] => 浙江
-[country] => 中国
-[headimgurl] => http://wx.qlogo.cn/mmopen/UVzXBswyibFh7ib0qClxDP6Y5EFUGSgrw7FIUNcB7K60LAIpKHpqHxJa7ta10HKYYIVSCPSQy0IBzGib9zgn9NE00vaHbVydjpY/0
-[subscribe_time] => 1498896058
-[unionid] => oVKOWs5xZRtfQNm73g5A4Fk7HO0M
-[remark] =>
-[groupid] => 0
-[tagid_list] => Array
-(
-)
+    /**
+     * 处理点击事件 生成二维码图片
+     * @return null
+     */
+    public function getQrCodeImg(&$error) {
+        $openid = $this->data['FromUserName'];
+        $auth = AuthorizerUtil::getAuthOne($this->data['appid']);
 
-)*/
+        $access_token = $auth->authorizer_access_token;
+        $client = AuthorizerUtil::getUserForOpenId($openid,$auth->record_id);
+        $img = ImageUtil::GetQrcodeImg($client->client_id);
+        if(!isset($img)) {  //TODO: 如果图片不存在  重新生成并上传
+
+            $userData = WeChatUserUtil::getUserInfo($access_token,$openid);
+            if(!WeChatUserUtil::getQrcodeSendImg($access_token,$openid,$userData['headimgurl'],$qrcode_file,$pic_file)) {
+                $error = '获取图片失败';
+                return false;
+            }
+            $text = $userData['nickname'];
+            if(!ImageUtil::imagemaking($qrcode_file,$pic_file,$openid,$text,$bg_img,$error)){
+                return false;
+            }
+            //$name = basename($bg_img);
+            /*if(!OssUtil::UploadQiniuFile($name,$bg_img,$bg_url,$error)){  //TODO: 背景图上传七牛
+                \Yii::error($error);
+                return false;
+            }*/
+            $wechat = new WeChatUtil();
+            if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
+                return false;
+            }
+            $model = new QrcodeImg();
+            $model->client_id = $client->client_id;
+            $model->media_id = $rst['media_id'];
+            $model->update_time = $rst['created_at'];
+            $model->save();
+            $media_id = $model->media_id;
+            $imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
+            if(!JobUtil::AddCustomJob('wechatBeanstalk','delete_img',$imgParams,$error)) {
+                \Yii::error($error); \Yii::getLogger()->flush(true);
+            }
+        } else {
+            $time = time();
+            $outTime = intval(($time - $img->update_time) / 84600);
+            if($outTime >= 3){
+                $wechat = new WeChatUtil();
+                $bg_img = \Yii::$app->basePath.'/runtime/bgimg/bg_'.$openid.'.png';
+                if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
+                    return false;
+                }
+                $img->media_id = $rst['media_id'];
+                $img->update_time = $rst['created_at'];
+                $img->save();
+            }
+            $media_id = $img->media_id;
+        }
+        $msgObj = new MessageComponent($this->data);
+        $msgData[] = [
+            'msg_type'=>'2',
+            'media_id'=>$media_id,
+        ];
+        $msgObj->sendMessageCustom($msgData,$openid);
+        return null;
+    }
 }

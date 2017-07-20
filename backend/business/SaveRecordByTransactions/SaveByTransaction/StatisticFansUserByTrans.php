@@ -10,6 +10,7 @@ namespace backend\business\SaveRecordByTransactions\SaveByTransaction;
 
 
 use backend\business\SaveRecordByTransactions\ISaveForTransaction;
+use common\models\FansStatistics;
 
 class StatisticFansUserByTrans implements ISaveForTransaction
 {
@@ -27,13 +28,15 @@ class StatisticFansUserByTrans implements ISaveForTransaction
         $sql = '';
         $upsql = '';
         $time = date('Y-m-d');
-        $insql = 'insert ignore into wc_fans_statistics(app_id,new_user,cancel_user,net_user,total_user,
+        $DataInfo = FansStatistics::findOne(['app_id'=>$this->record['record_id'],'statistics_date'=>$time]);
+        if(empty($DataInfo)){
+            $insql = 'insert ignore into wc_fans_statistics(app_id,new_user,cancel_user,net_user,total_user,
 statistics_date) VALUES (:appid,0,0,0,0,:tme)';
-        \Yii::$app->db->createCommand($insql,[
-            ':appid'=>$this->record['record_id'],
-            ':tme'=>$time,
-        ])->execute();
-
+            \Yii::$app->db->createCommand($insql,[
+                ':appid'=>$this->record['record_id'],
+                ':tme'=>$time,
+            ])->execute();
+        }
         $sql .= 'update wc_fans_statistics set ';
         $upsql .= 'update wc_statistics_count set ';
         if($this->extend['type'] == 1){

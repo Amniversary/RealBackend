@@ -42,10 +42,12 @@ $gridColumns = [
     [
         'attribute'=>'username',
         'label'=>'用户名',
+        'vAlign'=>'middle'
     ],
     [
         'attribute'=>'email',
         'label'=>'邮箱',
+        'vAlign'=>'middle',
     ],
     [
         'label'=>'头像',
@@ -63,6 +65,7 @@ $gridColumns = [
         'class' => 'kartik\grid\EditableColumn',
         'width'=>'100px',
         'attribute'=>'status',
+        'vAlign'=>'middle',
         'value'=>function($model)
         {
             return $model->GetStatusName();
@@ -86,6 +89,7 @@ $gridColumns = [
     [
         'label'=>'创建时间',
         'attribute'=>'create_at',
+        'vAlign'=>'middle',
         'value'=>function($model)
         {
             return date('Y-m-d H:i:s',intval($model->create_at));
@@ -94,6 +98,7 @@ $gridColumns = [
     ],
     [
         'label'=>'最后登录时间',
+        'vAlign'=>'middle',
         'attribute'=>'update_at',
         'value'=>function($model){
             return date('Y-m-d H:i:s',intval($model->update_at));

@@ -99,31 +99,31 @@ class SaveAuthorizeInfoByTrans implements ISaveForTransaction
             $upsql = 'update wc_fans_statistics set total_user = :total WHERE app_id = :appid and statistics_date = :date';
             $rst = \Yii::$app->db->createCommand($upsql,[
                 ':appid'=>$model->record_id,
-                ':total'=>$data['cumulate_user'],
+                ':total'=>intval($data['cumulate_user']),
                 ':date'=>$time
             ])->execute();
             if($rst <= 0){
                 $error = '更新每日统计粉丝信息失败';
                 \Yii::error($error . ' : '.\Yii::$app->db->createCommand($upsql,[
                         ':appid'=>$model->record_id,
-                        ':total'=>$data['cumulate_user'],
-                        ':cumu'=>$data['cumulate_user'],
-                        ':rma'=>$data['cumulate_user'],
+                        ':total'=>intval($data['cumulate_user']),
+                        ':cumu'=>intval($data['cumulate_user']),
+                        ':rma'=>intval($data['cumulate_user']),
                         ':date'=>$time])->rawSql);
                 return false;
             }
 
             $up_count = 'update wc_statistics_count set count_user = :cu,cumulate_user = :cumu WHERE app_id = :apd';
             $result = \Yii::$app->db->createCommand($up_count,[
-                ':cu'=>$data['cumulate_user'],
-                ':cumu'=>$data['cumulate_user'],
+                ':cu'=>intval($data['cumulate_user']),
+                ':cumu'=>intval($data['cumulate_user']),
                 ':apd'=>$model->record_id,
             ])->execute();
             if($result <= 0){
                 $error = '更新粉丝累计统计失败:';
                 \Yii::error($error. ' :' .\Yii::$app->db->createCommand($up_count,[
-                        ':cu'=>$data['cumulate_user'],
-                        ':cumu'=>$data['cumulate_user'],
+                        ':cu'=>intval($data['cumulate_user']),
+                        ':cumu'=>intval($data['cumulate_user']),
                         ':apd'=>$model->record_id,
                     ])->rawSql);
                 return false;

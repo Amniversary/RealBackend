@@ -10,6 +10,8 @@ namespace console\controllers;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\SaveByTransUtil;
+use backend\business\SaveRecordByTransactions\SaveByTransaction\TestTrans;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use common\models\AuthorizationList;
@@ -90,7 +92,7 @@ class WechatController extends Controller
                 $fans->net_user = 0;
 
             }
-            $fans->total_user = strval($rst['list'][0]['cumulate_user']);
+            $fans->total_user = intval($rst['list'][0]['cumulate_user']);
             $fans->statistics_date = date('Y-m-d');
             $fans->remark1 = $time;
             $fans->save();
@@ -100,6 +102,26 @@ class WechatController extends Controller
         echo "一共 $num 条记录，更新成功 $i 条记录   时间: $time\n";
     }
 
+    public function actionRefuse(){
+        $query = (new Query())
+            ->select(['record_id','authorizer_access_token','verify_type_info'])->from('wc_authorization_list')->all();
+        if(empty($query)){
+            echo "没有找到公众号信息 \n";
+            exit;
+        }
+        $num = count($query);
+        $i = 0;
+        $time = date('Y-m-d H:i:s');
+        foreach ($query as $item){
+            $transActions[] = new TestTrans($item);
+            $i ++;
+        }
+        if(!SaveByTransUtil::RewardSaveByTransaction($transActions,$error,$out)){
+            print_r($error);
+        }
+
+        echo "一共 $num 条记录，更新成功 $i 条记录   时间: $time\n";
+    }
 
     /**
      * @return null|FansStatistics
