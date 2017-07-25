@@ -12,4 +12,5 @@ return [
     'bh'=>'frontend\controllers\FuckActions\BhAction',
     'wld'=>'frontend\controllers\FuckActions\WldAction',
     'clear'=>'frontend\controllers\FuckActions\ClearGroupAction',
+    'get'=>'frontend\controllers\FuckActions\GetAction',
 ];

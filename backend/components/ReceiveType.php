@@ -33,9 +33,9 @@ class ReceiveType
         }else{
             $Text = new TextClass($arr);
             $contentStr = $Text->Text();
-            if($contentStr['msg_type'] == 1){
+            if($contentStr['msg_type'] == '1'){
                 return $this->transmitNews($arr,$contentStr);
-            }elseif($contentStr['msg_type'] == 2){
+            }elseif($contentStr['msg_type'] == '2'){
                 return $this->transmitImg($arr,$contentStr);
             }
         }
@@ -98,14 +98,13 @@ class ReceiveType
                 $contentStr = $Event->unSubscribe();
                 break;
             case 'CLICK':
-                \Yii::error('Click:'.var_export($arr,true));
                 $contentStr = null;
                 if($arr['EventKey'] == 'get_qrcode') {
                     $params = ['key_word' => 'get_qrcode', 'data' => $arr];
                     if(!JobUtil::AddCustomJob('wechatBeanstalk','get_qrcode',$params,$error)) {
                         \Yii::error($error);
                     }
-                    $contentStr = null;
+                    $contentStr = '海报生成中 ...';
                 }
                 break;
             default:
@@ -202,6 +201,21 @@ class ReceiveType
                     </Image>
                    </xml>";
         $resultStr = sprintf($imgXml,$arr['FromUserName'],$arr['ToUserName'],time(),$content['media_id']);
+        return $resultStr;
+    }
+
+    public function transmitVideo($arr,$content){
+        if($content == null) return null;
+        $xml = "<xml>
+                    <ToUserName><![CDATA[%s]]></ToUserName>
+                    <FromUserName><![CDATA[%s]]></FromUserName>
+                    <CreateTime>%s</CreateTime>
+                    <MsgType><![CDATA[voice]]></MsgType>
+                    <Voice>
+                        <MediaId><![CDATA[%s]]></MediaId>
+                    </Voice>
+                </xml>";
+        $resultStr = sprintf($xml,$arr['FromUserName'],$arr['ToUserName'],time(),$content['media_id']);
         return $resultStr;
     }
 }

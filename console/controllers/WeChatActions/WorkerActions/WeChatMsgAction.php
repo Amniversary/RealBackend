@@ -41,7 +41,7 @@ class WeChatMsgAction extends Action
                 {
                     $error = iconv('utf-8','gb2312',$error);
                 }
-                fwrite(STDOUT, Console::ansiFormat(" --$sentData->key_word-- $error no jobrecord "."\n", [Console::FG_GREEN]));
+                fwrite(STDOUT, Console::ansiFormat(" --$sentData->key_word- $json- $error no jobrecord "."\n", [Console::FG_GREEN]));
                 \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.'--- :'.$error,Logger::LEVEL_ERROR);
                 \Yii::getLogger()->flush(true);
                 return BeanstalkController::DELETE;

@@ -108,7 +108,8 @@ class ImageUtil
         $black = imagecolorallocate($cropped_image, 255, 255, 255);
 //        $text = '扫描二维码扫描二维码扫描二维码扫描二维码扫描二维码扫描二维码扫描二维码';  //要写到图上的文字
         $font = './mibo/wswh/hydsj.TTF';  //写的文字用到的字体。
-        $text = json_decode($text,true);
+        //print_r($text);exit;
+        //$text = json_decode($text,true);
         $text_len = count($text);
         $text_str = '';
         $content_text_height = imageftbbox(24,0,$font,$text[0]);

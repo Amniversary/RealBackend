@@ -36,21 +36,14 @@ use yii\bootstrap\Html;
 }*/
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
-    /*[
-        'attribute'=>'app_id',
-        'vAlign'=>'middle',
-        'value'=>function($model){
-            return $model::getKeyAppId($model->app_id);
-        },
-        'filter'=>false,
-    ],*/
+
     [
         'attribute'=>'msg_type',
         'vAlign'=>'middle',
         'value'=>function($model){
             return $model->getMsgType($model->msg_type);
         },
-        'filter'=>['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息'],
+        'filter'=>['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息','3'=>'语音消息'],
     ],
     [
         'attribute'=>'content',
@@ -76,7 +69,6 @@ $gridColumns = [
         },
         'filter'=>false,
     ],
-
     [
         'attribute'=>'url',
         'vAlign'=>'middle',
@@ -95,6 +87,16 @@ $gridColumns = [
             $url = empty($model->picurl) ? '': $model->picurl;
             return empty($url) ? Html::label('') :Html::img($url,['class'=>'user-pic']);
         },
+    ],
+    [
+        'attribute'=>'video',
+        'vAlign'=>'middle',
+        'width'=>'100px',
+        'format'=>'html',
+        'content'=>function($model) {
+            $url = empty($model->video)? '':"<audio controls='controls' src=$model->video></audio>";
+            return $url;
+        }
     ],
     [
         'attribute'=>'event_id',

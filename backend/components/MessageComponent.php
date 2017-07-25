@@ -104,12 +104,14 @@ class MessageComponent
                         return null;
                     }
                     $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);
-                    if($userData->invitation < 5) {
-                        $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',false,'value1');
-                        $Qcmsg[] = [
-                            'msg_type'=>0,
-                            'content'=>sprintf($msg,(5-$userData->invitation)),
-                        ];
+                    $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'');
+                    if(($userData->invitation <= 5)){
+                        $Qcmsg[] = ['msg_type'=>0, 'content'=>sprintf($msg['value1'],($userData->invitation),$model->nick_name)];
+                    }
+                    if($userData->invitation == 5){
+                        $Qcmsg[] = ['msg_type'=>0, 'content'=>$msg['value2']];
+                    }
+                    if(!empty($Qcmsg)) {
                         $this->sendMessageCustom($Qcmsg,$userData->open_id);
                     }
                 }
@@ -152,6 +154,9 @@ class MessageComponent
                 case 2: //TODO: 图片消息
                     $rst = $this->DisposeImg($value['picurl'],$this->auth->authorizer_access_token,$value['update_time'],$value['record_id']);
                     $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$rst['media_id']];
+                    break;
+                case 3: //TODO: 语音消息
+                    $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$value['media_id']];
                     break;
             }
         }

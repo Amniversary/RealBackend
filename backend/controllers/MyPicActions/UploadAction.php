@@ -89,7 +89,6 @@ class UploadAction extends Action
             exit;
         }
 
-
         $rst['code'] = '0';
         $rst['msg'] = $picUrl;
         echo json_encode($rst);

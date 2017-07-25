@@ -45,7 +45,7 @@ class AuthorizedController extends Controller
         $WeChat = new WeChatComponent();
         $data = $WeChat->decryptMsg;
         $record = Authorization::findOne(['app_id'=>$WeChat->webAppId]);
-        \Yii::error('Data::'.var_export($data,true));
+        //\Yii::error('Data::'.var_export($data,true));
         $infoType = isset($data['InfoType']) ? $data['InfoType']: '';
         if(!empty($infoType) && $infoType == 'unauthorized'){
             $authorzer_appid = $data['AuthorizerAppid'];

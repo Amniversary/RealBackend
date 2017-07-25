@@ -248,7 +248,7 @@ class WeChatUtil
     {
         $data['media'] = class_exists('\CURLFile') ? new \CURLFile(realpath($file)): '@'.realpath($file);
         $url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=$access_token&type=$type";
-        $rst = @json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$data),true);
+        $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$data),true);
         if(!isset($rst['media_id'])){
             $error = '上传微信文件失败，没有获取到对应 media_id, Code:'.$rst['errcode']. ' msg:'.$rst['errmsg'];
             return false;

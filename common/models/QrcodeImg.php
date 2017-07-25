@@ -10,7 +10,6 @@ use Yii;
  * @property integer $record_id
  * @property integer $client_id
  * @property string $media_id
- * @property string $pic_url
  * @property integer $update_time
  * @property string $remark1
  * @property string $remark2
@@ -33,7 +32,6 @@ class QrcodeImg extends \yii\db\ActiveRecord
         return [
             [['client_id', 'update_time'], 'integer'],
             [['media_id'], 'string', 'max' => 200],
-            [['pic_url'], 'string', 'max' => 300],
             [['remark1', 'remark2'], 'string', 'max' => 100],
             [['client_id'], 'unique'],
         ];

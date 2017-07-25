@@ -6,20 +6,19 @@ use yii\base\Action;
 
 class GetAction extends Action
 {
-    
     public function run()
     {
         date_default_timezone_set("PRC");
         $id= 'J6lxWbGddyo81K1R';
         $key= 'KWfmyikygwv98bTG4xmbs7KMdNXMoV';
-        $host = 'http://mblive.oss-cn-hangzhou.aliyuncs.com';
+        $host = 'http://7xld1x.com1.z0.glb.clouddn.com';
 
         $now = time();
         $expire = 3*60; //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问
         $end = $now + $expire;
         $expiration = MenuUtil::gmt_iso8601($end);
 
-        $dir = 'android_apk/';
+        $dir = 'realtech-test/';
 //    if($_GET['dir']=='123456789'){
 //        //表示没填写上传的目录
 //        $dir = 'mblive/';

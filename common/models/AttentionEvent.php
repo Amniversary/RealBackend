@@ -22,6 +22,7 @@ use yii\db\Query;
  * @property string $media_id
  * @property integer $update_time
  * @property string $create_time
+ * @property string $video
  * @property integer $order_no
  * @property integer $flag
  * @property string $remark1
@@ -46,7 +47,7 @@ class AttentionEvent extends ActiveRecord
     {
         return [
             [['app_id', 'msg_type', 'update_time','flag', 'event_id','key_id','order_no'], 'integer'],
-            [['create_time','title','description','url','picurl','media_id'], 'safe'],
+            [['create_time','title','description','url','picurl','media_id','video'], 'safe'],
             [['remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
             [['content'], 'string', 'max'=>1000],
         ];
@@ -71,6 +72,7 @@ class AttentionEvent extends ActiveRecord
             'key_id' => '关键字ID',
             'media_id' => '图片media_id',
             'order_no'=>'排序号',
+            'video'=>'音频url',
             'update_time' => '更新media_id的时间',
             'flag' => '0 关注类型  1关键词类型 2自定义菜单',
             'remark1' => 'Remark1',
@@ -107,6 +109,7 @@ class AttentionEvent extends ActiveRecord
             case 0: $rst = '文本消息'; break;
             case 1: $rst = '图文消息'; break;
             case 2: $rst = '图片消息'; break;
+            case 3: $rst = '语音消息'; break;
             default: $rst = '未知类型'; break;
         }
         return $rst;

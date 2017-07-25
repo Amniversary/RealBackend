@@ -12,4 +12,7 @@ return [
     'get'=>[
         'class' => 'backend\controllers\MyPicActions\GetAction',
     ],
+    'upload_video'=> [
+        'class' => 'backend\controllers\MyPicActions\UploadMp3Action',
+    ]
 ];

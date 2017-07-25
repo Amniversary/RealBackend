@@ -49,7 +49,7 @@ $data = [$cache['record_id']=>$cache['nick_name']];
 
     <?= $form->field($model,'app_id')->dropDownList($data,['disabled'=>'disabled','style'=>'width:200px']) ?>
     <hr/>
-    <?= $form->field($model,'msg_type')->radioList(['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息']) ?>
+    <?= $form->field($model,'msg_type')->radioList(['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息','3'=>'语音消息']) ?>
     <hr/>
     <div id="img-text">
     <label style="color: red;font-weight: bold;">标题、内容描述、外链Url、图片Url、事件Id 消息类型为图文消息时填写！</label>
@@ -84,6 +84,17 @@ $data = [$cache['record_id']=>$cache['nick_name']];
             <div class="help-block"><?=$model->getFirstError('picurl')?></div>
         </div>
     </div>
+
+    <div id="video">
+        <div class="form-group <?= ($model->getFirstError('video') ===null? 'has-success':'has-error') ?>">
+            <label class="control-label" for="label-video">语音(音频文件不能大于2MB 时长小于60秒)</label><a class="video-del" href="javascript:deletevideo('video')">删除</a>
+            <input type="file" id="video-file" name="file">
+            <input type="hidden" name="AttentionEvent[video]" id="video-user-file" value="<?=$model->video ?>"/>
+            <audio src="" controls id="video-files"></audio>
+
+        </div>
+    </div>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '新增' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         &nbsp;&nbsp;&nbsp;&nbsp;
@@ -99,17 +110,13 @@ $js = '
 $(function(){
     $vue = $("input[type=radio]:checked").val();
     if($vue == 0){
-        $("#content").show();
-        $("#img-text").hide();
-        $("#img").hide();
+        $("#content").show();$("#img-text").hide();$("#img").hide();$("#video").hide();$("#super-link").show();
     }else if($vue == 1){
-        $("#img-text").show();
-        $("#content").hide();
-        $("#img").hide();
+        $("#img-text").show();$("#content").hide();$("#img").hide();$("#video").hide();$("#super-link").hide();
+    }else if($vue == 2){
+        $("#img").show();$("#content").hide();$("#img-text").hide();$("#video").hide();$("#super-link").hide();
     }else{
-        $("#img").show();
-        $("#content").hide();
-        $("#img-text").hide();
+        $("#video").show();$("#img-text").hide();$("#content").hide();$("#img").hide();$("#super-link").hide();
     }
 });
 $("input[type=\'radio\']").on("click",function(){
@@ -118,14 +125,26 @@ $("input[type=\'radio\']").on("click",function(){
         $("#content").show();
         $("#img-text").hide();
         $("#img").hide();
+        $("#video").hide();
+        $("#super-link").show();
     }else if($vue == 1){
         $("#img-text").show();
         $("#content").hide();
         $("#img").hide();
-    }else{
+        $("#video").hide();
+        $("#super-link").hide();
+    }else if($vue == 2){
         $("#img").show();
         $("#content").hide();
         $("#img-text").hide();
+        $("#video").hide();
+        $("#super-link").hide();
+    }else{
+        $("#img").hide();
+        $("#content").hide();
+        $("#img-text").hide();
+        $("#video").show();
+        $("#super-link").hide();
     }
 });
 $("#super-link").on("click",function(){
@@ -142,6 +161,15 @@ function deletepic(targetKey)
         $("#" + key).attr("href", "");
         $("#" + key + " img").attr("src","");
         $("#b-user_" + targetKey).val("");
+    }
+}
+function deletevideo(targetKey)
+{
+    if(confirm("确定删除吗"))
+    {
+        key = targetKey + "-files";
+        $("#" + key).attr("src","");
+        $("#" + key + "-user-file").val("");
     }
 }
 function delpic(targetKey)
@@ -162,6 +190,46 @@ function delpic(targetKey)
     }
 }
 $(function(){
+$(document).on("change","#video-file",function(){
+        //创建FormData对象
+        var data = new FormData();
+        //为FormData对象添加数据
+        $.each($(this)[0].files, function(i, file) {
+            data.append("file", file);
+            hasFile = true;
+        });
+        if(!hasFile)
+        {
+            return;
+        }
+        $.ajax({
+            url:"/mypic/upload_video?file_type=video_type",
+            type:"POST",
+            data: data,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success:function(data)
+            {
+                data = $.parseJSON(data);
+                if(data.code == "0")
+                {
+                    $("#video-files").attr("src", data.msg);
+                    $("#video-user-file").val(data.msg);
+                }
+                else
+                {
+                    alert(data.msg);
+                }
+                console.log(data);
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown)
+            {
+                alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
+             }
+        });
+    });
     $(document).on("change",".backend-pic-input",function(){
         //创建FormData对象
         var data = new FormData();

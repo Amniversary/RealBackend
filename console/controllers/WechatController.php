@@ -16,9 +16,11 @@ use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use common\models\AuthorizationList;
 use common\models\FansStatistics;
+use common\models\StatisticsCount;
 use common\models\User;
 use common\models\UserMenu;
 use yii\console\Controller;
+use yii\db\Exception;
 use yii\db\Query;
 
 class WechatController extends Controller
@@ -76,31 +78,40 @@ class WechatController extends Controller
         $time = date('Y-m-d H:i:s');
         foreach ($query as $item){
             if(!AuthorizerUtil::isVerify($item['verify_type_info'])){
-                echo "公众号未认证 ID:".$item['nick_name'] ."\n";
                 continue;
             }
             if(!WeChatUserUtil::getWxFansAccumulate($item['authorizer_access_token'],$rst,$error)){
-                echo "$error \n";
+                echo "$error 公众号:".$item['nick_name']." \n";
+            }
+            try{
+                $trans = \Yii::$app->db->beginTransaction();
+                $fans = $this->getFansRecord($item['record_id']);
+                $fans_count = $this->getFansCount($item['record_id']);
+                if(empty($fans)){
+                    $fans = new FansStatistics();
+                    $fans->app_id = $item['record_id'];
+                    $fans->new_user = 0;
+                    $fans->cancel_user = 0;
+                    $fans->net_user = 0;
+                }
+                $fans->total_user = intval($rst['list'][0]['cumulate_user']);
+                $fans->statistics_date = date('Y-m-d');
+                $fans->remark1 = $time;
+                if(!$fans->save()){
+                    \Yii::error('error:'.var_export($fans->getErrors(),true));
+                }
+                $fans_count->count_user = floatval($rst['list'][0]['cumulate_user'] + $fans->net_user);
+                $fans_count->cumulate_user = floatval($rst['list'][0]['cumulate_user'] + $fans->new_user);
+                $trans->commit();
+            }catch(Exception $e) {
+                $trans->rollBack();
                 continue;
             }
-            $fans = $this->getFansRecord($item['record_id']);
-            if(empty($fans)){
-                $fans = new FansStatistics();
-                $fans->app_id = $item['record_id'];
-                $fans->new_user = 0;
-                $fans->cancel_user = 0;
-                $fans->net_user = 0;
-
-            }
-            $fans->total_user = intval($rst['list'][0]['cumulate_user']);
-            $fans->statistics_date = date('Y-m-d');
-            $fans->remark1 = $time;
-            $fans->save();
-
             $i ++;
         }
         echo "一共 $num 条记录，更新成功 $i 条记录   时间: $time\n";
     }
+
 
     public function actionRefuse(){
         $query = (new Query())
@@ -128,5 +139,12 @@ class WechatController extends Controller
      */
     private function getFansRecord($record_id){
         return FansStatistics::findOne(['app_id'=>$record_id,'statistics_date'=>date('Y-m-d')]);
+    }
+
+    /**
+     * @return null|StatisticsCount
+     */
+    private function getFansCount($record_id){
+        return StatisticsCount::findOne(['app_id'=>$record_id]);
     }
 }

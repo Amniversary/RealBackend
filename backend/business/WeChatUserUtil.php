@@ -86,7 +86,7 @@ class WeChatUserUtil
      */
     public static function getMsgTemplate($msgData,$openid)
     {
-        //TODO: 0 文本消息 1 图文消息 2 图片消息
+        //TODO: 0 文本消息 1 图文消息 2 图片消息 3 语音消息
         $data = '';
         switch ($msgData['msg_type']) {
             case '0':
@@ -97,6 +97,9 @@ class WeChatUserUtil
                 break;
             case '2':
                 $data = self::msgImage($openid,$msgData['media_id']);
+                break;
+            case '3':
+                $data = self::msgVideo($openid,$msgData['media_id']);
                 break;
         }
         return json_encode($data,JSON_UNESCAPED_UNICODE);
@@ -141,6 +144,20 @@ class WeChatUserUtil
             'touser'=>$openid,
             'msgtype'=>'image',
             'image'=>[
+                'media_id'=>$media_id
+            ]
+        ];
+    }
+
+    /**
+     * 返回语音消息类型
+     */
+    public static function msgVideo($openid,$media_id)
+    {
+        return $dataMsg = [
+            'touser'=>$openid,
+            'msgtype'=>'voice',
+            'voice'=>[
                 'media_id'=>$media_id
             ]
         ];
@@ -232,7 +249,7 @@ class WeChatUserUtil
         $data = [];
         foreach ($query as $key => $v){
             if(!$v['is_list']){
-                $data['button'][$key] = $v['type'] == 'click' ? ['key'=>$v['key_type']] :['url'=>$v['key_type']];
+                $data['button'][$key] = $v['type'] == 'click' ? ['key'=>$v['key_type']] :['url'=>$v['url']];
                 $data['button'][$key]['type'] = $v['type'];
                 $data['button'][$key]['name'] = $v['name'];
             }else{
@@ -361,26 +378,25 @@ class WeChatUserUtil
      * @param $file
      * @return bool
      */
-    public static function getQrcodeSendImg($access_token,$openid,$pic,&$qrcode_file,&$pic_file)
+    public static function getQrcodeSendImg($access_token,$openid,$pic,&$qrcode_file,&$pic_file,&$error)
     {
         $rst_ticket = self::getQrcodeTickt($access_token,$openid,$error);
         if(!$rst_ticket){
-            \Yii::error('get ticket : '.var_export($error,true));
             return false;
         }
         $ticket = $rst_ticket['ticket'];
         if(!self::getQrcodeImg($ticket,$qrcode_file)) {
-            \Yii::error('get Qrcode img Error');
+            $error = '保存二维码到本地失败';
             return false;
         }
         $rst = UsualFunForNetWorkHelper::HttpGetImg($pic,$content_type,$error);
         if(!$rst) {
-            \Yii::error('Create - Img:'.var_export($error,true));
+            $error ='获取PicUrl失败';
             return null;
         }
         $pic_file = \Yii::$app->basePath.'/runtime/source/pic_'.time().'.png';
         if(!file_put_contents($pic_file,$rst)) {
-            \Yii::error('get Pic img Error');
+            $error = '保存PicUrl到本地失败';
             return false;
         }
         return true;

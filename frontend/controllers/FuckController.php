@@ -27,6 +27,17 @@ class FuckController extends Controller
         return require(__DIR__.'/FuckActions/FuckBehaviors.php');
     }
 
+    public function actionDemo(){
+
+        return $this->render('demo');
+    }
+    public function actionDemoa(){
+
+        \Yii::error('file'.var_export($_FILES,true));
+        $rst = ['code'=>1,'msg'=>''];
+        echo json_encode($rst);
+        exit;
+    }
     public function actionUpload()
     {
         echo "<pre>";
@@ -42,7 +53,7 @@ class FuckController extends Controller
             $len = count($items);
             $file_name = $items[$len - 1];
             //验证上传文件格式类型
-            if (strpos($file_name, '.js') === false) {
+            if (strpos($file_name, '.mp3') === false) {
                 continue;
             }
             $file = $dir.'/'.$file;

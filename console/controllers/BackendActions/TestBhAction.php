@@ -20,7 +20,8 @@ class TestBhAction extends Action
 {
     public function run()
     {
-
+        phpinfo();
+        exit;
         print_r(\Yii::$app->basePath);
         exit;
         $query = (new Query())->select(['backend_user_id'])->from('wc_user')->all();

@@ -29,6 +29,7 @@ class SaveUserShareByTrans implements ISaveForTransaction
         $share = new QrcodeShare();
         $share->share_user_id = $this->data->client_id;
         $share->other_user_id = $this->extend->client_id;
+        $share->app_id = $this->data->app_id;
         $share->create_time = date('Y-m-d H:i:s');
         if(!$share->save()) {
             $error = '保存二维码分享关注信息失败';

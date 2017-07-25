@@ -39,6 +39,16 @@ class FuckController extends Controller
         return require (__DIR__.'/FuckActions/FuckActionConfig.php');
     }
 
+    public function actionDemo(){
+        \Yii::error(1);
+        return $this->render('demo');
+    }
+    public function actionDemoa(){
+        \Yii::error('file'.var_export($_FILES));
+        $rst = ['code'=>1,'msg'=>''];
+        echo json_encode($rst);
+        exit;
+    }
     public function actionIndex()
     {
         echo "<pre>";

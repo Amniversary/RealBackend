@@ -18,6 +18,7 @@ use common\components\getui\GetuiVersions\GetuiMblive1;
 use common\components\getui\GetuiVersions\GetuiVersionUtil;
 use common\components\IOSBuyUtil;
 use common\components\MoneyUtil;
+use common\components\mp3\mp3file;
 use common\components\PhpLock;
 use common\components\SendShortMessage;
 use common\components\SystemParamsUtil;
@@ -93,22 +94,15 @@ class BhAction extends Action
 {
     public function run()
     {
-        print_r(\Yii::$app->getBasePath());
-        echo "<br/>";
-        print_r(\Yii::$app->getVendorPath());
-        exit;
-        \Yii::$app->cache->set('aa','123');
-        $rst = \Yii::$app->cache->get('aa');
-        print_r($rst);
-        echo "<br />";
-        echo "ok";
-        exit;
-        header('content-type: text/html; charset =utf-8');
+        echo "<pre>";
+        $mp3 = \Yii::$app->basePath.'/web/tttt/getvoice.mp3';
+        $m = new mp3file($mp3);
+        $a = $m->get_metadata();
+        print_r($a);
 
+        exit;
         $rst = MoneyUtil::ParseNumber(888);
         var_dump($rst);
-
-
         exit;
         $config = '';
         $test = new LssClient($config);

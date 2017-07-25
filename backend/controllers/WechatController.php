@@ -107,7 +107,7 @@ class WechatController extends Controller
             \Yii::error('errMsg : '. $errMsg);
             return null;
         }
-        \Yii::error('encrypt:'.$resultXml);
+        //\Yii::error('encrypt:'.$resultXml);
         return $encryptMsg;
     }
 

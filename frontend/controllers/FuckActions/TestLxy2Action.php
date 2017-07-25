@@ -52,11 +52,6 @@ class TestLxy2Action extends Action
 
     public function run()
     {
-        var_dump(checkdnsrr('www.baidu.cwem'));
-        exit;
-        $p = \Yii::$app->request->getQueryParam('unique_no');
-        var_dump($p);
-        exit;
         $outImgPath='';
         $error='';
         $text =[
@@ -70,6 +65,12 @@ class TestLxy2Action extends Action
         $end = microtime(true);
         var_dump($end - $start);
         echo $outImgPath;
+        var_dump(checkdnsrr('www.baidu.cwem'));
+        exit;
+        $p = \Yii::$app->request->getQueryParam('unique_no');
+        var_dump($p);
+        exit;
+
     }
 
 } 

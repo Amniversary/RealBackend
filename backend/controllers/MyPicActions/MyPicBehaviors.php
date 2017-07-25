@@ -12,10 +12,10 @@ use yii\filters\AccessControl;
 return [
     'access' => [
         'class' => AccessControl::className(),
-        'only' => ['upload_pic'],
+        'only' => ['upload_pic','upload_video'],
         'rules' => [
             [
-                'actions' => ['upload_pic'],
+                'actions' => ['upload_pic','upload_video'],
                 'allow' => true,
                 'roles' => ['@'],//暂时先关闭
             ],
@@ -25,6 +25,7 @@ return [
         'class' => VerbFilter::className(),
         'actions' => [
             'upload_pic'=>['post'],
+            'upload_video'=>['post'],
         ],
     ],
 ];

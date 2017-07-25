@@ -19,11 +19,12 @@ class ImageUtil
             $error = '请开启 GD库扩展';
             return false;
         }
-        @ini_set('memory_limit', '2048M');
-        $bg_path = \Yii::$app->basePath.'/web/wswh/bg.jpg';
-        $font = \Yii::$app->basePath.'/web/wswh/hydsj.TTF';
+        @ini_set('memory_limit', '1024M');
+        $bg_path = \Yii::$app->basePath.'/runtime/source/bg.jpg';
+        $font = \Yii::$app->basePath.'/runtime/source/hydsj.TTF';
         $bg_info = getimagesize($bg_path);
         $bg_mime = $bg_info['mime'];
+
         switch ($bg_mime) {  //TODO: 背景图 判断图片类型
             case 'image/gif':
                 $bg_image = imagecreatefromgif($bg_path);
@@ -74,6 +75,15 @@ class ImageUtil
                 break;
         }
 
+        $target_image  = imagecreatetruecolor(550, 825);
+        $cropped_image = imagecreatetruecolor(550, 825);
+        $alpha = imagecolorallocatealpha($cropped_image, 0, 0, 0, 127);
+        imagefill($cropped_image, 0, 0, $alpha);
+        imageColorTransparent($cropped_image,$alpha);
+
+        imagecopyresampled($target_image, $bg_image, 0, 0, 0, 0, 550, 825, $bg_info[0], $bg_info[1]);   //源图裁剪为目标图片大小
+        /**将输出图片设为透明**/
+
         $new_pic_img = imagecreatetruecolor(120,120); //TODO: 创建新的图片资源 设置宽高 100*100 pic
         $alpha = imagecolorallocatealpha($new_pic_img,0,0,0,127);
         imagefill($new_pic_img, 0, 0, $alpha);
@@ -85,18 +95,18 @@ class ImageUtil
         imagefill($new_qrcode_img, 0, 0,$alpha);
         imagecolortransparent($qrcode_image,$alpha);
         imagecopyresampled($new_qrcode_img,$qrcode_image,0,0,0,0,170,170,$qrcode_info[0],$qrcode_info[1]);
-        imagecopyresampled($bg_image,$new_qrcode_img,119,590,0,0,170,170,170,170); //TODO:将二维码填充到底图
 
-        imagecopyresampled($bg_image,$new_pic_img,30,6,0,0,120,120,120,120); //TODO: 将剪裁的图片填充到底图中
-        $black = imagecolorallocate($bg_image,0,0,0);
-        imagettftext($bg_image,30,0,190,50,$black,$font,$text);
+        imagecopyresampled($target_image,$new_qrcode_img,119,590,0,0,170,170,170,170); //TODO:将二维码填充到底图
+        imagecopyresampled($target_image,$new_pic_img,30,6,0,0,120,120,120,120); //TODO: 将剪裁的图片填充到底图中
+        $black = imagecolorallocate($target_image,0,0,0);
+        imagettftext($target_image,30,0,190,50,$black,$font,$text);
 
-        $filename = \Yii::$app->basePath.'/runtime/bgimg/bg_'.$openid.'.png';
-        imagepng($bg_image,$filename,9);
+        $filename = \Yii::$app->basePath.'/runtime/bgimg/bg_'.$openid.'.jpeg';
+        imagejpeg($target_image,$filename,80);
 
+        imagedestroy($cropped_image);
         imagedestroy($new_qrcode_img);
         imagedestroy($new_pic_img);
-        imagedestroy($bg_image);
         return true;
     }
 
@@ -196,8 +206,8 @@ class ImageUtil
         $grey = imagecolorallocate($cropped_image, 128, 128, 128);
         $black = imagecolorallocate($cropped_image, 255, 255, 255);
 //        $text = '扫描二维码扫描二维码扫描二维码扫描二维码扫描二维码扫描二维码扫描二维码';  //要写到图上的文字
-        $font = './wswh/hydsj.TTF';  //写的文字用到的字体。
-        $text = json_decode($text,true);
+        $font = \Yii::$app->basePath.'/web/wswh/hydsj.TTF';  //写的文字用到的字体。
+        //$text = json_decode($text,true);
         $text_len = count($text);
         $text_str = '';
         $content_text_height = imageftbbox(24,0,$font,$text[0]);

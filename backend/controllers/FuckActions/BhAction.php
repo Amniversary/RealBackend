@@ -39,6 +39,50 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        $rst = [];
+        print_r(intval($rst['list'][0]['cumulate_user']));
+        exit;
+        $qrcodename = \Yii::$app->basePath.'/web/wswh/qrcode.png';
+        $filename = \Yii::$app->basePath.'/web/wswh/0.jpeg';
+        $text = 'Gavean';
+        $openid = time();
+        if(!ImageUtil::imagemaking($qrcodename,$filename,$openid,$text,$faaa,$error)){
+            print_r($error);exit;
+        }
+        //print_r($faaa);
+
+        exit;
+        $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'');
+        print_r($msg);
+        exit;
+        $auth = AuthorizerUtil::getAuthByOne(76);
+        $data['appid'] = $auth->authorizer_appid;
+        $msg = new MessageComponent($data);
+        $msgData = $msg->getMessageModel();
+        $msgData = [['msg_type'=>'3','media_id'=>'bftMsd8OQJiYWsRLs0TJTJvYbrNXNmdx5fmZvegeo-fX6_mCBK31OiU3vJmuKdxQ']];
+        $msg->sendMessageCustom($msgData,'ol_EGvw_V3rXYILgc7QEOVVBrxwg');
+
+        exit;
+        $pic = \Yii::$app->basePath. '/web/wswh/getvoice.mp3';
+        print_r($pic);
+        $Wechat = new WeChatUtil();
+        $re = $Wechat->Upload($pic,$auth->authorizer_access_token,$rst,$error,'voice');
+        if(!$re){
+            print_r($error);
+            exit;
+        }
+        print_r($rst);
+       /* [type] => voice
+    [media_id] => bftMsd8OQJiYWsRLs0TJTJvYbrNXNmdx5fmZvegeo-fX6_mCBK31OiU3vJmuKdxQ
+    [created_at] => 1500894333*/
+
+        exit;
+
+        $query = AuthorizerUtil::getMenuList(76);
+        print_r($query);
+        exit;
+        phpinfo();
+        exit;
         $sta  = microtime(true);
         $data= [
             'ToUserName'=>'gh_7318204277d9',

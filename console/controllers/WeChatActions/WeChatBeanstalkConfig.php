@@ -9,5 +9,5 @@
 return [
     'wechat'=>'console\controllers\WeChatActions\WorkerActions\WeChatMsgAction',
     'get_qrcode'=>'console\controllers\WeChatActions\WorkerActions\GetQrcodeImgAction',
-    'delete_img'=>'console\controllers\WeChatActions\WorkerActions\DeleteImgAction',
+    'delete_msg'=>'console\controllers\WeChatActions\WorkerActions\DeleteImgAction',
 ];

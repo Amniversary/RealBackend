@@ -104,7 +104,7 @@ class EventClass
      * 处理点击事件 生成二维码图片
      * @return null
      */
-    public function getQrCodeImg(&$error) {
+    public function  getQrCodeImg(&$error) {
         $openid = $this->data['FromUserName'];
         $auth = AuthorizerUtil::getAuthOne($this->data['appid']);
 
@@ -114,19 +114,15 @@ class EventClass
         if(!isset($img)) {  //TODO: 如果图片不存在  重新生成并上传
 
             $userData = WeChatUserUtil::getUserInfo($access_token,$openid);
-            if(!WeChatUserUtil::getQrcodeSendImg($access_token,$openid,$userData['headimgurl'],$qrcode_file,$pic_file)) {
-                $error = '获取图片失败';
+            if(!WeChatUserUtil::getQrcodeSendImg($access_token,$openid,$userData['headimgurl'],$qrcode_file,$pic_file,$error)) {
+                $error = '获取图片失败 '.$error;
                 return false;
             }
             $text = $userData['nickname'];
             if(!ImageUtil::imagemaking($qrcode_file,$pic_file,$openid,$text,$bg_img,$error)){
                 return false;
             }
-            //$name = basename($bg_img);
-            /*if(!OssUtil::UploadQiniuFile($name,$bg_img,$bg_url,$error)){  //TODO: 背景图上传七牛
-                \Yii::error($error);
-                return false;
-            }*/
+
             $wechat = new WeChatUtil();
             if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
                 return false;
@@ -138,7 +134,7 @@ class EventClass
             $model->save();
             $media_id = $model->media_id;
             $imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
-            if(!JobUtil::AddCustomJob('wechatBeanstalk','delete_img',$imgParams,$error)) {
+            if(!JobUtil::AddCustomJob('wechatBeanstalk','delete_msg',$imgParams,$error)) {
                 \Yii::error($error); \Yii::getLogger()->flush(true);
             }
         } else {
@@ -157,11 +153,11 @@ class EventClass
             $media_id = $img->media_id;
         }
         $msgObj = new MessageComponent($this->data);
-        $msgData[] = [
-            'msg_type'=>'2',
-            'media_id'=>$media_id,
+        $msgData = [
+            ['msg_type'=>'0', 'content'=>\Yii::$app->params['qrcode_msg'][0]],
+            ['msg_type'=>'2', 'media_id'=>$media_id],
         ];
         $msgObj->sendMessageCustom($msgData,$openid);
-        return null;
+        return true;
     }
 }

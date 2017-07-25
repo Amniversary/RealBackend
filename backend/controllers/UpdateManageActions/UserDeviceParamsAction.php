@@ -9,15 +9,16 @@
 namespace backend\controllers\UpdateManageActions;
 
 
-use backend\models\UserDeviceParamsSearch;
+
+
 use yii\base\Action;
 
 class UserDeviceParamsAction extends Action
 {
     public function run()
     {
-        $this->controller->getView()->title = '用户设备参数';
-        $searchModel = new UserDeviceParamsSearch();
+        $this->controller->getView()->title = '基本系统参数';
+        $searchModel = new SystemParamsSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
         return $this->controller->render('index',
             [
