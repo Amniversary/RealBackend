@@ -91,7 +91,6 @@ $data = [$cache['record_id']=>$cache['nick_name']];
             <input type="file" id="video-file" name="file">
             <input type="hidden" name="AttentionEvent[video]" id="video-user-file" value="<?=$model->video ?>"/>
             <audio src="" controls id="video-files"></audio>
-
         </div>
     </div>
 

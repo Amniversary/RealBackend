@@ -14,13 +14,13 @@ class TemplateUtil
     /**
      * 获取消息xml
      */
-    public static function GetMsgTemplate($arr, $msgType = '', $contentStr)
+    public static function GetMsgTemplate($arr, $contentStr)
     {
-        switch($msgType){
+        switch($contentStr['msg_type']){
             case  '1': $rst = self::transmitNews($arr,$contentStr); break;
             case  '2': $rst = self::transmitImg($arr, $contentStr); break;
             case  '3': $rst = self::transmitVideo($arr, $contentStr); break;
-            default: $rst = self::transmitVideo($arr, $contentStr); break;
+            default: $rst = self::transmitText($arr, $contentStr); break;
         }
         return $rst;
     }

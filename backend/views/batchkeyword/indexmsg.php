@@ -99,6 +99,16 @@ $gridColumns = [
         }
     ],
     [
+        'attribute'=>'video',
+        'vAlign'=>'middle',
+        'width'=>'100px',
+        'format'=>'html',
+        'content'=>function($model) {
+            $url = empty($model->video)? '':"<audio controls='controls' src=$model->video></audio>";
+            return $url;
+        }
+    ],
+    [
         'attribute'=>'event_id',
         'vAlign'=>'middle',
         'value'=>function($model){

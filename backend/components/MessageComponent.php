@@ -156,7 +156,8 @@ class MessageComponent
                     $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$rst['media_id']];
                     break;
                 case 3: //TODO: 语音消息
-                    $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$value['media_id']];
+                    $video = $this->DisposeVideo($value['video'], $this->auth->authorizer_access_token, $value['update_time'], $value['record_id']);
+                    $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$video['media_id']];
                     break;
             }
         }
@@ -201,6 +202,33 @@ class MessageComponent
         }
         $rst = [
             'media_id'=>$model->media_id,
+        ];
+        return $rst;
+    }
+
+    /**
+     * 处理过期音频
+     * @param $videoUrl
+     * @param $access_toekn
+     * @param $exceed
+     * @param $record
+     * @return array|mixed
+     * @throws \yii\web\HttpException
+     */
+    public static function DisposeVideo($videoUrl,$access_toekn,$exceed,$record)
+    {
+        $time = time();
+        $outTime = intval(($time - $exceed) / 84600);
+        $model = AuthorizerUtil::getEventMsg($record);
+        if($outTime >= 3) {
+            $rst = (new WeChatUtil())->UploadVideo($videoUrl, $access_toekn);
+            $model->media_id = $rst['media_id'];
+            $model->update_time = $rst['created_at'];
+            $model->save();
+            return $rst;
+        }
+        $rst = [
+            'media_id'=>$model->media_id
         ];
         return $rst;
     }

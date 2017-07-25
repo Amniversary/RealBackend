@@ -261,9 +261,9 @@ class WeChatUtil
      * @param $picUrl   //上传图片Url
      * @param $access_token //微信token
      * @return bool|int|array  [
-     *                              'type'=>type
+     *                              'type'=>image
      *                              'media_id'=>media_id
-     *                              'created_at'=>created_at
+     *                              'created_at'=>1500032112
      *                          ]
      * @throws HttpException
      */
@@ -285,6 +285,37 @@ class WeChatUtil
             throw new HttpException(500,'保存七牛图片到本地失败.');
         }
         if(!$this->Upload($fileDir,$access_token,$rst,$error)){
+            throw new HttpException(500,$error);
+        }
+        unlink($fileDir);
+        return $rst;
+    }
+
+
+    /**
+     * 上传微信语音素材
+     * @param $videoUrl
+     * @param $access_token
+     * @return mixed
+     * @throws HttpException
+     */
+    public function UploadVideo($videoUrl,$access_token)
+    {
+        $basename = basename($videoUrl);
+        $rst = UsualFunForNetWorkHelper::HttpGet($videoUrl);
+        if(empty($rst) || $rst == false) {
+            throw new HttpException(500,'获取不到网络音频文件');
+        }
+        $dirname = \Yii::$app->basePath.'/web/wximages/';
+        if(!file_exists($dirname)) {
+            mkdir($dirname,0777);
+        }
+        $fileDir = $dirname.$basename;
+        file_put_contents($fileDir,$rst);
+        if(!file_exists($fileDir)) {
+            throw new HttpException(500,'保存音频文件到本地失败.');
+        }
+        if(!$this->Upload($fileDir, $access_token, $rst, $error)) {
             throw new HttpException(500,$error);
         }
         unlink($fileDir);

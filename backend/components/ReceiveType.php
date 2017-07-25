@@ -10,6 +10,7 @@ namespace backend\components;
 
 
 use backend\business\JobUtil;
+use backend\business\TemplateUtil;
 use backend\components\WeChatClass\EventClass;
 use backend\components\WeChatClass\TextClass;
 use common\components\UsualFunForNetWorkHelper;
@@ -33,13 +34,8 @@ class ReceiveType
         }else{
             $Text = new TextClass($arr);
             $contentStr = $Text->Text();
-            if($contentStr['msg_type'] == '1'){
-                return $this->transmitNews($arr,$contentStr);
-            }elseif($contentStr['msg_type'] == '2'){
-                return $this->transmitImg($arr,$contentStr);
-            }
         }
-        $resultStr = $this->transmitText($arr, $contentStr, $flag);
+        $resultStr = TemplateUtil::GetMsgTemplate($arr, $contentStr);
         return $resultStr;
     }
 
@@ -111,111 +107,9 @@ class ReceiveType
                 $contentStr = null;//$arr['Event'].'from_callback';
                 break;
         }
-        if(is_array($contentStr) && isset($contentStr['msg_type'])) {
-            if($contentStr['msg_type'] == 1){
-                return $this->transmitNews($arr,$contentStr);
-            }elseif($contentStr['msg_type'] == 2){
-                return $this->transmitImg($arr,$contentStr);
-            }
-        }
-        $resultStr = $this->transmitText($arr, $contentStr);
-        return $resultStr;
-    }
-
-    /**
-     * 消息回复模版
-     * @param $arr
-     * @param $content
-     * @param int $flag
-     * @return string
-     */
-    public function transmitText($arr, $content, $flag = 0)
-    {
-        if($content == null){
-            return null;
-        }
-        if(is_array($content)){
-            $content = $content['content'];
-        }
-        if(strpos($content,'from_callback')){
-            $arr['MsgType'] = 'text';
-        }
-        $textXml = "<xml>
-                        <ToUserName><![CDATA[%s]]></ToUserName>
-                        <FromUserName><![CDATA[%s]]></FromUserName>
-                        <CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType>
-                        <Content><![CDATA[%s]]></Content>
-                        <FunFlag>%s</FunFlag>
-                    </xml>";
-        $resultStr = sprintf($textXml, $arr['FromUserName'], $arr['ToUserName'], time(),$content,$flag);
+        $resultStr = TemplateUtil::GetMsgTemplate($arr, $contentStr);
         return $resultStr;
     }
 
 
-    /**
-     * 图文回复模版
-     * @param $arr
-     * @param $content
-     * @return null|string
-     */
-    public function transmitNews($arr, $content){
-        if($content ==null) return null;
-        unset($content['msg_type']);
-        $count = count($content);
-        $newsXml = "<xml>
-                        <ToUserName><![CDATA[%s]]></ToUserName>
-                        <FromUserName><![CDATA[%s]]></FromUserName>
-                        <CreateTime>%s</CreateTime>
-                        <MsgType><![CDATA[news]]></MsgType>
-                        <ArticleCount>%s</ArticleCount>
-                        <Articles>";
-        foreach($content as $item){
-            $newsXml .= "<item>
-                            <Title><![CDATA[".$item['title']."]]></Title>
-                            <Description><![CDATA[".$item['description']."]]></Description>
-                            <PicUrl><![CDATA[".$item['url']."]]></PicUrl>
-                            <Url><![CDATA[".$item['picurl']."]]></Url>
-                        </item>";
-        }
-        $newsXml .= "</Articles></xml>";
-        $resultStr = sprintf($newsXml,$arr['FromUserName'],$arr['ToUserName'],time(),$count);
-        return $resultStr;
-    }
-
-
-    /**
-     * 图片消息模版
-     * @param $arr
-     * @param $content
-     * @return null|string
-     */
-    public function transmitImg($arr,$content){
-        if($content == null) return null;
-        $imgXml = "<xml>
-                    <ToUserName><![CDATA[%s]]></ToUserName>
-                    <FromUserName><![CDATA[%s]]></FromUserName>
-                    <CreateTime>%s</CreateTime>
-                    <MsgType><![CDATA[image]]></MsgType>
-                    <Image>
-                    <MediaId><![CDATA[%s]]></MediaId>
-                    </Image>
-                   </xml>";
-        $resultStr = sprintf($imgXml,$arr['FromUserName'],$arr['ToUserName'],time(),$content['media_id']);
-        return $resultStr;
-    }
-
-    public function transmitVideo($arr,$content){
-        if($content == null) return null;
-        $xml = "<xml>
-                    <ToUserName><![CDATA[%s]]></ToUserName>
-                    <FromUserName><![CDATA[%s]]></FromUserName>
-                    <CreateTime>%s</CreateTime>
-                    <MsgType><![CDATA[voice]]></MsgType>
-                    <Voice>
-                        <MediaId><![CDATA[%s]]></MediaId>
-                    </Voice>
-                </xml>";
-        $resultStr = sprintf($xml,$arr['FromUserName'],$arr['ToUserName'],time(),$content['media_id']);
-        return $resultStr;
-    }
 }
