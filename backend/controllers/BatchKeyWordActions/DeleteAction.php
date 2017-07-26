@@ -11,6 +11,7 @@ namespace backend\controllers\BatchKeyWordActions;
 
 use backend\components\ExitUtil;
 use common\models\AttentionEvent;
+use common\models\BatchKeywordList;
 use common\models\Keywords;
 use frontend\zhiboapi\v1\test;
 use yii\base\Action;
@@ -41,6 +42,7 @@ class DeleteAction extends Action
                 echo json_encode($rst);
                 exit;
             }
+            BatchKeywordList::deleteAll(['key_id'=>$model->key_id]);
             AttentionEvent::deleteAll(['key_id'=>$model->key_id]);
             $trans->commit();
         }

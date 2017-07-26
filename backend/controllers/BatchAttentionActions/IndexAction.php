@@ -6,9 +6,10 @@
  * Time: 上午11:32
  */
 
-namespace backend\controllers\BatchAttentions;
+namespace backend\controllers\BatchAttentionActions;
 
 
+use backend\models\BatchAttentionSearch;
 use yii\base\Action;
 
 class IndexAction extends Action
@@ -16,7 +17,7 @@ class IndexAction extends Action
     public function run()
     {
         $this->controller->getView()->title = '批量关注回复';
-        $searchModel = new BatchKeywordSearch();
+        $searchModel = new BatchAttentionSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
         return $this->controller->render('index',[
             'searchModel'=>$searchModel,

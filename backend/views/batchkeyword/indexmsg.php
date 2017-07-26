@@ -57,7 +57,7 @@ $gridColumns = [
         'value'=>function($model){
             return $model->getMsgType($model->msg_type);
         },
-        'filter'=>['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息'],
+        'filter'=>['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息','3'=>'语音消息'],
     ],
     [
         'attribute'=>'content',

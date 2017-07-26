@@ -42,16 +42,11 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model common\models\AttentionEvent */
 /* @var $form yii\widgets\ActiveForm */
-/* @var $cache */
-$data = [$cache['record_id']=>$cache['nick_name']];
 ?>
 
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model,'app_id')->dropDownList($data,['disabled'=>'disabled','style'=>'width:200px']) ?>
-    <hr/>
     <?= $form->field($model,'msg_type')->radioList(['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息','3'=>'语音消息']) ?>
     <hr/>
     <div id="img-text">
@@ -73,8 +68,8 @@ $data = [$cache['record_id']=>$cache['nick_name']];
     <hr/>
     </div>
     <div id="content">
-        <label style="color: red;font-weight: bold;">1.超链接中 href 为链接Url，例：< a href="http://wxmp.gatao.cn" >Real后台< /a><br/>2.回车即代表换行</label>
-    <?= $form->field($model, 'content')->textarea(['style'=>'width:100%']) ?>
+    <label style="color: red;font-weight: bold;">1.超链接中 href 为链接Url，例：< a href="http://wxmp.gatao.cn" >Real后台< /a><br/>2.回车即代表换行</label>
+    <?= $form->field($model, 'content')->textarea() ?>
     </div>
     <div id="img">
         <div class="form-group field-user-pic1 <?=($model->getFirstError('picurl') === null?'has-success':'has-error')?>">
@@ -100,7 +95,7 @@ $data = [$cache['record_id']=>$cache['nick_name']];
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '新增' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['publiclist/attention']), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['batchattention/index']), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <?= Html::button('添加超链接标签', ['id'=>'super-link','class' =>'btn btn-primary']) ?>
     </div>

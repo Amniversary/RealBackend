@@ -10,6 +10,7 @@ namespace backend\business;
 
 
 use common\models\AuthorizationList;
+use common\models\BatchAttention;
 use common\models\BatchKeywordList;
 use common\models\Keywords;
 use yii\base\Exception;
@@ -75,6 +76,51 @@ class KeywordUtil
             $table = \Yii::$app->db;
             foreach ($params as $parList) {
                 $sql .= sprintf('insert into %s_batch_keyword_list (key_id,app_id) values(%s,%s);',$table->tablePrefix,$key_id,$parList);
+            }
+            $rst = $table->createCommand($sql)->execute();
+            if( $rst <= 0 ){
+                throw new Exception('保存权限数据异常');
+            }
+            $trans->commit();
+        } catch(Exception $e) {
+            $trans->rollBack();
+            $error = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 返回已选择关注回复公众号
+     * @param $msg_id
+     * @return array
+     */
+    public static function GetAttentionAuthById($msg_id){
+        $query = (new Query())->from('wc_batch_attention')
+            ->select(['app_id'])
+            ->where(['msg_id'=>$msg_id])
+            ->all();
+        $rst = [];
+        foreach($query as $item){
+            $rst[] = $item['app_id'];
+        }
+        return $rst;
+    }
+
+
+    /**
+     * 保存公众号配置
+     * @return bool
+     * @throws \yii\db\Exception
+     */
+    public static function SaveAttentionAuthParams($params,$msg_id,&$error){
+        try {
+            $trans = \Yii::$app->db->beginTransaction();
+            (new BatchAttention())->deleteAll(['msg_id'=>$msg_id]);//TODO: 删除用户原有权限数据
+            $sql = '';
+            $table = \Yii::$app->db;
+            foreach ($params as $parList) {
+                $sql .= sprintf('insert into %s_batch_attention (msg_id,app_id) values(%s,%s);',$table->tablePrefix,$msg_id,$parList);
             }
             $rst = $table->createCommand($sql)->execute();
             if( $rst <= 0 ){

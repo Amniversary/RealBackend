@@ -3,6 +3,13 @@
         width: 60px;
         height: 60px;
     }
+    .alert{
+        padding: 10px;
+    }
+    .content-header{
+        position: relative;
+        padding: 1px 15px 0 15px;
+    }
     .back-a{
         display: inline-block;
         font-size: 14px;
@@ -26,20 +33,19 @@
 
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
-/*if(!$is_verify){
-    echo \yii\bootstrap\Alert::widget([
-        'body'=>'公众号未认证，无法进行相应操作！',
-        'options'=>[
-            'class'=>'alert-warning',
-        ]
-    ]);
-}*/
+echo \yii\bootstrap\Alert::widget([
+    'body'=>'未认证公众号，默认回复第一条消息！',
+    'options'=>[
+        'class'=>'alert-warning',
+    ]
+]);
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
 
     [
         'attribute'=>'msg_type',
         'vAlign'=>'middle',
+        'width'=>'110px',
         'value'=>function($model){
             return $model->getMsgType($model->msg_type);
         },
@@ -49,6 +55,10 @@ $gridColumns = [
         'attribute'=>'content',
         'vAlign'=>'middle',
         'format'=>'html',
+        'value'=>function($model){
+            $len = strlen($model->content);
+            return $len > 10 ? mb_substr($model->content,0,15) : $model->content;
+        },
         'filter'=>false,
     ],
     [
@@ -61,28 +71,23 @@ $gridColumns = [
         'vAlign'=>'middle',
         'value'=>function($model){
             $len = strlen($model->description);
-            if($len > 10){
-                return mb_substr($model->description,0,15) . '....';
-            }else{
-                return $model->description;
-            }
+            return $len > 10 ? mb_substr($model->description,0,15) : $model->description;
         },
         'filter'=>false,
     ],
     [
         'attribute'=>'url',
         'vAlign'=>'middle',
-        'width'=>'100px',
         'value'=>function($model){
             $len = strlen($model->url);
             return $len > 10 ? mb_substr($model->url,0,15) . '....' : $model->url;
-        }
+        },
+        'filter'=>false,
     ],
     [
         'attribute'=>'picurl',
         'vAlign'=>'middle',
         'format'=>'html',
-        'width'=>'100px',
         'value'=>function($model){
             $url = empty($model->picurl) ? '': $model->picurl;
             return empty($url) ? Html::label('') :Html::img($url,['class'=>'user-pic']);
@@ -101,7 +106,7 @@ $gridColumns = [
     [
         'attribute'=>'event_id',
         'vAlign'=>'middle',
-        'width'=>'100px',
+        'width'=>'110px',
         'value'=>function($model){
             return empty($model->event_id)? '': $model->event_id;
         }

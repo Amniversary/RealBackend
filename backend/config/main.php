@@ -49,7 +49,7 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning', 'info', 'trace'],
+                    'levels' => ['error', 'warning'],
                 ],
             ],
         ],

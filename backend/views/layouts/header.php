@@ -4,7 +4,11 @@ use yii\helpers\Html;
 /* @var $this \yii\web\View */
 /* @var $content string */
 ?>
-
+<style>
+    .auth-image{
+        float: left;
+    }
+</style>
 <header class="main-header">
 
     <?= Html::a('<span class="logo-mini">APP</span><span class="logo-lg">' . Yii::$app->name . '</span>', Yii::$app->homeUrl, ['class' => 'logo']) ?>
@@ -29,11 +33,12 @@ use yii\helpers\Html;
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="<?= $authInfo['head_img']; ?>" class="img-circle" alt="User Image"/>
+                            <img src="<?= $authInfo['head_img']; ?>" class="auth-image" alt="User Image"/>
                             <p>
                                 <?= date('Y-m-d') ?>
-                             <h4 style="color: #FFF"><?= $authInfo['nick_name'] ?></h4>
+                            <h4 style="color: #FFF"><?= $authInfo['nick_name'] ?></h4>
                             </p>
+
                         </li>
                     </ul>
                 </li>

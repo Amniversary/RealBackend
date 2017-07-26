@@ -107,7 +107,7 @@ class MessageComponent
                         return null;
                     }
                     $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);
-                    $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'value3');
+                    $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'');
                     if(($userData->invitation <= 5)){
                         $Qcmsg[] = ['msg_type'=>0, 'content'=>sprintf($msg['value1'],($userData->invitation),$model->nick_name)];
                     }
@@ -172,12 +172,16 @@ class MessageComponent
      * @return array|bool
      */
     public function getWxMessage(){
-        $condition = sprintf('app_id=%s and flag=%s', $this->auth->record_id,$this->flag);
+        $params = 'select msg_id from wc_batch_attention where app_id = %s';
+        $condition = sprintf('app_id=%s and flag=%s or record_id in ('.$params.')', $this->auth->record_id,$this->flag, $this->auth->record_id);
         if($this->key !== null)
             $condition .= sprintf(' or key_id=%s', $this->key);
         $query = (new Query())->from('wc_attention_event')
-            ->select(['record_id','app_id','event_id','content','msg_type','title','description','url','picurl','media_id','update_time','video'])
-            ->where($condition)->orderBy('order_no asc,create_time asc')->all();
+            ->select(['record_id','app_id','event_id','content','msg_type','title','description','url',
+                'picurl','media_id','update_time','video'])
+            ->where($condition)
+            ->orderBy('order_no asc,create_time asc')
+            ->all();
         if(empty($query))
             return false;
         return $query;
