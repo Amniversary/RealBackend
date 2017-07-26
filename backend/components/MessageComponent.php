@@ -50,10 +50,10 @@ class MessageComponent
                     strpos($item['keyword'],$this->data['Content']) !== false ? true:false;
                 if($touch){
                     $this->key = $item['key_id'];
+                    $msgData = $this->getMessageModel();
                     break;
                 }
             }
-            $msgData = $this->getMessageModel();
             if(!$msgData) return null;
             $rst = $msgData[0];
         }
@@ -93,6 +93,9 @@ class MessageComponent
             //TODO: 获取被扫者用户基本信息
             $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);
             $is_attention = AuthorizerUtil::isAttention($model->client_id); //TODO:  是否扫过其他人
+            if(!$is_attention){
+                \Yii::error('用户已关注: ClientId :'.$model->client_id . '  分享人ID:'.$userData->client_id);
+            }
             if($is_attention)
             {
                 if($user_id != $model->client_id)
@@ -104,7 +107,7 @@ class MessageComponent
                         return null;
                     }
                     $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);
-                    $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'');
+                    $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'value3');
                     if(($userData->invitation <= 5)){
                         $Qcmsg[] = ['msg_type'=>0, 'content'=>sprintf($msg['value1'],($userData->invitation),$model->nick_name)];
                     }
@@ -173,7 +176,7 @@ class MessageComponent
         if($this->key !== null)
             $condition .= sprintf(' or key_id=%s', $this->key);
         $query = (new Query())->from('wc_attention_event')
-            ->select(['record_id','app_id','event_id','content','msg_type','title','description','url','picurl','media_id','update_time'])
+            ->select(['record_id','app_id','event_id','content','msg_type','title','description','url','picurl','media_id','update_time','video'])
             ->where($condition)->orderBy('order_no asc,create_time asc')->all();
         if(empty($query))
             return false;
@@ -253,7 +256,8 @@ class MessageComponent
     /**
      * 发送自定义消息
      */
-    public function sendMessageCustom($msgData,$openid){
+    public function sendMessageCustom($msgData,$openid)
+    {
         if(!empty($msgData)) {
             foreach ($msgData as $item)
             {
@@ -261,7 +265,7 @@ class MessageComponent
                     'key_word'=>'key_word',
                     'open_id'=>$openid,
                     'authorizer_access_token'=>$this->auth->authorizer_access_token,
-                    'item'=>$item,
+                    'item'=>$item
                 ];
                 if(!JobUtil::AddCustomJob('wechatBeanstalk','wechat',$paramData,$error)){
                     \Yii::error('keyword msg job is error :'.$error);

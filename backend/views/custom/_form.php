@@ -75,12 +75,12 @@ $(function(){
     $type = $("#list-type input[name=\'AuthorizationMenu[is_list]\']:checked").val();
     $event = $(".event input[name=\'AuthorizationMenu[type]\']:checked").val();
     if($type == 0){
-        if($event != "view"){
-            $("#url").hide();
-            $("#event").show();
-        }else{
+        if($event == "view"){
             $("#url").show();
             $("#event").hide();
+        }else{
+            $("#url").hide();
+            $("#event").show();
         }
     }else{
         $("#type").hide();
@@ -89,13 +89,21 @@ $(function(){
     }
 });
 $("#list-type input[type=\'radio\']").on("click",function(){
-    $vue = $("#list-type input[type=\'radio\']:checked").val();
-    if($vue == 1){
+    $type= $("#list-type input[type=\'radio\']:checked").val();
+    $event = $(".event input[type=\'radio\']:checked").val();
+    if($type == 0){
+        $("#type").show();
+        if($event == "view"){
+            $("#url").show();
+            $("#event").hide();
+        }else{
+            $("#url").hide();
+            $("#event").show();
+        }
+    }else{
         $("#type").hide();
         $("#url").hide();
-    }else{
-        $("#type").show();
-        $("#url").show();
+        $("#event").hide();
     }
 })
 $(".event input[type=\'radio\']").on("click",function(){

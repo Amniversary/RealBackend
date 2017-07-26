@@ -32,7 +32,7 @@ class WeChatMsgAction extends Action
             $item = json_decode(json_encode($sentData->item),true);
             $json = WeChatUserUtil::getMsgTemplate($item,$openid);
             $rst = WeChatUserUtil::sendCustomerMsg($sentData->authorizer_access_token,$json);
-            //fwrite(STDOUT, Console::ansiFormat(var_export($rst,true)."\n", [Console::FG_GREEN]));
+            //fwrite(STDOUT, Console::ansiFormat("json: $json"."\n", [Console::FG_GREEN]));
             if($rst['errcode'] != 0)
             {
                 $error = 'Code:'. $rst['errcode']. ' Msg:'.$rst['errmsg'];

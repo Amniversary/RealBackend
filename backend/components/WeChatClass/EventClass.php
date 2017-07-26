@@ -20,6 +20,7 @@ use backend\business\WeChatUtil;
 use backend\components\MessageComponent;
 use backend\components\ReceiveType;
 use common\components\OssUtil;
+use common\components\SystemParamsUtil;
 use common\components\UsualFunForNetWorkHelper;
 use common\models\QrcodeImg;
 use common\models\QrcodeShare;
@@ -52,7 +53,6 @@ class EventClass
             if(!JobUtil::AddCustomJob('attentionBeanstalk','attention',$DataPrams,$error))
                 \Yii::error($error);
         }
-
         $UserInfo = AuthorizerUtil::getUserForOpenId($openid,$auth->record_id);
         //TODO: 获取用户基本信息
         if(AuthorizerUtil::isVerify($auth->verify_type_info)) {
@@ -61,6 +61,11 @@ class EventClass
                 \Yii::error('获取用户信息：'.var_export($getData,true));
                 return null;
             }
+            /*if(empty($UserInfo)) {
+                $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'value3');
+                $send[] = ['msg_type'=>0,'content'=>$msg];
+                $msgObj->sendMessageCustom($send,$openid);
+            }*/
             $getData['app_id'] = $auth->record_id;
             $model = AuthorizerUtil::genModel($UserInfo,$getData);
             if(!$model->save()){

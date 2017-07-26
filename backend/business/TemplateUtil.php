@@ -16,10 +16,14 @@ class TemplateUtil
      */
     public static function GetMsgTemplate($arr, $contentStr)
     {
-        switch($contentStr['msg_type']){
-            case  '1': $rst = self::transmitNews($arr,$contentStr); break;
-            case  '2': $rst = self::transmitImg($arr, $contentStr); break;
-            case  '3': $rst = self::transmitVideo($arr, $contentStr); break;
+        $msg_type = 0;
+        if(is_array($contentStr) && isset($contentStr['msg_type'])) {
+            $msg_type = $contentStr['msg_type'];
+        }
+        switch(intval($msg_type)){
+            case  1: $rst = self::transmitNews($arr,$contentStr); break;
+            case  2: $rst = self::transmitImg($arr, $contentStr); break;
+            case  3: $rst = self::transmitVideo($arr, $contentStr); break;
             default: $rst = self::transmitText($arr, $contentStr); break;
         }
         return $rst;
@@ -52,7 +56,7 @@ class TemplateUtil
                         <Content><![CDATA[%s]]></Content>
                         <FunFlag>%s</FunFlag>
                     </xml>";
-        $resultStr = sprintf($textXml, $arr['FromUserName'], $arr['ToUserName'], time(),$content,$flag);
+        $resultStr = sprintf($textXml, $arr['FromUserName'], $arr['ToUserName'], time(),str_replace("\r\n",PHP_EOL,$content),$flag);
         return $resultStr;
     }
 
@@ -78,8 +82,8 @@ class TemplateUtil
             $newsXml .= "<item>
                             <Title><![CDATA[".$item['title']."]]></Title>
                             <Description><![CDATA[".$item['description']."]]></Description>
-                            <PicUrl><![CDATA[".$item['url']."]]></PicUrl>
-                            <Url><![CDATA[".$item['picurl']."]]></Url>
+                            <PicUrl><![CDATA[".$item['picurl']."]]></PicUrl>
+                            <Url><![CDATA[".$item['url']."]]></Url>
                         </item>";
         }
         $newsXml .= "</Articles></xml>";

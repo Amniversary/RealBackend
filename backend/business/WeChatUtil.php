@@ -315,7 +315,7 @@ class WeChatUtil
         if(!file_exists($fileDir)) {
             throw new HttpException(500,'保存音频文件到本地失败.');
         }
-        if(!$this->Upload($fileDir, $access_token, $rst, $error)) {
+        if(!$this->Upload($fileDir, $access_token, $rst, $error,'voice')) {
             throw new HttpException(500,$error);
         }
         unlink($fileDir);

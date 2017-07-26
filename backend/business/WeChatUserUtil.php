@@ -130,7 +130,7 @@ class WeChatUserUtil
             'touser'=>$openid,
             'msgtype'=>'text',
             'text'=>[
-                'content'=>$content
+                'content'=>str_replace("\r\n",PHP_EOL,$content)
             ]
         ];
     }

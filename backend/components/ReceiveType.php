@@ -34,6 +34,7 @@ class ReceiveType
         }else{
             $Text = new TextClass($arr);
             $contentStr = $Text->Text();
+
         }
         $resultStr = TemplateUtil::GetMsgTemplate($arr, $contentStr);
         return $resultStr;
