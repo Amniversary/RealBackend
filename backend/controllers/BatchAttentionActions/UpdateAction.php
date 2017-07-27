@@ -22,7 +22,13 @@ class UpdateAction extends Action
         if(empty($record_id)){
             ExitUtil::ExitWithMessage('消息记录不存在');
         }
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+        $load = \Yii::$app->request->post();
+        if(!empty($load)){
+            if($load['AttentionEvent']['msg_type'] == 2){
+                $load['AttentionEvent']['picurl'] = $load['AttentionEvent']['picurl1'];
+            }
+        }
+        if ($model->load($load) && $model->save()) {
             return $this->controller->redirect(['index']);
         } else {
             return $this->controller->render('_form', [

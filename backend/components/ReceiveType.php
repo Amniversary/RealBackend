@@ -34,7 +34,39 @@ class ReceiveType
         }else{
             $Text = new TextClass($arr);
             $contentStr = $Text->Text();
+        }
+        $resultStr = TemplateUtil::GetMsgTemplate($arr, $contentStr);
+        return $resultStr;
+    }
 
+
+    /**
+     * 处理事件消息
+     */
+    public function Event($arr,$flag = 0)
+    {
+        $Event = new EventClass($arr);
+        switch ($arr['Event'])
+        {
+            case 'subscribe':
+                $contentStr = $Event->subscribe();
+                break;
+            case 'unsubscribe':
+                $contentStr = $Event->unSubscribe();
+                break;
+            case 'CLICK':
+                $contentStr = null;
+                if($arr['EventKey'] == 'get_qrcode') {
+                    $params = ['key_word' => 'get_qrcode', 'data' => $arr];
+                    if(!JobUtil::AddCustomJob('wechatBeanstalk','get_qrcode',$params,$error)) {
+                        \Yii::error($error);
+                    }
+                    $contentStr = '海报生成中 ...';
+                }
+                break;
+            default:
+                $contentStr = null;//$arr['Event'].'from_callback';
+                break;
         }
         $resultStr = TemplateUtil::GetMsgTemplate($arr, $contentStr);
         return $resultStr;
@@ -79,38 +111,4 @@ class ReceiveType
     {
         return null;
     }
-
-    /**
-     * 处理事件消息
-     */
-    public function Event($arr,$flag = 0)
-    {
-        $Event = new EventClass($arr);
-        switch ($arr['Event'])
-        {
-            case 'subscribe':
-                $contentStr = $Event->subscribe();
-                break;
-            case 'unsubscribe':
-                $contentStr = $Event->unSubscribe();
-                break;
-            case 'CLICK':
-                $contentStr = null;
-                if($arr['EventKey'] == 'get_qrcode') {
-                    $params = ['key_word' => 'get_qrcode', 'data' => $arr];
-                    if(!JobUtil::AddCustomJob('wechatBeanstalk','get_qrcode',$params,$error)) {
-                        \Yii::error($error);
-                    }
-                    $contentStr = '海报生成中 ...';
-                }
-                break;
-            default:
-                $contentStr = null;//$arr['Event'].'from_callback';
-                break;
-        }
-        $resultStr = TemplateUtil::GetMsgTemplate($arr, $contentStr);
-        return $resultStr;
-    }
-
-
 }

@@ -28,7 +28,10 @@ class CreateMsgAction extends Action
                 $load['AttentionEvent']['picurl'] = $load['AttentionEvent']['picurl1'];
             }
         }
-        if($model->load($load) && $model->save()){
+        if($model->load($load)){
+            if(!$model->save()){
+                \Yii::error('保存批量关键词消息失败:'.var_export($model->getErrors(),true));
+            }
             return $this->controller->redirect(['indexson','key_id'=>$key_id]);
         }else{
             return $this->controller->render('createmsg',[

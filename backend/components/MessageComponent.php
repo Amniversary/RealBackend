@@ -11,10 +11,12 @@ namespace backend\components;
 
 use backend\business\AuthorizerUtil;
 use backend\business\JobUtil;
+use backend\business\ResourceUtil;
 use backend\business\SaveByTransUtil;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveUserShareByTrans;
 use backend\business\WeChatUtil;
 use common\components\SystemParamsUtil;
+use common\models\Resource;
 use yii\db\Query;
 
 class MessageComponent
@@ -155,11 +157,11 @@ class MessageComponent
                         $data[$keys][] = $arr;
                     }break;
                 case 2: //TODO: 图片消息
-                    $rst = $this->DisposeImg($value['picurl'],$this->auth->authorizer_access_token,$value['update_time'],$value['record_id']);
+                    $rst = $this->DisposeImg($value['picurl'],$this->auth->authorizer_access_token,$this->auth->record_id,$value['record_id']);
                     $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$rst['media_id']];
                     break;
                 case 3: //TODO: 语音消息
-                    $video = $this->DisposeVideo($value['video'], $this->auth->authorizer_access_token, $value['update_time'], $value['record_id']);
+                    $video = $this->DisposeVideo($value['video'], $this->auth->authorizer_access_token, $this->auth->record_id, $value['record_id']);
                     $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$video['media_id']];
                     break;
             }
@@ -195,21 +197,31 @@ class MessageComponent
      * @return array|bool|int
      * @throws \yii\web\HttpException
      */
-    public static function DisposeImg($picurl,$access_token,$exceed,$record)
+    public static function DisposeImg($picurl,$access_token,$app_id,$record)
     {
         $time = time();
-        $outTime = intval(($time - $exceed)/84600);
-        $model = AuthorizerUtil::getEventMsg($record);
-        if($outTime >= 3){
+        $resource = ResourceUtil::GetResource($app_id,$record);
+        if(!$resource) {
+            $model = new Resource();
             $rst = (new WeChatUtil())->UploadWeChatImg($picurl,$access_token);
+            $model->app_id = $app_id;
+            $model->msg_id = $record;
             $model->media_id = $rst['media_id'];
             $model->update_time = $rst['created_at'];
             $model->save();
             return $rst;
+        } else {
+            $outTime = intval(($time - $resource->update_time)/84600);
+            if($outTime >= 3){
+                $rst = (new WeChatUtil())->UploadWeChatImg($picurl,$access_token);
+                $resource->media_id = $rst['media_id'];
+                $resource->update_time = $rst['created_at'];
+                $resource->save();
+            }
+            $rst = [
+                'media_id'=>$resource->media_id,
+            ];
         }
-        $rst = [
-            'media_id'=>$model->media_id,
-        ];
         return $rst;
     }
 
@@ -222,21 +234,31 @@ class MessageComponent
      * @return array|mixed
      * @throws \yii\web\HttpException
      */
-    public static function DisposeVideo($videoUrl,$access_toekn,$exceed,$record)
+    public static function DisposeVideo($videoUrl,$access_token,$app_id,$record)
     {
         $time = time();
-        $outTime = intval(($time - $exceed) / 84600);
-        $model = AuthorizerUtil::getEventMsg($record);
-        if($outTime >= 3) {
-            $rst = (new WeChatUtil())->UploadVideo($videoUrl, $access_toekn);
+        $resource = ResourceUtil::GetResource($app_id,$record);
+        if(!$resource) {
+            $model = new Resource();
+            $rst = (new WeChatUtil())->UploadVideo($videoUrl, $access_token);
+            $model->app_id = $app_id;
+            $model->msg_id = $record;
             $model->media_id = $rst['media_id'];
             $model->update_time = $rst['created_at'];
             $model->save();
             return $rst;
+        } else {
+            $outTime = intval(($time - $resource->update_time) / 84600);
+            if($outTime >= 3) {
+                $rst = (new WeChatUtil())->UploadVideo($videoUrl, $access_token);
+                $resource->media_id = $rst['media_id'];
+                $resource->update_time = $rst['created_at'];
+                $resource->save();
+            }
+            $rst = [
+                'media_id'=>$resource->media_id,
+            ];
         }
-        $rst = [
-            'media_id'=>$model->media_id
-        ];
         return $rst;
     }
 

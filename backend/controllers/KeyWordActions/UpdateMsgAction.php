@@ -10,6 +10,7 @@ namespace backend\controllers\KeyWordActions;
 
 
 use backend\business\WeChatUserUtil;
+use backend\business\WeChatUtil;
 use backend\components\ExitUtil;
 use common\models\AttentionEvent;
 use yii\base\Action;
@@ -18,12 +19,18 @@ class UpdateMsgAction extends Action
 {
     public function run($record_id)
     {
-        $model = AttentionEvent::findOne(['record_id'=>$record_id]);
-        if(empty($record_id)){
+        $model = AttentionEvent::findOne(['record_id' => $record_id]);
+        if (empty($record_id)) {
             ExitUtil::ExitWithMessage('消息记录不存在');
         }
         $Cache = WeChatUserUtil::getCacheInfo();
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+        $load = \Yii::$app->request->post();
+        if (!empty($load)) {
+            if ($load['AttentionEvent']['msg_type'] == 2) {
+                $load['AttentionEvent']['picurl'] = $load['AttentionEvent']['picurl1'];
+            }
+        }
+        if ($model->load($load) && $model->save()) {
             return $this->controller->redirect(['keyword']);
         } else {
             return $this->controller->render('createmsg', [

@@ -244,7 +244,7 @@ class WeChatUserUtil
     /**
      * 设置微信菜单
      */
-    public static function  setMenuList($query,$access_token,&$error)
+    public static function setMenuList($query,$access_token,&$error)
     {
         $data = [];
         foreach ($query as $key => $v){
@@ -266,7 +266,6 @@ class WeChatUserUtil
                     $info[$q] = $value['type'] == 'click'? ['key'=>$value['key_type']]:['url'=>$value['url']];
                     $info[$q]['type'] = $value['type'];
                     $info[$q]['name'] = $value['name'];
-
                 }
                 $data['button'][$key]['sub_button'] = $info;
             }

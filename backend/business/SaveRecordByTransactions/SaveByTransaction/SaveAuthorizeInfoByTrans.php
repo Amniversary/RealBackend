@@ -96,10 +96,11 @@ class SaveAuthorizeInfoByTrans implements ISaveForTransaction
                 return false;
             }
             $data = $res['list'][0];
-            $upsql = 'update wc_fans_statistics set total_user = :total WHERE app_id = :appid and statistics_date = :date';
+            $upsql = 'update wc_fans_statistics set total_user = :total, remark1 = :dt WHERE app_id = :appid and statistics_date = :date';
             $rst = \Yii::$app->db->createCommand($upsql,[
                 ':appid'=>$model->record_id,
                 ':total'=>intval($data['cumulate_user']),
+                ':dt'=>$date,
                 ':date'=>$time
             ])->execute();
             if($rst <= 0){
@@ -107,17 +108,17 @@ class SaveAuthorizeInfoByTrans implements ISaveForTransaction
                 \Yii::error($error . ' : '.\Yii::$app->db->createCommand($upsql,[
                         ':appid'=>$model->record_id,
                         ':total'=>intval($data['cumulate_user']),
-                        ':cumu'=>intval($data['cumulate_user']),
-                        ':rma'=>intval($data['cumulate_user']),
+                        ':dt'=>$date,
                         ':date'=>$time])->rawSql);
                 return false;
             }
 
-            $up_count = 'update wc_statistics_count set count_user = :cu,cumulate_user = :cumu WHERE app_id = :apd';
+            $up_count = 'update wc_statistics_count set count_user = :cu,cumulate_user = :cumu,remark1= :dt WHERE app_id = :apd';
             $result = \Yii::$app->db->createCommand($up_count,[
                 ':cu'=>intval($data['cumulate_user']),
                 ':cumu'=>intval($data['cumulate_user']),
                 ':apd'=>$model->record_id,
+                ':dt'=>$date,
             ])->execute();
             if($result <= 0){
                 $error = '更新粉丝累计统计失败:';
@@ -125,6 +126,7 @@ class SaveAuthorizeInfoByTrans implements ISaveForTransaction
                         ':cu'=>intval($data['cumulate_user']),
                         ':cumu'=>intval($data['cumulate_user']),
                         ':apd'=>$model->record_id,
+                        ':dt'=>$date,
                     ])->rawSql);
                 return false;
             }

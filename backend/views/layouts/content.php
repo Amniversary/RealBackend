@@ -24,7 +24,7 @@ use dmstr\widgets\Alert;
             ) ?>
         </section>
 
-    <section class="content" style="margin-top: 10px;">
+    <section class="content">   <!-- style="margin-top: 10px;"-->
         <?= Alert::widget() ?>
         <?= $content ?>
     </section>

@@ -9,6 +9,8 @@
 namespace backend\business;
 
 
+use common\models\AttentionEvent;
+use common\models\Authorization;
 use common\models\AuthorizationList;
 use common\models\BatchAttention;
 use common\models\BatchKeywordList;
@@ -18,6 +20,8 @@ use yii\db\Query;
 
 class KeywordUtil
 {
+
+
     /**
      * 返回关键字记录
      * @param $key_id
@@ -133,5 +137,14 @@ class KeywordUtil
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param $key_id
+     * @return null|AttentionEvent
+     */
+    public static function getAttentionById($key_id)
+    {
+        return AttentionEvent::findOne(['key_id'=>$key_id]);
     }
 }

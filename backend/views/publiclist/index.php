@@ -24,7 +24,6 @@ use yii\bootstrap\Html;
 
 $gridColumns = [
     ['class'=>'kartik\grid\SerialColumn'],
-
     [
         'attribute'=>'nick_name',
         'vAlign'=>'middle',

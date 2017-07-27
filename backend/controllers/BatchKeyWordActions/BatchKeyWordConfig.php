@@ -27,6 +27,9 @@ return [
     'order_no'=>[
         'class'=>'backend\controllers\BatchKeyWordActions\OrderNoAction'
     ],
+    'getauthlist'=>[
+        'class'=>'backend\controllers\BatchKeyWordActions\GetAuthListAction'
+    ],
     'setauthlist'=>[
         'class'=>'backend\controllers\BatchKeyWordActions\SetAuthListAction'
     ]

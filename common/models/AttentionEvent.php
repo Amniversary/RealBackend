@@ -47,8 +47,8 @@ class AttentionEvent extends ActiveRecord
     {
         return [
             [['app_id', 'msg_type', 'update_time','flag', 'event_id','key_id','order_no'], 'integer'],
-            [['create_time','title','description','url','picurl','media_id','video'], 'safe'],
-            [['remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
+            [['create_time','title','description','url','picurl','media_id','video','remark1'], 'safe'],
+            [[ 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
             [['content'], 'string', 'max'=>1000],
         ];
     }

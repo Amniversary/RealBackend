@@ -68,7 +68,7 @@ $gridColumns = [
                     $url = '/batchkeyword/indexson?key_id='.strval($model->key_id);;
                     break;
                 case 'setauth':
-                    $url = '/batchkeyword/setauthlist?key_id='.strval($model->key_id);
+                    $url = '/batchkeyword/getauthlist?key_id='.strval($model->key_id);
                     break;
                 case 'update':
                     $url = '/batchkeyword/update?key_id='.strval($model->key_id);

@@ -79,9 +79,8 @@ class AuthorizerUtil
      * @param bool $flag
      * @return Client|null
      */
-    public static function genModel($data,$getData)
+    public static function genModel($model,$getData)
     {
-        $model = $data;
         if(empty($model) || !isset($model)){
             $model = new Client();
             if(!isset($getData['openid'])){
@@ -113,12 +112,14 @@ class AuthorizerUtil
         return $model;
     }
 
+
+
     /**
      * 获取关键子列表
      * @param $app_id
      * @return array
      */
-    public static function getKeyword($app_id)
+    public static function  getKeyword($app_id)
     {
         $query = (new Query())
             ->select(['key_id','keyword','rule'])

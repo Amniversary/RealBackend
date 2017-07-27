@@ -15,13 +15,13 @@ use yii\base\Object;
 
 class WeChatComponent extends Object
 {
-    public $webAppId; //TODO：AppID
-    public $appSecret; //TODO：AppSecret
-    public $encryptKey; //TODO：加密Key(EncryptKey)
-    public $token; //TODO：公众平台自定义Token
-    public $encryptMsg;
-    public $decryptMsg;
-    public $encryptType;
+    public $webAppId;    //TODO：AppID
+    public $appSecret;   //TODO：AppSecret
+    public $encryptKey;  //TODO：加密Key(EncryptKey)
+    public $token;       //TODO：公众平台自定义Token
+    public $encryptMsg;  //TODO: 加密Xml
+    public $decryptMsg;  //TODO: 解密串
+    public $encryptType; //TODO: 加密类型
     public $nonce;
     public $timestamp;
     public $signature;
@@ -292,18 +292,18 @@ class WeChatComponent extends Object
 
     /**
      * 生成加密Xml格式
-     * @param $encrypt
-     * @param $signature
+     * @param $encrypt  //加密串
+     * @param $signature  //签名
      * @return string
      */
     public function generate($encrypt,$signature)
     {
         $format = "<xml>
-<Encrypt><![CDATA[%s]]></Encrypt>
-<MsgSignature><![CDATA[%s]]></MsgSignature>
-<TimeStamp>%s</TimeStamp>
-<Nonce><![CDATA[%s]]></Nonce>
-</xml>";
+                        <Encrypt><![CDATA[%s]]></Encrypt>
+                        <MsgSignature><![CDATA[%s]]></MsgSignature>
+                        <TimeStamp>%s</TimeStamp>
+                        <Nonce><![CDATA[%s]]></Nonce>
+                    </xml>";
         return sprintf($format, $encrypt, $signature, $this->timestamp, $this->nonce);
     }
 }

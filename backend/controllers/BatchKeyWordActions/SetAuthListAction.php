@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: a123
- * Date: 17/7/17
- * Time: 上午2:06
+ * Date: 17/7/27
+ * Time: 下午1:50
  */
 
 namespace backend\controllers\BatchKeyWordActions;
@@ -11,6 +11,8 @@ namespace backend\controllers\BatchKeyWordActions;
 
 use backend\business\KeywordUtil;
 use backend\components\ExitUtil;
+use common\models\AttentionEvent;
+use common\models\BatchKeywordList;
 use common\models\Keywords;
 use yii\base\Action;
 
@@ -26,8 +28,6 @@ class SetAuthListAction extends Action
             ExitUtil::ExitWithMessage('关键子不存在');
         }
         $params = \Yii::$app->request->post('title');
-        $selection = KeywordUtil::GetKeyWordAuthById($key_id);//TODO:公众号已有配置
-        $rights = KeywordUtil::GetAuthParams();//TODO: 配置列表
         if(isset($params))
         {
             $rst = ['code' => '1', 'msg' => ''];
@@ -40,12 +40,11 @@ class SetAuthListAction extends Action
             $rst['code'] = '0';
             echo json_encode($rst);
             exit;
+        }else{
+            (new BatchKeywordList())->deleteAll(['key_id'=>$key_id]);//TODO: 删除用户原有权限数据
+            $rst['code'] = '0';
+            echo json_encode($rst);
+            exit;
         }
-        $this->controller->layout='main_empty';
-        return $this->controller->render('setauthlist',[
-            'keyword'=>$keyword,
-            'rights'=>$rights,
-            'selections' =>$selection
-        ]);
     }
 }

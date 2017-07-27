@@ -57,8 +57,8 @@ class EventClass
         //TODO: 获取用户基本信息
         if(AuthorizerUtil::isVerify($auth->verify_type_info)) {
             $getData = WeChatUserUtil::getUserInfo($access_token,$openid); //TODO: 请求获取用户信息
-            if(isset($getData['errcode']) && $getData['errcode'] != 0) {
-                \Yii::error('获取用户信息：'.var_export($getData,true));
+            if(!isset($getData) || empty($getData)) {
+                \Yii::error('获取用户信息：'.var_export($getData,true),' openId:'. $openid . ' accessToken:'.$access_token);
                 return null;
             }
             /*if(empty($UserInfo)) {
@@ -104,6 +104,7 @@ class EventClass
         }
         return null;
     }
+
 
     /**
      * 处理点击事件 生成二维码图片

@@ -38,7 +38,6 @@ class MypicController extends Controller
                 'cors'=>[
                     'Origin'=>['*'],
                     'Access-Control-Request-Method'=>['GET','POST','HEAD','OPTIONS'],
-
                 ]
             ],
         ], parent::behaviors());
@@ -46,6 +45,8 @@ class MypicController extends Controller
 
     public function actionGettoken()
     {
+        header('Access-Control-Allow-Headers:x-requested-with,content-type');
+        header('Access-Control-Allow-Credentials:true');
         $params = \Yii::$app->params['QiNiuOss'];
         $auth = new Auth($params['ak'],$params['sk']);
         $bucket = $params['bucket'];
