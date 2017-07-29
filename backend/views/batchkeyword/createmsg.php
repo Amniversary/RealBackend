@@ -1,5 +1,12 @@
 <style>
-
+    .user-pic{
+        width:40%;
+        height:40%;
+    }
+    .b-user-pic{
+        width:40%;
+        height:40%;
+    }
     .backend-pic-input
     {
         margin-bottom: 10px;

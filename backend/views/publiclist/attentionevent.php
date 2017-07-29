@@ -57,7 +57,7 @@ $gridColumns = [
         'format'=>'html',
         'value'=>function($model){
             $len = strlen($model->content);
-            return $len > 10 ? mb_substr($model->content,0,15) : $model->content;
+            return $len > 10 ? mb_substr($model->content,0,15). '....' : $model->content;
         },
         'filter'=>false,
     ],
@@ -71,7 +71,7 @@ $gridColumns = [
         'vAlign'=>'middle',
         'value'=>function($model){
             $len = strlen($model->description);
-            return $len > 10 ? mb_substr($model->description,0,15) : $model->description;
+            return $len > 10 ? mb_substr($model->description,0,15).'....' : $model->description;
         },
         'filter'=>false,
     ],

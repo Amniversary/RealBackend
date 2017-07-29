@@ -94,6 +94,9 @@ class MessageComponent
             }
             //TODO: 获取被扫者用户基本信息
             $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);
+            if(empty($userData)) {
+                \Yii::error('EventKey  User_id:'. $user_id);
+            }
             $is_attention = AuthorizerUtil::isAttention($model->client_id); //TODO:  是否扫过其他人
             if(!$is_attention){
                 \Yii::error('用户已关注: ClientId :'.$model->client_id . '  分享人ID:'.$userData->client_id);
@@ -110,11 +113,19 @@ class MessageComponent
                     }
                     $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);
                     $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'');
-                    if(($userData->invitation <= 5)){
-                        $Qcmsg[] = ['msg_type'=>0, 'content'=>sprintf($msg['value1'],($userData->invitation),$model->nick_name)];
+                    switch($this->auth->record_id) {
+                        case 84: $num = 2; break;
+                        case 85: $num = 1;break;
+                        case 86: $num = 3;break;
+                        case 89: $num = 4; break;
+                        default: $num = 0; break;
+                    }
+
+                    if($userData->invitation <= 5 ){
+                        $Qcmsg[] = ['msg_type'=>0, 'content'=>sprintf($msg['value1'],($userData->invitation),$model->nick_name,$num)];
                     }
                     if($userData->invitation == 5){
-                        $Qcmsg[] = ['msg_type'=>0, 'content'=>$msg['value2']];
+                        $Qcmsg[] = ['msg_type'=>0, 'content'=>sprintf($msg['value2'],$num)];
                     }
                     if(!empty($Qcmsg)) {
                         $this->sendMessageCustom($Qcmsg,$userData->open_id);
@@ -153,7 +164,7 @@ class MessageComponent
                         $data[$key]['msg_type'] = $value['msg_type'];
                         $data[$key][] = $arr;
                     }else{
-                        $data[$key]['msg_type'] = $value['msg_type'];
+                        //$data[$key]['msg_type'] = $value['msg_type'];
                         $data[$keys][] = $arr;
                     }break;
                 case 2: //TODO: 图片消息
@@ -175,12 +186,15 @@ class MessageComponent
      */
     public function getWxMessage(){
         $params = 'select msg_id from wc_batch_attention where app_id = %s';
-        $condition = sprintf('app_id=%s and flag=%s or record_id in ('.$params.')', $this->auth->record_id,$this->flag, $this->auth->record_id);
-        if($this->key !== null)
+        $condition = sprintf('app_id=%s and flag=%s ', $this->auth->record_id,$this->flag, $this->auth->record_id);
+        if($this->flag == 0) {
+            $condition .= sprintf('or record_id in ('.$params.')', $this->auth->record_id);
+        }
+        if($this->flag == 1 && $this->key !== null)
             $condition .= sprintf(' or key_id=%s', $this->key);
         $query = (new Query())->from('wc_attention_event')
             ->select(['record_id','app_id','event_id','content','msg_type','title','description','url',
-                'picurl','media_id','update_time','video'])
+                'picurl','update_time','video'])
             ->where($condition)
             ->orderBy('order_no asc,create_time asc')
             ->all();

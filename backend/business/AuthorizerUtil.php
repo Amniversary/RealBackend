@@ -179,6 +179,19 @@ class AuthorizerUtil
     }
 
     /**
+     * 根据全局配置Id 获取菜单列表
+     */
+    public static function getGlobalMenuList($global){
+        $query = (new Query())
+            ->select(['menu_id','app_id','name','ifnull(type,\'\') as type','ifnull(key_type,\'\') as key_type', 'url', 'is_list'])
+            ->from('wc_authorization_menu')
+            ->where(['global'=>$global])->all();
+        if(empty($query)) return false;
+        return $query;
+    }
+
+
+    /**
      * 根据一级菜单ID获取子菜单列表
      * @param $menu_id
      * @return array
@@ -208,6 +221,13 @@ class AuthorizerUtil
         return AuthorizationMenuSon::find()->select(['count(1) as num'])->where(['menu_id'=>$menu_id])->limit(1)->scalar();
     }
 
+    /**
+     * 获取全局菜单记录数
+     */
+    public static function getGlobalMenuCount($global)
+    {
+        return AuthorizationMenu::find()->select(['count(1) as num'])->where(['global'=>$global])->limit(1)->scalar();
+    }
 
     /**
      * 保存粉丝基础信息

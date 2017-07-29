@@ -34,6 +34,7 @@ class TextClass
     {
         $msgObj = new MessageComponent($this->data,1);
         $content = $msgObj->VerifySendMessage();
+
         return $content;
     }
 }

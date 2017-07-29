@@ -35,14 +35,7 @@ use yii\bootstrap\Html;
 }*/
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
-    /*[
-        'attribute'=>'app_id',
-        'vAlign'=>'middle',
-        'value'=>function($model){
-            return $model::getKeyAppId($model->app_id);
-        },
-        'filter'=>false,
-    ],*/
+
     [
         'attribute'=>'key_id',
         'vAlign'=>'middle',
@@ -63,6 +56,10 @@ $gridColumns = [
         'attribute'=>'content',
         'vAlign'=>'middle',
         'format'=>'html',
+        'value'=>function($model){
+            $len = strlen($model->content);
+            return  $len > 10 ? mb_substr($model->content,0,15). '....' : $model->content;
+        },
         'filter'=>false,
     ],
     [

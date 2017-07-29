@@ -14,7 +14,8 @@ class CreateAction extends Action
     {
         $model = new User();
         $model->scenario = 'create';
-        $model->pic = '';
+        $num = rand(1,6);
+        $model->pic = 'http://7xld1x.com1.z0.glb.clouddn.com/person-'.$num.'.png';
         $model->user_type = 1;
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
             return $this->controller->redirect(['index']);

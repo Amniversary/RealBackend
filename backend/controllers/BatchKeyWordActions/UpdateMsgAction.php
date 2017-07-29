@@ -13,6 +13,7 @@ use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use backend\components\ExitUtil;
 use common\models\AttentionEvent;
+use common\models\Resource;
 use yii\base\Action;
 
 class UpdateMsgAction extends Action
@@ -30,6 +31,7 @@ class UpdateMsgAction extends Action
             }
         }
         if ($model->load($load) && $model->save()) {
+            Resource::deleteAll(['msg_id'=>$record_id]);
             return $this->controller->redirect(['indexson','key_id'=>$model->key_id]);
         } else {
             return $this->controller->render('createmsg', [

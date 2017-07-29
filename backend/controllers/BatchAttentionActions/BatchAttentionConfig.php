@@ -14,5 +14,8 @@ return [
     ],
     'setauthlist'=>[
         'class'=>'backend\controllers\BatchAttentionActions\SetAuthListAction'
+    ],
+    'getauthlist'=>[
+        'class'=>'backend\controllers\BatchAttentionActions\GetAuthListAction'
     ]
 ];

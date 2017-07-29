@@ -11,7 +11,7 @@ namespace backend\controllers;
 
 use yii\web\Controller;
 
-class BatchCustomController extends Controller
+class BatchcustomController extends Controller
 {
     public $enableCsrfValidation = false;
 
@@ -24,4 +24,5 @@ class BatchCustomController extends Controller
     {
         return require (__DIR__.'/BatchCustomActions/BatchCustomConfig.php');
     }
+
 }

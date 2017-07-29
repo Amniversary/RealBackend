@@ -13,18 +13,23 @@ use backend\business\AuthorizerUtil;
 use backend\business\DailyStatisticUsersUtil;
 use backend\business\ImageUtil;
 use backend\business\JobUtil;
+use backend\business\ResourceUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use backend\components\MessageComponent;
+use backend\components\WeChatComponent;
 use callmez\wechat\sdk\MpWechat;
 use callmez\wechat\sdk\Wechat;
 use common\components\OssUtil;
 use common\components\SystemParamsUtil;
 use common\components\UsualFunForNetWorkHelper;
+use common\models\AttentionEvent;
 use common\models\AuthorizationList;
 use common\models\AuthorizationMenu;
 use common\models\AuthorizationMenuSon;
+use common\models\Client;
 use common\models\QrcodeImg;
+use common\models\Resource;
 use common\models\StatisticsCount;
 use common\models\User;
 
@@ -32,6 +37,7 @@ use Qiniu\Auth;
 use udokmeci\yii2beanstalk\Beanstalk;
 use yii\base\Action;
 use yii\db\Query;
+use yii\log\Logger;
 use yii\web\Cookie;
 
 class BhAction extends Action
@@ -39,8 +45,129 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
-        $rst = [];
-        print_r(intval($rst['list'][0]['cumulate_user']));
+        $stat = microtime(true);
+        $data = [
+            'nick_name'=>'Gavean',
+            'pic'=>'http://wx.qlogo.cn/mmopen/UVzXBswyibFh7ib0qClxDP6Y5EFUGSgrw7FIUNcB7K60LAIpKHpqHxJa7ta10HKYYIVSCPSQy0IBzGib9zgn9NE00vaHbVydjpY/0',
+        ];
+        $qrcode = 'http://mmbiz.qpic.cn/mmbiz_jpg/6SPlDzxhRsQZgoUE4507ibia0hcWdicibxPLU2JvGjreoJMA9JDzyQK1IFNQb7OrZDx0HsIjgfuL2pJQe4PXrzIUdg/0';
+        $rst = UsualFunForNetWorkHelper::HttpGetImg($data['pic'],$content_type,$error);
+        if(!$rst) {
+            echo "rst :"."<br />";
+            print_r($error);exit;
+        }
+        $res = UsualFunForNetWorkHelper::HttpGet($qrcode);
+        if(!$res) {
+            echo "res:";
+            print_r($error);exit;
+        }
+        $text = $data['nick_name'];
+        $time = time();
+        $filename = \Yii::$app->basePath.'/web/wswh/img/pic_'.$time.'.png';
+        $qrcodename = \Yii::$app->basePath.'/web/wswh/img/qrcode_'.$time.'.png';
+        file_put_contents($filename,$rst);
+        file_put_contents($qrcodename,$res);
+
+        if(!ImageUtil::imagemaking($qrcodename,$filename,'bbbbb',$text,$faaa,$error)){
+            print_r($error);exit;
+        }
+
+        @unlink($filename);
+        @unlink($qrcodename);
+        $end = microtime(true);
+        $return = $end - $stat;
+        echo "<br/>";
+        print_r($return);
+        exit;
+        $rst = User::findAll(['pic'=>'']);
+        foreach($rst as $item){
+            $num = rand(1,6);
+            $item->pic = 'http://7xld1x.com1.z0.glb.clouddn.com/person-'.$num.'.png';
+            $item->save();
+            print_r($item->attributes);
+        }
+
+        exit;
+        $openid = 'olAb6wbBGooyONepGqXDrda2ADsA';
+        $auth = AuthorizerUtil::getAuthByOne(69);
+        $getData = WeChatUserUtil::getUserInfo($auth->authorizer_access_token,$openid);
+        print_r($getData);
+        exit;
+        $stat = microtime(true);
+
+        $data = [
+            'nick_name'=>'Gavean',
+            'pic'=>'http://wx.qlogo.cn/mmopen/UVzXBswyibFh7ib0qClxDP6Y5EFUGSgrw7FIUNcB7K60LAIpKHpqHxJa7ta10HKYYIVSCPSQy0IBzGib9zgn9NE00vaHbVydjpY/0',
+        ];
+        $qrcode = 'http://mmbiz.qpic.cn/mmbiz_jpg/6SPlDzxhRsQZgoUE4507ibia0hcWdicibxPLU2JvGjreoJMA9JDzyQK1IFNQb7OrZDx0HsIjgfuL2pJQe4PXrzIUdg/0';
+        $rst = UsualFunForNetWorkHelper::HttpGetImg($data['pic'],$content_type,$error);
+        if(!$rst) {
+            echo "rst :"."<br />";
+            print_r($error);exit;
+        }
+        $res = UsualFunForNetWorkHelper::HttpGet($qrcode);
+        if(!$res) {
+            echo "res:";
+            print_r($error);exit;
+        }
+        $text = $data['nick_name'];
+        $time = time();
+        $filename = \Yii::$app->basePath.'/web/wswh/img/pic_'.$time.'.png';
+        $qrcodename = \Yii::$app->basePath.'/web/wswh/img/qrcode_'.$time.'.png';
+        file_put_contents($filename,$rst);
+        file_put_contents($qrcodename,$res);
+
+        if(!ImageUtil::imagemaking($qrcodename,$filename,'bbbbb',$text,$faaa,$error)){
+            print_r($error);exit;
+        }
+
+        @unlink($filename);
+        @unlink($qrcodename);
+        $end = microtime(true);
+        $return = $end - $stat;
+        echo "<br/>";
+        print_r($return);
+        exit;
+
+        $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'');
+
+        print_r(sprintf(htmlspecialchars($msg['value1']),1,1,1));
+        exit;
+        $params = 'select msg_id from wc_batch_attention where app_id = %s';
+        $condition = sprintf('app_id=%s and flag=%s or record_id in ('.$params.')', 43,0, 43);
+        if(null !== null)
+            $condition .= sprintf(' or key_id=%s', null);
+        $query = (new Query())->from('wc_attention_event')
+            ->select(['record_id','app_d','event_id','content','msg_type','title','description','url',
+                'picurl','update_time','video'])
+            ->where($condition)
+            ->orderBy('order_no asc,create_time asc')
+            ->all();
+        if(empty($query))
+            return false;
+        print_r( $query);
+        exit;
+        //$msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'value3');
+        \Yii::getLogger()->log('1',Logger::LEVEL_ERROR);
+        //print_r($msg);exit;
+        $rst = AuthorizerUtil::getEventMsg(7);
+        //$pos = strpos("\r\n",$rst->attributes['content']);
+        $html =str_replace("\r\n",PHP_EOL,$rst->attributes['content']);
+        $html = json_encode($html,JSON_UNESCAPED_UNICODE);
+        print_r($html);
+        exit;
+
+        exit;
+        $url = 'http://7xld1x.com1.z0.glb.clouddn.com/getvoice.mp3';
+        $basename = basename($url);
+        $dirname = \Yii::$app->basePath.'/web/wswh/source/';
+        $rst = UsualFunForNetWorkHelper::HttpGet($url);
+        $fileDir = $dirname.$basename;
+        file_put_contents($fileDir,$rst);
+        if(!file_exists($fileDir)){
+            print_r('保存七牛图片到本地失败');exit;
+        }
+        print_r('ok');
         exit;
         $qrcodename = \Yii::$app->basePath.'/web/wswh/qrcode.png';
         $filename = \Yii::$app->basePath.'/web/wswh/0.jpeg';
@@ -52,9 +179,7 @@ class BhAction extends Action
         //print_r($faaa);
 
         exit;
-        $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'');
-        print_r($msg);
-        exit;
+
         $auth = AuthorizerUtil::getAuthByOne(76);
         $data['appid'] = $auth->authorizer_appid;
         $msg = new MessageComponent($data);

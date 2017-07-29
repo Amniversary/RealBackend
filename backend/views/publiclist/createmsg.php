@@ -1,9 +1,12 @@
 <style>
-    /*.user-pic
-    {
-        width: 100%;
-        height: 80px;
-    }*/
+    .user-pic{
+        width:40%;
+        height:40%;
+    }
+    .b-user-pic{
+        width:40%;
+        height:40%;
+    }
     #attentionevent-content{
         height: 200px;
     }

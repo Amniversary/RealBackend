@@ -13,6 +13,7 @@ use backend\components\ExitUtil;
 use common\models\AttentionEvent;
 use common\models\BatchKeywordList;
 use common\models\Keywords;
+use common\models\Resource;
 use frontend\zhiboapi\v1\test;
 use yii\base\Action;
 use yii\base\Exception;
@@ -33,7 +34,7 @@ class DeleteAction extends Action
             echo json_encode($rst);
             exit;
         }
-
+        $msg = AttentionEvent::findOne(['key_id'=>$model->key_id]);
         try{
             $trans = \Yii::$app->db->beginTransaction();
             if($model->delete() === false) {
@@ -44,6 +45,7 @@ class DeleteAction extends Action
             }
             BatchKeywordList::deleteAll(['key_id'=>$model->key_id]);
             AttentionEvent::deleteAll(['key_id'=>$model->key_id]);
+            Resource::deleteAll(['msg_id'=>$msg->record_id]);
             $trans->commit();
         }
         catch (Exception $e){

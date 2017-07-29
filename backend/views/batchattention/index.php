@@ -54,11 +54,7 @@ $gridColumns = [
         'vAlign'=>'middle',
         'value'=>function($model){
             $len = strlen($model->description);
-            if($len > 10){
-                return mb_substr($model->description,0,15) . '....';
-            }else{
-                return $model->description;
-            }
+            return $len > 10 ? mb_substr($model->description,0,15) .'....' :$model->description;
         },
         'filter'=>false,
     ],
@@ -118,7 +114,7 @@ $gridColumns = [
             $url = '';
             switch ($action){
                 case 'setauth':
-                    $url = '/batchattention/setauthlist?msg_id='.strval($model->record_id);
+                    $url = '/batchattention/getauthlist?msg_id='.strval($model->record_id);
                     break;
                 case 'update':
                     $url = '/batchattention/update?record_id='.strval($model->record_id);

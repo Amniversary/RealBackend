@@ -12,6 +12,7 @@ namespace backend\controllers\BatchAttentionActions;
 use backend\business\WeChatUserUtil;
 use backend\components\ExitUtil;
 use common\models\AttentionEvent;
+use common\models\Resource;
 use yii\base\Action;
 
 class UpdateAction extends Action
@@ -29,6 +30,7 @@ class UpdateAction extends Action
             }
         }
         if ($model->load($load) && $model->save()) {
+            Resource::deleteAll(['msg_id'=>$record_id]);
             return $this->controller->redirect(['index']);
         } else {
             return $this->controller->render('_form', [

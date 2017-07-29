@@ -2,19 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: a123
- * Date: 17/7/7
- * Time: 下午4:40
+ * Date: 17/7/28
+ * Time: 下午1:41
  */
 
 namespace backend\models;
 
 
-use backend\business\WeChatUserUtil;
-use common\models\AuthorizationMenu;
+use common\models\SystemMenu;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-class CustomSearch extends AuthorizationMenu
+class SystemMenuSearch extends SystemMenu
 {
     /**
      * @inheritdoc
@@ -22,8 +21,8 @@ class CustomSearch extends AuthorizationMenu
     public function rules()
     {
         return [
-            [['app_id','is_list'], 'integer'],
-            [['name', 'type', 'key_type', 'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
+            [['status'], 'integer'],
+            [['deploy_name', 'remark1', 'remark2'], 'safe', ],
         ];
     }
 
@@ -44,8 +43,7 @@ class CustomSearch extends AuthorizationMenu
      */
     public function search($params)
     {
-        $cacheInfo = WeChatUserUtil::getCacheInfo();
-        $query = AuthorizationMenu::find()->where(['app_id'=>$cacheInfo['record_id']]);
+        $query = SystemMenu::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,24 +56,8 @@ class CustomSearch extends AuthorizationMenu
         }
 
         $query->andFilterWhere([
-
+            'status'=>$this->status,
         ]);
-
-        return $dataProvider;
-    }
-
-    public function searchMenu($params)
-    {
-        $query = AuthorizationMenu::find()->where(['global'=>$params['id']]);
-
-        $dataProvider = new ActiveDataProvider([
-            'query'=> $query,
-        ]);
-
-        $this->load($params);
-        if (!$this->validate()) {
-            return $dataProvider;
-        }
 
         return $dataProvider;
     }

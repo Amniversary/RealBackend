@@ -25,7 +25,7 @@ $this->title = 'Real数据平台';
             <div class="icon">
                 <i class="ion ion-bag"></i>
             </div>
-            <a href="/operatestatis/index_addregnum" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -38,7 +38,7 @@ $this->title = 'Real数据平台';
             <div class="icon">
                 <i class="ion ion-stats-bars"></i>
             </div>
-            <a href="/operatestatis/index_activeuser" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -51,7 +51,7 @@ $this->title = 'Real数据平台';
             <div class="icon">
                 <i class="ion ion-person-add"></i>
             </div>
-            <a href="/operatestatis/index_recharge" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -64,7 +64,7 @@ $this->title = 'Real数据平台';
             <div class="icon">
                 <i class="ion ion-pie-graph"></i>
             </div>
-            <a href="/operatestatis/index_activeanchor" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>
@@ -82,30 +82,30 @@ $this->title = 'Real数据平台';
             ],
         ],
         'xAxis' => [
-            'categories' => $day_date//日统计类别
+            'categories' => ''//日统计类别
         ],
         'yAxis' => [
             'title' => ['text' => '金额/人数/次数']
         ],
         'series' => [
-            ['name' => '充值总金额', 'data' => $day_num['recharge_other_day']],
-            ['name' => '提现总金额', 'data' => $day_num['cach_other_day']],
-            ['name' => '直播次数', 'data' => $day_num['living_other_day']],
-            ['name' => '直播人数', 'data' => $day_num['living_person_day']],
-            ['name' => '打赏次数', 'data' => $day_num['reward_other_day']],
-            ['name' => '打赏人数', 'data' => $day_num['reward_person_other_day']],
+            ['name' => '充值总金额', 'data' => ''],
+            ['name' => '提现总金额', 'data' => ''],
+            ['name' => '直播次数', 'data' => ''],
+            ['name' => '直播人数', 'data' => ''],
+            ['name' => '打赏次数', 'data' => ''],
+            ['name' => '打赏人数', 'data' =>''],
 //            ['name' => '日活', 'data' => $day_num['user_day']],
-            ['name' => '日注册人数', 'data' => $day_num['reg_user_day']],
+            ['name' => '日注册人数', 'data' => ''],
         ],
         'credits'=>[
             'enabled'=>false
         ],
     ]
-]);
+]);/*
 
 
 //周统计表
-echo \miloschuman\highcharts\Highcharts::widget([
+/*echo \miloschuman\highcharts\Highcharts::widget([
     'options' => [
         'title' => ['text' => '周统计表'],
         'chart' => [

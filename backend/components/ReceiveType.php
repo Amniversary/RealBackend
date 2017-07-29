@@ -69,6 +69,7 @@ class ReceiveType
                 break;
         }
         $resultStr = TemplateUtil::GetMsgTemplate($arr, $contentStr);
+
         return $resultStr;
     }
 

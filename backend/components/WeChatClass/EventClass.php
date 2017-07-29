@@ -61,22 +61,28 @@ class EventClass
                 \Yii::error('获取用户信息：'.var_export($getData,true),' openId:'. $openid . ' accessToken:'.$access_token);
                 return null;
             }
-            /*if(empty($UserInfo)) {
-                $msg = SystemParamsUtil::GetSystemParam('qrcode_msg',true,'value3');
-                $send[] = ['msg_type'=>0,'content'=>$msg];
-                $msgObj->sendMessageCustom($send,$openid);
-            }*/
+            if($getData['errcode'] != 0) {
+                \Yii::error('获取用户信息:'. var_export($getData,true).' openId1:'. $openid. ' accessToken1:'. $access_token);
+                return null;
+            }
             $getData['app_id'] = $auth->record_id;
             $model = AuthorizerUtil::genModel($UserInfo,$getData);
             if(!$model->save()){
                 \Yii::error('保存微信用户信息失败：'.var_export($model->getErrors(),true));
                 return null;
             }
+            if(in_array($auth->record_id,[84,85,86,89])){
+                if(empty($UserInfo)) {
+                    $params = ['key_word' => 'get_qrcode', 'data' => $this->data];
+                    if(!JobUtil::AddCustomJob('wechatBeanstalk','get_qrcode',$params,$error)) {
+                        \Yii::error($error);
+                    }
+                }
+            }
             $msgObj->sendQrcodeMessage($model);
         }
         //TODO: 处理回复消息逻辑 走客服消息接口 回复多条消息
         $msgData = $msgObj->VerifySendAttentionMessage();
-
         return $msgData;
     }
 
@@ -118,8 +124,10 @@ class EventClass
         $client = AuthorizerUtil::getUserForOpenId($openid,$auth->record_id);
         $img = ImageUtil::GetQrcodeImg($client->client_id);
         if(!isset($img)) {  //TODO: 如果图片不存在  重新生成并上传
-
             $userData = WeChatUserUtil::getUserInfo($access_token,$openid);
+            if(empty($userData['headimgurl'])) {
+                $userData['headimgurl'] = 'http://7xld1x.com1.z0.glb.clouddn.com/timg.jpeg';
+            }
             if(!WeChatUserUtil::getQrcodeSendImg($access_token,$openid,$userData['headimgurl'],$qrcode_file,$pic_file,$error)) {
                 $error = '获取图片失败 '.$error;
                 return false;
@@ -152,6 +160,7 @@ class EventClass
                 if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
                     return false;
                 }
+                $img->client_id = $client->client_id;
                 $img->media_id = $rst['media_id'];
                 $img->update_time = $rst['created_at'];
                 $img->save();

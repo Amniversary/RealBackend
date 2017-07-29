@@ -356,7 +356,7 @@ class WeChatUserUtil
      * @param $ticket
      * @return bool
      */
-    public static function getQrcodeImg($ticket,&$file)
+    public static function getQrcodeImg($ticket,$openid,&$file)
     {
         $ticket =  urlencode($ticket);
         $url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=$ticket";
@@ -364,7 +364,7 @@ class WeChatUserUtil
         if(!$rst) {
             return false;
         }
-        $file = \Yii::$app->basePath.'/runtime/source/qrcode_'.time().'.png';
+        $file = \Yii::$app->basePath.'/runtime/source/qrcode_'.$openid.'.png';
         if(!file_put_contents($file,$rst)) {
             return false;
         }
@@ -384,16 +384,18 @@ class WeChatUserUtil
             return false;
         }
         $ticket = $rst_ticket['ticket'];
-        if(!self::getQrcodeImg($ticket,$qrcode_file)) {
+        if(!self::getQrcodeImg($ticket,$openid,$qrcode_file)) {
             $error = '保存二维码到本地失败';
             return false;
         }
         $rst = UsualFunForNetWorkHelper::HttpGetImg($pic,$content_type,$error);
         if(!$rst) {
             $error ='获取PicUrl失败';
-            return null;
+            \Yii::error($error.'  open_Id:'. $openid .' pic:'.$pic);
+            \Yii::getLogger()->flush(true);
+            return false;
         }
-        $pic_file = \Yii::$app->basePath.'/runtime/source/pic_'.time().'.png';
+        $pic_file = \Yii::$app->basePath.'/runtime/source/pic_'.$openid.'.png';
         if(!file_put_contents($pic_file,$rst)) {
             $error = '保存PicUrl到本地失败';
             return false;

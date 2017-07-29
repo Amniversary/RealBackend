@@ -15,6 +15,7 @@ use common\models\AuthorizationList;
 use common\models\BatchAttention;
 use common\models\BatchKeywordList;
 use common\models\Keywords;
+use common\models\MenuList;
 use yii\base\Exception;
 use yii\db\Query;
 
@@ -31,6 +32,22 @@ class KeywordUtil
         return Keywords::findOne(['key_id'=>$key_id]);
     }
 
+    /**
+     * 返回已选菜单公众号
+     * @param $id
+     * @return array
+     */
+    public static function GetCustomAuthById($id){
+        $query = (new Query())->from('wc_menu_list')
+            ->select(['app_id'])
+            ->where(['deploy_id'=>$id])
+            ->all();
+        $rst = [];
+        foreach($query as $item){
+            $rst[] = $item['app_id'];
+        }
+        return $rst;
+    }
 
     /**
      * 返回已选择关键字公众号
@@ -146,5 +163,51 @@ class KeywordUtil
     public static function getAttentionById($key_id)
     {
         return AttentionEvent::findOne(['key_id'=>$key_id]);
+    }
+
+
+
+    /**
+     * 保存批量自定义公众号配置
+     * @return bool
+     * @throws \yii\db\Exception
+     */
+    public static function SaveMenuAuthParams($params,$id,&$error){
+        $query = AuthorizerUtil::getGlobalMenuList($id);
+        $error = '';
+        if(!$query) {
+            $error .= '菜单列表为空, 请先设置菜单'."\n";
+            return false;
+        }
+        try {
+            $trans = \Yii::$app->db->beginTransaction();
+            (new MenuList())->deleteAll(['deploy_id'=>$id]);//TODO: 删除用户原有权限数据
+            $sql = '';
+            $table = \Yii::$app->db;
+            foreach ($params as $parList) {
+                $auth = AuthorizerUtil::getAuthByOne($parList);
+                $call_back = WeChatUserUtil::setMenuList($query,$auth->authorizer_access_token,$back_error);
+                if(!$call_back) {
+                   $error .= $back_error."\n";
+                    continue;
+                }
+                if($call_back['errcode'] != 0 || !$call_back) {
+                    $error .= '设置失败: AppId :'.$auth->record_id.' Code: '.$call_back['errcode'] . ' '. $call_back['errmsg']."\n";
+                    continue;
+                }
+                $sql .= sprintf('insert into %s_menu_list (app_id,deploy_id) values(%s,%s);',$table->tablePrefix,$parList,$id);
+            }
+            $rst = $table->createCommand($sql)->execute();
+            if( $rst <= 0 ){
+                $error .= '保存权限数据异常';
+                return false;
+            }
+            $trans->commit();
+        } catch(Exception $e) {
+            $trans->rollBack();
+            $error = $e->getMessage();
+            return false;
+        }
+        return true;
     }
 }

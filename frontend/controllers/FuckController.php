@@ -53,7 +53,7 @@ class FuckController extends Controller
             $len = count($items);
             $file_name = $items[$len - 1];
             //验证上传文件格式类型
-            if (strpos($file_name, '.mp3') === false) {
+            if (strpos($file_name, '.png') === false) {
                 continue;
             }
             $file = $dir.'/'.$file;

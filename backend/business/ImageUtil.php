@@ -76,19 +76,14 @@ class ImageUtil
         }
 
         $target_image  = imagecreatetruecolor(550, 825);
-        $cropped_image = imagecreatetruecolor(550, 825);
-        $alpha = imagecolorallocatealpha($cropped_image, 0, 0, 0, 127);
-        imagefill($cropped_image, 0, 0, $alpha);
-        imageColorTransparent($cropped_image,$alpha);
-
         imagecopyresampled($target_image, $bg_image, 0, 0, 0, 0, 550, 825, $bg_info[0], $bg_info[1]);   //源图裁剪为目标图片大小
         /**将输出图片设为透明**/
 
-        $new_pic_img = imagecreatetruecolor(120,120); //TODO: 创建新的图片资源 设置宽高 100*100 pic
+        $new_pic_img = imagecreatetruecolor(100,100); //TODO: 创建新的图片资源 设置宽高 100*100 pic
         $alpha = imagecolorallocatealpha($new_pic_img,0,0,0,127);
         imagefill($new_pic_img, 0, 0, $alpha);
         imageColorTransparent($new_pic_img,$alpha);
-        imagecopyresampled($new_pic_img,$pic_image,0,0,0,0,120,120,$pic_info[0],$pic_info[1]); //TODO: 将原图剪裁成100*100
+        imagecopyresampled($new_pic_img,$pic_image,0,0,0,0,100,100,$pic_info[0],$pic_info[1]); //TODO: 将原图剪裁成100*100
 
         $new_qrcode_img = imagecreatetruecolor(170,170);
         $alpha = imagecolorallocatealpha($new_qrcode_img,0,0,0,127);
@@ -96,15 +91,15 @@ class ImageUtil
         imagecolortransparent($qrcode_image,$alpha);
         imagecopyresampled($new_qrcode_img,$qrcode_image,0,0,0,0,170,170,$qrcode_info[0],$qrcode_info[1]);
 
-        imagecopyresampled($target_image,$new_qrcode_img,119,590,0,0,170,170,170,170); //TODO:将二维码填充到底图
-        imagecopyresampled($target_image,$new_pic_img,30,6,0,0,120,120,120,120); //TODO: 将剪裁的图片填充到底图中
+        imagecopyresampled($target_image,$new_qrcode_img,65,590,0,0,170,170,170,170); //TODO:将二维码填充到底图
+        imagecopyresampled($target_image,$new_pic_img,40,47,0,0,100,100,100,100); //TODO: 将剪裁的图片填充到底图中
         $black = imagecolorallocate($target_image,0,0,0);
-        imagettftext($target_image,30,0,190,50,$black,$font,$text);
+        imagettftext($target_image,22,0,160,90,$black,$font,$text);
 
         $filename = \Yii::$app->basePath.'/runtime/bgimg/bg_'.$openid.'.jpeg';
-        imagejpeg($target_image,$filename,80);
+        imagejpeg($target_image,$filename,90);
 
-        imagedestroy($cropped_image);
+        imagedestroy($target_image);
         imagedestroy($new_qrcode_img);
         imagedestroy($new_pic_img);
         return true;
