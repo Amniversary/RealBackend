@@ -64,6 +64,10 @@ class ReceiveType
                     $contentStr = '海报生成中 ...';
                 }
                 break;
+            case 'TEMPLATESENDJOBFINISH':
+                \Yii::error('模板消息失败回调: '.var_export($arr,true));
+                $contentStr = null;
+                break;
             default:
                 $contentStr = null;//$arr['Event'].'from_callback';
                 break;

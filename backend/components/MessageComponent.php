@@ -91,6 +91,9 @@ class MessageComponent
             if(strpos($user_id,'qrscene_') !== false) {
                 $str = str_replace('qrscene_','',$this->data['EventKey']);
                 $user_id = trim($str);
+                if(empty($user_id)) {
+                    return null;
+                }
             }
             //TODO: 获取被扫者用户基本信息
             $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);

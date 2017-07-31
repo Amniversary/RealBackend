@@ -29,8 +29,6 @@ class TemplateUtil
         return $rst;
     }
 
-
-
     /**
      * 消息回复模版
      * @param $arr
@@ -132,4 +130,5 @@ class TemplateUtil
                 </xml>";
         return $resultStr = sprintf($xml,$arr['FromUserName'],$arr['ToUserName'],time(),$content['media_id']);
     }
+
 }

@@ -36,5 +36,8 @@ return [
     ],
     'updateson'=>[
         'class'=>'backend\controllers\CustomActions\UpdateSonAction',
+    ],
+    'delete_menu'=>[
+        'class'=>'backend\controllers\CustomActions\DeleteMenuAction',
     ]
 ];

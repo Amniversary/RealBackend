@@ -48,6 +48,13 @@ return [
             'port'=>11302,
             'connectTimeout'=>1,
             'sleep'=> 0,
+        ],
+        'templateBeanstalk'=>[
+            'class'=>'udokmeci\yii2beanstalk\Beanstalk',
+            'host'=>"127.0.0.1",
+            'port'=>11303,
+            'connectTimeout'=>1,
+            'sleep'=> 0,
         ]
     ],
 ];

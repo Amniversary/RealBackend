@@ -45,6 +45,11 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        /*$query = (new Query())
+            ->select(['menu_id'])->from('wc_authorization_menu')->where(['global'=>3])->all();
+        print_r($query);
+
+        exit;*/
         $stat = microtime(true);
         $data = [
             'nick_name'=>'Gavean',
@@ -61,7 +66,7 @@ class BhAction extends Action
             echo "res:";
             print_r($error);exit;
         }
-        $text = $data['nick_name'];
+        $text = 'Mr.REE';
         $time = time();
         $filename = \Yii::$app->basePath.'/web/wswh/img/pic_'.$time.'.png';
         $qrcodename = \Yii::$app->basePath.'/web/wswh/img/qrcode_'.$time.'.png';

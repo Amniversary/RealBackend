@@ -14,6 +14,15 @@ use yii\log\Logger;
 
 class ImageUtil
 {
+    /**
+     * @param $qrcodePath //二维码地址
+     * @param $picPath    //头像地址
+     * @param $openid     //生成图标名称标识
+     * @param $text       //插入的文本
+     * @param $filename   //返回生成后的物理地址
+     * @param $error      //错误信息
+     * @return bool
+     */
     public static function imagemaking($qrcodePath,$picPath,$openid,$text,&$filename,&$error) {
         if(!function_exists('gd_info')) {
             $error = '请开启 GD库扩展';
@@ -21,7 +30,7 @@ class ImageUtil
         }
         @ini_set('memory_limit', '1024M');
         $bg_path = \Yii::$app->basePath.'/runtime/source/bg.jpg';
-        $font = \Yii::$app->basePath.'/runtime/source/hydsj.TTF';
+        $font = \Yii::$app->basePath.'/runtime/source/simhei.ttf';
         $bg_info = getimagesize($bg_path);
         $bg_mime = $bg_info['mime'];
 
@@ -92,14 +101,16 @@ class ImageUtil
         imagecopyresampled($new_qrcode_img,$qrcode_image,0,0,0,0,170,170,$qrcode_info[0],$qrcode_info[1]);
 
         imagecopyresampled($target_image,$new_qrcode_img,65,590,0,0,170,170,170,170); //TODO:将二维码填充到底图
-        imagecopyresampled($target_image,$new_pic_img,40,47,0,0,100,100,100,100); //TODO: 将剪裁的图片填充到底图中
+        imagecopyresampled($target_image,$new_pic_img,40,55,0,0,100,100,100,100); //TODO: 将剪裁的图片填充到底图中
         $black = imagecolorallocate($target_image,0,0,0);
         imagettftext($target_image,22,0,160,90,$black,$font,$text);
 
         $filename = \Yii::$app->basePath.'/runtime/bgimg/bg_'.$openid.'.jpeg';
         imagejpeg($target_image,$filename,90);
 
-        imagedestroy($target_image);
+
+        //imagedestroy($target_image);
+
         imagedestroy($new_qrcode_img);
         imagedestroy($new_pic_img);
         return true;

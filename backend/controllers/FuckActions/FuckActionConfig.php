@@ -8,5 +8,8 @@
 return [
     'bh'=>[
         'class'=>'backend\controllers\FuckActions\BhAction',
+    ],
+    'test'=>[
+        'class'=>'backend\controllers\FuckActions\TestAction'
     ]
 ];

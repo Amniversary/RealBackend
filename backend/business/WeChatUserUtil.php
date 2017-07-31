@@ -274,6 +274,18 @@ class WeChatUserUtil
     }
 
     /**
+     * 清空微信自定义菜单配置
+     * @param $access_token
+     * @return mixed
+     */
+    public static function deleteWxCustomMenu($access_token)
+    {
+        $url = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=$access_token";
+        $rst = json_decode(UsualFunForNetWorkHelper::HttpGet($url),true);
+        return $rst;
+    }
+
+    /**
      * 获取累积粉丝数
      * @param $access_token
      * @return bool

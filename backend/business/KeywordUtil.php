@@ -192,7 +192,7 @@ class KeywordUtil
                     continue;
                 }
                 if($call_back['errcode'] != 0 || !$call_back) {
-                    $error .= '设置失败: AppId :'.$auth->record_id.' Code: '.$call_back['errcode'] . ' '. $call_back['errmsg']."\n";
+                    $error .= '设置失败:'.$auth->nick_name.' ID :'.$auth->record_id.' Code: '.$call_back['errcode'] . ' '. $call_back['errmsg']."\n";
                     continue;
                 }
                 $sql .= sprintf('insert into %s_menu_list (app_id,deploy_id) values(%s,%s);',$table->tablePrefix,$parList,$id);

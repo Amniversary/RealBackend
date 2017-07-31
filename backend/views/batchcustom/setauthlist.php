@@ -163,7 +163,7 @@ function SubmitCheck($url, dataStr)
                 data = $.parseJSON(data);
                 if(data.code == "0")
                 {
-                    alert("数据提交成功");
+                    alert("数据提交成功 \n" + data.msg);
                     $("#contact-modal").modal("hide");
                     $("#user-manage-list").yiiGridView("applyFilter");
                 }

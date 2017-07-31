@@ -40,6 +40,7 @@ class SetAuthListAction extends Action
                 exit;
             }
             $rst['code'] = '0';
+            $rst['msg'] = $error;
             echo json_encode($rst);
             exit;
         }else{

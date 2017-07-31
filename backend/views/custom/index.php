@@ -141,6 +141,7 @@ echo GridView::widget([
             'content'=>
                 Html::button('保存菜单', ['id'=>'save-menu','type'=>'button', 'class'=>'btn btn-success']).
                 Html::button('加载菜单配置', ['type'=>'button', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('custom/download').'";return false;']).
+                Html::button('删除菜单', ['type'=>'button' ,'class'=>'btn btn-success','id'=>'delete-menu']).
                 Html::button('新增菜单',['id'=>'create-menu','type'=>'button','class'=>'btn btn-success']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
@@ -168,7 +169,7 @@ $(document).on("click","#create-menu",function(){
         success: function(data){
             data = $.parseJSON(data);
             if(data.code == "0"){
-                location = "'.\Yii::$app->urlManager->createUrl('custom/create').'"; 
+                location = "'.\Yii::$app->urlManager->createUrl('custom/create').'";
                 return false;
             }else{
                 alert(data.msg);
@@ -178,6 +179,27 @@ $(document).on("click","#create-menu",function(){
             alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
         }
     })
+});
+$(document).on("click","#delete-menu",function(){
+    $url = "http://"+ window.location.host +"/custom/delete_menu";
+    $.ajax({
+        type:"POST",
+        url:$url,
+        data:"",
+        success: function(data){
+            data = $.parseJSON(data);
+            if(data.code == 0){
+                alert("数据提交成功");
+                $("#custom_list").yiiGridView("applyFilter");
+            }else{
+                alert("设置失败: " + data.msg);
+                return false;
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
+        },
+    });
 });
 $(document).on("click","#save-menu",function(){
     $url = "http://"+ window.location.host + "/custom/save";
