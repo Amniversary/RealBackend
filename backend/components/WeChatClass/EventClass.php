@@ -163,6 +163,13 @@ class EventClass
             }
             $wechat = new WeChatUtil();
             if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
+                if($rst['errcode'] == 45009) {
+                    $Clear = WeChatUserUtil::ClearQuota($this->data['appid'], $access_token);
+                    if(!$Clear['errcode'] != 0) {
+                        \Yii::error('Clear quota :'.var_export($Clear,true));
+                        \Yii::getLogger()->flush(true);
+                    }
+                }
                 return false;
             }
             $model = new QrcodeImg();
@@ -197,6 +204,13 @@ class EventClass
                 }
                 $wechat = new WeChatUtil();
                 if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
+                    if($rst['errcode'] == 45009) {
+                        $Clear = WeChatUserUtil::ClearQuota($this->data['appid'], $access_token);
+                        if(!$Clear['errcode'] != 0) {
+                            \Yii::error('Clear quota :'.var_export($Clear,true));
+                            \Yii::getLogger()->flush(true);
+                        }
+                    }
                     return false;
                 }
                 $imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
