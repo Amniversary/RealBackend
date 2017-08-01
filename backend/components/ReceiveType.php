@@ -65,7 +65,9 @@ class ReceiveType
                 }
                 break;
             case 'TEMPLATESENDJOBFINISH':
-                \Yii::error('模板消息失败回调: '.var_export($arr,true));
+                if($arr['Status'] != 'success') {
+                    \Yii::error('模板消息失败回调: '.var_export($arr,true));
+                }
                 $contentStr = null;
                 break;
             default:

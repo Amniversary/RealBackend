@@ -24,9 +24,9 @@ class SendTemplateMsgAction extends Action
         fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."---$sentData->key_word-- in job id:[$jobId]---"."\n", [Console::FG_GREEN]));
         try {
             $template = new TemplateComponent(null,$sentData->accessToken);
-            $msg = $sentData->msg;
+            $msg = json_decode(json_encode($sentData->msg),true);
             $res = $template->SendTemplateMessage($msg);
-            if(!$res['errcode'] != 0 || $res)
+            if($res['errcode'] != 0 || !$res)
             {
                 $error = $res;
                 if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
@@ -35,17 +35,14 @@ class SendTemplateMsgAction extends Action
                 }
                 fwrite(STDOUT, Console::ansiFormat("发送模板消息失败:  nick_name : ".$sentData->nick_name." openId :" . $sentData->open_id."\n",[Console::FG_GREEN]));
                 fwrite(STDOUT, Console::ansiFormat("Code :".$res['errcode']. ' msg :'.$res['errmsg']."\n",[Console::FG_GREEN]));
-                \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.'-- :'.$error .'  openId :'.$sentData->open_id .' ',Logger::LEVEL_ERROR);
+                \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' -- :'.var_export($error,true) .'  openId :'.$sentData->open_id .' ',Logger::LEVEL_ERROR);
                 \Yii::getLogger()->flush(true);
                 return BeanstalkController::DELETE;
-            }
-
-
-            $everthingIsAllRight = true;
-            if($everthingIsAllRight == true){
-                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --$res--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
+            }else{
+                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($res)."--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
                 return BeanstalkController::DELETE;
             }
+
 
             $everthingWillBeAllRight = false;
             if($everthingWillBeAllRight == true){

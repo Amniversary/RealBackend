@@ -414,4 +414,18 @@ class WeChatUserUtil
         }
         return true;
     }
+
+
+    /**
+     * 清除微信api调用次数接口
+     * @param $app_id
+     * @param $accessToken
+     * @return mixed
+     */
+    public static function ClearQuota($app_id, $accessToken){
+        $url = "https://api.weixin.qq.com/cgi-bin/clear_quota?access_token=$accessToken";
+        $json = json_encode(['appid'=>$app_id]);
+        $res = json_decode(UsualFunForNetWorkHelper::HttpsPost($url, $json),true);
+        return $res;
+    }
 }

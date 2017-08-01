@@ -61,7 +61,7 @@ class TemplateController extends Controller
                     'color'=>'#173177',
                 ]
             ];
-            $msg = $template->BuildTemplate($item, $template_id,$data,$url);
+            $msg = $template->BuildTemplate($item['open_id'], $template_id,$data,$url);
             $params = [
                 'key_word' => 'send_template',
                 'nick_name' => $item['nick_name'],
@@ -73,6 +73,7 @@ class TemplateController extends Controller
                 var_dump($error);
                 continue;
             }
+            
             $i ++;
         }
         echo "发送消息数 : $i 条";

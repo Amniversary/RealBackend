@@ -12,12 +12,21 @@ namespace backend\controllers\FuckActions;
 use backend\business\AuthorizerUtil;
 use backend\components\TemplateComponent;
 use yii\base\Action;
+use yii\db\Query;
 
 class TestAction extends Action
 {
     public function run()
     {
         echo "<pre>";
+        $query = (new Query())
+            ->from('wc_client')
+            ->select(['client_id','open_id','nick_name','app_id'])
+            ->where(['app_id'=>89,'is_vip'=>0,'subscribe'=>1])
+            ->limit(100)
+            ->all();
+        print_r($query);
+        exit;
         $auth = AuthorizerUtil::getAuthByOne(89);
         $app_id = $auth->record_id;
         $accessToken = $auth->authorizer_access_token;

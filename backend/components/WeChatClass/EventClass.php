@@ -141,9 +141,10 @@ class EventClass
                 \Yii::error($error. ' :'.var_export($model->getErrors(),true));
                 return false;
             }
+            $client = $model;
         }
         $img = ImageUtil::GetQrcodeImg($client->client_id);
-        if(!isset($img)) {  //TODO: 如果图片不存在  重新生成并上传
+        if(!isset($img) || empty($img)) {  //TODO: 如果图片不存在  重新生成并上传
             $userData = WeChatUserUtil::getUserInfo($access_token,$openid);
             if(empty($userData['headimgurl'])) {
                 $userData['headimgurl'] = 'http://7xld1x.com1.z0.glb.clouddn.com/timg.jpeg';
