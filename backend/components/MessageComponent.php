@@ -228,7 +228,7 @@ class MessageComponent
             $model->save();
             return $rst;
         } else {
-            $outTime = intval(($time - $resource->update_time)/84600);
+            $outTime = intval(($time - $resource->update_time)/86400);
             if($outTime >= 3){
                 $rst = (new WeChatUtil())->UploadWeChatImg($picurl,$access_token);
                 $resource->media_id = $rst['media_id'];
@@ -265,7 +265,7 @@ class MessageComponent
             $model->save();
             return $rst;
         } else {
-            $outTime = intval(($time - $resource->update_time) / 84600);
+            $outTime = intval(($time - $resource->update_time) / 86400);
             if($outTime >= 3) {
                 $rst = (new WeChatUtil())->UploadVideo($videoUrl, $access_token);
                 $resource->media_id = $rst['media_id'];

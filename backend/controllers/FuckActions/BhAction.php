@@ -20,6 +20,7 @@ use backend\components\MessageComponent;
 use backend\components\WeChatComponent;
 use callmez\wechat\sdk\MpWechat;
 use callmez\wechat\sdk\Wechat;
+use Codeception\Module\Cli;
 use common\components\OssUtil;
 use common\components\SystemParamsUtil;
 use common\components\UsualFunForNetWorkHelper;
@@ -45,23 +46,24 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
-        /*$query = (new Query())
-            ->select(['menu_id'])->from('wc_authorization_menu')->where(['global'=>3])->all();
-        print_r($query);
-
-        exit;*/
+        phpinfo();
+        exit;
         $stat = microtime(true);
+        print_r('程序开始:'.memory_get_usage());echo "<br/>";
         $data = [
             'nick_name'=>'Gavean',
             'pic'=>'http://wx.qlogo.cn/mmopen/UVzXBswyibFh7ib0qClxDP6Y5EFUGSgrw7FIUNcB7K60LAIpKHpqHxJa7ta10HKYYIVSCPSQy0IBzGib9zgn9NE00vaHbVydjpY/0',
         ];
         $qrcode = 'http://mmbiz.qpic.cn/mmbiz_jpg/6SPlDzxhRsQZgoUE4507ibia0hcWdicibxPLU2JvGjreoJMA9JDzyQK1IFNQb7OrZDx0HsIjgfuL2pJQe4PXrzIUdg/0';
         $rst = UsualFunForNetWorkHelper::HttpGetImg($data['pic'],$content_type,$error);
+        print_r('执行获取:'.memory_get_usage());echo "<br/>";
+        unset($data);
         if(!$rst) {
             echo "rst :"."<br />";
             print_r($error);exit;
         }
         $res = UsualFunForNetWorkHelper::HttpGet($qrcode);
+        unset($qrcode);
         if(!$res) {
             echo "res:";
             print_r($error);exit;
@@ -76,14 +78,88 @@ class BhAction extends Action
         if(!ImageUtil::imagemaking($qrcodename,$filename,'bbbbb',$text,$faaa,$error)){
             print_r($error);exit;
         }
-
+        print_r('处理完图片:'.memory_get_usage());echo "<br/>";
         @unlink($filename);
         @unlink($qrcodename);
         $end = microtime(true);
         $return = $end - $stat;
         echo "<br/>";
+        print_r('最终结束:'.memory_get_usage());
+        echo "<br/>";
         print_r($return);
         exit;
+        phpinfo();
+        exit;
+        $data = [];
+        JobUtil::AddCustomJob('beanstalk','tube',$data,$error);
+
+        exit;
+        $query = (new Query())
+            ->select(['authorizer_appid','authorizer_refresh_token','nick_name','record_id','update_time'])
+            ->from('wc_authorization_list')
+            ->all();
+        if(empty($query)) exit('没有数据');
+        $date = date('Y-m-d H:i:s');
+        $time = '2017-08-02 12:00:00';
+        //print_r($time);
+        echo "<br/>";
+
+        $rst = floor((strtotime($time) - strtotime($query[1]['update_time']))%86400/60);
+        print_r($rst);
+        exit;
+        $max = count($query);
+        $k = 0;
+        print_r($max);
+        $error_data = [];
+        $timeout = 0;
+        for($i = 0; $i < $max ; $i ++ ) {
+            $data = [
+                'component_appid'=>'2121',
+                'authorizer_appid'=>$query[$i]['authorizer_appid'],
+                'authorizer_refresh_token'=>$query[$i]['authorizer_refresh_token']
+            ];
+
+            $url = "https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=".$this->AppInfo->access_token;
+            $json = json_encode($data);
+            $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
+            if(!isset($rst['authorizer_access_token']) || !isset($rst['authorizer_refresh_token'])){
+                if($timeout < 3) {
+                    $i--;
+                    $timeout ++;
+                    continue;
+                }
+                echo '刷新授权方令牌失败: AppId : '.$query[$i]['authorizer_appid']."  time : $date\n";
+                continue;
+            }
+            $AuthAppid = AuthorizationList::findOne(['authorizer_appid'=>$item['authorizer_appid']]);
+            $AuthAppid->authorizer_access_token = $rst['authorizer_access_token'];
+            $AuthAppid->authorizer_refresh_token = $rst['authorizer_refresh_token'];
+            $AuthAppid->update_time = $date;
+            if(!$AuthAppid->save()){
+                if($timeout < 3) {
+                    $i--;
+                    $timeout ++;
+                    continue;
+                }
+                \Yii::error('保存授权数据失败: rst:'.var_export($rst,true).' Nick_name :'.$item['nick_name'] .'  '.var_export($AuthAppid->getErrors(),true));
+                \Yii::getLogger()->flush(true);
+                echo '保存授权新数据失败: '."time: $date\n";
+                continue;
+            }
+            $timeout = 0;
+        }
+        echo "刷新授权公众号AppId完成，共 $max 条记录 , 成功刷新记录数: ".($i+1)." 条,  time:  $date \n";
+        exit;
+
+        $model = Client::findOne(['client_id'=>2]);
+        return $this->controller->redirect('demo');
+
+        /*$query = (new Query())
+            ->select(['menu_id'])->from('wc_authorization_menu')->where(['global'=>3])->all();
+        print_r($query);
+
+        exit;*/
+
         $rst = User::findAll(['pic'=>'']);
         foreach($rst as $item){
             $num = rand(1,6);

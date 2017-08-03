@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: a123
- * Date: 17/7/12
- * Time: 下午6:14
+ * Date: 17/8/2
+ * Time: 下午3:08
  */
 
 namespace console\controllers;
@@ -11,7 +11,7 @@ namespace console\controllers;
 
 use udokmeci\yii2beanstalk\BeanstalkController;
 
-class WorkerwxmsgController extends BeanstalkController
+class WorkerimgController extends BeanstalkController
 {
     const DELAY_PRIORITY = "500";
 
@@ -20,17 +20,16 @@ class WorkerwxmsgController extends BeanstalkController
     const DELAY_MAX = 3;
     public function init()
     {
-        $this->beanstalk = \Yii::$app->wechatBeanstalk;
+        $this->beanstalk = \Yii::$app->imgBeanstalk;
         parent::init();
     }
     public function listenTubes()
     {
-        return require(__DIR__ . '/WeChatActions/ListenTubesConfig.php');
+        return require(__DIR__ . '/ImgActions/ListenTubesConfig.php');
     }
 
     public function actions()
     {
-        return require(__DIR__ . '/WeChatActions/WeChatBeanstalkConfig.php');
+        return require(__DIR__ . '/ImgActions/ImgBeanstalkConfig.php');
     }
-
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "df830446a1f68bff99f3d341289ebb1c",
+    "content-hash": "78d14b9c50a3c6ca8fbe0400df1825eb",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -2533,6 +2533,39 @@
             "time": "2017-07-03 14:07:39"
         },
         {
+            "name": "pjkui/kindeditor",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pjkui/kindeditor.git",
+                "reference": "84b3b10570a923c868c24615cdbfea60a04b8d08"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/pjkui/kindeditor/84b3b10570a923c868c24615cdbfea60a04b8d08.zip",
+                "reference": "84b3b10570a923c868c24615cdbfea60a04b8d08",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "pjkui\\kindeditor\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Quinn Pan",
+                    "email": "pjkui@qq.com"
+                }
+            ],
+            "description": "desc",
+            "time": "2017-04-14 10:04:17"
+        },
+        {
             "name": "psr/container",
             "version": "dev-master",
             "source": {
@@ -4793,7 +4826,8 @@
         "kartik-v/yii2-grid": 20,
         "kartik-v/yii2-krajee-base": 20,
         "callmez/yii2-wechat-sdk": 20,
-        "udokmeci/yii2-beanstalk": 20
+        "udokmeci/yii2-beanstalk": 20,
+        "pjkui/kindeditor": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -19,7 +19,7 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $sourcePath = '@bower/';
 //    public $css = [
-//        'css/site.css',
+//        '/pjkui/kindeditor/themes/default/example1.css',
 //    ];
     public $js = [
     ];

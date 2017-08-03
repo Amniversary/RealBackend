@@ -21,7 +21,7 @@ class CreateMsgAction extends Action
         $model->flag = 1;
         $model->msg_type = 0;
         $model->create_time = date('Y-m-d H:i:s');
-        $model->order_no = '50';
+        $model->order_no = 50;
         $load = \Yii::$app->request->post();
         if(!empty($load)){
             if($load['AttentionEvent']['msg_type'] == 2){

@@ -7,5 +7,6 @@
  */
 
 return [
-    'wechat',
+    'get_qrcode',
+    'delete_img',
 ];

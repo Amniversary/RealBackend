@@ -9,9 +9,12 @@
 namespace console\controllers\TemplateActions\WorkerActions;
 
 
+use backend\business\AuthorizerUtil;
+use backend\business\TemplateUtil;
 use backend\components\TemplateComponent;
 use udokmeci\yii2beanstalk\BeanstalkController;
 use yii\base\Action;
+use yii\db\Query;
 use yii\helpers\Console;
 use yii\log\Logger;
 
@@ -23,42 +26,44 @@ class SendTemplateMsgAction extends Action
         $sentData = $job->getData();
         fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."---$sentData->key_word-- in job id:[$jobId]---"."\n", [Console::FG_GREEN]));
         try {
-            $template = new TemplateComponent(null,$sentData->accessToken);
-            $msg = json_decode(json_encode($sentData->msg),true);
-            $res = $template->SendTemplateMessage($msg);
-            if($res['errcode'] != 0 || !$res)
-            {
-                $error = $res;
-                if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
-                {
-                    $error = iconv('utf-8','gb2312',$error);
+            set_time_limit(0);
+            $auth = AuthorizerUtil::getAuthByOne($sentData->app_id);
+            $accessToken = $auth->authorizer_access_token;
+            $templateData = TemplateUtil::GetTemplateById($sentData->id);
+            $template = new TemplateComponent(null,$accessToken);
+            $data = json_decode(json_encode($sentData->data),true);
+            $query = (new Query())
+                ->select(['client_id','open_id','nick_name','app_id'])
+                ->from('wc_client')
+                ->where(['app_id'=>$auth->record_id,'subscribe'=>1])
+                ->all();
+            $url = $data['url'];
+            unset($data['url']);
+            foreach($query as $list) {
+                $msgData = [];
+                foreach($data as $key => $v) {
+                    $value = str_replace('{{NICKNAME}}', $list['nick_name'], $v);
+                    $msgData[$key] = ['value'=>$value, 'color'=> '#173177'];
                 }
-                fwrite(STDOUT, Console::ansiFormat("发送模板消息失败:  nick_name : ".$sentData->nick_name." openId :" . $sentData->open_id."\n",[Console::FG_GREEN]));
-                fwrite(STDOUT, Console::ansiFormat("Code :".$res['errcode']. ' msg :'.$res['errmsg']."\n",[Console::FG_GREEN]));
-                \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' -- :'.var_export($error,true) .'  openId :'.$sentData->open_id .' ',Logger::LEVEL_ERROR);
-                \Yii::getLogger()->flush(true);
-                return BeanstalkController::DELETE;
-            }else{
+                $sendData = $template->BuildTemplate($list['open_id'],$templateData->template_id,$msgData,$url);
+                $res = $template->SendTemplateMessage($sendData);
+                if($res['errcode'] != 0 || !$res) {
+                    $error = $res;
+                    if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+                        $error = iconv('utf-8','gb2312',$error);
+
+                    fwrite(STDOUT, Console::ansiFormat("发送模板消息失败:  nick_name : ".$sentData->nick_name." openId :" . $sentData->open_id."  app_id : ".$auth->record_id."\n",[Console::FG_GREEN]));
+                    fwrite(STDOUT, Console::ansiFormat("Code :".$res['errcode']. ' msg :'.$res['errmsg']."\n",[Console::FG_GREEN]));
+                    \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' -- :'.var_export($error,true) .'  openId :'.$sentData->open_id .' ',Logger::LEVEL_ERROR);
+                    \Yii::getLogger()->flush(true);
+                    continue;
+                }
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($res)."--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
-                return BeanstalkController::DELETE;
+                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --$sentData->key_word-- "."\n", [Console::FG_GREEN]));
             }
 
-
-            $everthingWillBeAllRight = false;
-            if($everthingWillBeAllRight == true){
-                fwrite(STDOUT, Console::ansiFormat("- Everything will be allright"."\n", [Console::FG_GREEN]));
-                return BeanstalkController::DELAY;
-            }
-
-            $IWantSomethingCustom = false;
-            if($IWantSomethingCustom==true){
-                \Yii::$app->beanstalk->release($job);
-                return BeanstalkController::NO_ACTION;
-            }
-
-            fwrite(STDOUT, Console::ansiFormat("- Not everything is allright!!!"."\n", [Console::FG_GREEN]));
-            return BeanstalkController::DECAY;
-
+            fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." ----$sentData->key_word--任务执行完成!"."\n", [Console::FG_GREEN]));
+            return BeanstalkController::DELETE;
         } catch (\Exception $e) {
             fwrite(STDERR, Console::ansiFormat($e->getMessage()."\n", [Console::FG_RED]));
             return BeanstalkController::DELETE;

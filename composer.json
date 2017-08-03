@@ -34,7 +34,8 @@
         "udokmeci/yii2-beanstalk": "^1.2@dev",
         "codeception/specify": "*",
         "codeception/codeception": "2.0.*",
-        "codeception/verify": "*"
+        "codeception/verify": "*",
+        "pjkui/kindeditor": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

@@ -52,6 +52,7 @@ class WeChatUtil
         if(!$this->AppInfo->save()){
             $error = '保存微信Token失败';
             \Yii::error($error. ' ：'. var_export($this->AppInfo->getErrors(),true));
+
             return false;
         }
         return true;
@@ -143,39 +144,51 @@ class WeChatUtil
     public function refreshAuthToken()
     {
         $query = (new Query())
-            ->select(['authorizer_appid','authorizer_refresh_token'])
+            ->select(['authorizer_appid','authorizer_refresh_token','nick_name','record_id'])
             ->from('wc_authorization_list')
             ->all();
         if(empty($query)) exit('没有数据');
         $date = date('Y-m-d H:i:s');
         $max = count($query);
-        $k = 0;
-        foreach ($query as $item){
+        $timeout = 0;
+        for($i = 0; $i < $max ; $i ++ ) {
             $data = [
                 'component_appid'=>$this->appId,
-                'authorizer_appid'=>$item['authorizer_appid'],
-                'authorizer_refresh_token'=>$item['authorizer_refresh_token']
+                'authorizer_appid'=>$query[$i]['authorizer_appid'],
+                'authorizer_refresh_token'=>$query[$i]['authorizer_refresh_token']
             ];
-            $url = sprintf('https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=%s',
-                $this->AppInfo->access_token);
+            $url = "https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=".$this->AppInfo->access_token;
             $json = json_encode($data);
             $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
-            if(empty($rst)){
-                echo '刷新授权方令牌失败: AppId : '.$item['authorizer_appid']."  time : $date\n";
+            if(!isset($rst['authorizer_access_token']) || !isset($rst['authorizer_refresh_token'])){
+                if($timeout < 3){
+                    $i --;
+                    $timeout ++;
+                    continue;
+                }
+                echo '刷新授权方令牌失败: AppId : '.$query[$i]['authorizer_appid']."  time : $date\n";
+                \Yii::error("刷新授权方令牌失败: AppId: ".$query[$i]['authorizer_appid'] . 'data :'.var_export($rst,true));
+                \Yii::getLogger()->flush(true);
                 continue;
             }
-            $AuthAppid = AuthorizationList::findOne(['authorizer_appid'=>$item['authorizer_appid']]);
+            $AuthAppid = AuthorizationList::findOne(['authorizer_appid'=>$query[$i]['authorizer_appid']]);
             $AuthAppid->authorizer_access_token = $rst['authorizer_access_token'];
             $AuthAppid->authorizer_refresh_token = $rst['authorizer_refresh_token'];
             $AuthAppid->update_time = $date;
             if(!$AuthAppid->save()){
-                \Yii::error('保存授权数据失败: '.var_export($AuthAppid->getErrors(),true));
+                if($timeout < 3){
+                    $i --;
+                    $timeout ++;
+                    continue;
+                }
+                \Yii::error('保存授权数据失败: Nick_name :'.$query[$i]['nick_name'] .'  '.var_export($AuthAppid->getErrors(),true));
+                \Yii::getLogger()->flush(true);
                 echo '保存授权新数据失败: '."time: $date\n";
                 continue;
             }
-            $k++;
+            $timeout = 0;
         }
-        echo "刷新授权公众号AppId完成，共 $max 条记录 , 成功刷新记录数: $k 条,  time:  $date \n";
+        echo "刷新授权公众号AppId完成，共 $max 条记录 , 成功刷新记录数:". $i ." 条,  time:  $date \n";
     }
 
 

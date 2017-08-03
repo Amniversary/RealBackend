@@ -32,21 +32,19 @@ class WeChatMsgAction extends Action
             $item = json_decode(json_encode($sentData->item),true);
             $json = WeChatUserUtil::getMsgTemplate($item,$openid);
             $rst = WeChatUserUtil::sendCustomerMsg($sentData->authorizer_access_token,$json);
-            //fwrite(STDOUT, Console::ansiFormat("json: $json"."\n", [Console::FG_GREEN]));
+            fwrite(STDOUT, Console::ansiFormat("json: $json "."\n", [Console::FG_GREEN]));
             if($rst['errcode'] != 0)
             {
                 $error = 'Code:'. $rst['errcode']. ' Msg:'.$rst['errmsg'];
-                $error1 = $error;
-                if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
-                {
+                if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                     $error = iconv('utf-8','gb2312',$error);
                 }
-                fwrite(STDOUT, Console::ansiFormat(" --$sentData->key_word- $json- $error no jobrecord "."\n", [Console::FG_GREEN]));
-                \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' rst : '.var_export($rst,true) .'---'.$json .' :'.$error,Logger::LEVEL_ERROR);
+                fwrite(STDOUT, Console::ansiFormat(" --$sentData->key_word- $json-accessToken: $sentData->authorizer_access_token --- $error no jobrecord "."\n", [Console::FG_GREEN]));
+                \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' rst : '.var_export($rst,true) .'-accessToken : '. $sentData->authorizer_access_token.'--'.$json .' :'.$error,Logger::LEVEL_ERROR);
                 \Yii::getLogger()->flush(true);
                 return BeanstalkController::DELETE;
             }
-
+            fwrite(STDOUT, Console::ansiFormat("rst: $rst "."\n", [Console::FG_GREEN]));
 
             $everthingIsAllRight = true;
             if($everthingIsAllRight == true){
@@ -54,32 +52,9 @@ class WeChatMsgAction extends Action
                 //Delete the job from beanstalkd
                 return BeanstalkController::DELETE;
             }
-
-            $everthingWillBeAllRight = false;
-            if($everthingWillBeAllRight == true){
-                fwrite(STDOUT, Console::ansiFormat("- Everything will be allright"."\n", [Console::FG_GREEN]));
-                //Delay the for later try
-                //You may prefer decay to avoid endless loop
-                return BeanstalkController::DELAY;
-            }
-
-            $IWantSomethingCustom = false;
-            if($IWantSomethingCustom==true){
-                \Yii::$app->beanstalk->release($job);
-                return BeanstalkController::NO_ACTION;
-            }
-
-            fwrite(STDOUT, Console::ansiFormat("- Not everything is allright!!!"."\n", [Console::FG_GREEN]));
-            //Decay the job to try DELAY_MAX times.
-            return BeanstalkController::DECAY;
-
-            // if you return anything else job is burried.
         } catch (\Exception $e) {
-            //If there is anything to do.
             fwrite(STDERR, Console::ansiFormat($e->getMessage()."\n", [Console::FG_RED]));
-            // you can also bury jobs to examine later
             return BeanstalkController::DELETE;
         }
     }
-
 } 

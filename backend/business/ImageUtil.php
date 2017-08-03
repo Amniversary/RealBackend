@@ -28,7 +28,7 @@ class ImageUtil
             $error = '请开启 GD库扩展';
             return false;
         }
-        @ini_set('memory_limit', '1024M');
+        @ini_set('memory_limit', '128M');
         $bg_path = \Yii::$app->basePath.'/runtime/source/bg.jpg';
         $font = \Yii::$app->basePath.'/runtime/source/simhei.ttf';
         $bg_info = getimagesize($bg_path);
@@ -108,9 +108,10 @@ class ImageUtil
         $filename = \Yii::$app->basePath.'/runtime/bgimg/bg_'.$openid.'.jpeg';
         imagejpeg($target_image,$filename,90);
 
-
-        //imagedestroy($target_image);
-
+        imagedestroy($bg_image);
+        imagedestroy($pic_image);
+        imagedestroy($qrcode_image);
+        imagedestroy($target_image);
         imagedestroy($new_qrcode_img);
         imagedestroy($new_pic_img);
         return true;

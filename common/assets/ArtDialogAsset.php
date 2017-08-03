@@ -16,17 +16,18 @@ use yii\web\AssetBundle;
 class ArtDialogAsset extends AssetBundle
 {
     public $sourcePath = '@bower/artDialog/artDialog4.1.7';
-/*    public $basePath = '@webroot';
-    public $baseUrl = '@web';
-*/
+    //public $basePath = '@webroot';
+    //public $baseUrl = '@web';
+
     public $css = [
     ];
     public $js = [
-        /*'jquery.artDialog.js?skin=default',
-        'plugins/iframeTools.js'*/
-        //'http://mbpic.mblive.cn/mibo-js/artDialog.js?skin=aero',
-        //'http://mbpic.mblive.cn/mibo-js/iframeTools.js',
-        //'http://mbpic.mblive.cn/mibo-js/masonry-docs.min.js'
+        'jquery.artDialog.js?skin=aero',
+        'plugins/iframeTools.js',
+        /*'http://mbpic.mblive.cn/mibo-js/artDialog.js?skin=aero',
+        'http://mbpic.mblive.cn/mibo-js/iframeTools.js',
+        'http://mbpic.mblive.cn/mibo-js/masonry-docs.min.js'*/
+
     ];
     public $depends = [
         'yii\web\JqueryAsset',

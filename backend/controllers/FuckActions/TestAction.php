@@ -10,7 +10,9 @@ namespace backend\controllers\FuckActions;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\WeChatUserUtil;
 use backend\components\TemplateComponent;
+use common\components\UsualFunForNetWorkHelper;
 use yii\base\Action;
 use yii\db\Query;
 
@@ -19,31 +21,19 @@ class TestAction extends Action
     public function run()
     {
         echo "<pre>";
-        $query = (new Query())
-            ->from('wc_client')
-            ->select(['client_id','open_id','nick_name','app_id'])
-            ->where(['app_id'=>89,'is_vip'=>0,'subscribe'=>1])
-            ->limit(100)
-            ->all();
-        print_r($query);
-        exit;
-        $auth = AuthorizerUtil::getAuthByOne(89);
+        $auth = AuthorizerUtil::getAuthByOne(84);
         $app_id = $auth->record_id;
         $accessToken = $auth->authorizer_access_token;
         $url = 'http://novel.duobb.cn/novel/vipremind?app=4';
 
         $data = [
             [
-                'open_id'=>'oWrMewqeUq0sdbzlTW-XZm0rPvlg',
-                'nick_name' => 'Mr.REE',
-            ],
-            [
-                'open_id'=>'oWrMewvkT27ilO5Nst-lSZFaYkf4',
+                'open_id'=>'oJXYOwRxeD5L-w6tHu1LsD2oPgTw',
                 'nick_name'=>"Gavean"
             ]
         ];
         $template = new TemplateComponent($app_id, $accessToken);
-        $temp = 'DIWFZf7uyxBWl8cC5PldnN4QjY_Iihw6x5Ho6OlIi5Y';
+        $temp = 'iecBsyRQxB25021l4nRpvSkPdPnedWSVZVKTnse4-hI';
 
         foreach($data as $item) {
             $data = [
@@ -75,6 +65,83 @@ class TestAction extends Action
             $msg = $template->BuildTemplate($item['open_id'], $temp,$data,$url);
             print_r($template->SendTemplateMessage($msg));
         }
+        exit;
+
+        $query = (new Query())
+            ->from('wc_client')
+            ->select(['client_id','open_id','nick_name','app_id'])
+            ->where(['app_id'=>89,'is_vip'=>0,'subscribe'=>1])
+            ->limit(100)
+            ->all();
+        print_r($query);
+        exit;
+        $content = '{{first.DATA}}
+            姓名：{{keyword1.DATA}}
+            手机号：{{keyword2.DATA}}
+            特权身份：{{keyword3.DATA}}
+            到期时间：{{keyword4.DATA}}
+            {{remark.DATA}}';
+        $content = explode('}}',$content);
+        print_r($content);
+        $count = count($content) - 1;
+        $data = [];
+        for($i=0; $i < $count;$i++){
+            $data[$i]['text'] = strtok(str_replace('{{','',trim($content[$i])),'：');
+            $data[$i]['format'] = strtok(strtok(strstr(trim($content[$i]),'{{'),'{{'),'.');
+        }
+        print_r($data);
+        exit;
+        //TODO: 切换模板格式
+        $content = '{{first.DATA}}
+            姓名：{{keyword1.DATA}}
+            手机号：{{keyword2.DATA}}
+            特权身份：{{keyword3.DATA}}
+            到期时间：{{keyword4.DATA}}
+            {{remark.DATA}}';
+        $content = explode('}}',$content);
+        print_r($content);
+        $count = count($content) - 1;
+        $data = [];
+        for($i=0; $i < $count;$i++){
+            $str = strstr(trim($content[$i]),'{{');
+            $str = strtok($str,'{{');
+            $key = strtok($str,'.');
+            $data[] = $key;
+        }
+        print_r($data);
+        exit;
+        $auth = AuthorizerUtil::getAuthByOne(84);
+        $open_id ='oJXYOwRxeD5L-w6tHu1LsD2oPgTw';
+        $data = [
+            'msg_type'=> 2,
+            'media_id'=> 'KgnT5hzBUX_uFT3D0h7pJNkNuY36wDGl6mjMTrjBNNq_keSPvazpI93Q3VNC8T2-',
+        ];
+        $msg = WeChatUserUtil::getMsgTemplate($data,$open_id);
+         $rst = WeChatUserUtil::sendCustomerMsg($auth->authorizer_access_token,$msg);
+        print_r($rst);
+
+
+
+
+        exit;
+        $app_token = 'XWca1x9_q1tf9bDY8pI4tbkVVTy1SYMSE7liximiIo4RmmjinXnfCC-mQleejiLIryvCiYhl7kUU3apGgUdUlK8yp75733PinrtgK-7-Rhu-SEC2rs2tphCGaGBTFxFTWXThADAEFB';
+        $data = [
+            'component_appid'=>'wx25d7fec30752314f',
+            'authorizer_appid'=>'wx253ac96ed8cfb4ab',
+            'authorizer_refresh_token'=>'refreshtoken@@@Vw8m3230uyrtCRIZUfqudeVVkxXKWJbfV_EjsVt8Nw0'
+        ];
+        $url = sprintf('https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=%s',
+            $app_token);
+        $json = json_encode($data);
+        $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
+
+        print_r($rst);
+
+
+        exit;
+
+
+
 
     }
 

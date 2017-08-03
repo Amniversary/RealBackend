@@ -6,7 +6,7 @@
  * Time: 下午6:10
  */
 
-namespace console\controllers\WeChatActions\WorkerActions;
+namespace console\controllers\ImgActions\WorkerActions;
 
 
 use udokmeci\yii2beanstalk\BeanstalkController;
@@ -22,30 +22,17 @@ class DeleteImgAction extends Action
         $sentData = $job->getData();
         fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."---$sentData->key_word-- in job id:[$jobId]---"."\n", [Console::FG_GREEN]));
         try {
-            unlink($sentData->qrcode_file);
-            unlink($sentData->pic_file);
-
+            if(!unlink($sentData->qrcode_file) && !unlink($sentData->pic_file)) {
+                $error = '删除二维码图片资源或用户头像资源失败';
+                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." $error "."\n",[Console::FG_BLUE]));
+                fwrite(STDOUT,Console::ansiFormat("pic :".$sentData->pic_file . " qrcode :". $sentData->qrcode_file,[Console::FG_BLUE]));
+                return BeanstalkController::DELETE;
+            }
             $everthingIsAllRight = true;
             if($everthingIsAllRight == true){
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." ---$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
                 return BeanstalkController::DELETE;
             }
-
-            $everthingWillBeAllRight = false;
-            if($everthingWillBeAllRight == true){
-                fwrite(STDOUT, Console::ansiFormat("- Everything will be allright"."\n", [Console::FG_GREEN]));
-                return BeanstalkController::DELAY;
-            }
-
-            $IWantSomethingCustom = false;
-            if($IWantSomethingCustom==true){
-                \Yii::$app->beanstalk->release($job);
-                return BeanstalkController::NO_ACTION;
-            }
-
-            fwrite(STDOUT, Console::ansiFormat("- Not everything is allright!!!"."\n", [Console::FG_GREEN]));
-            return BeanstalkController::DECAY;
-
         } catch (\Exception $e) {
             fwrite(STDERR, Console::ansiFormat($e->getMessage()."\n", [Console::FG_RED]));
             return BeanstalkController::DELETE;

@@ -61,6 +61,7 @@ class  LoginForm extends Model
             }
             if(empty($user)){
                 $this->addError($attribute, '该账号不存在');
+
                 return;
             }
             if (!$user->validatePassword($this->password)) {

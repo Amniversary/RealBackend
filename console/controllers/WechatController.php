@@ -45,8 +45,10 @@ class WechatController extends Controller
      */
     public function actionRefreshauthtoken()
     {
+        set_time_limit(0);
         $wechat = new WeChatUtil();
         $wechat->refreshAuthToken();
+
         $query = (new Query())->select(['backend_user_id'])->from('wc_user')->all();
         foreach ($query as $item) {
             $get = \Yii::$app->cache->get('app_backend_'.$item['backend_user_id']);

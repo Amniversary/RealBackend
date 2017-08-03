@@ -88,6 +88,26 @@ class TemplateComponent
         return $res;
     }
 
-
-
+    /**
+     * 格式化模板内容
+     * @param $content
+     * @return array
+     *          [
+     *              0 => ['text' => 'first.DATA', 'format'=>'first'],
+     *              1 => ['text' => '姓名', 'format' => 'keyword1'],
+     *              2 => ['text' => '手机号', 'format' => 'keyword2'],
+     *              3 => ['text' => '特权身份', 'format' => 'keyword3'],
+     *              4 => ['text' => 'remark.DATA', 'format' => 'remark' ]
+     *          ]
+     */
+    public function FormatTemplate($content){
+        $content = explode('}}',$content);
+        $count = count($content) - 1;
+        $data = [];
+        for($i=0; $i < $count;$i++){
+            $data[$i]['text'] = strtok(str_replace('{{','',trim($content[$i])),'：');
+            $data[$i]['format'] = strtok(strtok(strstr(trim($content[$i]),'{{'),'{{'),'.');
+        }
+        return $data;
+    }
 }

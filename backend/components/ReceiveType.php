@@ -58,7 +58,7 @@ class ReceiveType
                 $contentStr = null;
                 if($arr['EventKey'] == 'get_qrcode') {
                     $params = ['key_word' => 'get_qrcode', 'data' => $arr];
-                    if(!JobUtil::AddCustomJob('wechatBeanstalk','get_qrcode',$params,$error)) {
+                    if(!JobUtil::AddCustomJob('imgBeanstalk','get_qrcode',$params,$error)) {
                         \Yii::error($error);
                     }
                     $contentStr = '海报生成中 ...';

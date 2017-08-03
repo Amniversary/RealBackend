@@ -26,6 +26,7 @@ use common\models\QrcodeImg;
 use common\models\QrcodeShare;
 use EasyWeChat\MiniProgram\QRCode\QRCode;
 use Qiniu\Auth;
+use yii\helpers\Console;
 
 class EventClass
 {
@@ -75,7 +76,7 @@ class EventClass
             if(in_array($auth->record_id,[84,85,86,89])){
                 if(empty($UserInfo)) {
                     $params = ['key_word' => 'get_qrcode', 'data' => $this->data];
-                    if(!JobUtil::AddCustomJob('wechatBeanstalk','get_qrcode',$params,$error)) {
+                    if(!JobUtil::AddCustomJob('imgBeanstalk','get_qrcode',$params,$error)) {
                         \Yii::error($error);
                     }
                 }
@@ -118,11 +119,13 @@ class EventClass
      * @return null
      */
     public function  getQrCodeImg(&$error) {
+        $start = microtime(true);
         $openid = $this->data['FromUserName'];
         $auth = AuthorizerUtil::getAuthOne($this->data['appid']);
         $access_token = $auth->authorizer_access_token;
         $client = AuthorizerUtil::getUserForOpenId($openid,$auth->record_id);
         if(!$client) {
+            $a = microtime(true);
             $getData = WeChatUserUtil::getUserInfo($access_token, $openid);
             if(!isset($getData) || empty($getData)) {
                 $error  = '获取用户数据为空: openId: '.$openid .' accessToken:'.$access_token;
@@ -141,26 +144,35 @@ class EventClass
                 \Yii::error($error. ' :'.var_export($model->getErrors(),true));
                 return false;
             }
+            fwrite(STDOUT, Console::ansiFormat("更新用户信息 Time : ".(microtime(true) - $a)."\n", [Console::FG_GREEN]));
             $client = $model;
         }
         $img = ImageUtil::GetQrcodeImg($client->client_id);
         if(!isset($img) || empty($img)) {  //TODO: 如果图片不存在  重新生成并上传
+            $b = microtime(true);
             $userData = WeChatUserUtil::getUserInfo($access_token,$openid);
+            fwrite(STDOUT, Console::ansiFormat("获取用户信息  Time : ".(microtime(true) - $b)."\n", [Console::FG_GREEN]));
+
             if(empty($userData['headimgurl'])) {
                 $userData['headimgurl'] = 'http://7xld1x.com1.z0.glb.clouddn.com/timg.jpeg';
             }
+            $c = microtime(true);
             if(!WeChatUserUtil::getQrcodeSendImg($access_token,$openid,$userData['headimgurl'],$qrcode_file,$pic_file,$error)) {
                 $error = '获取二维码图片失败 '.$error;
                 return false;
             }
+            fwrite(STDOUT, Console::ansiFormat("获取二维码和用户头像地址: Time : ".(microtime(true) - $c)."\n", [Console::FG_GREEN]));
             $text = $userData['nickname'];
+            $d = microtime(true);
             if(!ImageUtil::imagemaking($qrcode_file,$pic_file,$openid,$text,$bg_img,$error)){
                 return false;
             }
+            fwrite(STDOUT, Console::ansiFormat("生成海报图片: Time : ".(microtime(true) - $d)."\n", [Console::FG_GREEN]));
             if(!file_exists($bg_img)) {
                 $error = '海报生成失败: bg_img:'. $bg_img . ' qrcode_img:' . $qrcode_file . ' pic:'. $pic_file;
                 return false;
             }
+            $e = microtime(true);
             $wechat = new WeChatUtil();
             if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
                 if($rst['errcode'] == 45009) {
@@ -172,39 +184,52 @@ class EventClass
                 }
                 return false;
             }
+            fwrite(STDOUT, Console::ansiFormat("上传微信图片: Time : ".(microtime(true) - $e)."\n", [Console::FG_GREEN]));
             $model = new QrcodeImg();
             $model->client_id = $client->client_id;
             $model->media_id = $rst['media_id'];
             $model->update_time = $rst['created_at'];
             $model->save();
             $media_id = $model->media_id;
-            $imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
-            if(!JobUtil::AddCustomJob('wechatBeanstalk','delete_msg',$imgParams,$error)) {
+            $unlink = microtime(true);
+            @unlink($qrcode_file);
+            @unlink($pic_file);
+            fwrite(STDOUT, Console::ansiFormat("删除图片地址 : Time : ".(microtime(true) - $unlink)."\n", [Console::FG_GREEN]));
+            /*$imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
+            if(!JobUtil::AddCustomJob('imgBeanstalk','delete_img',$imgParams,$error)) {
                 \Yii::error($error); \Yii::getLogger()->flush(true);
-            }
+            }*/
         } else {
             $time = time();
-            $outTime = intval(($time - $img->update_time) / 84600);
+            $outTime = intval(($time - $img->update_time) / 86400);
             if($outTime >= 3){
+                $f = microtime(true);
                 $userData = WeChatUserUtil::getUserInfo($access_token,$openid);
+                fwrite(STDOUT, Console::ansiFormat("更新用户信息 2 Time : ".(microtime(true) - $f)."\n", [Console::FG_GREEN]));
                 if(empty($userData['headimgurl'])) {
                     $userData['headimgurl'] = 'http://7xld1x.com1.z0.glb.clouddn.com/timg.jpeg';
                 }
+                $g = microtime(true);
                 if(!WeChatUserUtil::getQrcodeSendImg($access_token,$openid,$userData['headimgurl'],$qrcode_file,$pic_file,$error)) {
                     $error = '获取图片失败 '.$error;
                     return false;
                 }
+                fwrite(STDOUT, Console::ansiFormat("获取二维码和用户头像地址2: Time : ".(microtime(true) - $g)."\n", [Console::FG_GREEN]));
                 $text = $userData['nickname'];
+                $h = microtime(true);
                 if(!ImageUtil::imagemaking($qrcode_file,$pic_file,$openid,$text,$bg_img,$error)){
                     return false;
                 }
+                fwrite(STDOUT, Console::ansiFormat("生成海报图片2: Time : ".(microtime(true) - $h)."\n", [Console::FG_GREEN]));
                 if(!file_exists($bg_img)) {
                     $error = '海报生成失败2: bg_img:'. $bg_img . ' qrcode_img:' . $qrcode_file . ' pic:'. $pic_file;
                     return false;
                 }
+                $i = microtime(true);
                 $wechat = new WeChatUtil();
                 if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
                     if($rst['errcode'] == 45009) {
+                        fwrite(STDOUT, Console::ansiFormat("图片Api请求达到日上限执行清理 "."\n", [Console::FG_GREEN]));
                         $Clear = WeChatUserUtil::ClearQuota($this->data['appid'], $access_token);
                         if(!$Clear['errcode'] != 0) {
                             \Yii::error('Clear quota :'.var_export($Clear,true));
@@ -213,14 +238,19 @@ class EventClass
                     }
                     return false;
                 }
-                $imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
-                if(!JobUtil::AddCustomJob('wechatBeanstalk','delete_msg',$imgParams,$error)) {
+                fwrite(STDOUT, Console::ansiFormat("上传微信图片2: Time : ".(microtime(true) - $i)."\n", [Console::FG_GREEN]));
+                /*$imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
+                if(!JobUtil::AddCustomJob('imgBeanstalk','delete_img',$imgParams,$error)) {
                     \Yii::error($error); \Yii::getLogger()->flush(true);
-                }
+                }*/
                 $img->client_id = $client->client_id;
                 $img->media_id = $rst['media_id'];
                 $img->update_time = $rst['created_at'];
                 $img->save();
+                $unlink2 = microtime(true);
+                @unlink($qrcode_file);
+                @unlink($pic_file);
+                fwrite(STDOUT, Console::ansiFormat("删除图片地址2 : Time : ".(microtime(true) - $unlink2)."\n", [Console::FG_GREEN]));
             }
             $media_id = $img->media_id;
         }
@@ -230,6 +260,7 @@ class EventClass
             ['msg_type'=>'2', 'media_id'=>$media_id],
         ];
         $msgObj->sendMessageCustom($msgData,$openid);
+        fwrite(STDOUT, Console::ansiFormat("任务结束时间: Time : ".(microtime(true) - $start)."\n\n", [Console::FG_GREEN]));
         return true;
     }
 }

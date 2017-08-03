@@ -16,6 +16,7 @@ class CreateMsgAction extends Action
         $model->app_id = $Cache['record_id'];
         $model->flag = 0;
         $model->msg_type = 0;
+        $model->order_no = 50;
         $model->create_time = date('Y-m-d H:i:s');
         $load = \Yii::$app->request->post();
         if(!empty($load)){

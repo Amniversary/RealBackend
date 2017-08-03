@@ -21,6 +21,8 @@ class TubeAction extends Action
         $jobId = $job->getId();
         fwrite(STDOUT, Console::ansiFormat("---tube-- in job id:[$jobId]----"."\n", [Console::FG_GREEN]));
         try {
+            set_time_limit(0);
+
             // something useful here
             $everthingIsAllRight = true;
             if($everthingIsAllRight == true){

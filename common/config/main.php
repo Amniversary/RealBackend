@@ -55,6 +55,13 @@ return [
             'port'=>11303,
             'connectTimeout'=>1,
             'sleep'=> 0,
+        ],
+        'imgBeanstalk'=>[
+            'class'=>'udokmeci\yii2beanstalk\Beanstalk',
+            'host'=>"127.0.0.1",
+            'port'=>11304,
+            'connectTimeout'=>1,
+            'sleep'=>false
         ]
     ],
 ];

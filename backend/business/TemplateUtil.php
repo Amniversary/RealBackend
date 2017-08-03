@@ -9,6 +9,8 @@
 namespace backend\business;
 
 
+use common\models\Template;
+
 class TemplateUtil
 {
     /**
@@ -131,4 +133,13 @@ class TemplateUtil
         return $resultStr = sprintf($xml,$arr['FromUserName'],$arr['ToUserName'],time(),$content['media_id']);
     }
 
+    /**
+     * 根据模板id 获取模板
+     * @param $id
+     * @return null|Template
+     */
+    public static function GetTemplateById($id)
+    {
+        return Template::findOne(['id'=>$id]);
+    }
 }
