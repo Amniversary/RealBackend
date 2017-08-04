@@ -15,7 +15,6 @@
         background-color: #fff;
         padding: 20px;
         /*margin-bottom: 20px;*/
-
     }
     #temp{
         background-color: #EBEBEB;
@@ -70,7 +69,8 @@ common\assets\ArtDialogAsset::register($this);
                 <label class="template-label"><?= strpos($item['text'],'DATA') ? '': $item['text'].':' ?></label>
                 <label class="template-label" id="<?= $item['format'].'-label' ?>"></label>&nbsp;
                 <a href="#" id="<?= $item['format'].'-a' ?>"><span class="glyphicon glyphicon-pencil"></span></a>
-                <input type="hidden" name="Template[<?= $item['format'] ?>]" id="Template-<?= $item['format'] ?>-hide" value=""/>
+                <input type="hidden" name="Template[<?= $item['format'] ?>][value]" id="Template-<?= $item['format'] ?>-hide" value=""/>
+                <input type="hidden" name="Template[<?= $item['format'] ?>][color]" id="Template-<?= $item['format'] ?>-color-hide" value=""/>
                 <br/>
             <?php } ?>
         </div>
@@ -104,13 +104,21 @@ foreach($data as $item) {
      $(document).on("click", "#' . $item['format'] . '-a",function(){
            var dialog = art.dialog({
                 content: "<textarea type=\"text\" style=\"width:500px;\" id=\"' . $item['format'] . '-text\"></textarea>"
-                    + "<br/><label style=\"color:#8E8E8E\">文本中加入{{NICKNAME}}会替换成用户昵称</label>",
+                    + "<select id=\"template-color\" class=\"form-control\" style=\"width:100px\">"
+                    + "<option value=\"#173177\" selected=\"\">蓝</option>"
+                    + "<option value=\"#FF0000\" selected=\"\">红</option>"
+                    + "<option value=\"\" selected=\"\">黑</option>"
+                    + "</select>"
+                    + "<br/><label style=\"color:#8E8E8E\">文本中加入 {{NICKNAME}} 会替换成用户昵称</label>",
                 fixed: true,
                 lock:true,
                 ok:function() {
                     $text = $("#' . $item['format'] . '-text").val();
+                    $value = $("#template-color option:selected").val();
                     $("#' . $item['format'] . '-label").html($text);
-                    $("#Template-' . $item['format'] . '-hide").val($text);
+                    $("#Template-'. $item['format'].'-hide").val($text);
+                    $("#Template-'. $item['format'].'-color-hide").val($value);
+                    $("#' . $item['format'] . '-label").css("color", $value);
                 },
                 cancel:true,
            })

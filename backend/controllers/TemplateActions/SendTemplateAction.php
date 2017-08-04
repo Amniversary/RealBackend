@@ -48,8 +48,8 @@ class SendTemplateAction extends Action
             $template = new TemplateComponent(null,$accessToken);
             $data = [];
             foreach($post as $key=>$v) {
-                $value = str_replace('{{NICKNAME}}', $client->nick_name, $v);
-                $data[$key] = ['value'=>$value, 'color'=> '#173177'];
+                $value = str_replace('{{NICKNAME}}', $client->nick_name, $v['value']);
+                $data[$key] = ['value'=>$value, 'color'=> $v['color']];
             }
             $sendData = $template->BuildTemplate($open_id,$templateData->template_id,$data,$url);
             \Yii::error('template:'.var_export($sendData,true));

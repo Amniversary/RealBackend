@@ -35,15 +35,15 @@ class SendTemplateMsgAction extends Action
             $query = (new Query())
                 ->select(['client_id','open_id','nick_name','app_id'])
                 ->from('wc_client')
-                ->where(['app_id'=>$auth->record_id,'subscribe'=>1])
+                ->where('app_id = :appid and subscribe = :sub',[':appid'=>$auth->record_id,':sub'=>1])
                 ->all();
             $url = $data['url'];
             unset($data['url']);
             foreach($query as $list) {
                 $msgData = [];
                 foreach($data as $key => $v) {
-                    $value = str_replace('{{NICKNAME}}', $list['nick_name'], $v);
-                    $msgData[$key] = ['value'=>$value, 'color'=> '#173177'];
+                    $value = str_replace('{{NICKNAME}}', $list['nick_name'], $v['value']);
+                    $msgData[$key] = ['value'=>$value, 'color'=> $v['color']];
                 }
                 $sendData = $template->BuildTemplate($list['open_id'],$templateData->template_id,$msgData,$url);
                 $res = $template->SendTemplateMessage($sendData);
@@ -59,7 +59,7 @@ class SendTemplateMsgAction extends Action
                     continue;
                 }
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($res)."--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
-                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --$sentData->key_word-- "."\n", [Console::FG_GREEN]));
+                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --nick_name : ".$list['nick_name']."\n", [Console::FG_GREEN]));
             }
 
             fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." ----$sentData->key_word--任务执行完成!"."\n", [Console::FG_GREEN]));
