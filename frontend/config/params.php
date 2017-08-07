@@ -28,10 +28,4 @@ return [
     'log_encrypt_key'=>'sowe!@#45&8(sjowj1234jow',
     'living_key'=>'Wg9Y3PRwr8eNOwMToQqpSrGpv9uw0jlPyMbVVTuT',
     'is_begin_check_app_id'=>'0',
-    'error_unique_no'=>[
-//        'A1000',
-        'A0000',
-        '00000',
-    ],
-
 ];

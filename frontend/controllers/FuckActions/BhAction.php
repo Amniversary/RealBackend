@@ -95,6 +95,10 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        $time = strtotime(date('Y-m-d 00:00:00'));
+        var_dump($time);
+
+        exit;
         $mp3 = \Yii::$app->basePath.'/web/tttt/getvoice.mp3';
         $m = new mp3file($mp3);
         $a = $m->get_metadata();

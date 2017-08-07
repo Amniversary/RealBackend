@@ -73,7 +73,7 @@ class EventClass
                 \Yii::error('保存微信用户信息失败：'.var_export($model->getErrors(),true));
                 return null;
             }
-            if(in_array($auth->record_id,[84,85,86,89])){
+            if(in_array($auth->record_id,\Yii::$app->params['WxAuthParams'])){
                 if(empty($UserInfo)) {
                     $params = ['key_word' => 'get_qrcode', 'data' => $this->data];
                     if(!JobUtil::AddCustomJob('imgBeanstalk','get_qrcode',$params,$error)) {

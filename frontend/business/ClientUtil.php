@@ -60,7 +60,6 @@ class ClientUtil
             $data[$item]['create_time'] = $value['create_time'];
         }
 
-
         return $data;
     }
 

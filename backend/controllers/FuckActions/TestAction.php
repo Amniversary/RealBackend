@@ -21,44 +21,44 @@ class TestAction extends Action
     public function run()
     {
         echo "<pre>";
-        $auth = AuthorizerUtil::getAuthByOne(84);
+        $auth = AuthorizerUtil::getAuthByOne(85);
         $app_id = $auth->record_id;
         $accessToken = $auth->authorizer_access_token;
         $url = 'http://novel.duobb.cn/novel/vipremind?app=4';
 
         $data = [
             [
-                'open_id'=>'oJXYOwRxeD5L-w6tHu1LsD2oPgTw',
+                'open_id'=>'oG5UpwKsAdoEb1iGmlgPcTI9jvQg',
                 'nick_name'=>"Gavean"
             ]
         ];
         $template = new TemplateComponent($app_id, $accessToken);
-        $temp = 'iecBsyRQxB25021l4nRpvSkPdPnedWSVZVKTnse4-hI';
+        $temp = 'uK2SkIUqJpL5jy_lAauMIvHMp9DuOM9Np0ez3eHm8bE';
 
         foreach($data as $item) {
             $data = [
                 'first'=>[
-                    'value'=>'您好，您的『免费开通会员』特权即将到期。',
+                    'value'=>"您好，您的免费开通『VIP会员』特权即将到期。",
                     'color'=>'#173177'
                 ],
                 'keyword1'=>[
                     'value'=>$item['nick_name'],
-                    'color'=>'#173177',
+                    'color'=>'#135EFB',
                 ],
                 'keyword2'=>[
                     'value'=>'未知',
                     'color'=>'#173177',
                 ],
                 'keyword3'=>[
-                    'value'=>'邀您免费开通会员',
-                    'color'=>'#173177',
+                    'value'=>'邀您免费开通【VIP会员】',
+                    'color'=>'#FF0000',
                 ],
                 'keyword4'=>[
                     'value'=>date('Y-m-d', strtotime('+3 day')),
-                    'color'=>'#173177',
+                    'color'=>'#135EFB',
                 ],
                 'remark'=>[
-                    'value'=>"会员到期之前免费开通会员，您将永久免费阅读『我的书库』所有书籍，更新量超过一万册。\n点击查看 >>> 开通方法",
+                    'value'=>"限时会员到期之前免费开通永久【VIP会员】，您将永久免费阅读『我的书库』所有书籍。\n点击查看 >>> 开通方法",
                     'color'=>'#173177',
                 ]
             ];

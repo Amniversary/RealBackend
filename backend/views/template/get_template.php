@@ -46,7 +46,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Template */
+/* @var $template common\models\Template */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $cache */
 common\assets\ArtDialogAsset::register($this);
@@ -88,9 +88,9 @@ common\assets\ArtDialogAsset::register($this);
     </div>
     <br/>
     <div class="form-group">
-        <?= Html::button($model->isNewRecord ? '新增' : '发送',['id'=>'send-msg','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::button('发送',['id'=>'send-msg','class' =>'btn btn-primary']) ?>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['template/index']), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['template/index']), ['class' => 'btn btn-primary']) ?>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <?= Html::button('测试发送',['class'=>'btn btn-success test-send']) ?>
     </div>
@@ -106,6 +106,7 @@ foreach($data as $item) {
                 content: "<textarea type=\"text\" style=\"width:500px;\" id=\"' . $item['format'] . '-text\"></textarea>"
                     + "<select id=\"template-color\" class=\"form-control\" style=\"width:100px\">"
                     + "<option value=\"#173177\" selected=\"\">蓝</option>"
+                    + "<option value=\"#135EFB\" selected=\"\">天蓝</option>"
                     + "<option value=\"#FF0000\" selected=\"\">红</option>"
                     + "<option value=\"\" selected=\"\">黑</option>"
                     + "</select>"
@@ -115,13 +116,15 @@ foreach($data as $item) {
                 ok:function() {
                     $text = $("#' . $item['format'] . '-text").val();
                     $value = $("#template-color option:selected").val();
-                    $("#' . $item['format'] . '-label").html($text);
+                    $("#'. $item['format'] .'-label").html($text);
                     $("#Template-'. $item['format'].'-hide").val($text);
                     $("#Template-'. $item['format'].'-color-hide").val($value);
-                    $("#' . $item['format'] . '-label").css("color", $value);
+                    $("#'. $item['format'] .'-label").css("color", $value);
                 },
                 cancel:true,
            })
+           $vue = $("#Template-'. $item['format'].'-hide").val();
+           $("#' . $item['format'] . '-text").val($vue);
      });
 ';
 }

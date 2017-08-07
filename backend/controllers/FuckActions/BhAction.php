@@ -24,6 +24,7 @@ use Codeception\Module\Cli;
 use common\components\OssUtil;
 use common\components\SystemParamsUtil;
 use common\components\UsualFunForNetWorkHelper;
+use common\components\UsualFunForStringHelper;
 use common\models\AttentionEvent;
 use common\models\AuthorizationList;
 use common\models\AuthorizationMenu;
@@ -46,6 +47,35 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        $data = \Yii::$app->params['WxAuthParams'];
+        $str = implode(',', $data);
+
+        $sql = 'select client_id,nick_name,open_id,c.app_id, ifnull(temp_num,0) as temp_num
+                from wc_client c left join wc_template_flag f ON  c.client_id = f.user_id and c.app_id = f.app_id
+                where client_id = 114567 and is_vip = 0 and c.app_id in ('.$str.') and (create_time BETWEEN :star and :end)  and subscribe = 1';
+        $OneGroupData =  \Yii::$app->db->createCommand($sql,[
+            ':star' => date('Y-m-d H:i:s', time() - 60 * 60),
+            ':end' => date('Y-m-d H:i:s', time() - 60 * 30),
+        ])->queryAll();
+        print_r(\Yii::$app->db->createCommand($sql,[
+            ':star' => date('Y-m-d H:i:s', time() - 60 * 60),
+            ':end' => date('Y-m-d H:i:s', time() - 60 * 30),
+        ])->rawSql);
+        print_r($OneGroupData);
+        exit;
+        $sql ='select client_id,nick_name,open_id,c.app_id,ifnull(temp_num,0) as temp_num
+                        from wc_client c left join wc_template_flag f on c.client_id = f.user_id and c.app_id = f.app_id
+                        where client_id = 114567 and is_vip = 0 and c.app_id in ('.$str.') and (create_time BETWEEN :star and :end) and subscribe = 1';
+        $TowGroupData = \Yii::$app->db->createCommand($sql,[
+            ':star'=> date('Y-m-d H:i:s', time() - (60 * (60 * 2 + 30))),
+            ':end' => date('Y-m-d H:i:s', time() - 60 * 60 * 2),
+        ])->queryAll();
+        print_r(\Yii::$app->db->createCommand($sql,[
+            ':star'=> date('Y-m-d H:i:s', time() - (60 * (60 * 2 + 30))),
+            ':end' => date('Y-m-d H:i:s', time() - 60 * 60 * 2),
+        ])->rawSql);
+        print_r($TowGroupData);exit;
+        exit;
         phpinfo();
         exit;
         $stat = microtime(true);

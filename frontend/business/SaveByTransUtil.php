@@ -9,6 +9,7 @@
 namespace frontend\business;
 
 
+
 use frontend\business\SaveRecordByransactions\ISaveForTransaction;
 use yii\base\Exception;
 use yii\db\Transaction;
@@ -23,7 +24,7 @@ class SaveByTransUtil
      * @return bool
      * @throws \yii\db\Exception
      */
-    public static function RewardSaveByTransaction($objList,&$error,&$outInfo = null)
+    public static function SaveByTransaction($objList,&$error,&$outInfo = null)
     {
         $error ='';
         if(!isset($objList) || !is_array($objList))
