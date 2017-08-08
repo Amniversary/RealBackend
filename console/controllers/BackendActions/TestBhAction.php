@@ -11,8 +11,10 @@ namespace console\controllers\BackendActions;
 
 use common\components\tenxunlivingsdk\TimRestApi;
 use common\models\AuthorizationList;
+use common\models\StatisticsCount;
 use frontend\business\JobUtil;
 use yii\base\Action;
+use yii\db\Exception;
 use yii\db\Query;
 use yii\log\Logger;
 
@@ -20,6 +22,27 @@ class TestBhAction extends Action
 {
     public function run()
     {
+        set_time_limit(0);
+        echo "<pre>";
+        try{
+            $trans = \Yii::$app->db->beginTransaction();
+            $sql = 'select app_id ,SUM(new_user) as num from wc_fans_statistics GROUP BY app_id  ';
+            $a = \Yii::$app->db->createCommand($sql)->queryAll();
+            foreach($a as $item) {
+                $auth = StatisticsCount::findOne(['app_id'=>$item['app_id']]);
+                $auth->cumulate_user = $auth->count_user + $item['num'];
+                if(!$auth->save()){
+                    print_r($auth->getError());exit;
+                }
+            }
+            echo "ok";
+            $trans->commit();
+
+        }catch(Exception $e){
+            $trans->rollBack();
+            print_r($e->getMessage());
+        }
+        exit;
         phpinfo();
         exit;
         print_r(\Yii::$app->basePath);

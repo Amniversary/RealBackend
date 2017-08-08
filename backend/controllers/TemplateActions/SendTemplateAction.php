@@ -25,7 +25,6 @@ class SendTemplateAction extends Action
         $id = \Yii::$app->request->get('id');
         $templateData = TemplateUtil::GetTemplateById($id);
         $post = \Yii::$app->request->post('Template');
-        \Yii::error('post:'.var_export($post,true));
         if($t == 'test') {
             if(!isset($post['openid'])) {
                 $rst['msg'] = '参数openId不能为空';

@@ -293,8 +293,8 @@ class WeChatUserUtil
     public static function getWxFansAccumulate($access_token,&$rst,&$error)
     {
         $url = "https://api.weixin.qq.com/datacube/getusercumulate?access_token=$access_token";
-        $data['begin_date'] = date('Y-m-d',strtotime('-1 day'));;
-        $data['end_date'] = date('Y-m-d',strtotime('-1 day'));;
+        $data['begin_date'] = date('Y-m-d',strtotime('-1 day'));
+        $data['end_date'] = date('Y-m-d',strtotime('-1 day'));
         $json = json_encode($data);
         $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
         if($rst['errcode'] != 0){

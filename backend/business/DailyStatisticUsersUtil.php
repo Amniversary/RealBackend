@@ -22,6 +22,14 @@ use yii\log\Logger;
 
 class DailyStatisticUsersUtil {
 
+    public static function GetDailyFansNum($rd){
+        $query = (new Query())
+            ->select(['al.record_id','ifnull(new_user,0) as new_user','ifnull(net_user,0) as net_user','ifnull(count_user,0) as count_user'])
+            ->from('wc_authorization_list al')
+            ->innerJoin('wc_statistics_count sc','al.record_id = sc.app_id and al.record_id = :rd',[':rd'=>$rd])
+            ->leftJoin('wc_fans_statistics fs','al.record_id = fs.app_id and fs.statistics_date =:date',[':date'=>date('Y-m-d')])->one();
+        return $query;
+    }
     /**
      * 当日统计人数
      * @return array

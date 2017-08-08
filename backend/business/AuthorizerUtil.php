@@ -93,7 +93,6 @@ class AuthorizerUtil
             $model->is_vip = 0;
         }
 
-
         $model->subscribe = isset($getData['subscribe'])? $getData['subscribe'] : '';
         $model->nick_name = isset($getData['nickname'])? $getData['nickname'] : '';
         $model->sex = isset($getData['sex'])? $getData['sex'] : '';

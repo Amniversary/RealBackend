@@ -8,6 +8,21 @@ use yii\helpers\Html;
     .auth-image{
         float: left;
     }
+    .user-header>p {
+        font-size: 14px !important;
+        font-weight: bold !important;
+    }
+    #head-ul{
+        color: #FFF;
+        font-weight: bold;
+        font-size: 14px;
+        list-style: none;
+        text-align: initial;
+    }
+    #head-ul > li {
+        display: list-item;
+        padding-left: 32%;
+    }
 </style>
 <header class="main-header">
 
@@ -25,6 +40,7 @@ use yii\helpers\Html;
 
                 <?php if (!empty($authInfo)) { ?>
                 <!-- 公众号头部 -->
+                <?php $authData = \backend\business\DailyStatisticUsersUtil::GetDailyFansNum($authInfo['record_id']);  ?>
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= $authInfo['head_img']; ?>" class="user-image" alt="User Image"/>
@@ -32,13 +48,16 @@ use yii\helpers\Html;
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
-                        <li class="user-header">
+                        <li class="user-header" style="height: auto">
                             <img src="<?= $authInfo['head_img']; ?>" class="auth-image" alt="User Image"/>
-                            <p>
-                                <?= date('Y-m-d') ?>
                             <h4 style="color: #FFF"><?= $authInfo['nick_name'] ?></h4>
-                            </p>
-
+                            <ul id="head-ul">
+                                <li>公众号类型 : <?= \common\models\AuthorizationList::getServiceTypeInfo($authInfo['service_type_info']) ?></li>
+                                <li>认证类型 : <?= \common\models\AuthorizationList::getVerifyTypeInfo($authInfo['verify_type_info']) ?></li>
+                                <li>新增人数 : <?= $authData['new_user'] ?></li>
+                                <li>净增人数 : <?= $authData['net_user'] ?></li>
+                                <li>总粉丝数 : <?= $authData['count_user'] ?></li>
+                            </ul>
                         </li>
                     </ul>
                 </li>

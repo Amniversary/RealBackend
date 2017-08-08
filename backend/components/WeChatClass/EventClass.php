@@ -54,16 +54,11 @@ class EventClass
             if(!JobUtil::AddCustomJob('attentionBeanstalk','attention',$DataPrams,$error))
                 \Yii::error($error);
         }
-
         //TODO: 获取用户基本信息
         if(AuthorizerUtil::isVerify($auth->verify_type_info)) {
             $getData = WeChatUserUtil::getUserInfo($access_token,$openid); //TODO: 请求获取用户信息
-            if(!isset($getData) || empty($getData)) {
-                \Yii::error('获取用户信息：'.var_export($getData,true),' openId:'. $openid . ' accessToken:'.$access_token);
-                return null;
-            }
-            if($getData['errcode'] != 0 || !$getData) {
-                \Yii::error('获取用户信息:'. var_export($getData,true).' openId1:'. $openid. ' accessToken1:'. $access_token);
+            if(isset($getData['errcode']) && $getData['errcode'] != 0) {
+                \Yii::error('获取用户信息:'. var_export($getData,true).' openId : '. $openid );
                 return null;
             }
             $getData['app_id'] = $auth->record_id;

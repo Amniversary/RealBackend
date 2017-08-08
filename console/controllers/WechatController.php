@@ -70,7 +70,10 @@ class WechatController extends Controller
     public function actionFansnum()
     {
         $query = (new Query())
-            ->select(['record_id','authorizer_access_token','verify_type_info','nick_name'])->from('wc_authorization_list')->all();
+            ->select(['record_id','authorizer_access_token','verify_type_info','nick_name'])
+            ->from('wc_authorization_list')
+            ->where('record_id = 85')
+            ->all();
         if(empty($query)){
             echo "没有找到公众号信息 \n";
             exit;
@@ -83,12 +86,15 @@ class WechatController extends Controller
                 continue;
             }
             if(!WeChatUserUtil::getWxFansAccumulate($item['authorizer_access_token'],$rst,$error)){
-                echo "$error 公众号:".$item['nick_name']." \n";
+                echo "$error 公众号:".$item['nick_name']." \n";continue;
+            }
+            if($rst['list'][0]['cumulate_user'] < 0 || !isset($rst['list'][0]['cumulate_user'])) {
+                continue;
             }
             try{
                 $trans = \Yii::$app->db->beginTransaction();
                 $fans = $this->getFansRecord($item['record_id']);
-                $fans_count = $this->getFansCount($item['record_id']);
+                //$fans_count = $this->getFansCount($item['record_id']);
                 if(empty($fans)){
                     $fans = new FansStatistics();
                     $fans->app_id = $item['record_id'];
@@ -102,8 +108,9 @@ class WechatController extends Controller
                 if(!$fans->save()){
                     \Yii::error('error:'.var_export($fans->getErrors(),true));
                 }
-                $fans_count->count_user = floatval($rst['list'][0]['cumulate_user'] + $fans->net_user);
-                $fans_count->cumulate_user = floatval($rst['list'][0]['cumulate_user'] + $fans->new_user);
+                //$fans_count->count_user = floatval($rst['list'][0]['cumulate_user'] + $fans->net_user);
+                //$fans_count->cumulate_user = floatval($rst['list'][0]['cumulate_user'] + $fans->new_user);
+                //$fans_count->save();
                 $trans->commit();
             }catch(Exception $e) {
                 $trans->rollBack();

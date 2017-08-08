@@ -21,19 +21,19 @@ class TestAction extends Action
     public function run()
     {
         echo "<pre>";
-        $auth = AuthorizerUtil::getAuthByOne(85);
+        $auth = AuthorizerUtil::getAuthByOne(76);
         $app_id = $auth->record_id;
         $accessToken = $auth->authorizer_access_token;
         $url = 'http://novel.duobb.cn/novel/vipremind?app=4';
 
         $data = [
             [
-                'open_id'=>'oG5UpwKsAdoEb1iGmlgPcTI9jvQg',
+                'open_id'=>'ol_EGvw_V3rXYILgc7QEOVVBrxwg',
                 'nick_name'=>"Gavean"
             ]
         ];
         $template = new TemplateComponent($app_id, $accessToken);
-        $temp = 'uK2SkIUqJpL5jy_lAauMIvHMp9DuOM9Np0ez3eHm8bE';
+        $temp = 'HztMzehij46IRm31whdZeStiiLjC_rgWunoNOAF2cjo';
 
         foreach($data as $item) {
             $data = [

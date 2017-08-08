@@ -7,15 +7,9 @@
  */
 namespace frontend\controllers\FuckActions;
 
-use BaiduBce\Services\Lss\LssClient;
-use common\components\AESCrypt;
-use common\components\alipay\AlipayUtil;
-use common\components\CharToPingYinManager;
-use common\components\Des3Crypt;
-use common\components\GameRebotsHelper;
-use common\components\getui\GeTuiUtil;
-use common\components\getui\GetuiVersions\GetuiMblive1;
-use common\components\getui\GetuiVersions\GetuiVersionUtil;
+
+use backend\business\AuthorizerUtil;
+use backend\business\WeChatUserUtil;
 use common\components\IOSBuyUtil;
 use common\components\MoneyUtil;
 use common\components\mp3\mp3file;
@@ -27,66 +21,11 @@ use common\components\UsualFunForNetWorkHelper;
 use common\components\UsualFunForStringHelper;
 use common\components\wxpay\lib\WxPayOrderQuery;
 use common\components\wxpay\lib\WxPayOrderQueryApp;
-use common\models\Advertise;
-use common\models\Client;
-use common\models\ClientNoList;
-use common\models\ClientOther;
-use common\models\Gift;
-use common\models\LivingParameters;
-use common\models\Menu;
-use common\models\MultiVersionInfo;
-use common\wxverify\WXBizMsgCrypt;
-use console\controllers\BackendActions\ProduceRobotsAction;
-use Faker\Provider\Uuid;
-use frontend\business\ActivityStatisticUtil;
-use frontend\business\ActivityUtil;
-use frontend\business\ApiCommon;
-use frontend\business\BalanceUtil;
-use frontend\business\ChatFriendsUtil;
-use frontend\business\ChatPersonGroupUtil;
-use frontend\business\ClientGoodsUtil;
-use frontend\business\ClientInfoUtil;
-use frontend\business\ClientLivingParamtersUtil;
-use frontend\business\ClientUtil;
-use frontend\business\DynamicUtil;
-use frontend\business\FansGroupUtil;
-use frontend\business\GiftUtil;
-use frontend\business\GoldsAccountUtil;
-use frontend\business\GoodsTicketToCashUtil;
-use frontend\business\IntegralAccountUtil;
-use frontend\business\JobUtil;
-use frontend\business\LivingGuessUtil;
-use frontend\business\LivingHotUtil;
-use frontend\business\LivingUtil;
-use frontend\business\LuckyGiftUtil;
-use frontend\business\MultiUpdateContentUtil;
-use frontend\business\MultiVersionInfoUtil;
-use frontend\business\NiuNiuGameGrabSeatUtil;
-use frontend\business\NiuNiuGameHelper;
-use frontend\business\NiuNiuGameUtil;
-use frontend\business\OtherPayUtil;
-use frontend\business\RongCloud\SystemMessageUtil;
+use common\models\StatisticsCount;
 use frontend\business\RongCloud\UserUtil;
-use frontend\business\SaveByTransUtil;
-use frontend\business\SaveRecordByransactions\SaveByTransaction\NiuNiuGameMultipleUpdateSaveByTrans;
-use frontend\business\StatisticActiveUserUtil;
-use frontend\business\UpdateContentUtil;
-use frontend\zhiboapi\v1\ZhiBoDanmaku;
-use frontend\zhiboapi\v1\ZhiBoGetClientInfo;
-use frontend\zhiboapi\v1\ZhiBoGetValidateCode;
-use frontend\zhiboapi\v1\ZhiBoLoginQiNiu;
-use frontend\zhiboapi\v1\ZhiBoQuitRoom;
-use frontend\zhiboapi\v2\niuniu\ZhiBoStartNiuNiuGame;
-use frontend\zhiboapi\v2\ZhiBoAddDynamic;
-use frontend\zhiboapi\v2\ZhiBoGatherError;
-use frontend\zhiboapi\v2\ZhiBoGetGuess;
-use frontend\zhiboapi\v2\ZhiBoGetRobot;
-use frontend\zhiboapi\v2\ZhiBoLivingRoomSearch;
-use Pheanstalk\Job;
+
 use yii\base\Action;
-use yii\data\Pagination;
 use yii\db\Query;
-use yii\helpers\BaseJson;
 use yii\log\Logger;
 
 
@@ -95,8 +34,48 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
-        $time = strtotime(date('Y-m-d 00:00:00'));
-        var_dump($time);
+        $query = (new Query())
+            ->select(['record_id','authorizer_access_token','verify_type_info','nick_name'])
+            ->from('wc_authorization_list')
+            ->where('record_id = 85')
+            ->all();
+        /*if(!AuthorizerUtil::isVerify($query['verify_type_info'])){
+            print_r('false');exit;
+        }
+        if(!WeChatUserUtil::getWxFansAccumulate($query['authorizer_access_token'],$rst,$error)){
+            echo "$error 公众号:".$query['nick_name']." \n";
+        }*/
+
+        print_r($query);
+        echo "<br/>";
+        //print_r($rst);
+
+
+
+
+
+
+        exit;
+        set_time_limit(0);
+        echo "<pre>";
+        try{
+            $trans = \Yii::$app->db->beginTransaction();
+            $sql = 'select app_id ,SUM(new_user) as num from wc_fans_statistics GROUP BY app_id  ';
+            $a = \Yii::$app->db->createCommand($sql)->queryAll();
+            foreach($a as $item) {
+                $auth = StatisticsCount::findOne(['app_id'=>$item['app_id']]);
+                $auth->cumulate_user = $auth->count_user + $item['num'];
+                if(!$auth->save()){
+                    print_r($auth->getError());exit;
+                }
+            }
+            echo "ok";
+            $trans->commit();
+
+        }catch(Exception $e){
+            $trans->rollBack();
+            print_r($e->getMessage());
+        }
 
         exit;
         $mp3 = \Yii::$app->basePath.'/web/tttt/getvoice.mp3';

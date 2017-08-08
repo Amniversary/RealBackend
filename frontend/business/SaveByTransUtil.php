@@ -9,8 +9,7 @@
 namespace frontend\business;
 
 
-
-use frontend\business\SaveRecordByransactions\ISaveForTransaction;
+use frontend\business\SaveRecordByTransactions\ISaveForTransaction;
 use yii\base\Exception;
 use yii\db\Transaction;
 use yii\log\Logger;
