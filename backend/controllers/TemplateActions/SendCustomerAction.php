@@ -10,6 +10,7 @@ namespace backend\controllers\TemplateActions;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\JobUtil;
 use backend\business\UserUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
@@ -63,11 +64,14 @@ class SendCustomerAction extends Action
                 $data = ['msg_type'=>$post['msg_type'],'media_id'=>$video['media_id']];
                 break;
         }
-        $json = WeChatUserUtil::getMsgTemplate($data,$User->open_id);
-        $msgRst = WeChatUserUtil::sendCustomerMsg($accessToken, $json);
-        if($msgRst['errcode'] != 0) {
-            $rst['msg'] = 'Code : '.$msgRst['errcode'] . ' msg : '.$msgRst['errmsg'] . ' Openid :'. $User->open_id;
-            echo json_encode($rst);exit;
+        $paramData = [
+            'key_word'=>'wx_msg',
+            'open_id'=>$User->open_id,
+            'authorizer_access_token'=>$accessToken,
+            'item'=>$data
+        ];
+        if(!JobUtil::AddCustomJob('wechatBeanstalk','wechat',$paramData,$error)){
+            \Yii::error('keyword msg job is error :'.$error);
         }
 
         $rst['code'] = 0;

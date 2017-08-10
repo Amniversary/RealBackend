@@ -89,6 +89,7 @@ class WechatController extends Controller
                 echo "$error 公众号:".$item['nick_name']." \n";continue;
             }
             if($rst['list'][0]['cumulate_user'] < 0 || !isset($rst['list'][0]['cumulate_user'])) {
+                var_dump($rst);
                 continue;
             }
             try{
