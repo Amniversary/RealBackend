@@ -9,8 +9,10 @@
 namespace backend\controllers;
 
 
+use backend\business\AuthorizerUtil;
 use backend\business\SaveByTransUtil;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveAuthorizeInfoByTrans;
+use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use backend\components\ExitUtil;
 use backend\components\ReceiveType;
@@ -72,7 +74,7 @@ class WechatController extends Controller
         $Receive = new ReceiveType();
         $data = $WeChat->decryptMsg;
         $data['appid'] = $WeChat->AppId;
-        //\Yii::error('data:'.var_export($data,true));
+        $this->SaveUserUpdate($data['FromUserName'], $WeChat->AppId);
         switch ($WeChat->MsgType)
         {
             case 'text':
@@ -158,5 +160,19 @@ class WechatController extends Controller
         $strstr = strstr($rules,"/");
         $strrpos = strtok($strstr,"/");
         return $strrpos;
+    }
+
+    private function SaveUserUpdate($Openid, $app_id){
+        $auth = AuthorizerUtil::getAuthOne($app_id);
+        if(!isset($auth)) {
+            return false;
+        }
+        $User = AuthorizerUtil::getUserForOpenId($Openid, $auth->record_id);
+        if(!isset($User) || empty($User)) {
+           return false;
+        }
+        $User->update_time = date('Y-m-d H:i:s');
+        $User->save();
+        return true;
     }
 }

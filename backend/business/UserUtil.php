@@ -9,6 +9,8 @@
 namespace backend\business;
 
 
+use Codeception\Module\Cli;
+use common\models\Client;
 use common\models\Family;
 use common\models\User;
 use yii\log\Logger;
@@ -122,5 +124,13 @@ class UserUtil
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param $user_id
+     * @return null|Client
+     */
+    public static function  GetClientInfo($user_id){
+       return Client::findOne(['client_id'=>$user_id]);
     }
 }

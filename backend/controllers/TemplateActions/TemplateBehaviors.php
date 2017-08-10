@@ -6,10 +6,10 @@ use yii\filters\VerbFilter;
 return [
     'access' => [
         'class' => AccessControl::className(),
-        'only' => ['index'],
+        'only' => ['index','customer'],
         'rules' => [
             [
-                'actions' => ['index'],
+                'actions' => ['index','customer'],
                 'allow' => true,
                 'roles' => ['@'],
             ],

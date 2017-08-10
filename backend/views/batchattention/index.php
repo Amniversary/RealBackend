@@ -26,7 +26,12 @@
 
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
-
+echo \yii\bootstrap\Alert::widget([
+    'body'=>'未认证公众号，默认回复第一条消息！',
+    'options'=>[
+        'class'=>'alert-warning',
+    ]
+]);
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
     [

@@ -47,6 +47,18 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        $time = strtotime(date('Y-m-d H:i:s'));
+        $end = strtotime('-2 day'); //date('Y-m-d H:i:s',strtotime('-2 day'));
+       $rst  = ($time - $end) / 86400 ;
+        print_r($rst);
+        echo "<br/>";
+        print_r($time);
+        print_r("<br/>");
+        print_r($end);
+        //$rst = Client::find()->where(['and',['app_id'=>85],['between','crete_time',date('Y-m-d H:i:s',time() - 60), date('Y-m-d H:i:s')],['subscribe'=>1]])->one();
+        //$rst = date('Y-m-d H:i:s', strtotime('-2 day'));
+        //print_r($rst);
+        exit;
         $query = (new Query())
         ->select(['al.record_id','ifnull(new_user,0) as new_user','ifnull(net_user,0) as net_user','ifnull(count_user,0) as count_user'])
         ->from('wc_authorization_list al')

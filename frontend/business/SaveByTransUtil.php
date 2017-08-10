@@ -29,6 +29,7 @@ class SaveByTransUtil
         if(!isset($objList) || !is_array($objList))
         {
             $error = '非法对象，不是数组';
+            \Yii::error($error .' :'. var_export($objList,true));
             return false;
         }
         foreach($objList as $obj)
