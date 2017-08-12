@@ -28,6 +28,12 @@ class LoginAction extends Action
             echo json_encode($rst);
             exit;
         }
+        if(!isset($post['type'])) {
+            $rst['msg'] = 'type类型不能为空';
+            echo json_encode($rst);exit;
+        }
+        $type = $post['type'];
+        unset($post['type']);
         $model = new RealtechLoginSearch();
         if(!$model->load($post)){
             \Yii::error('post::'.var_export($post,true));
@@ -35,6 +41,7 @@ class LoginAction extends Action
             echo json_encode($rst);
             exit;
         }
+        $model->type = $type;
         if(!$model->validatePassword($error)){
             $rst['msg'] = $error;
             echo json_encode($rst);

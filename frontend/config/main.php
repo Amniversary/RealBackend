@@ -37,9 +37,7 @@ return [
             //'suffix'=> '.html',//后缀，如果设置了此项，那么浏览器地址栏就必须带上.html后缀，否则会报404错误
             'rules'=> [
                 'mbapi/response.do'=>'mbapi/doaction',
-                'mbapi/testresponse.do'=>'mbapi/testdoaction',
-                'mbapi/servercheck.do'=>'mbapi/checkserver',
-                'autotest/test.do'=>'autotest/doaction',
+                'api/response.do'=>'wcapi/api'
                 //'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
             ],
         ],

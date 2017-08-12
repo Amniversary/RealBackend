@@ -20,6 +20,9 @@
         border:1px solid #00a65a;
         padding: 6px 12px;
     }
+    .alert {
+        padding: 10px;
+    }
 </style>
 
 <?php

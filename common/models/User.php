@@ -46,6 +46,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password'=>'密码',
             'email'=>'邮箱',
             'status'=>'状态',
+            'user_type'=>'帐号类型'
         ];
     }
 
@@ -268,10 +269,12 @@ class User extends ActiveRecord implements IdentityInterface
      * 后台名称
      */
     public function BackendName($status){
+        $rst = '';
         switch (intval($status)){
-            case 0: $rst = '';break;
-            case 1: $rst = '公众号平台';break;
-            case 2: $rst = '微信后台';break;
+            case 0: $rst = '全局';break;
+            case 1: $rst = '公众号管理后台';break;
+            case 2: $rst = '裂变管理系统';break;
+            case 3: $rst = '小鹿微课后台';break;
         }
         return $rst;
     }

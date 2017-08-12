@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'username')->textInput() ?>
-
+    <?= $form->field($model, 'user_type')->dropDownList(['1'=>'公众号管理后台', '2'=>'裂变管理系统', '3'=>'小鹿微课后台']) ?>
     <?= $form->field($model, 'email')->textInput() ?>
 <?php
 if($model->isNewRecord) {

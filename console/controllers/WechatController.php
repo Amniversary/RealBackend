@@ -72,7 +72,6 @@ class WechatController extends Controller
         $query = (new Query())
             ->select(['record_id','authorizer_access_token','verify_type_info','nick_name'])
             ->from('wc_authorization_list')
-            ->where('record_id = 85')
             ->all();
         if(empty($query)){
             echo "没有找到公众号信息 \n";

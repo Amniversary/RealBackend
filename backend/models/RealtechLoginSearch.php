@@ -17,7 +17,7 @@ class RealtechLoginSearch extends Model
     public $username;
     public $password;
     public $rememberMe = true;
-
+    public $type;
     private $_user;
 
 
@@ -91,7 +91,7 @@ class RealtechLoginSearch extends Model
     protected function getUser()
     {
         if ($this->_user === null) {
-            $status = User::STATUS_CUSTOM;
+            $status = $this->type;
             $this->_user = User::findByUsername($this->username,$status);
         }
         return $this->_user;

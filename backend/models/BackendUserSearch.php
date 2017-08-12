@@ -18,7 +18,7 @@ class BackendUserSearch extends User
     public function rules()
     {
         return [
-            [['backend_user_id', 'status', 'create_at', 'update_at'], 'integer'],
+            [['backend_user_id', 'status', 'create_at', 'update_at','user_type'], 'integer'],
             [['username', 'pwd_hash', 'pwd_reset_token', 'email', 'auth_key', 'password', 'pic', 'remark1', 'remark2'], 'safe'],
         ];
     }
@@ -61,6 +61,7 @@ class BackendUserSearch extends User
         $query->andFilterWhere([
             'backend_user_id' => $this->backend_user_id,
             'status' => $this->status,
+            'user_type'=>$this->user_type
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])

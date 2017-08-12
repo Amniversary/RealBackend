@@ -62,6 +62,16 @@ $gridColumns = [
         'filter'=>false,
     ],
     [
+        'attribute'=>'user_type',
+        'label'=>'帐号类型',
+        'width'=> '100px',
+        'vAlign'=> 'middle',
+        'value' => function($model) {
+            return $model->BackendName($model->user_type);
+        },
+        'filter' => ['1'=>'公众号管理后台','2'=>'裂变管理系统', '3'=>'小鹿微课后台'],
+    ],
+    [
         'class' => 'kartik\grid\EditableColumn',
         'width'=>'100px',
         'attribute'=>'status',
@@ -143,12 +153,12 @@ $gridColumns = [
             },*/
             'update'=>function($url,$model)
             {
-                if($model->backend_user_id === 1 || $model->username === 'admin') return '';
+                if($model->backend_user_id === 1) return '';
                 return Html::a('编辑',$url,['class'=>'back-a']);
             },
             'delete'=>function($url,$model)
             {
-                if($model->backend_user_id === 1 || $model->username === 'admin') return '';
+                if($model->backend_user_id === 1) return '';
                 return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
             },
             'setprivilige'=>function($url, $model,$key)
