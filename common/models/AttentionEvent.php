@@ -12,6 +12,7 @@ use yii\db\Query;
  * @property integer $record_id
  * @property integer $event_id
  * @property integer $app_id
+ * @property integer $menu_id
  * @property string $content
  * @property integer $msg_type
  * @property string $title
@@ -45,7 +46,7 @@ class AttentionEvent extends ActiveRecord
     public function rules()
     {
         return [
-            [['app_id', 'msg_type', 'update_time','flag', 'event_id','key_id','order_no'], 'integer'],
+            [['app_id', 'msg_type', 'update_time','flag', 'event_id','key_id','order_no','menu_id'], 'integer'],
             [['create_time','title','description','url','picurl','video','remark1'], 'safe'],
             [[ 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
             [['content'], 'string', 'max'=>1000],
@@ -61,6 +62,7 @@ class AttentionEvent extends ActiveRecord
             'record_id' => '记录 ID',
             'app_id' => '公众号',
             'event_id' => '事件 ID',
+            'menu_id' => '菜单 ID',
             'content' => '文本内容',
             'msg_type' => '消息类型',
             'create_time' => '创建时间',

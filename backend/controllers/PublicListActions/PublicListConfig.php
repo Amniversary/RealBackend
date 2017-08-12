@@ -23,5 +23,8 @@ return [
     ],
     'set_count'=>[
         'class'=>'backend\controllers\PublicListActions\SetCountAction',
+    ],
+    'order_no'=>[
+        'class'=>'backend\controllers\PublicListActions\OrderNoAction',
     ]
 ];

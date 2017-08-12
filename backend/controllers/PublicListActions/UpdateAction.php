@@ -12,6 +12,7 @@ namespace backend\controllers\PublicListActions;
 use backend\business\WeChatUserUtil;
 use backend\components\ExitUtil;
 use common\models\AttentionEvent;
+use common\models\Resource;
 use yii\base\Action;
 
 class UpdateAction extends Action
@@ -24,12 +25,13 @@ class UpdateAction extends Action
         }
         $Cache = WeChatUserUtil::getCacheInfo();
         $load = \Yii::$app->request->post();
-        if(!empty($load)){
+        if(!empty($load)) {
             if($load['AttentionEvent']['msg_type'] == 2){
                 $load['AttentionEvent']['picurl'] = $load['AttentionEvent']['picurl1'];
             }
         }
         if ($model->load($load) && $model->save()) {
+            Resource::deleteAll(['msg_id'=>$record_id]);
             return $this->controller->redirect(['attention']);
         } else {
             return $this->controller->render('createmsg', [

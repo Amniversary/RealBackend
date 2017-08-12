@@ -43,6 +43,9 @@ class ApiAction extends Action
 
     public function run()
     {
+        header('Access-Control-Allow-Origin:*');
+        header('Access-Control-Allow-Methods:*');
+        header('Access-Control-Allow-Headers:x-requested-with,content-type');
         $rstOut = ['code'=>1, 'msg'=>''];
         $rst = ['code'=>0,'data'=>'','msg'=>''];
         $error = '';
@@ -56,6 +59,7 @@ class ApiAction extends Action
             echo json_encode($rstOut);exit;
         }
         $POST = json_decode(file_get_contents("php://input"),true);
+        \Yii::error("POST:".var_export($POST,true));
         $action_name = $POST['action_name'];
         $configFile = \Yii::$app->getBasePath().'/api/Config.php';
         if(!file_exists($configFile)) {
@@ -76,7 +80,7 @@ class ApiAction extends Action
         }
         $class = new $actionClass;
         try{
-            if(!$class->execute_action($POST['data'], $rst, $error)) {
+            if(!$class->execute_action($POST, $rst, $error)) {
                 $rstOut['msg'] = $error;
                 \Yii::error($error . ' 执行异常 action : '.$action_name);
                 echo json_encode($rstOut);exit;

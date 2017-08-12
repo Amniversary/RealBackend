@@ -200,13 +200,14 @@ class WeChatUserUtil
     {
         self::DeleteCustom();
         $rst = self::getCustomMenu($access_token,$error);
+        \Yii::error('data_menu:'.var_export($rst,true));
         if(!$rst) throw new HttpException(500,$error);
         if($rst['is_menu_open'] == 0) throw new HttpException(500,'自定义菜单未开启');
         $data = $rst['selfmenu_info']['button'];
         if(empty($data)){
             throw new HttpException(500,'自定义菜单列表为空');
         }
-
+        \Yii::error('data_menu:'.var_export($data,true));
         $trans = \Yii::$app->db->beginTransaction();
         try{
             foreach ($data as $item) {
@@ -216,6 +217,7 @@ class WeChatUserUtil
                     $model->type = $item['type'];
                     $model->name = $item['name'];
                     $model->key_type = isset($item['key']) ? $item['key'] : '';
+                    $model->url = isset($item['url']) ? $item['url'] : '';
                     $model->is_list = 0;
                     if (!$model->save()) throw new HttpException(500, '保存一级菜单信息失败');
                 } else {
@@ -325,7 +327,7 @@ class WeChatUserUtil
 
 
     /**
-     * 获取临时二维码Ticket 参数
+     * 获取二维码Ticket 参数
      * @param $access_token  //授权access_token
      * @param $expire_seveonds  //二维码过期时间
      * @param $action_name  //二维码请求类型参数值  [

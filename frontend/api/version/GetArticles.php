@@ -35,7 +35,7 @@ class GetArticles implements IApiExecute
         if($page_size <= 0) {
             $page_size = 1;
         }
-        ArticlesUtil::
+        //
 
     }
 

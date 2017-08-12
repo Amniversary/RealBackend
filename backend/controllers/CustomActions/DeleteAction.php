@@ -9,6 +9,7 @@
 namespace backend\controllers\CustomActions;
 
 
+use common\models\AttentionEvent;
 use common\models\AuthorizationMenu;
 use common\models\AuthorizationMenuSon;
 use yii\base\Action;
@@ -38,9 +39,9 @@ class DeleteAction extends Action
                 \Yii::error('删除失败:'.var_export($model->getErrors(),true));
             }
             AuthorizationMenuSon::deleteAll(['menu_id'=>$model->menu_id]);
+            AttentionEvent::deleteAll(['menu_id'=>$menu_id]);
             $trans->commit();
-        }
-        catch (Exception $e){
+        } catch (Exception $e){
             $trans->rollBack();
             $rst['msg'] = $e->getMessage();
             echo json_encode($rst);

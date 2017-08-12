@@ -28,24 +28,17 @@
         padding: 6px 12px;
     }
 </style>
-
 <?php
 
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
-echo \yii\bootstrap\Alert::widget([
-    'body'=>'未认证公众号，默认回复第一条消息！',
-    'options'=>[
-        'class'=>'alert-warning',
-    ]
-]);
+
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
-
     [
         'attribute'=>'msg_type',
         'vAlign'=>'middle',
-        'width'=>'110px',
+        'width'=>'130px',
         'value'=>function($model){
             return $model->getMsgType($model->msg_type);
         },
@@ -57,7 +50,7 @@ $gridColumns = [
         'format'=>'html',
         'value'=>function($model){
             $len = strlen($model->content);
-            return $len > 10 ? mb_substr($model->content,0,15). '....' : $model->content;
+            return $len > 10 ? mb_substr($model->content,0,15) . '....' : $model->content;
         },
         'filter'=>false,
     ],
@@ -71,27 +64,28 @@ $gridColumns = [
         'vAlign'=>'middle',
         'value'=>function($model){
             $len = strlen($model->description);
-            return $len > 10 ? mb_substr($model->description,0,15).'....' : $model->description;
+            return $len > 10 ? mb_substr($model->description,0,15) . '....': $model->description;
         },
         'filter'=>false,
     ],
     [
         'attribute'=>'url',
         'vAlign'=>'middle',
+        'width'=>'100px',
         'value'=>function($model){
             $len = strlen($model->url);
             return $len > 10 ? mb_substr($model->url,0,15) . '....' : $model->url;
-        },
-        'filter'=>false,
+        }
     ],
     [
         'attribute'=>'picurl',
         'vAlign'=>'middle',
+        'width'=>'100px',
         'format'=>'html',
         'value'=>function($model){
             $url = empty($model->picurl) ? '': $model->picurl;
             return empty($url) ? Html::label('') :Html::img($url,['class'=>'user-pic']);
-        },
+        }
     ],
     [
         'attribute'=>'video',
@@ -106,10 +100,10 @@ $gridColumns = [
     [
         'attribute'=>'event_id',
         'vAlign'=>'middle',
-        'width'=>'110px',
         'value'=>function($model){
-            return empty($model->event_id)? '': $model->event_id;
-        }
+            return empty($model->event_id) ? '':$model->event_id;
+        },
+        'width'=>'100px',
     ],
     [
         'class' => 'kartik\grid\EditableColumn',
@@ -119,7 +113,7 @@ $gridColumns = [
         'editableOptions'=>function($model)
         {
             return [
-                'formOptions'=>['action'=>'/publiclist/order_no?record_id='.strval($model->record_id)],
+                'formOptions'=>['action'=>'/keyword/order_no?record_id='.strval($model->record_id)],
                 'size'=>'min',
                 'inputType'=>\kartik\editable\Editable::INPUT_TEXT,
             ];
@@ -129,7 +123,6 @@ $gridColumns = [
     [
         'attribute'=>'create_time',
         'vAlign'=>'middle',
-        'width'=>'160px',
         'filterType'=>'\yii\jui\DatePicker',
         'filterWidgetOptions'=>[
             'language'=>'zh-CN',
@@ -147,10 +140,10 @@ $gridColumns = [
             $url = '';
             switch ($action){
                 case 'update':
-                    $url = '/publiclist/update?record_id='.strval($model->record_id);
+                    $url = '/custom/updatemsg?record_id='.strval($model->record_id).'&menu_id='.strval($model->menu_id);
                     break;
                 case 'delete':
-                    $url = '/publiclist/delete?record_id='.strval($model->record_id);
+                    $url = '/custom/deletemsg?record_id='.strval($model->record_id);
                     break;
             }
             return $url;
@@ -170,7 +163,7 @@ $gridColumns = [
 ];
 
 echo GridView::widget([
-    'id'=>'attention_event',
+    'id'=>'customMsg',
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'columns' =>$gridColumns,
@@ -178,7 +171,8 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('添加回复消息',['type'=>'button', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('publiclist/createmsg').'";return false;']),
+            'content'=>Html::button('返回',['type'=>'button','class'=>'btn btn-success','onclick'=>'location="'.\Yii::$app->urlManager->createUrl('custom/index').'";return false;']).
+                Html::button('添加回复消息',['id'=>'cry-msg','type'=>'button','title'=>'添加回复', 'class'=>'btn btn-success','onclick'=>'location="'.\Yii::$app->urlManager->createUrl(['custom/createmsg','menu_id'=>$menu_id]).'";return false;']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
@@ -203,7 +197,7 @@ echo \yii\bootstrap\Modal::widget([
 );
 
 $js='
-$("#attention_event-pjax").on("click",".delete",function(){
+$("#customMsg-pjax").on("click",".delete",function(){
 if(!confirm("确定要删除该记录吗？"))
     {
         return false;
@@ -218,7 +212,7 @@ if(!confirm("确定要删除该记录吗？"))
                data = $.parseJSON(data);
                 if(data.code == "0")
                 {
-                    $("#attention_event").yiiGridView("applyFilter");
+                    $("#customMsg").yiiGridView("applyFilter");
                 }
                 else
                 {
@@ -233,5 +227,6 @@ if(!confirm("确定要删除该记录吗？"))
         });
        return false;
 });
+
 ';
 $this->registerJs($js,\yii\web\View::POS_END);

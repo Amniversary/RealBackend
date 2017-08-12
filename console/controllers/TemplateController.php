@@ -26,7 +26,7 @@ class TemplateController extends Controller
     public function actionSendtemplatemsg()
     {
         set_time_limit(0);
-        $data = \Yii::$app->params['WxAuthParams'];
+        $data = \Yii::$app->params['WxAuthQrcode'];
         $str = implode(',', $data);
         $authList = $this->GetAuthList($str);
         $OneCount = 0;

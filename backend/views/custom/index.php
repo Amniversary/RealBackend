@@ -88,7 +88,7 @@ $gridColumns = [
     ],
     [
         'class' => 'kartik\grid\ActionColumn',
-        'template'=>'{son}&nbsp;&nbsp;&nbsp;{update}&nbsp;&nbsp;&nbsp;{delete}',
+        'template'=>'{son}&nbsp;&nbsp;&nbsp;{click}&nbsp;&nbsp;&nbsp;{update}&nbsp;&nbsp;&nbsp;{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
         'width'=>'250px',
@@ -103,6 +103,9 @@ $gridColumns = [
                     break;
                 case 'delete':
                     $url = '/custom/delete?menu_id='.strval($model->menu_id);
+                    break;
+                case 'click':
+                    $url = '/custom/custom_msg?menu_id='.strval($model->menu_id);
                     break;
             }
             return $url;
@@ -122,6 +125,12 @@ $gridColumns = [
             },
             'delete'=>function($url, $model){
                 return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
+            },
+            'click'=>function($url, $model){
+                if($model->type == 'click') {
+                    return Html::a('消息配置', $url, ['class'=>'back-a']);
+                }
+                return '';
             }
         ],
     ]

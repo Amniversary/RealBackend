@@ -20,6 +20,7 @@ class GetCarousels implements IApiExecute
         $rst = empty($rst) ? [] : $rst;
         $rstData['code'] = 0;
         $rstData['data'] = $rst;
+
         return true;
     }
 }

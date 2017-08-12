@@ -16,6 +16,8 @@ use backend\business\SaveByTransUtil;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveUserShareByTrans;
 use backend\business\WeChatUtil;
 use common\components\SystemParamsUtil;
+use common\models\AttentionEvent;
+use common\models\AuthorizationMenu;
 use common\models\Resource;
 use yii\db\Query;
 
@@ -305,7 +307,7 @@ class MessageComponent
             foreach ($msgData as $item)
             {
                 $paramData = [
-                    'key_word'=>'key_word',
+                    'key_word'=>'wx_msg',
                     'open_id'=>$openid,
                     'authorizer_access_token'=>$this->auth->authorizer_access_token,
                     'item'=>$item
@@ -313,6 +315,7 @@ class MessageComponent
                 if(!JobUtil::AddCustomJob('wechatBeanstalk','wechat',$paramData,$error)){
                     \Yii::error('keyword msg job is error :'.$error);
                 }
+                sleep(1);
             }
         }
         return true;
@@ -330,5 +333,65 @@ class MessageComponent
             }
         }
         return true;
+    }
+
+
+    public function getMenuClickMsg()
+    {
+        $menuList = AuthorizationMenu::findAll(['app_id'=>$this->auth->record_id]);
+        foreach($menuList as $list) {
+            if($list->type == 'click') {
+                if($list->key_type == $this->data['EventKey']) {
+                    $result = $list; break;
+                }
+            }
+        }
+        if(empty($result)) {
+            return null;
+        }
+        $msg = (new Query())
+            ->select(['record_id','app_id','event_id','content','msg_type','title','description','url',
+                'picurl','update_time','video'])
+            ->from('wc_attention_event')
+            ->where(['app_id'=>$this->auth->record_id,'menu_id'=>$result->menu_id,'flag'=>2])
+            ->orderBy('order_no asc,create_time asc')->all();
+
+        $data = []; $temp = [];
+        foreach ($msg as $key => $value)
+        {
+            switch ($value['msg_type']){
+                case 0:  //TODO: 文本消息
+                    $data[] = [
+                        'content'=>$value['content'],
+                        'msg_type'=>$value['msg_type']
+                    ];break;
+                case 1: //TODO: 图文消息
+                    $keys = array_search($value['event_id'],$temp);
+                    $arr = [
+                        'title'=>$value['title'],
+                        'description'=>$value['description'],
+                        'url'=>$value['url'],
+                        'picurl'=>$value['picurl']
+                    ];
+                    if($keys === false) {
+                        $temp[$key] = $value['event_id'];
+                        $data[$key]['msg_type'] = $value['msg_type'];
+                        $data[$key][] = $arr;
+                    }else{
+                        //$data[$key]['msg_type'] = $value['msg_type'];
+                        $data[$keys][] = $arr;
+                    }break;
+                case 2: //TODO: 图片消息
+                    $rst = $this->DisposeImg($value['picurl'],$this->auth->authorizer_access_token,$this->auth->record_id,$value['record_id']);
+                    $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$rst['media_id']];
+                    break;
+                case 3: //TODO: 语音消息
+                    $video = $this->DisposeVideo($value['video'], $this->auth->authorizer_access_token, $this->auth->record_id, $value['record_id']);
+                    $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$video['media_id']];
+                    break;
+            }
+        }
+        $this->sendMessageCustom($data, $this->data['FromUserName']);
+        return null;
     }
 }

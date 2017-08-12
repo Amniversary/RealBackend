@@ -22,10 +22,13 @@ use backend\components\ReceiveType;
 use common\components\OssUtil;
 use common\components\SystemParamsUtil;
 use common\components\UsualFunForNetWorkHelper;
+use common\models\AttentionEvent;
+use common\models\AuthorizationMenu;
 use common\models\QrcodeImg;
 use common\models\QrcodeShare;
 use EasyWeChat\MiniProgram\QRCode\QRCode;
 use Qiniu\Auth;
+use yii\db\Query;
 use yii\helpers\Console;
 
 class EventClass
@@ -257,5 +260,15 @@ class EventClass
         $msgObj->sendMessageCustom($msgData,$openid);
         fwrite(STDOUT, Console::ansiFormat("任务结束时间: Time : ".(microtime(true) - $start)."\n\n", [Console::FG_GREEN]));
         return true;
+    }
+
+    /**
+     * 处理点击事件消息回复
+     */
+    public function Click()
+    {
+        $msgObj = new MessageComponent($this->data);
+        $content = $msgObj->getMenuClickMsg();
+        return $content;
     }
 }

@@ -6,7 +6,7 @@
  * Time: 上午9:50
  */
 
-namespace backend\controllers\KeyWordActions;
+namespace backend\controllers\CustomActions;
 
 
 use backend\business\WeChatUserUtil;
@@ -24,6 +24,7 @@ class UpdateMsgAction extends Action
         if (empty($record_id)) {
             ExitUtil::ExitWithMessage('消息记录不存在');
         }
+        $menu_id = \Yii::$app->request->get('menu_id');
         $Cache = WeChatUserUtil::getCacheInfo();
         $load = \Yii::$app->request->post();
         if (!empty($load)) {
@@ -33,11 +34,12 @@ class UpdateMsgAction extends Action
         }
         if ($model->load($load) && $model->save()) {
             Resource::deleteAll(['msg_id'=>$record_id]);
-            return $this->controller->redirect(['keyword']);
+            return $this->controller->redirect(['custom_msg','menu_id'=>$menu_id]);
         } else {
             return $this->controller->render('createmsg', [
                 'model' => $model,
-                'cache' => $Cache
+                'cache' => $Cache,
+                'menu_id'=>$menu_id
             ]);
         }
     }

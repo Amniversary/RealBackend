@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: a123
- * Date: 17/7/2
- * Time: 下午10:03
+ * Date: 17/8/12
+ * Time: 下午2:57
  */
 
 namespace backend\models;
@@ -14,7 +14,7 @@ use common\models\AttentionEvent;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-class AttentionMsgSearch extends AttentionEvent
+class CustomMsgSearch extends AttentionEvent
 {
     /**
      * @inheritdoc
@@ -22,8 +22,8 @@ class AttentionMsgSearch extends AttentionEvent
     public function rules()
     {
         return [
-            [['key_id','app_id', 'msg_type', 'flag'], 'integer'],
-            [['event_id','create_time','content' ,'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
+            [['event_id','app_id', 'msg_type', 'flag','key_id'], 'integer'],
+            [['create_time','content' ,'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
         ];
     }
 
@@ -45,7 +45,7 @@ class AttentionMsgSearch extends AttentionEvent
     public function search($params)
     {
         $cacheInfo = WeChatUserUtil::getCacheInfo();
-        $query = AttentionEvent::find()->where(['app_id'=>$cacheInfo['record_id'],'flag'=>0]);
+        $query = AttentionEvent::find()->where(['app_id'=>$cacheInfo['record_id'],'menu_id'=>$params['menu_id'],'flag'=>2])->orderBy('order_no asc,event_id asc');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -67,7 +67,6 @@ class AttentionMsgSearch extends AttentionEvent
             'event_id' =>$this->event_id,
         ]);
 
-        $query->orderBy('order_no asc');
         return $dataProvider;
     }
 }

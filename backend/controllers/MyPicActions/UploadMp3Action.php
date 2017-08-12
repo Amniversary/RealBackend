@@ -72,9 +72,9 @@ class UploadMp3Action extends Action
             exit;
         }
         $suffix = $typeItems[1];
-        if(!in_array($suffix,['mpeg','mp3']))
+        if(!in_array($suffix,['mpeg','mp3','AMR']))
         {
-            $rst['msg'] = '不是图片文件';
+            $rst['msg'] = '不是正确的音频文件格式';
             echo json_encode($rst);
             exit;
         }

@@ -17,6 +17,7 @@ class CreateCarousels implements IApiExecute
 {
     function execute_action($data, &$rstData,&$error, $extendData= [])
     {
+        \Yii::error('data:'.var_export($data,true));
         if(!$this->check_params($data, $error)) {
             return false;
         }
@@ -27,7 +28,7 @@ class CreateCarousels implements IApiExecute
         $model = new Carousel();
         $model->pic_url = $data['data']['pic_url'];
         $model->action_type = $data['data']['type'];
-        $model->description = $url;
+        $model->url = $url;
         $model->status = 1;
         $model->create_time = date('Y-m-d H:i:s');
         $model->update_time = date('Y-m-d H:i:s');
@@ -48,6 +49,7 @@ class CreateCarousels implements IApiExecute
         $len = count($fields);
         for($i = 0; $i < $len; $i++)
         {
+            \Yii::error('datform:'.$dataProtocal['data'][$fields[$i]]);
             if(!isset($dataProtocal['data'][$fields[$i]]) || empty($dataProtocal['data'][$fields[$i]])) {
                 $error = $fieldLabels[$i] . '不能为空';
                 return false;

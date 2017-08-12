@@ -6,16 +6,15 @@
  * Time: 上午9:44
  */
 
-namespace backend\controllers\BatchAttentionActions;
+namespace backend\controllers\CustomActions;
 
 
 use common\models\AttentionEvent;
-use common\models\BatchAttention;
 use common\models\Resource;
 use yii\base\Action;
-use yii\db\Exception;
+use yii\base\Exception;
 
-class DeleteAction extends Action
+class DeleteMsgAction extends Action
 {
     public function run($record_id)
     {
@@ -41,16 +40,13 @@ class DeleteAction extends Action
                 exit;
             }
             Resource::deleteAll(['msg_id'=>$record_id]);
-            BatchAttention::deleteAll(['msg_id'=>$msgData->record_id]);
             $trans->commit();
-        }catch(Exception $e){
+        }catch(Exception $e ){
             $trans->rollBack();
             $rst['msg'] = $e->getMessage();
             echo json_encode($rst);
             exit;
         }
-
-
         $rst['code'] = '0';
         echo json_encode($rst);
         exit;

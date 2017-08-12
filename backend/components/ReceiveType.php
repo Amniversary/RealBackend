@@ -9,9 +9,11 @@
 namespace backend\components;
 
 
+use backend\business\AuthorizerUtil;
 use backend\business\JobUtil;
 use backend\business\TemplateUtil;
 use backend\components\WeChatClass\EventClass;
+use backend\components\WeChatClass\ImageClass;
 use backend\components\WeChatClass\TextClass;
 use common\components\UsualFunForNetWorkHelper;
 
@@ -46,6 +48,7 @@ class ReceiveType
     public function Event($arr,$flag = 0)
     {
         $Event = new EventClass($arr);
+        $contentStr = null;
         switch ($arr['Event'])
         {
             case 'subscribe':
@@ -55,13 +58,16 @@ class ReceiveType
                 $contentStr = $Event->unSubscribe();
                 break;
             case 'CLICK':
-                $contentStr = null;
+                $auth = AuthorizerUtil::getAuthOne($arr['appid']);
+                $contentStr = $Event->Click();
                 if($arr['EventKey'] == 'get_qrcode') {
-                    $params = ['key_word' => 'get_qrcode', 'data' => $arr];
-                    if(!JobUtil::AddCustomJob('imgBeanstalk','get_qrcode',$params,$error)) {
-                        \Yii::error($error);
+                    if(!in_array($auth->record_id,\Yii::$app->params['WxAuthParams'])) {
+                        $params = ['key_word' => 'get_qrcode', 'data' => $arr];
+                        if(!JobUtil::AddCustomJob('imgBeanstalk','get_qrcode',$params,$error)) {
+                            \Yii::error($error);
+                        }
+                        $contentStr = '海报生成中 ...';
                     }
-                    $contentStr = '海报生成中 ...';
                 }
                 break;
             case 'TEMPLATESENDJOBFINISH':
@@ -84,7 +90,13 @@ class ReceiveType
      */
     public function Image($arr,$flag = 0)
     {
-        return null;
+        if($arr['FromUserName'] == 'ol_EGvw_V3rXYILgc7QEOVVBrxwg'){
+            \Yii::error('arr:'.var_export($arr,true));
+        }
+        $img = new ImageClass($arr);
+        $content = $img->image();
+        $resultStr = TemplateUtil::GetMsgTemplate($arr, $content);
+        return $resultStr;
     }
 
     /**
