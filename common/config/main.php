@@ -62,6 +62,13 @@ return [
             'port'=>11304,
             'connectTimeout'=>1,
             'sleep'=>false
+        ],
+        'vipBeanstalk'=>[
+            'class'=>'udokmeci\yii2beanstalk\Beanstalk',
+            'host'=>"127.0.0.1",
+            'port'=>11305,
+            'connectTimeout'=>1,
+            'sleep'=>false
         ]
     ],
 ];

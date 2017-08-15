@@ -41,7 +41,6 @@ use yii\widgets\ActiveForm;
     <div class="user-form">
 
         <?php $form = ActiveForm::begin(); ?>
-        <hr>
         <?= $form->field($model, 'name')->textInput(['style'=>'width:200px']) ?>
         <hr>
         <?= $form->field($model, 'is_list')->radioList(['0'=>'否','1'=>'是'],['id'=>'list-type','style'=>'width:200px']) ?>

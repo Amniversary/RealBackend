@@ -22,7 +22,7 @@ class CreateWeekly implements IApiExecute
         }
         $model = new Weekly();
         $model->title = $data['data']['title'];
-        $model->weeks = $data['data']['weeks'];
+        $model->weeks = date('YW',$data['data']['weeks']);
         $model->status = 1;
         $model->create_time = date('Y-m-d H:i:s');
         $model->update_time = date('Y-m-d H:i:s');

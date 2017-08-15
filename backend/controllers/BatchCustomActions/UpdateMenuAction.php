@@ -18,7 +18,6 @@ class UpdateMenuAction extends Action
 {
     public function run($menu_id,$id)
     {
-
         $model = AuthorizationMenu::findOne(['menu_id'=>$menu_id]);
         if(empty($model)){
             ExitUtil::ExitWithMessage('菜单记录不存在');
@@ -40,7 +39,7 @@ class UpdateMenuAction extends Action
                 ExitUtil::ExitWithMessage('更新菜单失败');
                 exit;
             }
-            return $this->controller->redirect(['index_menu']);
+            return $this->controller->redirect(['index_menu','id'=>$id]);
         } else {
             return $this->controller->render('_form_menu', [
                 'model' => $model,

@@ -36,15 +36,15 @@ class UpdateCarousels implements IApiExecute
         if(!CarouselsUtil::SaveCarousel($Carousel, $error)) {
             return false;
         }
-
+        \Yii::$app->cache->delete('carousels_info');
         $rstData['code'] = 0;
         $rstData['data'] = '';
         return true;
     }
 
     private function check_params($dataProtocal,&$error){
-        $fields = ['id', 'pic_url', 'status'];
-        $fieldLabels = ['轮播图id', '图片url', '状态'];
+        $fields = ['id', 'pic_url'];
+        $fieldLabels = ['轮播图id', '图片url'];
         $len = count($fields);
         for($i = 0; $i < $len; $i++)
         {
@@ -52,6 +52,10 @@ class UpdateCarousels implements IApiExecute
                 $error = $fieldLabels[$i] . '不能为空';
                 return false;
             }
+        }
+        if(!isset($dataProtocal['data']['status'])) {
+            $error = '状态值不能为空';
+            return false;
         }
         return true;
     }

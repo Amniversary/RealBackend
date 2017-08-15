@@ -35,8 +35,16 @@ class GetArticles implements IApiExecute
         if($page_size <= 0) {
             $page_size = 1;
         }
-        //
+        $articles = ArticlesUtil::GetArticles($book->book_id, $page_no, $page_size);
+        if(empty($articles)) {
+            $articles = [];
+        }
+        $count = ArticlesUtil::GetArticleCount($book_id);
 
+        $rstData['code'] = 0;
+        $rstData['count'] = intval($count);
+        $rstData['data']['list'] = $articles;
+        return true;
     }
 
 

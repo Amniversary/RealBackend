@@ -31,6 +31,7 @@ class TemplateController extends Controller
         $authList = $this->GetAuthList($str);
         $OneCount = 0;
         $TowCount = 0;
+
         $OneGroupSql = $this->GetOneGroupUserList($str);
         $TowGroupSql = $this->GetTowGroupUserList($str);
         $File = \Yii::$app->basePath .'/../common/config/WxAuthParams.php';
@@ -120,7 +121,7 @@ class TemplateController extends Controller
                 echo $error;
             }
         }
-        echo "第一批模板消息  $OneCount 条 ,  第二批模板消息  $TowCount 条 . data ".date('Y-m-d H:i:s') ."\n";
+        echo "第一批模板消息  $OneCount 条 ,  第二批模板消息  $TowCount 条 . date: ".date('Y-m-d H:i:s') ."\n";
     }
 
 

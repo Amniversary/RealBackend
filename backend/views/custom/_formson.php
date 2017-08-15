@@ -17,7 +17,7 @@
         /*margin-bottom: 20px;*/
 
     }
-    #authorizationmenuson-type > label{
+    #authorizationmenu-type > label{
         padding-right: 20px;
         color: #333;
     }
@@ -30,7 +30,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\AuthorizationMenuSon */
+/* @var $model common\models\AuthorizationMenu */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $cache */
 ?>
@@ -53,7 +53,7 @@ use yii\widgets\ActiveForm;
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? '新增' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['custom/indexson','menu_id'=>$menu_id]), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['custom/indexson','menu_id'=>$menuInfo->menu_id]), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
         <?php ActiveForm::end(); ?>
 
@@ -61,7 +61,7 @@ use yii\widgets\ActiveForm;
 <?php
 $js = '
 $(function(){
-    $vue = $("#authorizationmenuson-type input[type=\'radio\']:checked").val()
+    $vue = $("#authorizationmenu-type input[type=\'radio\']:checked").val()
     if($vue == "view"){
         $("#url").show();
         $("#event").hide();
@@ -70,8 +70,8 @@ $(function(){
         $("#event").show();
     }
 })
-$("#authorizationmenuson-type input[type=\'radio\']").on("click",function(){
-    $vue = $("#authorizationmenuson-type input[type=\'radio\']:checked").val()
+$("#authorizationmenu-type input[type=\'radio\']").on("click",function(){
+    $vue = $("#authorizationmenu-type input[type=\'radio\']:checked").val()
     if($vue == "view"){
         $("#url").show();
         $("#event").hide();

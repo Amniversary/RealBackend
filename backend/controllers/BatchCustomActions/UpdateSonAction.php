@@ -9,20 +9,19 @@
 namespace backend\controllers\BatchCustomActions;
 
 
-use backend\business\AuthorizerUtil;
-use backend\business\WeChatUserUtil;
 use backend\components\ExitUtil;
-use common\models\AuthorizationMenuSon;
+use common\models\AuthorizationMenu;
 use yii\base\Action;
 
 class UpdateSonAction extends Action
 {
-    public function run($record_id)
+    public function run($menu_id)
     {
-        $model = AuthorizationMenuSon::findOne(['record_id'=>$record_id]);
+        $model = AuthorizationMenu::findOne(['menu_id'=>$menu_id]);
         if(empty($model)){
              ExitUtil::ExitWithMessage('子菜单记录不存在');
         }
+        $parent_id = \Yii::$app->request->get('parent_id');
         $id = \Yii::$app->request->get('id');
         if(empty($model->type)) $model->type = 'view';
         if ($model->load(\Yii::$app->request->post())) {
@@ -36,11 +35,11 @@ class UpdateSonAction extends Action
                 ExitUtil::ExitWithMessage('更新菜单失败');
                 exit;
             }
-            return $this->controller->redirect(['indexson','menu_id'=>$model->menu_id,'id'=>$id]);
+            return $this->controller->redirect(['indexson','menu_id'=>$parent_id,'id'=>$id]);
         } else {
             return $this->controller->render('_formson', [
                 'model' => $model,
-                'menu_id'=> $model->menu_id,
+                'menu_id'=> $parent_id,
                 'id'=>$id
             ]);
         }

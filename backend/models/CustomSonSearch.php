@@ -9,11 +9,11 @@
 namespace backend\models;
 
 
-use common\models\AuthorizationMenuSon;
+use common\models\AuthorizationMenu;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-class CustomSonSearch extends AuthorizationMenuSon
+class CustomSonSearch extends AuthorizationMenu
 {
     /**
      * @inheritdoc
@@ -43,7 +43,7 @@ class CustomSonSearch extends AuthorizationMenuSon
      */
     public function search($params)
     {
-        $query = AuthorizationMenuSon::find()->where(['menu_id'=>$params['menu_id']]);
+        $query = AuthorizationMenu::find()->where(['parent_id'=>$params['menu_id']]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

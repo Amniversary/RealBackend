@@ -11,7 +11,6 @@ namespace backend\controllers\CustomActions;
 
 use backend\business\WeChatUserUtil;
 use common\models\AuthorizationMenu;
-use common\models\AuthorizationMenuSon;
 use yii\base\Action;
 use yii\db\Exception;
 use yii\db\Query;
@@ -33,7 +32,7 @@ class DeleteMenuAction extends Action
         try{
             AuthorizationMenu::deleteAll(['app_id'=>$cache['record_id']]);
             foreach($query as $item) {
-                AuthorizationMenuSon::deleteAll(['menu_id'=>$item['menu_id']]);
+                AuthorizationMenu::deleteAll(['parent_id'=>$item['menu_id']]);
             }
         }catch(Exception $e){
             $rst['msg'] = $e->getMessage();

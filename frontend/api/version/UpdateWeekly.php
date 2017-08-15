@@ -17,6 +17,7 @@ class UpdateWeekly implements  IApiExecute
 {
     function execute_action($data, &$rstData,&$error, $extendData = [])
     {
+        \Yii::error('dataRfst :'.var_export($data,true));
         if(!$this->check_params($data, $error)) {
            return false;
         }
@@ -28,7 +29,7 @@ class UpdateWeekly implements  IApiExecute
         }
 
         $weekly->title = $data['data']['title'];
-        $weekly->weeks = $data['data']['weeks'];
+        $weekly->weeks = date('YW',$data['data']['weeks']);
         $weekly->status = $data['data']['status'];
         $weekly->update_time = date('Y-m-d H:i:s');
         if(!WeeklyUtil::SaveWeekly($weekly, $error)) {
@@ -41,14 +42,18 @@ class UpdateWeekly implements  IApiExecute
     }
 
     private function check_params($dataProtocal, &$error) {
-        $files = ['id', 'title', 'weeks', 'status'];
-        $filedLabel = ['周刊id', '周刊标题', '周刊周数', '状态值'];
+        $files = ['id', 'title', 'weeks'];
+        $filedLabel = ['周刊id', '周刊标题', '周刊周数'];
         $len = count($files);
         for($i = 0; $i < $len ; $i++) {
-            if(!isset($dataProtocal[$files[$i]]) || empty($dataProtocal[$files[$i]])) {
+            if(!isset($dataProtocal['data'][$files[$i]]) || empty($dataProtocal['data'][$files[$i]])) {
                 $error = $filedLabel[$i] . '不能为空';
                 return false;
             }
+        }
+        if(!isset($dataProtocal['data']['status'])) {
+            $error = '状态值不能为空';
+            return false;
         }
        return true;
     }

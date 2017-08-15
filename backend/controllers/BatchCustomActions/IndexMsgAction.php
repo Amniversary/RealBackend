@@ -2,35 +2,33 @@
 /**
  * Created by PhpStorm.
  * User: a123
- * Date: 17/8/12
- * Time: 下午2:54
+ * Date: 17/8/14
+ * Time: 下午5:24
  */
 
-namespace backend\controllers\CustomActions;
+namespace backend\controllers\BatchCustomActions;
 
 
-use backend\business\WeChatUserUtil;
 use backend\components\ExitUtil;
 use backend\models\CustomMsgSearch;
 use yii\base\Action;
 
-class CustomMsgAction extends Action
+class IndexMsgAction extends Action
 {
     public function run($menu_id)
     {
         if(empty($menu_id)) {
             ExitUtil::ExitWithMessage('菜单Id 不能为空');
         }
-        $parent_id = \Yii::$app->request->get('parent_id');
-        //$cacheInfo = WeChatUserUtil::getCacheInfo();
+        $id = \Yii::$app->request->get('id');
         $this->controller->getView()->title = '点击事件消息';
         $searchModel = new CustomMsgSearch();
-        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchBatch(\Yii::$app->request->queryParams);
         return $this->controller->render('indexmsg',[
             'searchModel'=>$searchModel,
             'dataProvider'=>$dataProvider,
             'menu_id' => $menu_id,
-            'parent_id' => isset($parent_id) ? $parent_id: '',
+            'id' => $id
         ]);
     }
 }

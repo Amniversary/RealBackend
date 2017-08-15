@@ -9,8 +9,8 @@
 namespace backend\controllers\BatchCustomActions;
 
 
+use common\models\AttentionEvent;
 use common\models\AuthorizationMenu;
-use common\models\AuthorizationMenuSon;
 use common\models\MenuList;
 use common\models\SystemMenu;
 use yii\base\Action;
@@ -47,8 +47,10 @@ class DeleteAction extends Action
             }
             MenuList::deleteAll(['deploy_id'=>$id]);
             AuthorizationMenu::deleteAll(['global'=>$id]);
-            foreach($query as $item) {
-                AuthorizationMenuSon::deleteAll(['menu_id'=>$item['menu_id']]);
+            if(!empty($query)) {
+                foreach ($query as $item) {
+                    AttentionEvent::deleteAll(['menu_id'=>$item['menu_id']]);
+                }
             }
             $trans->commit();
         }catch(Exception $e){

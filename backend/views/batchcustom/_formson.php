@@ -17,7 +17,7 @@
         /*margin-bottom: 20px;*/
 
     }
-    #authorizationmenuson-type > label{
+    #authorizationmenu-type > label{
         padding-right: 20px;
         color: #333;
     }
@@ -30,7 +30,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\AuthorizationMenuSon */
+/* @var $model common\models\AuthorizationMenu */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -60,7 +60,7 @@ use yii\widgets\ActiveForm;
 <?php
 $js = '
 $(function(){
-    $vue = $("#authorizationmenuson-type input[type=\'radio\']:checked").val()
+    $vue = $("#authorizationmenu-type input[type=\'radio\']:checked").val()
     if($vue == "view"){
         $("#url").show();
         $("#event").hide();
@@ -69,8 +69,8 @@ $(function(){
         $("#event").show();
     }
 })
-$("#authorizationmenuson-type input[type=\'radio\']").on("click",function(){
-    $vue = $("#authorizationmenuson-type input[type=\'radio\']:checked").val()
+$("#authorizationmenu-type input[type=\'radio\']").on("click",function(){
+    $vue = $("#authorizationmenu-type input[type=\'radio\']:checked").val()
     if($vue == "view"){
         $("#url").show();
         $("#event").hide();

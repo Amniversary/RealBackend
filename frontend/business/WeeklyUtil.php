@@ -56,4 +56,13 @@ class WeeklyUtil
 
         return $query;
     }
+
+    /**
+     * 返回周刊总数
+     * @return bool|string
+     */
+    public static function GetWeeklyCount()
+    {
+        return Weekly::find()->select(['count(1) as num'])->limit(1)->scalar();
+    }
 }

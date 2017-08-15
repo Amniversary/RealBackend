@@ -43,9 +43,6 @@ class ApiAction extends Action
 
     public function run()
     {
-        header('Access-Control-Allow-Origin:*');
-        header('Access-Control-Allow-Methods:*');
-        header('Access-Control-Allow-Headers:x-requested-with,content-type');
         $rstOut = ['code'=>1, 'msg'=>''];
         $rst = ['code'=>0,'data'=>'','msg'=>''];
         $error = '';
@@ -59,7 +56,7 @@ class ApiAction extends Action
             echo json_encode($rstOut);exit;
         }
         $POST = json_decode(file_get_contents("php://input"),true);
-        \Yii::error("POST:".var_export($POST,true));
+        //\Yii::error("POST:".var_export($POST,true));
         $action_name = $POST['action_name'];
         $configFile = \Yii::$app->getBasePath().'/api/Config.php';
         if(!file_exists($configFile)) {

@@ -63,4 +63,13 @@ class BookUtil
             ->all();
         return $query;
     }
+
+    /**
+     * 返回书籍总数
+     * @return bool|string
+     */
+    public static function GetBookCount($weekly_id)
+    {
+        return Books::find()->select(['count(1) as num'])->where(['weekly_id'=>$weekly_id])->limit(1)->scalar();
+    }
 }

@@ -6,7 +6,7 @@
  * Time: 下午3:50
  */
 
-namespace backend\controllers\CustomActions;
+namespace backend\controllers\BatchCustomActions;
 
 
 use backend\business\WeChatUserUtil;
@@ -18,14 +18,14 @@ use common\models\Keywords;
 use yii\base\Action;
 use yii\web\HttpException;
 
-class CreateMsgAction extends Action
+class CreateSonMsgAction extends Action
 {
     public function run()
     {
-        $Cache = WeChatUserUtil::getCacheInfo();
+        $parent_id = \Yii::$app->request->get('parent_id');
         $menu_id = \Yii::$app->request->get('menu_id');
+        $id = \Yii::$app->request->get('id');
         $model = new AttentionEvent();
-        $model->app_id =  $Cache['record_id'];
         $model->menu_id = $menu_id;
         $model->flag = 2;
         $model->msg_type = 0;
@@ -38,12 +38,13 @@ class CreateMsgAction extends Action
             }
         }
         if($model->load($load) && $model->save()){
-            return $this->controller->redirect(['custom_msg','menu_id'=>$menu_id]);
+            return $this->controller->redirect(['indexson_msg','menu_id'=>$menu_id, 'parent_id'=>$parent_id,'id'=>$id]);
         }else{
             return $this->controller->render('createsonmsg',[
                 'model'=>$model,
-                'cache'=>$Cache,
-                'menu_id'=>$menu_id
+                'menu_id'=>$menu_id,
+                'parent_id'=>$parent_id,
+                'id'=>$id,
             ]);
         }
     }

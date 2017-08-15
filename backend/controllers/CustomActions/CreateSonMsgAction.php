@@ -18,11 +18,12 @@ use common\models\Keywords;
 use yii\base\Action;
 use yii\web\HttpException;
 
-class CreateMsgAction extends Action
+class CreateSonMsgAction extends Action
 {
     public function run()
     {
         $Cache = WeChatUserUtil::getCacheInfo();
+        $parent_id = \Yii::$app->request->get('parent_id');
         $menu_id = \Yii::$app->request->get('menu_id');
         $model = new AttentionEvent();
         $model->app_id =  $Cache['record_id'];
@@ -38,12 +39,13 @@ class CreateMsgAction extends Action
             }
         }
         if($model->load($load) && $model->save()){
-            return $this->controller->redirect(['custom_msg','menu_id'=>$menu_id]);
+            return $this->controller->redirect(['customson_msg','menu_id'=>$menu_id, 'parent_id'=>$parent_id]);
         }else{
             return $this->controller->render('createsonmsg',[
                 'model'=>$model,
                 'cache'=>$Cache,
-                'menu_id'=>$menu_id
+                'menu_id'=>$menu_id,
+                'parent_id'=>$parent_id,
             ]);
         }
     }

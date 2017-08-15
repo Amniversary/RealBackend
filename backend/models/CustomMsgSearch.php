@@ -69,4 +69,31 @@ class CustomMsgSearch extends AttentionEvent
 
         return $dataProvider;
     }
+
+    public function searchBatch($params)
+    {
+        $query = AttentionEvent::find()->where(['menu_id'=>$params['menu_id'],'flag'=>2])->orderBy('order_no asc,event_id asc');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        if(!empty($this->create_time)){
+            $start_time = date('Y-m-d 00:00:00',strtotime($this->create_time));
+            $end_time = date('Y-m-d 23:00:00',strtotime($this->create_time));
+            $query->andFilterWhere(['between' , 'create_time', $start_time, $end_time]);
+        }
+        $query->andFilterWhere([
+            'msg_type' => $this->msg_type,
+            'event_id' =>$this->event_id,
+        ]);
+
+        return $dataProvider;
+    }
 }

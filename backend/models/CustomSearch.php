@@ -45,7 +45,7 @@ class CustomSearch extends AuthorizationMenu
     public function search($params)
     {
         $cacheInfo = WeChatUserUtil::getCacheInfo();
-        $query = AuthorizationMenu::find()->where(['app_id'=>$cacheInfo['record_id']]);
+        $query = AuthorizationMenu::find()->where(['app_id'=>$cacheInfo['record_id'],'parent_id'=>0]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -66,7 +66,7 @@ class CustomSearch extends AuthorizationMenu
 
     public function searchMenu($params)
     {
-        $query = AuthorizationMenu::find()->where(['global'=>$params['id']]);
+        $query = AuthorizationMenu::find()->where(['global'=>$params['id'],'parent_id'=>0]);
 
         $dataProvider = new ActiveDataProvider([
             'query'=> $query,

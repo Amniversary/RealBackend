@@ -9,10 +9,11 @@
 namespace backend\controllers\BatchCustomActions;
 
 
+use common\models\AttentionEvent;
 use common\models\AuthorizationMenu;
-use common\models\AuthorizationMenuSon;
 use yii\base\Action;
 use yii\db\Exception;
+use yii\db\Query;
 
 class DeleteMenuAction extends Action
 {
@@ -31,16 +32,26 @@ class DeleteMenuAction extends Action
             echo json_encode($rst);
             exit;
         }
+        $query = (new Query())
+            ->select(['menu_id'])
+            ->from('wc_authorization_menu')
+            ->where(['parent_id'=>$menu_id])
+            ->all();
         try{
             $trans = \Yii::$app->db->beginTransaction();
             if(!$model->delete()) {
                 $rst['msg']='删除失败';
                 \Yii::error('删除失败:'.var_export($model->getErrors(),true));
             }
-            AuthorizationMenuSon::deleteAll(['menu_id'=>$model->menu_id]);
+            AuthorizationMenu::deleteAll(['parent_id'=>$model->menu_id]);
+            AttentionEvent::deleteAll(['menu_id'=>$model->menu_id]);
+            if(!empty($query)) {
+                foreach($query as $list) {
+                    AttentionEvent::deleteAll(['menu_id'=>$list['menu_id']]);
+                }
+            }
             $trans->commit();
-        }
-        catch (Exception $e){
+        } catch (Exception $e){
             $trans->rollBack();
             $rst['msg'] = $e->getMessage();
             echo json_encode($rst);

@@ -24,6 +24,7 @@ class CreateAction extends Action
         $model = new AuthorizationMenu();
         $model->app_id = $cacheInfo['record_id'];
         $model->is_list = 0;
+        $model->parent_id = 0;
         $model->type = 'view';
         if($model->load(\Yii::$app->request->post())){
             if($model->is_list == 1){

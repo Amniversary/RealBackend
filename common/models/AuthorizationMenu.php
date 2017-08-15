@@ -13,6 +13,7 @@ use Yii;
  * @property string $type
  * @property string $key_type
  * @property integer $is_list
+ * @property integer $parent_id
  * @property string $url
  * @property integer $global
  * @property string $remark1
@@ -51,11 +52,12 @@ class AuthorizationMenu extends \yii\db\ActiveRecord
         return [
             'menu_id' => '菜单 ID',
             'app_id' => '公众号名称',
-            'name' => '一级菜单名称',
+            'name' => '菜单名称',
             'type' => '菜单事件',
             'key_type' => '事件标签',
             'url'=> '跳转链接',
             'is_list' => '是否有二级菜单',
+            'parent_id' => '父级菜单id',
             'global'=>'全局配置',
             'remark1' => '备用字段1',
             'remark2' => '备用字段2',

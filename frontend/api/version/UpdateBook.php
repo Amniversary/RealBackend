@@ -34,8 +34,8 @@ class UpdateBook implements IApiExecute
     }
 
     private function check_params($dataProtocal,&$error){
-        $fields = ['id','title','status'];
-        $fieldLabels = ['书籍id', '书籍标题',  '状态值'];
+        $fields = ['id','title'];
+        $fieldLabels = ['书籍id', '书籍标题'];
         $len = count($fields);
         for($i = 0; $i < $len; $i++)
         {
@@ -43,6 +43,10 @@ class UpdateBook implements IApiExecute
                 $error = $fieldLabels[$i] . '不能为空';
                 return false;
             }
+        }
+        if(!isset($dataProtocal['data']['status'])) {
+            $error = '状态值不能为空';
+            return false;
         }
         return true;
     }

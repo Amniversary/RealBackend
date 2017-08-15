@@ -9,9 +9,7 @@
 namespace backend\controllers\BatchCustomActions;
 
 
-use backend\business\WeChatUserUtil;
 use common\models\AuthorizationMenu;
-use common\models\AuthorizationMenuSon;
 use yii\base\Action;
 
 class CreateSonAction extends Action
@@ -21,9 +19,11 @@ class CreateSonAction extends Action
         $this->controller->getView()->title = '新增子菜单';
         $menu_id = \Yii::$app->request->get('menu_id');
         $id = \Yii::$app->request->get('id');
-        $model = new AuthorizationMenuSon();
-        $model->menu_id = $menu_id;
+        $model = new AuthorizationMenu();
+        $model->parent_id = $menu_id;
         $model->type = 'view';
+        $model->global = $id;
+        $model->is_list = 0;
         if($model->load(\Yii::$app->request->post())){
             if($model->type == 'click'){
                 $model->url = '';

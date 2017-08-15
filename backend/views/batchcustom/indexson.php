@@ -42,6 +42,11 @@ $gridColumns = [
         'filter'=>false,
     ],
     [
+        'attribute'=>'key_type',
+        'vAlign'=>'middle',
+        'filter'=>false
+    ],
+    [
         'attribute'=>'url',
         'vAlign'=>'middle',
         'value'=>function($model){
@@ -51,7 +56,7 @@ $gridColumns = [
     ],
     [
         'class'=>'kartik\grid\ActionColumn',
-        'template'=>'{son}&nbsp;&nbsp;&nbsp;{update}&nbsp;&nbsp;&nbsp;{delete}',
+        'template'=>'{click}{update}{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
         'width'=>'200px',
@@ -59,10 +64,13 @@ $gridColumns = [
             $url = '';
             switch ($action){
                 case 'update':
-                    $url = '/batchcustom/updateson?record_id='.strval($model->record_id);
+                    $url = '/batchcustom/updateson?menu_id='.strval($model->menu_id).'&parent_id='.$model->parent_id.'&id='.$model->global;
                     break;
                 case 'delete':
-                    $url = '/batchcustom/deleteson?record_id='.strval($model->record_id);
+                    $url = '/batchcustom/deleteson?menu_id='.strval($model->menu_id);
+                    break;
+                case 'click':
+                    $url = '/batchcustom/indexson_msg?menu_id='.strval($model->menu_id).'&parent_id='.strval($model->parent_id).'&id='.$model->global;
                     break;
             }
             return $url;
@@ -70,11 +78,17 @@ $gridColumns = [
         'updateOptions'=>['title'=>'修改','label'=>'修改', 'data-toggle'=>false],
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
-            'update'=>function($url, $model ,$id){
-                return Html::a('修改', $url.'&id='.$id,['class'=>'back-a']);
+            'update'=>function($url, $model ){
+                return Html::a('修改', $url,['class'=>'back-a','style'=>'margin-right:10px']);
             },
             'delete'=>function($url, $model){
                 return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false,'data-pjax'=>'0']);
+            },
+            'click'=>function($url, $model) {
+                if($model->type  == 'click') {
+                    return Html::a('消息配置', $url, ['class'=>'back-a','style'=>'margin-right:10px']);
+                }
+                return '';
             }
         ],
     ]

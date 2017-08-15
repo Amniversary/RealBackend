@@ -335,13 +335,22 @@ class MessageComponent
         return true;
     }
 
-
+    /**
+     * 回复点击事件消息
+     * @return null
+     */
     public function getMenuClickMsg()
     {
-        $menuList = AuthorizationMenu::findAll(['app_id'=>$this->auth->record_id]);
+        $params = sprintf('SELECT deploy_id FROM wc_menu_list where app_id = %s',$this->auth->record_id);
+        $condition = 'app_id = :apd or global in ('.$params.')';
+        $menuList = (new Query())
+            ->select(['menu_id','type','key_type'])
+            ->from('wc_authorization_menu')
+            ->where($condition,[':apd'=>$this->auth->record_id])
+            ->all();
         foreach($menuList as $list) {
-            if($list->type == 'click') {
-                if($list->key_type == $this->data['EventKey']) {
+            if($list['type'] == 'click') {
+                if($list['key_type'] == $this->data['EventKey']) {
                     $result = $list; break;
                 }
             }
@@ -353,8 +362,12 @@ class MessageComponent
             ->select(['record_id','app_id','event_id','content','msg_type','title','description','url',
                 'picurl','update_time','video'])
             ->from('wc_attention_event')
-            ->where(['app_id'=>$this->auth->record_id,'menu_id'=>$result->menu_id,'flag'=>2])
+            ->where('(app_id =:app and menu_id =:me) or menu_id = :me and flag = 2',[':app'=>$this->auth->record_id,':me'=>$result['menu_id']])
             ->orderBy('order_no asc,create_time asc')->all();
+
+        if(empty($msg)) {
+            return null;
+        }
 
         $data = []; $temp = [];
         foreach ($msg as $key => $value)

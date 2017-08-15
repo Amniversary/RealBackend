@@ -12,7 +12,6 @@ namespace backend\business;
 use common\models\AttentionEvent;
 use common\models\AuthorizationList;
 use common\models\AuthorizationMenu;
-use common\models\AuthorizationMenuSon;
 use common\models\Client;
 use common\models\QrcodeShare;
 use function Qiniu\waterImg;
@@ -171,7 +170,7 @@ class AuthorizerUtil
         $query = (new Query())
             ->select(['menu_id','app_id','name','ifnull(type,\'\') as type','ifnull(key_type,\'\') as key_type','url','is_list'])
             ->from('wc_authorization_menu')
-            ->where('app_id = :appid',[':appid'=>$app_id])->all();
+            ->where(['app_id'=>$app_id,'parent_id'=>0])->all();
         if(empty($query)) return false;
 
         return $query;
@@ -199,8 +198,8 @@ class AuthorizerUtil
     {
         $sql = (new Query())
             ->select(['name','type','url','key_type'])
-            ->from('wc_authorization_menu_son')
-            ->where('menu_id = :md',[':md'=>$menu_id])->all();
+            ->from('wc_authorization_menu')
+            ->where(['parent_id'=>$menu_id])->all();
         return $sql;
     }
 
@@ -209,7 +208,7 @@ class AuthorizerUtil
      */
     public static function getMenuCount($app_id)
     {
-        return AuthorizationMenu::find()->select(['count(1) as num'])->where(['app_id'=>$app_id])->limit(1)->scalar();
+        return AuthorizationMenu::find()->select(['count(1) as num'])->where(['app_id'=>$app_id,'parent_id'=>0])->limit(1)->scalar();
     }
 
     /**
@@ -217,7 +216,7 @@ class AuthorizerUtil
      */
     public static function getMenuSonCount($menu_id)
     {
-        return AuthorizationMenuSon::find()->select(['count(1) as num'])->where(['menu_id'=>$menu_id])->limit(1)->scalar();
+        return AuthorizationMenu::find()->select(['count(1) as num'])->where(['parent_id'=>$menu_id])->limit(1)->scalar();
     }
 
     /**
@@ -225,7 +224,7 @@ class AuthorizerUtil
      */
     public static function getGlobalMenuCount($global)
     {
-        return AuthorizationMenu::find()->select(['count(1) as num'])->where(['global'=>$global])->limit(1)->scalar();
+        return AuthorizationMenu::find()->select(['count(1) as num'])->where(['global'=>$global,'parent_id'=>0])->limit(1)->scalar();
     }
 
     /**

@@ -42,6 +42,11 @@ $gridColumns = [
         'filter'=>false,
     ],
     [
+        'attribute'=>'key_type',
+        'vAlign'=>'middle',
+        'filter'=>false,
+    ],
+    [
         'attribute'=>'url',
         'vAlign'=>'middle',
         'value'=>function($model){
@@ -59,13 +64,13 @@ $gridColumns = [
             $url = '';
             switch ($action){
                 case 'update':
-                    $url = '/custom/updateson?record_id='.strval($model->record_id);
+                    $url = '/custom/updateson?menu_id='.strval($model->menu_id).'&parent_id='.strval($model->parent_id);
                     break;
                 case 'delete':
-                    $url = '/custom/deleteson?record_id='.strval($model->record_id);
+                    $url = '/custom/deleteson?menu_id='.strval($model->menu_id);
                     break;
                 case 'click':
-                    $url = '/custom/clickson?record_id='.strval($model->record_id);
+                    $url = '/custom/customson_msg?menu_id='.strval($model->menu_id).'&parent_id='.strval($model->parent_id);
                     break;
             }
             return $url;
@@ -98,7 +103,8 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('返回',['type'=>'button','class'=>'btn btn-success','onclick'=>'location="'.\Yii::$app->urlManager->createUrl('custom/index').'";return false;']).'&nbsp;&nbsp;&nbsp;&nbsp;'.Html::button('新增子菜单',['type'=>'button', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl(['custom/createson','menu_id'=>$menu_id]).'";return false;']),
+            'content'=> Html::button('返回',['type'=>'button','class'=>'btn btn-success','onclick'=>'location="'.\Yii::$app->urlManager->createUrl('custom/index').'";return false;']).'&nbsp;&nbsp;&nbsp;&nbsp;'.
+                Html::button('新增子菜单',['id'=>'create-menu','type'=>'button', 'class'=>'btn btn-success']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
@@ -116,6 +122,26 @@ echo GridView::widget([
 ]);
 
 $js='
+$(document).on("click","#create-menu",function(){
+    $url = "http://"+ window.location.host + "/custom/check_menu_son?menu_id='.$menu_id.'";
+    $.ajax({
+        type:"POST",
+        url:$url,
+        data: "",
+        success: function(data){
+            data = $.parseJSON(data);
+            if(data.code == 0){
+                location = "'.\Yii::$app->urlManager->createUrl(['custom/createson','menu_id'=>$menu_id]).'";
+                return false;
+            }else{
+                alert(data.msg);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
+        }
+    })
+});
 $("#customson_list-pjax").on("click",".delete",function(){
  if(!confirm("确定要删除该记录吗？"))
     {

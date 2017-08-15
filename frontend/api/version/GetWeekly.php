@@ -31,8 +31,11 @@ class GetWeekly implements IApiExecute
         if(empty($data)) {
             $data = [];
         }
+        $count = WeeklyUtil::GetWeeklyCount();
+
         $rstData['code'] = 0;
-        $rstData['data'] = $data;
+        $rstData['data']['count'] = intval($count);
+        $rstData['data']['list'] = $data;
         return true;
     }
 

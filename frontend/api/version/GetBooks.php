@@ -38,9 +38,11 @@ class GetBooks implements IApiExecute
         if(empty($bookList)) {
             $bookList = [];
         }
+        $count = BookUtil::GetBookCount($Weekly->weekly_id);
 
         $rstData['code'] = 0;
-        $rstData['data'] = $bookList;
+        $rstData['count'] = intval($count);
+        $rstData['data']['list'] = $bookList;
         return true;
     }
 

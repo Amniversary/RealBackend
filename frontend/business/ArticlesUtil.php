@@ -10,6 +10,7 @@ namespace frontend\business;
 
 
 use common\models\Articles;
+use yii\db\Query;
 
 class ArticlesUtil
 {
@@ -46,8 +47,33 @@ class ArticlesUtil
         return true;
     }
 
-    public static function GetArticles()
+    /**
+     * 获取章节列表
+     * @param $bookId
+     * @param int $page_no
+     * @param int $page_size
+     * @return array
+     */
+    public static function GetArticles($bookId, $page_no = 1, $page_size = 20)
     {
+        $query = (new Query())
+            ->from('wc_articles')
+            ->select(['book_id as id', 'title', 'pic', 'description', 'url', 'status', 'create_time', 'update_time'])
+            ->where(['book_id'=>$bookId])
+            ->offset(($page_no - 1) * $page_size)
+            ->limit($page_size)
+            ->all();
 
+       return $query;
+    }
+
+    /**
+     * 返回章节总数
+     * @param $bookId
+     * @return bool|string
+     */
+    public static function GetArticleCount($bookId)
+    {
+        return Articles::find()->select(['count(1) as num'])->where(['book_id'=>$bookId])->limit(1)->scalar();
     }
 }

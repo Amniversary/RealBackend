@@ -11,7 +11,6 @@ namespace backend\business;
 
 use common\components\UsualFunForNetWorkHelper;
 use common\models\AuthorizationMenu;
-use common\models\AuthorizationMenuSon;
 use yii\base\Exception;
 use yii\db\Query;
 use yii\web\HttpException;
@@ -185,7 +184,7 @@ class WeChatUserUtil
         $query = (new Query())->select(['menu_id'])->from('wc_authorization_menu')->where(['is_list'=>1])->all();
         AuthorizationMenu::deleteAll(['app_id'=>$cacheInfo['record_id']]);
         foreach ($query as $v){
-            AuthorizationMenuSon::deleteAll(['menu_id'=>$v['menu_id']]);
+            AuthorizationMenu::deleteAll(['parent_id'=>$v['menu_id']]);
         }
     }
 
@@ -213,21 +212,23 @@ class WeChatUserUtil
             foreach ($data as $item) {
                 $model = new AuthorizationMenu();
                 $model->app_id = $app_id;
+                $model->parent_id = 0;
+                $model->name = $item['name'];
+                $model->type = isset($item['type']) ? $item['type'] : '';
+                $model->key_type = isset($item['key']) ? $item['key'] : '';
+                $model->url = isset($item['url']) ? $item['url'] : '';
                 if (!isset($item['sub_button'])) {
-                    $model->type = $item['type'];
-                    $model->name = $item['name'];
-                    $model->key_type = isset($item['key']) ? $item['key'] : '';
-                    $model->url = isset($item['url']) ? $item['url'] : '';
                     $model->is_list = 0;
                     if (!$model->save()) throw new HttpException(500, '保存一级菜单信息失败');
                 } else {
                     $model->is_list = 1;
-                    $model->name = $item['name'];
                     $model->save();
                     foreach ($item['sub_button']['list'] as $v) {
-                        $list = new AuthorizationMenuSon();
-                        $list->menu_id = $model->menu_id;
+                        $list = new AuthorizationMenu();
+                        $list->app_id = $app_id;
+                        $list->parent_id = $model->menu_id;
                         $list->name = $v['name'];
+                        $list->is_list = 0;
                         $list->key_type = isset($v['key']) ? $v['key'] : '';
                         $list->url = isset($v['url']) ? $v['url'] : '';
                         $list->type = $v['type'];

@@ -17,6 +17,8 @@ use backend\business\ResourceUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use backend\components\MessageComponent;
+use backend\components\ReceiveType;
+use backend\components\WeChatClass\EventClass;
 use backend\components\WeChatComponent;
 use callmez\wechat\sdk\MpWechat;
 use callmez\wechat\sdk\Wechat;
@@ -28,25 +30,54 @@ use common\components\UsualFunForStringHelper;
 use common\models\AttentionEvent;
 use common\models\AuthorizationList;
 use common\models\AuthorizationMenu;
-use common\models\AuthorizationMenuSon;
 use common\models\Client;
 use common\models\QrcodeImg;
 use common\models\Resource;
-use common\models\StatisticsCount;
 use common\models\User;
-
 use Qiniu\Auth;
-use udokmeci\yii2beanstalk\Beanstalk;
 use yii\base\Action;
 use yii\db\Query;
 use yii\log\Logger;
-use yii\web\Cookie;
 
 class BhAction extends Action
 {
     public function run()
     {
         echo "<pre>";
+        $data = [
+            'appid'=>'wxd396e6246bd24673',
+            'EventKey'=>'121',
+            'FromUserName'=>'oH24O0m_KZp0XcQSb74qGNuFZDsw'
+        ];
+        $event = new EventClass($data);
+        $event->Click();
+        echo "ok";
+
+        exit;
+        $time = time();
+        $rst = date('YW',$time);
+        print_r($rst);
+        exit;
+        $msg = AttentionEvent::findAll(['app_id'=>90, 'menu_id'=>72, 'flag'=>2]);
+        print_r($msg);
+        exit;
+        $a = 89;
+        $auth = AuthorizerUtil::getAuthByOne($a);
+        $rst_ticket = WeChatUserUtil::getQrcodeTickt($auth->authorizer_access_token,'1',$error);
+        if(!$rst_ticket){
+            print_r($error);exit;
+        }
+        $ticket = $rst_ticket['ticket'];
+        if(!WeChatUserUtil::getQrcodeImg($ticket,$a,$qrcode_file)) {
+            $error = '保存二维码到本地失败';
+            print_r($error);exit;
+        }
+        print_r($qrcode_file);
+
+        exit;
+        $rst = UsualFunForStringHelper::mt_rand_str(20);
+        print_r($rst);
+        exit;
         $time = strtotime(date('Y-m-d H:i:s'));
         $end = strtotime('-2 day'); //date('Y-m-d H:i:s',strtotime('-2 day'));
        $rst  = ($time - $end) / 86400 ;
@@ -642,7 +673,7 @@ Array
         $query = (new Query())->select(['menu_id'])->from('wc_authorization_menu')->where(['is_list'=>1])->all();
         AuthorizationMenu::deleteAll(['app_id'=>$cacheInfo['record_id']]);
         foreach ($query as $v){
-            AuthorizationMenuSon::deleteAll(['menu_id'=>$v['menu_id']]);
+            AuthorizationMenu::deleteAll(['parent_id'=>$v['menu_id']]);
         }
         exit;
 
@@ -672,8 +703,8 @@ Array
                 $model->name = $item['name'];
                 $model->save();
                 foreach ($item['sub_button']['list'] as $v){
-                    $list = new AuthorizationMenuSon();
-                    $list->menu_id = $model->menu_id;
+                    $list = new AuthorizationMenu();
+                    $list->parent_id = $model->menu_id;
                     $list->name = $v['name'];
                     $list->key_type = isset($v['key']) ? $v['key']: '';
                     $list->url = isset($v['url']) ?$v['url']: '';
@@ -701,8 +732,8 @@ Array
             }else{
                 $sql = (new Query())
                     ->select(['name','type','url','key_type'])
-                    ->from('wc_authorization_menu_son')
-                    ->where('menu_id = :md',[':md'=>$v['menu_id']])->all();
+                    ->from('wc_authorization_menu')
+                    ->where('parent_id = :md',[':md'=>$v['menu_id']])->all();
                 $data['button'][$key] = [
                     'name'=>$v['name'],
                 ];

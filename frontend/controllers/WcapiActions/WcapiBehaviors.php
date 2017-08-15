@@ -14,7 +14,7 @@ return [
         'cors' => [
             'Origin' => ['*'],
             'Access-Control-Allow-Origin'=>['*'],
-            'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'HEAD', 'OPTIONS'],
+            'Access-Control-Request-Method' => ['GET', 'POST', 'OPTIONS'],
             'Access-Control-Request-Headers' => ['*'],
         ],
     ]

@@ -20,6 +20,7 @@ class CreateMenuAction extends Action
         $id = \Yii::$app->request->get('id');
         $model = new AuthorizationMenu();
         $model->global = $id;
+        $model->parent_id = 0;
         $model->is_list = 0;
         $model->type = 'view';
         if($model->load(\Yii::$app->request->post())){

@@ -1,54 +1,26 @@
 <?php
 return [
-    'index'=>[
-        'class'=>'backend\controllers\BatchCustomActions\IndexAction'
-    ],
-    'create'=>[
-        'class'=>'backend\controllers\BatchCustomActions\CreateAction'
-    ],
-    'delete'=>[
-        'class'=>'backend\controllers\BatchCustomActions\DeleteAction'
-    ],
-    'index_menu'=>[
-        'class'=>'backend\controllers\BatchCustomActions\IndexMenuAction'
-    ],
-    'create_menu'=>[
-        'class'=>'backend\controllers\BatchCustomActions\CreateMenuAction'
-    ],
-    'check'=>[
-        'class'=>'backend\controllers\BatchCustomActions\CheckMenuNumAction'
-    ],
-    'delete_menu'=>[
-        'class'=>'backend\controllers\BatchCustomActions\DeleteMenuAction'
-    ],
-    'is_list'=>[
-        'class'=>'backend\controllers\BatchCustomActions\IsListAction'
-    ],
-    'update_menu'=>[
-        'class'=>'backend\controllers\BatchCustomActions\UpdateMenuAction'
-    ],
-    'indexson'=>[
-        'class'=>'backend\controllers\BatchCustomActions\IndexSonAction'
-    ],
-    'createson'=>[
-        'class'=>'backend\controllers\BatchCustomActions\CreateSonAction'
-    ],
-    'deleteson'=>[
-        'class'=>'backend\controllers\BatchCustomActions\DeleteSonAction'
-    ],
-    'updateson'=>[
-        'class'=>'backend\controllers\BatchCustomActions\UpdateSonAction'
-    ],
-    'check_menu_son'=>[
-        'class'=>'backend\controllers\BatchCustomActions\CheckMenuSonAction'
-    ],
-    'status'=>[
-        'class'=>'backend\controllers\BatchCustomActions\SetStatusAction'
-    ],
-    'getauthlist'=>[
-        'class'=>'backend\controllers\BatchCustomActions\GetAuthListAction'
-    ],
-    'setauthlist'=>[
-        'class'=>'backend\controllers\BatchCustomActions\SetAuthListAction'
-    ]
+    'index'=>'backend\controllers\BatchCustomActions\IndexAction',
+    'create'=>'backend\controllers\BatchCustomActions\CreateAction',
+    'delete'=>'backend\controllers\BatchCustomActions\DeleteAction',
+    'index_menu'=>'backend\controllers\BatchCustomActions\IndexMenuAction',
+    'create_menu'=> 'backend\controllers\BatchCustomActions\CreateMenuAction',
+    'check'=> 'backend\controllers\BatchCustomActions\CheckMenuNumAction',
+    'delete_menu'=> 'backend\controllers\BatchCustomActions\DeleteMenuAction',
+    'is_list'=> 'backend\controllers\BatchCustomActions\IsListAction',
+    'update_menu'=> 'backend\controllers\BatchCustomActions\UpdateMenuAction',
+    'indexson'=> 'backend\controllers\BatchCustomActions\IndexSonAction',
+    'createson'=> 'backend\controllers\BatchCustomActions\CreateSonAction',
+    'deleteson'=> 'backend\controllers\BatchCustomActions\DeleteSonAction',
+    'updateson'=> 'backend\controllers\BatchCustomActions\UpdateSonAction',
+    'check_menu_son'=> 'backend\controllers\BatchCustomActions\CheckMenuSonAction',
+    'status'=> 'backend\controllers\BatchCustomActions\SetStatusAction',
+    'getauthlist'=> 'backend\controllers\BatchCustomActions\GetAuthListAction',
+    'setauthlist'=> 'backend\controllers\BatchCustomActions\SetAuthListAction',
+    'index_msg'=> 'backend\controllers\BatchCustomActions\IndexMsgAction',
+    'createmsg'=>'backend\controllers\BatchCustomActions\CreateMsgAction',
+    'updatemsg'=>'backend\controllers\BatchCustomActions\UpdateMsgAction',
+    'deletemsg'=>'backend\controllers\BatchCustomActions\DeleteMsgAction',
+    'indexson_msg'=> 'backend\controllers\BatchCustomActions\IndexSonMsgAction',
+    'createsonmsg'=>'backend\controllers\BatchCustomActions\CreateSonMsgAction',
 ];

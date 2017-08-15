@@ -29,7 +29,7 @@ class DelCarousels implements IApiExecute
         }
 
         Carousel::deleteAll(['carousel_id'=>$id]);
-
+        \Yii::$app->cache->delete('carousels_info');
         $rstData['code'] = 0;
         $rstData['data'] = '';
         return true;

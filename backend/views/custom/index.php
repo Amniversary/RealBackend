@@ -88,7 +88,7 @@ $gridColumns = [
     ],
     [
         'class' => 'kartik\grid\ActionColumn',
-        'template'=>'{son}&nbsp;&nbsp;&nbsp;{click}&nbsp;&nbsp;&nbsp;{update}&nbsp;&nbsp;&nbsp;{delete}',
+        'template'=>'{son}{click}{update}{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
         'width'=>'250px',
@@ -116,19 +116,19 @@ $gridColumns = [
         'buttons'=>[
             'son'=>function($url, $model){
                 if($model->is_list == 1){
-                    return Html::a('二级菜单管理', $url,['title'=>'修改信息','class'=>'back-a','data-toggle'=>false]);
+                    return Html::a('二级菜单管理', $url,['style'=>'margin-right:10px','class'=>'back-a','data-toggle'=>false]);
                 }
                 return '';
             },
             'update'=>function($url, $model){
-                return Html::a('编辑',$url,['class'=>'back-a']);
+                return Html::a('编辑',$url,['class'=>'back-a','style'=>'margin-right:10px']);
             },
             'delete'=>function($url, $model){
                 return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
             },
             'click'=>function($url, $model){
                 if($model->type == 'click') {
-                    return Html::a('消息配置', $url, ['class'=>'back-a']);
+                    return Html::a('消息配置', $url, ['class'=>'back-a','style'=>'margin-right:10px']);
                 }
                 return '';
             }

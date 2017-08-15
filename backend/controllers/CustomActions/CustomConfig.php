@@ -18,4 +18,7 @@ return [
     'updatemsg'=>'backend\controllers\CustomActions\UpdateMsgAction',
     'deletemsg'=>'backend\controllers\CustomActions\DeleteMsgAction',
     'createmsg'=>'backend\controllers\CustomActions\CreateMsgAction',
+    'check_menu_son'=>'backend\controllers\CustomActions\CheckMenuSonAction',
+    'customson_msg'=>'backend\controllers\CustomActions\CustomSonMsgAction',
+    'createsonmsg'=>'backend\controllers\CustomActions\CreateSonMsgAction',
 ];

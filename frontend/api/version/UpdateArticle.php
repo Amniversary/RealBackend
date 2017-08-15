@@ -42,8 +42,8 @@ class UpdateArticle implements IApiExecute
     }
 
     private function check_params($dataProtocal,&$error){
-        $fields = ['id','title', 'pic','description', 'url','status'];
-        $fieldLabels = ['文章id', '文章名称' ,'文章图片', '文章描述', '跳转链接', '状态值'];
+        $fields = ['id','title', 'pic','description', 'url'];
+        $fieldLabels = ['文章id', '文章名称' ,'文章图片', '文章描述', '跳转链接'];
         $len = count($fields);
         for($i = 0; $i < $len; $i++)
         {
@@ -51,6 +51,10 @@ class UpdateArticle implements IApiExecute
                 $error = $fieldLabels[$i] . '不能为空';
                 return false;
             }
+        }
+        if(!isset($dataProtocal['data']['status'])) {
+            $error = '状态值不能为空';
+            return false;
         }
         return true;
     }

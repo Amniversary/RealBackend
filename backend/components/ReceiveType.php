@@ -61,7 +61,7 @@ class ReceiveType
                 $auth = AuthorizerUtil::getAuthOne($arr['appid']);
                 $contentStr = $Event->Click();
                 if($arr['EventKey'] == 'get_qrcode') {
-                    if(!in_array($auth->record_id,\Yii::$app->params['WxAuthParams'])) {
+                    if(in_array($auth->record_id,\Yii::$app->params['WxAuthParams'])) {
                         $params = ['key_word' => 'get_qrcode', 'data' => $arr];
                         if(!JobUtil::AddCustomJob('imgBeanstalk','get_qrcode',$params,$error)) {
                             \Yii::error($error);
