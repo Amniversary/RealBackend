@@ -219,11 +219,6 @@ use yii\log\Logger;
         return $paramOut;
     }
 
-    public static function GetSysParamsByOne()
-    {
-
-    }
-
     /**
      * @var 单个系统参数缓存前缀
      */

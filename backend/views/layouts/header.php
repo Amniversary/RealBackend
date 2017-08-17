@@ -43,13 +43,13 @@ use yii\helpers\Html;
                 <?php $authData = \backend\business\DailyStatisticUsersUtil::GetDailyFansNum($authInfo['record_id']);  ?>
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="<?= $authInfo['head_img']; ?>" class="user-image" alt="User Image"/>
+                        <img src="<?= empty($authInfo['head_img']) ? 'http://oss.aliyuncs.com/meiyuan/wish_type/default.png':$authInfo['head_img']; ?>" class="user-image" alt="User Image"/>
                         <span class="hidden-xs"><?= $authInfo['nick_name']; ?></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header" style="height: auto">
-                            <img src="<?= $authInfo['head_img']; ?>" class="auth-image" alt="User Image"/>
+                            <img src="<?= empty($authInfo['head_img']) ? 'http://oss.aliyuncs.com/meiyuan/wish_type/default.png': $authInfo['head_img']; ?>" class="auth-image" alt="User Image"/>
                             <h4 style="color: #FFF"><?= $authInfo['nick_name'] ?></h4>
                             <ul id="head-ul">
                                 <li>公众号类型 : <?= \common\models\AuthorizationList::getServiceTypeInfo($authInfo['service_type_info']) ?></li>

@@ -28,6 +28,7 @@ class CreateCarousels implements IApiExecute
         $model = new Carousel();
         $model->pic_url = $data['data']['pic_url'];
         $model->action_type = $data['data']['type'];
+        $model->description = $data['data']['description'];
         $model->url = $url;
         $model->status = 1;
         $model->create_time = date('Y-m-d H:i:s');

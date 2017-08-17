@@ -65,6 +65,26 @@ class BookUtil
     }
 
     /**
+     * 获取web书籍列表
+     * @return array
+     */
+    public static function GetWebBooks($id, $page_no =1 , $page_size =20)
+    {
+        $book = Books::find()->select(['book_id','title'])->where(['weekly_id'=>$id,'status'=>1])->offset(($page_no - 1)* $page_size)->limit($page_size)->orderBy('create_time asc')->all();
+        $rst = [];
+        if(empty($book)) {
+            $book = [];
+        }
+        foreach($book as $item) {
+            $rst[] = [
+                'id'=> intval($item->book_id),
+                'title' => $item->title
+            ];
+        }
+        return $rst;
+    }
+
+    /**
      * 返回书籍总数
      * @return bool|string
      */

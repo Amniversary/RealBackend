@@ -31,6 +31,7 @@ class UpdateCarousels implements IApiExecute
         }
         $Carousel->pic_url = $data['data']['pic_url'];
         $Carousel->url = $url;
+        $Carousel->description = $data['data']['description'];
         $Carousel->status = $data['data']['status'];
         $Carousel->update_time = date('Y-m-d H:i:s');
         if(!CarouselsUtil::SaveCarousel($Carousel, $error)) {

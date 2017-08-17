@@ -183,7 +183,7 @@ class AuthorizerUtil
         $query = (new Query())
             ->select(['menu_id','app_id','name','ifnull(type,\'\') as type','ifnull(key_type,\'\') as key_type', 'url', 'is_list'])
             ->from('wc_authorization_menu')
-            ->where(['global'=>$global])->all();
+            ->where(['global'=>$global,'parent_id'=>0])->all();
         if(empty($query)) return false;
         return $query;
     }

@@ -65,4 +65,35 @@ class WeeklyUtil
     {
         return Weekly::find()->select(['count(1) as num'])->limit(1)->scalar();
     }
-}
+
+    /**
+     * 获取周数列表
+     * @param bool $reflush
+     * @param int $page_no
+     * @param int $page_size
+     * @return array
+     */
+    public static function GetWeeklyCacheData($reflush = false,$page_no = 1, $page_size = 20)
+    {
+        $query = (new Query())
+            ->select(['weekly_id', 'title', 'weeks'])
+            ->from('wc_weekly')
+            ->where('status = 1')
+            ->offset(($page_no -1 )* $page_size)
+            ->limit($page_size)
+            ->all();
+
+        if (empty($query)) {
+            $query = [];
+        }
+        $rst = [];
+        foreach($query as $item) {
+            $rst[] = [
+                'id' => intval($item['weekly_id']),
+                'title' => $item['title'],
+                'weeks' => $item['weeks']
+            ];
+        }
+        return $rst;
+    }
+ }

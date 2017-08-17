@@ -30,6 +30,7 @@ class GetCarousel implements IApiExecute
         $rstData['data'] = [
             'id'=> intval($carousel->carousel_id),
             'pic_url'=> $carousel->pic_url,
+            'description'=> $carousel->description,
             'url' => $carousel->url,
             'status' => $carousel->status,
             'create_time' => $carousel->create_time,

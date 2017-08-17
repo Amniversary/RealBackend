@@ -101,6 +101,7 @@ class MessageComponent
             $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);
             if(empty($userData)) {
                 \Yii::error('EventKey  User_id:'. $user_id);
+                return null;
             }
             $is_attention = AuthorizerUtil::isAttention($model->client_id); //TODO:  是否扫过其他人
             if(!$is_attention){

@@ -53,7 +53,7 @@ use yii\widgets\ActiveForm;
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? '新增' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['custom/indexson','menu_id'=>$menuInfo->menu_id]), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['custom/indexson','menu_id'=>$menu_id]), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
         <?php ActiveForm::end(); ?>
 

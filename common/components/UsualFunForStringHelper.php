@@ -235,6 +235,20 @@ class UsualFunForStringHelper
     }
 
     /**
+     * 判断时间格式是否为 YYYY-mm-dd HH:ii:ss
+     * @param $date
+     * @return bool
+     */
+    public static function IsDateTime($date)
+    {
+        $patten = '/^\d{4}[\-](0?[1-9]|1[012])[\-](0?[1-9]|[12][0-9]|3[01])(\s+(0?[0-9]|1[0-9]|2[0-3])\:(0?[0-9]|[1-5][0-9])\:(0?[0-9]|[1-5][0-9]))?$/';
+        if (!preg_match($patten, $date)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 将秒数转为HH:MM:SS格式的时间
      * @param $seconds
      * @return string

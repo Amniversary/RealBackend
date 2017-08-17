@@ -58,7 +58,7 @@ class ArticlesUtil
     {
         $query = (new Query())
             ->from('wc_articles')
-            ->select(['book_id as id', 'title', 'pic', 'description', 'url', 'status', 'create_time', 'update_time'])
+            ->select(['id', 'title', 'pic', 'description', 'url', 'status', 'create_time', 'update_time'])
             ->where(['book_id'=>$bookId])
             ->offset(($page_no - 1) * $page_size)
             ->limit($page_size)
@@ -75,5 +75,29 @@ class ArticlesUtil
     public static function GetArticleCount($bookId)
     {
         return Articles::find()->select(['count(1) as num'])->where(['book_id'=>$bookId])->limit(1)->scalar();
+    }
+
+    public static function GetWebArticleList($id, $page_no = 1, $page_size = 20)
+    {
+        $rst = Articles::find()->select(['id', 'title', 'pic', 'description', 'url'])
+            ->where(['book_id'=>$id,'status'=>1])
+            ->offset(($page_no - 1)* $page_size)
+            ->limit($page_size)->all();
+
+        if(empty($rst)) {
+            $rst = [];
+        }
+        $data = [];
+        foreach($rst as $item) {
+            $data[] = [
+                'id'=>$item->id,
+                'title' =>$item->title,
+                'pic'=>$item->pic,
+                'description'=>$item->description,
+                'url'=>$item->url
+            ];
+        }
+
+        return $data;
     }
 }

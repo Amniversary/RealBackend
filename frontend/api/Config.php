@@ -21,5 +21,9 @@ return [
     'update_article' => 'UpdateArticle',
     'get_articles' => 'GetArticles',
     'get_article' => 'GetArticle',
-
+    //TODO: Web接口
+    'web_get_carousels'=>'WebGetCarousels',
+    'web_get_issue' => 'WebGetIssue',
+    'web_get_books' => 'WebGetBooks',
+    'web_get_articles' => 'WebGetArticles'
 ];

@@ -33,6 +33,7 @@ use common\models\AuthorizationMenu;
 use common\models\Client;
 use common\models\QrcodeImg;
 use common\models\Resource;
+use common\models\TemplateTiming;
 use common\models\User;
 use Qiniu\Auth;
 use yii\base\Action;
@@ -44,6 +45,43 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        $data = '2017-08-17 11:50:00';
+        print_r(strtotime($data));exit;
+
+        $json = '{"first":{"value":"\u6765\u4e00\u6761\u6d4b\u8bd5\u6a21\u677f\u63a8\u9001\u6d88\u606f","color":"#FF0000"},"keyword1":{"value":"{{NICKNAME}} \u8fd9\u91cc\u5e26\u4e00\u4e2a\u7528\u6237\u540d","color":"#135EFB"},"keyword2":{"value":"\u597d\u50cf\u8fd8\u53ef\u4ee5","color":"#173177"},"keyword3":{"value":"999\u81f3\u5c0aVIP","color":"#135EFB"},"keyword4":{"value":"2222-09-09 23:59:59","color":""},"remark":{"value":"adaa","color":"#FF0000"},"url":"http:\/\/www.baidu.com","openid":"ol_EGvw_V3rXYILgc7QEOVVBrxwg"}';
+        print_r(json_decode($json,true));
+
+        exit;
+        $time = time();
+        $condition = 'status = 1 and create_time <= :tm';
+        $query = TemplateTiming::find()
+            ->select(['app_id', 'template_id', 'template_data', 'status', 'type' , 'create_time'])
+            ->where($condition,[':tm'=>$time])
+            ->all();
+        foreach($query as $item) {
+            $item->id;
+        }
+
+
+        exit;
+        $time = date('Y-W');
+        print_r(strtotime($time));
+        echo "<br />";
+        $date = date('Y-m-d',strtotime($time));
+        print_r($date);
+        exit;
+        //匹配时间格式为2016-02-16或2016-02-16 23:59:59前面为0时可以不写
+        $time = "2016-12-14 23:59:59";
+        $patten = '/^\d{4}[\-](0?[1-9]|1[012])[\-](0?[1-9]|[12][0-9]|3[01])(\s+(0?[0-9]|1[0-9]|2[0-3])\:(0?[0-9]|[1-5][0-9])\:(0?[0-9]|[1-5][0-9]))?$/';
+        if (preg_match($patten, $time)) {
+            echo $timestro = strtotime($time);
+        } else {
+            echo "error";
+        }
+
+
+
+        exit;
         $data = [
             'appid'=>'wxd396e6246bd24673',
             'EventKey'=>'121',

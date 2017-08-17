@@ -76,6 +76,19 @@ common\assets\ArtDialogAsset::register($this);
         </div>
     </div>
     <hr>
+    <div class="form-group field-Template-time">
+        <label class="control-label" for="template-time">定时发送</label>
+        <?php echo \kartik\datetime\DateTimePicker::widget([
+            'name' => 'Template[time]',
+            'options' => ['class' => 'form-control'],
+            'pluginOptions' => [
+                'autoclose' => true,
+                'format' => 'yyyy-mm-dd HH:ii:00',
+                'todayHighlight' => true
+            ]
+        ]); ?>
+        <div class="help-block"></div>
+    </div>
     <div class="form-group field-Template-url">
         <label class="control-label" for="template-url">跳转链接</label>
         <input type="text" id="Template-url" class="form-control" name="Template[url]">
@@ -88,7 +101,7 @@ common\assets\ArtDialogAsset::register($this);
     </div>
     <br/>
     <div class="form-group">
-        <?= Html::button('发送',['id'=>'send-msg','class' =>'btn btn-primary']) ?>
+        <?= Html::button('保存',['id'=>'send-msg','class' =>'btn btn-primary']) ?>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['template/index']), ['class' => 'btn btn-primary']) ?>
         &nbsp;&nbsp;&nbsp;&nbsp;
@@ -172,7 +185,7 @@ $js .= '
            })
     });
     $(document).on("click","#send-msg", function() {
-         if(!confirm("确定要发送消息吗?")){
+         if(!confirm("确定要保存或发送消息吗?")){
               return false;
          }
          var dialog = art.dialog({

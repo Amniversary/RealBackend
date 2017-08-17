@@ -79,6 +79,7 @@ class CarouselsUtil
                 'id'=>$model->carousel_id,
                 'title'=>$model->title,
                 'pic_url'=>$model->pic_url,
+                'description'=>$model->description,
                 'url'=>$model->url,
                 'status'=>$model->status,
                 'create_time'=>$model->create_time,
@@ -115,5 +116,63 @@ class CarouselsUtil
      */
     public static function GetCarousel($id) {
         return Carousel::findOne(['carousel_id'=>$id]);
+    }
+
+
+    /**
+     * 获取轮播图信息
+     */
+    public static function GetWebCarouselInfo($reflash = false)
+    {
+        if($reflash) {
+            $carousel = self::GetCarousels();
+            $rst = self::GetFormatCarousels($carousel);
+            $pStr = serialize($rst);
+            \Yii::$app->cache->set('web_carousels_info',$pStr);
+        } else {
+            $cnt = \Yii::$app->cache->get('web_carousels_info');
+            if($cnt == false) {
+                $lock = new PhpLock('get_web_carousels');
+                $lock->lock();
+                $cnt = \Yii::$app->cache->get('web_carousels_info');
+                if($cnt == false) {
+                    $carousel = self::GetCarouselList();
+                    $rst = self::GetFormateCarouselList($carousel);
+                    $pStr = serialize($rst);
+                    \Yii::$app->cache->set('web_carousels_info',$pStr);
+                } else {
+                    $rst = unserialize($cnt);
+                }
+                $lock->unlock();
+            } else {
+                $rst = unserialize($cnt);
+            }
+        }
+        return $rst;
+    }
+
+    public static function GetCarousels()
+    {
+        return Carousel::find()->where(['status'=>1])->orderBy('order_no asc')->all();
+    }
+    public static function GetFormatCarousels($recordList)
+    {
+        $out = [];
+        if(!isset($recordList) || empty($recordList))
+        {
+            return $out;
+        }
+        foreach($recordList as $model)
+        {
+            $ary = [
+                'id'=>$model->carousel_id,
+                'pic_url'=>$model->pic_url,
+                'url'=>$model->url,
+                'description'=>$model->description,
+            ];
+            $out[] = $ary;
+        }
+
+        return $out;
     }
 }

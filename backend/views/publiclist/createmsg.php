@@ -41,18 +41,19 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\datetime\DateTimePicker;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\AttentionEvent */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $cache */
 $data = [$cache['record_id']=>$cache['nick_name']];
+
 ?>
 
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
     <?= $form->field($model,'app_id')->dropDownList($data,['disabled'=>'disabled','style'=>'width:200px']) ?>
     <hr/>
     <?= $form->field($model,'msg_type')->radioList(['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息','3'=>'语音消息']) ?>

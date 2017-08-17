@@ -12,7 +12,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="<?=$pic?>" class="img-circle" alt="User Image"/>
+                <img src="<?=empty($pic) ? 'http://oss.aliyuncs.com/meiyuan/wish_type/default.png': $pic ?>" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
                 <p><?= \Yii::$app->user->identity->username; ?></p>

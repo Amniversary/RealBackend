@@ -181,7 +181,7 @@ class WeChatUserUtil
     public static function DeleteCustom()
     {
         $cacheInfo = WeChatUserUtil::getCacheInfo();
-        $query = (new Query())->select(['menu_id'])->from('wc_authorization_menu')->where(['is_list'=>1])->all();
+        $query = (new Query())->select(['menu_id'])->from('wc_authorization_menu')->where(['app_id'=>$cacheInfo['record_id'],'is_list'=>1])->all();
         AuthorizationMenu::deleteAll(['app_id'=>$cacheInfo['record_id']]);
         foreach ($query as $v){
             AuthorizationMenu::deleteAll(['parent_id'=>$v['menu_id']]);
