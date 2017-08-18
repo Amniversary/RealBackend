@@ -9,8 +9,10 @@
 namespace backend\controllers\KeyWordActions;
 
 
+use backend\business\WeChatUserUtil;
 use backend\components\ExitUtil;
 use common\models\AttentionEvent;
+use common\models\KeywordParams;
 use common\models\Keywords;
 use yii\base\Action;
 use yii\base\Exception;
@@ -19,6 +21,7 @@ class DeleteAction extends Action
 {
     public function run($key_id)
     {
+        $cache = WeChatUserUtil::getCacheInfo();
         $rst = ['code'=>'1', 'msg'=>''];
         if(empty($key_id)){
             $rst['msg'] = '关键词记录Id不能为空';
@@ -40,7 +43,7 @@ class DeleteAction extends Action
                 echo json_encode($rst);
                 exit;
             }
-            AttentionEvent::deleteAll(['key_id'=>$model->key_id]);
+            KeywordParams::deleteAll(['app_id'=>$cache['record_id'],'key_id'=>$key_id]);
             $trans->commit();
         }
         catch (Exception $e){

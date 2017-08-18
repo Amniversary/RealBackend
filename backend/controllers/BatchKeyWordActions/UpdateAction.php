@@ -23,7 +23,7 @@ class UpdateAction extends Action
         }
         $Cache = WeChatUserUtil::getCacheInfo();
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            return $this->controller->redirect(['createkey']);
+            return $this->controller->redirect(['index']);
         } else {
             return $this->controller->render('_form', [
                 'model' => $model,

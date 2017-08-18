@@ -57,24 +57,21 @@ $gridColumns = [
     ],
     [
         'class'=>'kartik\grid\ActionColumn',
-        'template'=>'{setauth}{createmsg}{update}{delete}',
+        'template'=>'{setauth}{update}{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
-        'width'=>'300px',
+        'width'=>'250px',
         'urlCreator'=>function($action, $model, $key, $index){
             $url = '';
             switch ($action){
-                case 'createmsg':
-                    $url = '/batchkeyword/indexson?key_id='.strval($model->key_id);;
-                    break;
-                case 'setauth':
-                    $url = '/batchkeyword/getauthlist?key_id='.strval($model->key_id);
-                    break;
                 case 'update':
                     $url = '/batchkeyword/update?key_id='.strval($model->key_id);
                     break;
                 case 'delete':
                     $url = '/batchkeyword/delete?key_id='.strval($model->key_id);
+                    break;
+                case 'setauth':
+                    $url = '/batchkeyword/getauthlist?key_id='.strval($model->key_id);
                     break;
             }
             return $url;
@@ -83,13 +80,10 @@ $gridColumns = [
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'update'=>function($url, $model){
-                return Html::a('修改', $url,['title'=>'修改信息','style'=>'margin-right:10px','class'=>'back-a']);
+                return Html::a('修改', $url,['title'=>'修改信息','style'=>'margin-right:3%','class'=>'back-a']);
             },
             'delete'=>function($url, $model){
                 return Html::a('删除',$url,['title'=>'删除','class'=>'delete back-a','data-toggle'=>false,'data-pjax'=>'0']);
-            },
-            'createmsg'=>function($url,$model){
-                return Html::a('消息设置',$url,['class'=>'back-a','style'=>'margin-right:10px']);
             },
             'setauth'=>function($url ,$model){
                 return Html::a('设置公众号',$url,['class'=>'back-a','style'=>'margin-right:10px','data-toggle'=>'modal','data-target'=>'#contact-modal']);

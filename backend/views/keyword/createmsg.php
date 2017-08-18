@@ -55,8 +55,7 @@ $data = [$cache['record_id']=>$cache['nick_name']];
     <?= $form->field($model,'app_id')->dropDownList($data,['disabled'=>'disabled','style'=>'width:200px']) ?>
     <hr/>
     <?= $form->field($model,'msg_type')->radioList(['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息','3'=>'语音消息']) ?>
-    <hr/>
-    <?= $form->field($model,'key_id')->dropDownList(\common\models\Keywords::getKeyWord($cache['record_id']),['style'=>'width:200px']) ?>
+
     <hr/>
     <div id="img-text">
     <label style="color: red;font-weight: bold;">标题、内容描述、外链Url、图片Url、事件Id 消息类型为图文消息时填写！</label>

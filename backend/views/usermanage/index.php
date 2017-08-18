@@ -116,9 +116,9 @@ $gridColumns = [
         'filter'=>false
     ],
     [
-        'width'=>'300px',
+        'width'=>'250px',
         'class' => 'kartik\grid\ActionColumn',
-        'template'=>'{update}&nbsp;&nbsp;{delete}&nbsp;&nbsp;{resetpwd}&nbsp;&nbsp;{setprivilige}',
+        'template'=>'{update}{delete}{resetpwd}{setprivilige}',
         'dropdown' => false,
         'vAlign'=>'middle',
         'urlCreator' => function($action, $model, $key, $index)
@@ -146,7 +146,7 @@ $gridColumns = [
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'resetpwd' => function ($url, $model, $key) {
-                return Html::a('重置密码',$url,['class'=>'back-a', 'data-toggle'=>'modal','data-target'=>'#contact-modal']);
+                return Html::a('重置密码',$url,['class'=>'back-a','style'=>'margin-right:3%', 'data-toggle'=>'modal','data-target'=>'#contact-modal']);
             },
             /*'setcheckno' => function ($url, $model, $key) {
                 return Html::a('设置审核号',$url,[ 'data-toggle'=>'modal','data-target'=>'#contact-modal','style'=>'margin-left:10px;']);
@@ -154,12 +154,12 @@ $gridColumns = [
             'update'=>function($url,$model)
             {
                 if($model->backend_user_id === 1) return '';
-                return Html::a('编辑',$url,['class'=>'back-a']);
+                return Html::a('编辑',$url,['class'=>'back-a','style'=>'margin-right:3%']);
             },
             'delete'=>function($url,$model)
             {
                 if($model->backend_user_id === 1) return '';
-                return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
+                return Html::a('删除',$url,['class'=>'delete back-a','style'=>'margin-right:3%','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
             },
             'setprivilige'=>function($url, $model,$key)
             {

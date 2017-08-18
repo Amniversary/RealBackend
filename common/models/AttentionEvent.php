@@ -19,7 +19,7 @@ use yii\db\Query;
  * @property string $description
  * @property string $url
  * @property string $picurl
- * @property string $key_id
+ * @property string $global
  * @property integer $update_time
  * @property string $create_time
  * @property string $video
@@ -46,7 +46,7 @@ class AttentionEvent extends ActiveRecord
     public function rules()
     {
         return [
-            [['app_id', 'msg_type', 'update_time','flag', 'event_id','key_id','order_no','menu_id'], 'integer'],
+            [['app_id', 'msg_type', 'update_time','flag', 'event_id','global','order_no','menu_id'], 'integer'],
             [['create_time','title','description','url','picurl','video','remark1'], 'safe'],
             [[ 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
             [['content'], 'string', 'max'=>1000],
@@ -70,7 +70,7 @@ class AttentionEvent extends ActiveRecord
             'description' => '内容描述',
             'url' => '外链Url',
             'picurl' => '图片Url',
-            'key_id' => '关键字ID',
+            'global' => '是否全局',
             'order_no'=>'排序号',
             'video'=>'音频url',
             'update_time' => '更新media_id的时间',

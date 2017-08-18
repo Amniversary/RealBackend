@@ -35,18 +35,10 @@ use yii\bootstrap\Html;
 }*/
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
-
-    [
-        'attribute'=>'key_id',
-        'vAlign'=>'middle',
-        'value'=>function($model){
-            return \common\models\Keywords::getKeyName($model->key_id);
-        },
-        'filter'=>false,
-    ],
     [
         'attribute'=>'msg_type',
         'vAlign'=>'middle',
+        'width'=>'100px',
         'value'=>function($model){
             return $model->getMsgType($model->msg_type);
         },
@@ -131,6 +123,7 @@ $gridColumns = [
     [
         'attribute'=>'create_time',
         'vAlign'=>'middle',
+        'width'=>'150px',
         'filterType'=>'\yii\jui\DatePicker',
         'filterWidgetOptions'=>[
             'language'=>'zh-CN',
@@ -140,13 +133,16 @@ $gridColumns = [
     ],
     [
         'class'=>'kartik\grid\ActionColumn',
-        'template'=>'{update}&nbsp;&nbsp;&nbsp;{delete}',
+        'template'=>'{get_key}{update}{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
-        'width'=>'200px',
+        'width'=>'290px',
         'urlCreator'=> function($action, $model , $key , $index){
             $url = '';
             switch ($action){
+                case 'get_key':
+                    $url = '/batchkeyword/getkeylist?record_id='.strval($model->record_id);
+                    break;
                 case 'update':
                     $url = '/batchkeyword/updatemsg?record_id='.strval($model->record_id);
                     break;
@@ -160,11 +156,15 @@ $gridColumns = [
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'update'=>function($url, $model){
-                return Html::a('修改', $url,['class'=>'back-a','style'=>'margin-right:10px']);
+                return Html::a('修改', $url,['class'=>'back-a','style'=>'margin-right:3%']);
             },
             'delete'=>function($url, $model){
                 return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false]);
+            },
+            'get_key'=>function($url, $model) {
+                return Html::a('设置关键字', $url,['class'=>'back-a', 'style'=>'margin-right:3%', 'data-toggle'=>'modal','data-target'=>'#contact-modal']);
             }
+
         ],
     ],
 
@@ -202,7 +202,6 @@ echo \yii\bootstrap\Modal::widget([
         'size'=>\yii\bootstrap\Modal::SIZE_LARGE,
     ]
 );
-
 $js='
 $(document).on("click","#cry-msg",function(){
     location="'.\Yii::$app->urlManager->createUrl(['batchkeyword/createmsg','key_id'=>$key_id]).'";

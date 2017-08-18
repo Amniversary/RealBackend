@@ -50,11 +50,20 @@ $gridColumns = [
         'attribute'=>'content',
         'vAlign'=>'middle',
         'format'=>'html',
+        'value'=>function($model){
+            $len = strlen($model->content);
+            return $len > 10 ? mb_substr($model->content,0,15) . '....' : $model->content;
+        },
         'filter'=>false,
     ],
     [
         'attribute'=>'title',
         'vAlign'=>'middle',
+        'width'=>'150px',
+        'value'=>function ($model) {
+            $len = strlen($model->title);
+            return $len > 10 ? mb_substr($model->title,0, 15) .'....' : $model->title;
+        },
         'filter'=>false,
     ],
     [

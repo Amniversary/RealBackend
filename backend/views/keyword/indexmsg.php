@@ -42,15 +42,6 @@ echo \yii\bootstrap\Alert::widget([
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
     [
-        'attribute'=>'key_id',
-        'vAlign'=>'middle',
-        'width'=>'110px',
-        'value'=>function($model){
-            return \common\models\Keywords::getKeyName($model->key_id);
-        },
-        'filter'=>false,
-    ],
-    [
         'attribute'=>'msg_type',
         'vAlign'=>'middle',
         'width'=>'130px',
@@ -147,10 +138,10 @@ $gridColumns = [
     ],
     [
         'class'=>'kartik\grid\ActionColumn',
-        'template'=>'{update}&nbsp;&nbsp;&nbsp;{delete}',
+        'template'=>'{get_key}{update}{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
-        'width'=>'200px',
+        'width'=>'250px',
         'urlCreator'=> function($action, $model , $key , $index){
             $url = '';
             switch ($action){
@@ -160,6 +151,9 @@ $gridColumns = [
                 case 'delete':
                     $url = '/keyword/deletemsg?record_id='.strval($model->record_id);
                     break;
+                case 'get_key':
+                    $url = '/keyword/get_keyword?record_id='.strval($model->record_id);
+                    break;
             }
             return $url;
         },
@@ -167,10 +161,13 @@ $gridColumns = [
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'update'=>function($url, $model){
-                return Html::a('修改', $url,['class'=>'back-a','style'=>'margin-right:10px']);
+                return Html::a('修改', $url,['class'=>'back-a','style'=>'margin-right:3%']);
             },
             'delete'=>function($url, $model){
                 return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false]);
+            },
+            'get_key'=>function($url, $model) {
+                return Html::a('设置关键字',$url, ['class'=>'back-a', 'style'=>'margin-right:3%','data-toggle'=>'modal','data-target'=>'#contact-modal']);
             }
         ],
     ],
@@ -188,6 +185,8 @@ echo GridView::widget([
         [
             'content'=> Html::button('添加回复消息',['id'=>'cry-msg','type'=>'button','title'=>'添加回复', 'class'=>'btn btn-success']),
         ],
+        //'{export}',
+        //'{toggleData}',
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
     ],

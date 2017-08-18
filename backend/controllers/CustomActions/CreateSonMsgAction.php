@@ -32,6 +32,7 @@ class CreateSonMsgAction extends Action
         $model->msg_type = 0;
         $model->create_time = date('Y-m-d H:i:s');
         $model->order_no = 50;
+        $model->global = 0;
         $load = \Yii::$app->request->post();
         if(!empty($load)){
             if($load['AttentionEvent']['msg_type'] == 2){

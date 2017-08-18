@@ -14,6 +14,7 @@ use common\models\Authorization;
 use common\models\AuthorizationList;
 use common\models\BatchAttention;
 use common\models\BatchKeywordList;
+use common\models\KeywordParams;
 use common\models\Keywords;
 use common\models\MenuList;
 use yii\base\Exception;
@@ -21,7 +22,6 @@ use yii\db\Query;
 
 class KeywordUtil
 {
-
 
     /**
      * 返回关键字记录
@@ -49,6 +49,68 @@ class KeywordUtil
         return $rst;
     }
 
+
+    public static function GetGlobalMessageKeyParams($msgId)
+    {
+        $query = (new Query())
+            ->select(['key_id'])
+            ->from('wc_keyword_params')
+            ->where(['msg_id'=>$msgId])
+            ->all();
+        $rst = [];
+        foreach($query as $item) {
+            $rst[] = $item['key_id'];
+        }
+        return $rst;
+    }
+
+    public static function GetMessageKeyWord($appId, $msgId)
+    {
+        $query = (new Query())
+            ->select(['key_id'])
+            ->from('wc_keyword_params')
+            ->where(['app_id'=>$appId, 'msg_id'=>$msgId])
+            ->all();
+        $rst = [];
+        foreach($query as $item) {
+            $rst[] = $item['key_id'];
+        }
+        return $rst;
+    }
+
+    public static function GetGlobalKeyWord()
+    {
+        $article = [];
+        $articleList = Keywords::find()
+            ->select(['key_id','keyword'])
+            ->where(['global'=>1])
+            ->all();
+
+        foreach($articleList as $articled){
+            $article[$articled['key_id']] = $articled['keyword'];
+        }
+        $rights = array_chunk($article,30,true);
+        return $rights;
+    }
+    /**
+     * 获取公众号所有关键字
+     * @param $appId
+     * @return array
+     */
+    public static function GetMessageKeyList($appId)
+    {
+        $article = [];
+        $articleList = Keywords::find()
+            ->select(['key_id','keyword'])
+            ->where(['app_id'=>$appId])
+            ->all();
+
+        foreach($articleList as $articled){
+            $article[$articled['key_id']] = $articled['keyword'];
+        }
+        $rights = array_chunk($article,30,true);
+        return $rights;
+    }
     /**
      * 返回已选择关键字公众号
      * @param $key_id
@@ -64,6 +126,38 @@ class KeywordUtil
             $rst[] = $item['app_id'];
         }
         return $rst;
+    }
+
+    /**
+     * 保存公众号关键字配置
+     * @param $params
+     * @param $app_id
+     * @param $msg_id
+     * @param $error
+     * @return bool
+     * @throws \yii\db\Exception
+     */
+    public static function SaveKeyWordParams($params, $app_id ,$msg_id, &$error)
+    {
+        try {
+            $trans = \Yii::$app->db->beginTransaction();
+            (new KeywordParams())->deleteAll(['app_id'=>$app_id,'msg_id'=>$msg_id]);//TODO: 删除用户原有权限数据
+            $sql = '';
+            $table = \Yii::$app->db;
+            foreach ($params as $parList) {
+                $sql .= sprintf('insert into %s_keyword_params (app_id, key_id, msg_id) values(%s,%s,%s);',$table->tablePrefix,$app_id,$parList,$msg_id);
+            }
+            $rst = $table->createCommand($sql)->execute();
+            if( $rst <= 0 ){
+                throw new Exception('保存权限数据异常');
+            }
+            $trans->commit();
+        } catch(Exception $e) {
+            $trans->rollBack();
+            $error = $e->getMessage();
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -201,6 +295,29 @@ class KeywordUtil
             if( $rst <= 0 ){
                 $error .= '保存权限数据异常';
                 return false;
+            }
+            $trans->commit();
+        } catch(Exception $e) {
+            $trans->rollBack();
+            $error = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+    public static function SaveGlobalKeyWordParams($params ,$msg_id, &$error)
+    {
+        try {
+            $trans = \Yii::$app->db->beginTransaction();
+            (new KeywordParams())->deleteAll(['msg_id'=>$msg_id]);//TODO: 删除用户原有权限数据
+            $sql = '';
+            $table = \Yii::$app->db;
+            foreach ($params as $parList) {
+                $sql .= sprintf('insert into %s_keyword_params ( key_id, msg_id) values(%s,%s);',$table->tablePrefix,$parList,$msg_id);
+            }
+            $rst = $table->createCommand($sql)->execute();
+            if( $rst <= 0 ){
+                throw new Exception('保存权限数据异常');
             }
             $trans->commit();
         } catch(Exception $e) {

@@ -10,12 +10,16 @@ namespace backend\controllers\KeyWordActions;
 
 
 use common\models\AttentionEvent;
+use common\models\KeywordParams;
+use common\models\Resource;
 use yii\base\Action;
+use yii\db\Exception;
 
 class DeleteMsgAction extends Action
 {
     public function run($record_id)
     {
+
         $rst = ['code'=>'1', 'msg'=>''];
         if(empty($record_id)){
             $rst['msg'] = '记录Id不能为空';
@@ -29,10 +33,20 @@ class DeleteMsgAction extends Action
             echo json_encode($rst);
             exit;
         }
-
-        if($msgData->delete() === false) {
-            $rst['msg']='删除失败';
-            \Yii::error('删除失败:'.var_export($msgData->getErrors(),true));
+        try{
+            $trans = \Yii::$app->db->beginTransaction();
+            if($msgData->delete() === false) {
+                $rst['msg']='删除失败';
+                \Yii::error('删除失败:'.var_export($msgData->getErrors(),true));
+                echo json_encode($rst);
+                exit;
+            }
+            KeywordParams::deleteAll(['msg_id'=>$record_id]);
+            Resource::deleteAll(['msg_id'=>$record_id]);
+            $trans->commit();
+        } catch (Exception $e){
+            $trans->rollBack();
+            $rst['msg'] = $e->getMessage();
             echo json_encode($rst);
             exit;
         }

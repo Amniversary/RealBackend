@@ -18,6 +18,7 @@ class GetTemplateAction extends Action
 {
     public function run($id)
     {
+        $this->controller->getView()->title = '设置模板消息';
         $cache = WeChatUserUtil::getCacheInfo();
         $templateClass = new TemplateComponent(null,$cache['record_id']);
         $templateData = TemplateUtil::GetTemplateById($id);

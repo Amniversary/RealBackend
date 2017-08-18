@@ -206,7 +206,6 @@ class WeChatUserUtil
         if(empty($data)){
             throw new HttpException(500,'自定义菜单列表为空');
         }
-        \Yii::error('data_menu:'.var_export($data,true));
         $trans = \Yii::$app->db->beginTransaction();
         try{
             foreach ($data as $item) {

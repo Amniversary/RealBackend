@@ -10,7 +10,10 @@ namespace backend\controllers\BatchKeyWordActions;
 
 
 use common\models\AttentionEvent;
+use common\models\KeywordParams;
+use common\models\Resource;
 use yii\base\Action;
+use yii\db\Exception;
 
 class DeleteMsgAction extends Action
 {
@@ -30,12 +33,23 @@ class DeleteMsgAction extends Action
             exit;
         }
 
-        if($msgData->delete() === false) {
-            $rst['msg']='删除失败';
-            \Yii::error('删除失败:'.var_export($msgData->getErrors(),true));
-            echo json_encode($rst);
-            exit;
+        try{
+            $trans = \Yii::$app->db->beginTransaction();
+            if($msgData->delete() === false) {
+                $rst['msg']='删除失败';
+                \Yii::error('删除失败:'.var_export($msgData->getErrors(),true));
+                echo json_encode($rst);
+                exit;
+            }
+            KeywordParams::deleteAll(['msg_id'=>$record_id]);
+            Resource::deleteAll(['msg_id'=>$record_id]);
+            $trans->commit();
+        }catch(Exception $e){
+            $trans->rollBack();
+            $rst['msg'] = $e->getMessage();
+            echo json_encode($rst);exit;
         }
+
 
         $rst['code'] = '0';
         echo json_encode($rst);

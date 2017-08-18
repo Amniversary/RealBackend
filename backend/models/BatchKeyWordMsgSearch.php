@@ -21,7 +21,7 @@ class BatchKeyWordMsgSearch extends AttentionEvent
     public function rules()
     {
         return [
-            [['event_id','app_id', 'msg_type', 'flag','key_id'], 'integer'],
+            [['event_id','app_id', 'msg_type', 'flag'], 'integer'],
             [['create_time','content' ,'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
         ];
     }
@@ -43,7 +43,7 @@ class BatchKeyWordMsgSearch extends AttentionEvent
      */
     public function search($params)
     {
-        $query = AttentionEvent::find()->where(['key_id'=>$params['key_id'],'flag'=>1])->orderBy('order_no asc,create_time asc');
+        $query = AttentionEvent::find()->where(['global'=>1,'flag'=>1])->orderBy('order_no asc,create_time asc');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

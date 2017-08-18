@@ -13,6 +13,7 @@ use backend\business\AuthorizerUtil;
 use backend\business\DailyStatisticUsersUtil;
 use backend\business\ImageUtil;
 use backend\business\JobUtil;
+use backend\business\KeywordUtil;
 use backend\business\ResourceUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
@@ -45,6 +46,16 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        $data = [
+            'appid'=>'wxfb4431191609bd1e',  //wxd396e6246bd24673  90  wxfb4431191609bd1e 1
+            'EventKey'=>'121',
+            'FromUserName'=>'oH24O0m_KZp0XcQSb74qGNuFZDsw',
+            'Content'=>'12222',
+        ];
+        $msgObj = new MessageComponent($data,1);
+        $rst = $msgObj->VerifySendMessage();
+        print_r($rst);
+        exit;
         $data = '2017-08-17 11:50:00';
         print_r(strtotime($data));exit;
 

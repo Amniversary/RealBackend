@@ -18,6 +18,7 @@ use backend\business\WeChatUtil;
 use common\components\SystemParamsUtil;
 use common\models\AttentionEvent;
 use common\models\AuthorizationMenu;
+use common\models\KeywordParams;
 use common\models\Resource;
 use yii\db\Query;
 
@@ -51,10 +52,11 @@ class MessageComponent
             foreach($keyword as $item){
                 $touch = $item['rule'] == 1 ?
                     $this->data['Content'] == $item['keyword'] ? true:false :
-                    strpos($item['keyword'],$this->data['Content']) !== false ? true:false;
+                    strpos($item['keyword'], $this->data['Content']) !== false ? true:false;
                 if($touch){
                     $this->key = $item['key_id'];
-                    $msgData = $this->getMessageModel();
+                    $msg = $this->getKeywordMsg();
+                    $msgData = $this->getMessageItem($msg);
                     break;
                 }
             }
@@ -293,7 +295,8 @@ class MessageComponent
                 strpos($item['keyword'],$this->data['Content']) !== false ? true:false;
             if($touch){
                 $this->key = $item['key_id'];
-                $msgData = $this->getMessageModel();
+                $msg = $this->getKeywordMsg();
+                $msgData = $this->getMessageItem($msg);
                 $this->sendMessageCustom($msgData,$this->data['FromUserName']);
             }
         }
@@ -316,7 +319,6 @@ class MessageComponent
                 if(!JobUtil::AddCustomJob('wechatBeanstalk','wechat',$paramData,$error)){
                     \Yii::error('keyword msg job is error :'.$error);
                 }
-                sleep(1);
             }
         }
         return true;
@@ -405,7 +407,93 @@ class MessageComponent
                     break;
             }
         }
-        $this->sendMessageCustom($data, $this->data['FromUserName']);
+        $this->sendMessageClick($data, $this->data['FromUserName']);
         return null;
+    }
+
+    /**
+     * 发送自定义消息
+     */
+    public function sendMessageClick($msgData,$openid)
+    {
+        if(!empty($msgData)) {
+            foreach ($msgData as $item)
+            {
+                $paramData = [
+                    'key_word'=>'click_msg',
+                    'open_id'=>$openid,
+                    'authorizer_access_token'=>$this->auth->authorizer_access_token,
+                    'item'=>$item
+                ];
+                if(!JobUtil::AddCustomJob('wechatBeanstalk','wechat',$paramData,$error)){
+                    \Yii::error('keyword msg job is error :'.$error);
+                }
+                sleep(1);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 获取关键字消息
+     * @return array
+     */
+    public function getKeywordMsg(){
+        $params = sprintf('select msg_id from wc_keyword_params where (app_id = %d and key_id = %d) or key_id = %d',$this->auth->record_id, $this->key, $this->key);
+        $condition = sprintf('app_id = %s and flag = %s or record_id in ('.$params.')',$this->auth->record_id, $this->flag);
+        $query = (new Query())->from('wc_attention_event')
+            ->select(['record_id','app_id','event_id','content','msg_type','title','description','url',
+                'picurl','update_time','video'])
+            ->where($condition)
+            ->orderBy('order_no asc,create_time asc')
+            ->all();
+        return $query;
+    }
+
+
+    /**
+     * 组装消息参数
+     * @param $query
+     * @return array|bool
+     */
+    public function getMessageItem($query)
+    {
+        if(!$query) return false;
+        $data = []; $temp = [];
+        foreach ($query as $key => $value)
+        {
+            switch ($value['msg_type']){
+                case 0:  //TODO: 文本消息
+                    $data[] = [
+                        'content'=>$value['content'],
+                        'msg_type'=>$value['msg_type']
+                    ];break;
+                case 1: //TODO: 图文消息
+                    $keys = array_search($value['event_id'],$temp);
+                    $arr = [
+                        'title'=>$value['title'],
+                        'description'=>$value['description'],
+                        'url'=>$value['url'],
+                        'picurl'=>$value['picurl']
+                    ];
+                    if($keys === false) {
+                        $temp[$key] = $value['event_id'];
+                        $data[$key]['msg_type'] = $value['msg_type'];
+                        $data[$key][] = $arr;
+                    }else{
+                        //$data[$key]['msg_type'] = $value['msg_type'];
+                        $data[$keys][] = $arr;
+                    }break;
+                case 2: //TODO: 图片消息
+                    $rst = $this->DisposeImg($value['picurl'],$this->auth->authorizer_access_token,$this->auth->record_id,$value['record_id']);
+                    $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$rst['media_id']];
+                    break;
+                case 3: //TODO: 语音消息
+                    $video = $this->DisposeVideo($value['video'], $this->auth->authorizer_access_token, $this->auth->record_id, $value['record_id']);
+                    $data[] = ['msg_type'=>$value['msg_type'],'media_id'=>$video['media_id']];
+                    break;
+            }
+        }
+        return $data;
     }
 }

@@ -82,8 +82,8 @@ common\assets\ArtDialogAsset::register($this);
             'name' => 'Template[time]',
             'options' => ['class' => 'form-control'],
             'pluginOptions' => [
-                'autoclose' => true,
-                'format' => 'yyyy-mm-dd HH:ii:00',
+                'autoclose' => false,
+                'format' => 'yyyy-mm-dd hh:ii:00',
                 'todayHighlight' => true
             ]
         ]); ?>

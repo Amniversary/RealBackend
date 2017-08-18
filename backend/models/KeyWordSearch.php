@@ -45,7 +45,7 @@ class KeyWordSearch extends Keywords
     public function search($params)
     {
         $cacheInfo = WeChatUserUtil::getCacheInfo();
-        $query = Keywords::find()->where(['app_id'=>$cacheInfo['record_id']]);
+        $query = Keywords::find()->where(['app_id'=>$cacheInfo['record_id'],'global'=>0]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
