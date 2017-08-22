@@ -69,6 +69,7 @@ class CustomerSearch extends Client
 
         $query->andFilterWhere(['like', 'open_id', $this->open_id])
               ->andFilterWhere(['like', 'nick_name', $this->nick_name]);
+
         return $dataProvider;
     }
 }

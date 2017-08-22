@@ -3,6 +3,13 @@
         width: 60px;
         height: 60px;
     }
+    .alert{
+        padding: 10px;
+    }
+    .content-header{
+        position: relative;
+        padding: 1px 15px 0 15px;
+    }
     .back-a{
         display: inline-block;
         font-size: 14px;
@@ -25,20 +32,19 @@
 
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
-/*if(!$is_verify){
-    echo \yii\bootstrap\Alert::widget([
-        'body'=>'公众号未认证，无法进行相应操作！',
-        'options'=>[
-            'class'=>'alert-warning',
-        ]
-    ]);
-}*/
+
+echo \yii\bootstrap\Alert::widget([
+    'body'=>'未认证公众号，默认回复第一条消息！',
+    'options'=>[
+        'class'=>'alert-warning',
+    ]
+]);
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
     [
         'attribute'=>'msg_type',
         'vAlign'=>'middle',
-        'width'=>'100px',
+        'width'=>'130px',
         'value'=>function($model){
             return $model->getMsgType($model->msg_type);
         },
@@ -49,7 +55,8 @@ $gridColumns = [
         'vAlign'=>'middle',
         'format'=>'html',
         'value'=>function($model){
-            return  $model->content;
+            $len = strlen($model->content);
+            return $len > 20 ? mb_substr($model->content,0,15) . '....' : $model->content;
         },
         'filter'=>false,
     ],
@@ -63,7 +70,7 @@ $gridColumns = [
         'vAlign'=>'middle',
         'value'=>function($model){
             $len = strlen($model->description);
-            return $len > 10 ? mb_substr($model->description,0,15) . '....': $model->description;
+            return $len > 20 ? mb_substr($model->description,0,15) . '....': $model->description;
         },
         'filter'=>false,
     ],
@@ -73,7 +80,7 @@ $gridColumns = [
         'width'=>'100px',
         'value'=>function($model){
             $len = strlen($model->url);
-            return $len > 10 ? mb_substr($model->url,0,15) . '....' : $model->url;
+            return $len > 20 ? mb_substr($model->url,0,15) . '....' : $model->url;
         }
     ],
     [
@@ -112,7 +119,7 @@ $gridColumns = [
         'editableOptions'=>function($model)
         {
             return [
-                'formOptions'=>['action'=>'/batchkeyword/order_no?record_id='.strval($model->record_id)],
+                'formOptions'=>['action'=>'/keyword/order_no?record_id='.strval($model->record_id)],
                 'size'=>'min',
                 'inputType'=>\kartik\editable\Editable::INPUT_TEXT,
             ];
@@ -122,7 +129,6 @@ $gridColumns = [
     [
         'attribute'=>'create_time',
         'vAlign'=>'middle',
-        'width'=>'150px',
         'filterType'=>'\yii\jui\DatePicker',
         'filterWidgetOptions'=>[
             'language'=>'zh-CN',
@@ -132,21 +138,18 @@ $gridColumns = [
     ],
     [
         'class'=>'kartik\grid\ActionColumn',
-        'template'=>'{get_key}{update}{delete}',
+        'template'=>'{update}{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
-        'width'=>'290px',
+        'width'=>'250px',
         'urlCreator'=> function($action, $model , $key , $index){
             $url = '';
             switch ($action){
-                case 'get_key':
-                    $url = '/batchkeyword/getkeylist?record_id='.strval($model->record_id);
-                    break;
                 case 'update':
-                    $url = '/batchkeyword/updatemsg?record_id='.strval($model->record_id);
+                    $url = '/sign/update_msg?record_id='.strval($model->record_id);
                     break;
                 case 'delete':
-                    $url = '/batchkeyword/deletemsg?record_id='.strval($model->record_id);
+                    $url = '/sign/delete_msg?record_id='.strval($model->record_id);
                     break;
             }
             return $url;
@@ -159,18 +162,14 @@ $gridColumns = [
             },
             'delete'=>function($url, $model){
                 return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false]);
-            },
-            'get_key'=>function($url, $model) {
-                return Html::a('设置关键字', $url,['class'=>'back-a', 'style'=>'margin-right:3%', 'data-toggle'=>'modal','data-target'=>'#contact-modal']);
             }
-
         ],
     ],
 
 ];
 
 echo GridView::widget([
-    'id'=>'keywordMsg',
+    'id'=>'sign_msg_list',
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'columns' =>$gridColumns,
@@ -178,8 +177,11 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('返回',['type'=>'button','class'=>'btn btn-success','onclick'=>'location="'.\Yii::$app->urlManager->createUrl('batchkeyword/index').'";return false;']).Html::button('添加回复消息',['id'=>'cry-msg','type'=>'button','title'=>'添加回复', 'class'=>'btn btn-success']),
+            'content'=> Html::button('返回',['type'=>'button','class'=>'btn btn-success','onclick'=>'location="'.\Yii::$app->urlManager->createUrl('sign/index').'";return false;']).
+            Html::button('添加回复消息',['type'=>'button','title'=>'添加回复', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl(['sign/create_msg', 'id'=>$id]).'";return false']),
         ],
+        //'{export}',
+        //'{toggleData}',
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
     ],
@@ -201,11 +203,13 @@ echo \yii\bootstrap\Modal::widget([
         'size'=>\yii\bootstrap\Modal::SIZE_LARGE,
     ]
 );
+
 $js='
-$(document).on("click","#cry-msg",function(){
-    location="'.\Yii::$app->urlManager->createUrl(['batchkeyword/createmsg','key_id'=>$key_id]).'";
+$(document).on("click", ".back-a",function(){
+    $(".back-a").attr("href", $(this).attr("href") + "&id='.$id.'");
 });
-$("#keywordMsg-pjax").on("click",".delete",function(){
+
+$("#sign_msg_list-pjax").on("click",".delete",function(){
 if(!confirm("确定要删除该记录吗？"))
     {
         return false;
@@ -220,7 +224,7 @@ if(!confirm("确定要删除该记录吗？"))
                data = $.parseJSON(data);
                 if(data.code == "0")
                 {
-                    $("#keywordMsg").yiiGridView("applyFilter");
+                    $("#sign_msg_list").yiiGridView("applyFilter");
                 }
                 else
                 {

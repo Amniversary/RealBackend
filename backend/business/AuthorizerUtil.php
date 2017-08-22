@@ -120,7 +120,7 @@ class AuthorizerUtil
     public static function  getKeyword($app_id)
     {
         $query = (new Query())
-            ->select(['key_id','keyword','rule'])
+            ->select(['key_id','keyword','rule','global'])
             ->from('wc_keywords')
             ->where('app_id = :appid or key_id in (select key_id from wc_batch_keyword_list where app_id = :appid)',[':appid'=>$app_id])->all();
         return $query;

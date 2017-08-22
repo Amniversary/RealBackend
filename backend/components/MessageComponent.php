@@ -13,13 +13,16 @@ use backend\business\AuthorizerUtil;
 use backend\business\JobUtil;
 use backend\business\ResourceUtil;
 use backend\business\SaveByTransUtil;
+use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveAuthSignByTrans;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveUserShareByTrans;
+use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use common\components\SystemParamsUtil;
 use common\models\AttentionEvent;
 use common\models\AuthorizationMenu;
 use common\models\KeywordParams;
 use common\models\Resource;
+use common\models\SignKeyword;
 use yii\db\Query;
 
 class MessageComponent
@@ -29,7 +32,7 @@ class MessageComponent
     public $key;
     public $data = null;
     public $auth = null;
-
+    public $signId;
 
     //TODO: flag 0关注消息  1关键词消息  2自定义菜单消息
     public function __construct($data,$flag = 0,$key = null ){
@@ -55,6 +58,15 @@ class MessageComponent
                     strpos($item['keyword'], $this->data['Content']) !== false ? true:false;
                 if($touch){
                     $this->key = $item['key_id'];
+                    if($item['global'] == '3') {
+                        if(!$this->setSignFlag()) return null;
+                        /*$this->flag = 3;
+                        $sign_params = $this->getSignParams();
+                        print_r($sign_params);
+                        if (empty( $sign_params ) || !isset($sign_params))
+                            return false;
+                        $this->signId = $sign_params['sign_id'];*/
+                    }
                     $msg = $this->getKeywordMsg();
                     $msgData = $this->getMessageItem($msg);
                     break;
@@ -295,6 +307,9 @@ class MessageComponent
                 strpos($item['keyword'],$this->data['Content']) !== false ? true:false;
             if($touch){
                 $this->key = $item['key_id'];
+                if($item['global'] == '3') {
+                    if(!$this->setSignFlag()) return null;
+                }
                 $msg = $this->getKeywordMsg();
                 $msgData = $this->getMessageItem($msg);
                 $this->sendMessageCustom($msgData,$this->data['FromUserName']);
@@ -439,8 +454,13 @@ class MessageComponent
      * @return array
      */
     public function getKeywordMsg(){
-        $params = sprintf('select msg_id from wc_keyword_params where (app_id = %d and key_id = %d) or key_id = %d',$this->auth->record_id, $this->key, $this->key);
-        $condition = sprintf('app_id = %s and flag = %s or record_id in ('.$params.')',$this->auth->record_id, $this->flag);
+        $params = '';
+        if($this->flag == 1) {
+            $params = sprintf('select msg_id from wc_keyword_params where (app_id = %d and key_id = %d) or key_id = %d',$this->auth->record_id, $this->key, $this->key);
+        } else if ($this->flag == 3) {
+            $params = sprintf('select msg_id from wc_sign_message where (sign_id = %d)', $this->signId);
+        }
+        $condition = sprintf('flag = %s and record_id in ('.$params.')', $this->flag);
         $query = (new Query())->from('wc_attention_event')
             ->select(['record_id','app_id','event_id','content','msg_type','title','description','url',
                 'picurl','update_time','video'])
@@ -495,5 +515,51 @@ class MessageComponent
             }
         }
         return $data;
+    }
+
+    /**
+     * 获取对应打卡日期的消息数据
+     * @return array|bool
+     */
+    public function getSignParams()
+    {
+        $day = date('w', time());
+        $query = (new Query())
+            ->select(['key_id', 'sign_id', 'day_id', 'type'])
+            ->from('wc_sign_keyword sk')
+            ->innerJoin('wc_sign_params sp','sk.sign_id = sp.id')
+            ->where('key_id = :key and day_id = :day' ,[':key'=>$this->key, ':day'=>$day])
+            ->one();
+
+        return $query;
+    }
+
+    /**
+     * 更新用户签到记录
+     * @return bool
+     */
+    public function setSignFlag()
+    {
+        $User = AuthorizerUtil::getUserForOpenId($this->data['FromUserName'], $this->auth->record_id);
+        if(empty($User) || !isset($User)) {
+            \Yii::error('用户记录信息不存在:'. var_export($User,true));
+            return false;
+        }
+        $data = [
+            'app_id'=>$this->auth->record_id,
+            'user_id'=>1 // $User->client_id,
+        ];
+        $transActions[] = new SaveAuthSignByTrans($data);
+        if(!SaveByTransUtil::RewardSaveByTransaction($transActions, $error, $out)) {
+            \Yii::error($error);
+            return false;
+        }
+        if($out['is_sign'] == 1) return false;
+        $this->flag = 3;
+        $sign_params = $this->getSignParams();
+        if (empty( $sign_params ) || !isset($sign_params))
+            return false;
+        $this->signId = $sign_params['sign_id'];
+        return true;
     }
 }

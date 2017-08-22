@@ -15,6 +15,7 @@ use backend\business\ImageUtil;
 use backend\business\JobUtil;
 use backend\business\KeywordUtil;
 use backend\business\ResourceUtil;
+use backend\business\SignParamsUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use backend\components\MessageComponent;
@@ -34,6 +35,7 @@ use common\models\AuthorizationMenu;
 use common\models\Client;
 use common\models\QrcodeImg;
 use common\models\Resource;
+use common\models\SignParams;
 use common\models\TemplateTiming;
 use common\models\User;
 use Qiniu\Auth;
@@ -50,12 +52,48 @@ class BhAction extends Action
             'appid'=>'wxfb4431191609bd1e',  //wxd396e6246bd24673  90  wxfb4431191609bd1e 1
             'EventKey'=>'121',
             'FromUserName'=>'oH24O0m_KZp0XcQSb74qGNuFZDsw',
-            'Content'=>'12222',
+            'Content'=>'晚安',
         ];
+        /*$data  = array (
+            'ToUserName' => 'gh_bdba6dfdc510',
+            'FromUserName' => 'ol_EGvw_V3rXYILgc7QEOVVBrxwg',
+            'CreateTime' => '1503042880',
+            'MsgType' => 'text',
+            'Content' => '11',
+            'MsgId' => '6455520014503388140',
+            'appid' => 'wxeb6eae49977722b5',
+        );*/
         $msgObj = new MessageComponent($data,1);
         $rst = $msgObj->VerifySendMessage();
         print_r($rst);
         exit;
+        $day = 1;
+        $query = (new Query())
+            ->select(['key_id', 'sign_id', 'day_id', 'type'])
+            ->from('wc_sign_keyword sk')
+            ->innerJoin('wc_sign_params sp','sk.sign_id = sp.id')
+            ->where('key_id = :key and day_id = :day' ,[':key'=>3, ':day'=>$day])
+            ->one();
+
+        $sign_id = $query[0]['sign_id'];
+
+        print_r($query);exit;
+        $ary = ['日','一','二','三','四','五','六'];
+        $time = time();
+        $i = date('w',$time);
+        print_r('星期'.$ary[$i]);
+        echo "<br>";
+        exit;
+
+
+        exit;
+
+        exit;
+        $sign = SignParamsUtil::GetSignDayParams(1);
+        print_r($sign);
+        exit;
+
+
         $data = '2017-08-17 11:50:00';
         print_r(strtotime($data));exit;
 

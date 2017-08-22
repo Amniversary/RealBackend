@@ -23,23 +23,19 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Keywords */
+/* @var $model common\models\SignParams */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
     <div class="user-form">
-
         <?php $form = ActiveForm::begin(); ?>
-        <?= $form->field($model, 'rule')->dropDownList(['2'=>'模糊匹配','1'=>'精准匹配'],['style'=>'width:200px']) ?>
-        <hr>
-        <?= $form->field($model, 'keyword')->textInput() ?>
+        <?= $form->field($model, 'day_id')->dropDownList(\backend\business\SignParamsUtil::GetBatchSignDayParams(),['style'=>'width:200px']) ?>
         <br/>
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? '新增' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['batchkeyword/index']), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['sign/batchindex']), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
-
         <?php ActiveForm::end(); ?>
     </div>
 <?php

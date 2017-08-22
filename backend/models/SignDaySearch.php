@@ -2,19 +2,19 @@
 /**
  * Created by PhpStorm.
  * User: a123
- * Date: 17/7/4
- * Time: 下午2:08
+ * Date: 17/8/21
+ * Time: 下午2:07
  */
 
 namespace backend\models;
 
 
 use backend\business\WeChatUserUtil;
-use common\models\Keywords;
+use common\models\SignParams;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-class KeyWordSearch extends Keywords
+class SignDaySearch extends SignParams
 {
     /**
      * @inheritdoc
@@ -22,8 +22,8 @@ class KeyWordSearch extends Keywords
     public function rules()
     {
         return [
-            [['app_id','rule'], 'integer'],
-            [['keyword', 'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
+            [['app_id', 'day_id', 'type'], 'integer'],
+            [['remark1', 'remark2'], 'safe'],
         ];
     }
 
@@ -45,7 +45,7 @@ class KeyWordSearch extends Keywords
     public function search($params)
     {
         $cacheInfo = WeChatUserUtil::getCacheInfo();
-        $query = Keywords::find()->where(['app_id'=>$cacheInfo['record_id'],'global'=>0]);
+        $query = SignParams::find()->where(['app_id'=>$cacheInfo['record_id'], 'type'=>0]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,11 +58,32 @@ class KeyWordSearch extends Keywords
         }
 
         $query->andFilterWhere([
-            'rule'=>$this->rule,
+            'day_id'=>$this->day_id
         ]);
 
-
+        $query->orderBy('day_id asc');
         return $dataProvider;
     }
 
+    public function searchBatch($params)
+    {
+        $query = SignParams::find()->where(['type'=>1]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'day_id'=>$this->day_id
+        ]);
+
+        $query->orderBy('day_id asc');
+        return $dataProvider;
+    }
 }

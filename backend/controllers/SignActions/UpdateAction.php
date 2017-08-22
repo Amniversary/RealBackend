@@ -6,7 +6,7 @@
  * Time: 下午3:29
  */
 
-namespace backend\controllers\BatchKeyWordActions;
+namespace backend\controllers\SignActions;
 
 
 use backend\business\WeChatUserUtil;
@@ -22,7 +22,7 @@ class UpdateAction extends Action
             ExitUtil::ExitWithMessage('关键词记录不存在');
         }
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            return $this->controller->redirect(['index']);
+            return $this->controller->redirect(['keyword']);
         } else {
             return $this->controller->render('_form', [
                 'model' => $model,

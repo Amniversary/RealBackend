@@ -21,7 +21,7 @@ class BatchAttentionSearch extends AttentionEvent
     public function rules()
     {
         return [
-            [['key_id','app_id', 'msg_type', 'flag'], 'integer'],
+            [['app_id', 'msg_type', 'flag'], 'integer'],
             [['event_id','create_time','content' ,'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
         ];
     }

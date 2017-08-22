@@ -6,7 +6,7 @@
  * Time: 上午9:44
  */
 
-namespace backend\controllers\KeyWordActions;
+namespace backend\controllers\SignActions;
 
 
 use common\models\AttentionEvent;
@@ -19,12 +19,14 @@ class DeleteMsgAction extends Action
 {
     public function run($record_id)
     {
+
         $rst = ['code'=>'1', 'msg'=>''];
         if(empty($record_id)){
             $rst['msg'] = '记录Id不能为空';
             echo json_encode($rst);
             exit;
         }
+
         $msgData = AttentionEvent::findOne(['record_id'=>$record_id]);
         if(!isset($msgData)){
             $rst['msg'] = '操作记录不存在或已经删除';
@@ -39,6 +41,7 @@ class DeleteMsgAction extends Action
                 echo json_encode($rst);
                 exit;
             }
+            KeywordParams::deleteAll(['msg_id'=>$record_id]);
             Resource::deleteAll(['msg_id'=>$record_id]);
             $trans->commit();
         } catch (Exception $e){

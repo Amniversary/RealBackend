@@ -17,6 +17,7 @@ use common\models\BatchKeywordList;
 use common\models\KeywordParams;
 use common\models\Keywords;
 use common\models\MenuList;
+use common\models\SignKeyword;
 use yii\base\Exception;
 use yii\db\Query;
 
@@ -49,7 +50,30 @@ class KeywordUtil
         return $rst;
     }
 
+    /**
+     * 根据签到id配置获取已配置关键字id列表
+     * @param $sign_id
+     * @return array
+     */
+    public static function GetSignKeyParams($sign_id)
+    {
+        $query = (new Query())
+            ->select(['key_id'])
+            ->from('wc_sign_keyword')
+            ->where(['sign_id'=>$sign_id])
+            ->all();
+        $rst = [];
+        foreach ($query as $item) {
+            $rst[] = $item['key_id'];
+        }
+       return $rst;
+    }
 
+    /**
+     * 根据消息id 获取已配置关键字id列表
+     * @param $msgId
+     * @return array
+     */
     public static function GetGlobalMessageKeyParams($msgId)
     {
         $query = (new Query())
@@ -78,6 +102,29 @@ class KeywordUtil
         return $rst;
     }
 
+    /**
+     * 获取签到对应配置关键字
+     * @return array
+     */
+    public static function GetSignKeyWord()
+    {
+        $article = [];
+        $articleList = Keywords::find()
+            ->select(['key_id','keyword'])
+            ->where(['global'=>3])
+            ->all();
+
+        foreach($articleList as $articled){
+            $article[$articled['key_id']] = $articled['keyword'];
+        }
+        $rights = array_chunk($article,30,true);
+        return $rights;
+    }
+
+    /**
+     * 获取所有全局配置关键字
+     * @return array
+     */
     public static function GetGlobalKeyWord()
     {
         $article = [];
@@ -250,15 +297,6 @@ class KeywordUtil
         return true;
     }
 
-    /**
-     * @param $key_id
-     * @return null|AttentionEvent
-     */
-    public static function getAttentionById($key_id)
-    {
-        return AttentionEvent::findOne(['key_id'=>$key_id]);
-    }
-
 
 
     /**
@@ -327,4 +365,29 @@ class KeywordUtil
         }
         return true;
     }
+
+
+    public static function SaveSignKeyWordParams($params, $id, &$error)
+    {
+        try {
+            $trans = \Yii::$app->db->beginTransaction();
+            (new SignKeyword())->deleteAll(['sign_id'=>$id]);//TODO: 删除用户原有权限数据
+            $sql = '';
+            $table = \Yii::$app->db;
+            foreach ($params as $parList) {
+                $sql .= sprintf('insert into %s_sign_keyword (key_id, sign_id) values(%s,%s);',$table->tablePrefix,$parList,$id);
+            }
+            $rst = $table->createCommand($sql)->execute();
+            if( $rst <= 0 ){
+                throw new Exception('保存权限数据异常');
+            }
+            $trans->commit();
+        } catch(Exception $e) {
+            $trans->rollBack();
+            $error = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
 }

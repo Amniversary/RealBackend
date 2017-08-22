@@ -302,7 +302,7 @@ class WeChatUtil
         if(!$this->Upload($fileDir,$access_token,$rst,$error)){
             throw new HttpException(500,$error);
         }
-        unlink($fileDir);
+        @unlink($fileDir);
         return $rst;
     }
 
@@ -333,7 +333,7 @@ class WeChatUtil
         if(!$this->Upload($fileDir, $access_token, $rst, $error,'voice')) {
             throw new HttpException(500,$error);
         }
-        unlink($fileDir);
+        @unlink($fileDir);
         return $rst;
     }
 }
