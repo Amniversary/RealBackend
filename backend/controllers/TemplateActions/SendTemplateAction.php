@@ -66,7 +66,7 @@ class SendTemplateAction extends Action
             $rst['code'] = 0;
             echo json_encode($rst);exit;
         }
-        if(!empty($post) || isset($post)) {
+        if(!empty($post) ||  isset($post)) {
             if($t == 'test') {
                 if(!isset($post['openid'])) {
                     $rst['msg'] = '参数openId不能为空';
@@ -108,7 +108,7 @@ class SendTemplateAction extends Action
                     'data'=>$post,
                     'app_id'=>$auth['record_id']
                 ];
-                if(!JobUtil::AddCustomJob('templateBeanstalk','send_template',$params,$error)) {
+                if(!JobUtil::AddCustomJob('templateBeanstalk','send_template',$params,$error,(60 * 60 * 5))) {
                     $rst['msg'] = $error;
                     echo json_encode($rst);exit;
                 }

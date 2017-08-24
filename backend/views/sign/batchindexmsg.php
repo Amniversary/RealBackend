@@ -33,123 +33,33 @@
 use kartik\grid\GridView;
 use yii\bootstrap\Html;
 
-echo \yii\bootstrap\Alert::widget([
-    'body'=>'未认证公众号，默认回复第一条消息！',
-    'options'=>[
-        'class'=>'alert-warning',
-    ]
-]);
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
     [
-        'attribute'=>'msg_type',
-        'vAlign'=>'middle',
-        'width'=>'130px',
-        'value'=>function($model){
-            return $model->getMsgType($model->msg_type);
-        },
-        'filter'=>['0'=>'文本消息','1'=>'图文消息','2'=>'图片消息','3'=>'语音消息'],
-    ],
-    [
-        'attribute'=>'content',
-        'vAlign'=>'middle',
-        'format'=>'html',
-        'value'=>function($model){
-            $len = strlen($model->content);
-            return $len > 20 ? mb_substr($model->content,0,15) . '....' : $model->content;
-        },
-        'filter'=>false,
-    ],
-    [
-        'attribute'=>'title',
-        'vAlign'=>'middle',
-        'filter'=>false,
-    ],
-    [
-        'attribute'=>'description',
-        'vAlign'=>'middle',
-        'value'=>function($model){
-            $len = strlen($model->description);
-            return $len > 20 ? mb_substr($model->description,0,15) . '....': $model->description;
-        },
-        'filter'=>false,
-    ],
-    [
-        'attribute'=>'url',
-        'vAlign'=>'middle',
-        'width'=>'100px',
-        'value'=>function($model){
-            $len = strlen($model->url);
-            return $len > 20 ? mb_substr($model->url,0,15) . '....' : $model->url;
-        }
-    ],
-    [
-        'attribute'=>'picurl',
+        'attribute'=>'pic_url',
         'vAlign'=>'middle',
         'width'=>'100px',
         'format'=>'html',
         'value'=>function($model){
-            $url = empty($model->picurl) ? '': $model->picurl;
+            $url = empty($model->pic_url) ? '': $model->pic_url;
             return empty($url) ? Html::label('') :Html::img($url,['class'=>'user-pic']);
-        }
-    ],
-    [
-        'attribute'=>'video',
-        'vAlign'=>'middle',
-        'width'=>'100px',
-        'format'=>'html',
-        'content'=>function($model) {
-            $url = empty($model->video)? '':"<audio controls='controls' src=$model->video></audio>";
-            return $url;
-        }
-    ],
-    [
-        'attribute'=>'event_id',
-        'vAlign'=>'middle',
-        'value'=>function($model){
-            return empty($model->event_id) ? '':$model->event_id;
         },
-        'width'=>'100px',
-    ],
-    [
-        'class' => 'kartik\grid\EditableColumn',
-        'attribute'=>'order_no',
-        'vAlign'=>'middle',
-        'width'=>'100px',
-        'editableOptions'=>function($model)
-        {
-            return [
-                'formOptions'=>['action'=>'/keyword/order_no?record_id='.strval($model->record_id)],
-                'size'=>'min',
-                'inputType'=>\kartik\editable\Editable::INPUT_TEXT,
-            ];
-        },
-        'refreshGrid'=>true,
-    ],
-    [
-        'attribute'=>'create_time',
-        'vAlign'=>'middle',
-        'filterType'=>'\yii\jui\DatePicker',
-        'filterWidgetOptions'=>[
-            'language'=>'zh-CN',
-            'dateFormat'=>'yyyy-MM-dd',
-            'options'=>['class'=>'form-control','style'=>'display:inline-block;']
-        ],
+        'filter'=>false
     ],
     [
         'class'=>'kartik\grid\ActionColumn',
         'template'=>'{update}{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
-        'width'=>'250px',
+        'width'=>'50px',
         'urlCreator'=> function($action, $model , $key , $index){
             $url = '';
             switch ($action){
                 case 'update':
-                    $url = '/sign/batchupdate_msg?record_id='.strval($model->record_id);
+                    $url = '/sign/batch_update_msg?record_id='.strval($model->id);
                     break;
                 case 'delete':
-                    $url = '/sign/delete_msg?record_id='.strval($model->record_id);
+                    $url = '/sign/delete_msg?record_id='.strval($model->id);
                     break;
             }
             return $url;
@@ -158,7 +68,7 @@ $gridColumns = [
         'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
         'buttons'=>[
             'update'=>function($url, $model){
-                return Html::a('修改', $url,['class'=>'back-a','style'=>'margin-right:3%']);
+                return Html::a('修改', $url,['class'=>'back-a','style'=>'margin-right:5%']);
             },
             'delete'=>function($url, $model){
                 return Html::a('删除',$url,['class'=>'delete back-a','data-toggle'=>false]);
@@ -178,7 +88,7 @@ echo GridView::widget([
     'toolbar'=> [
         [
             'content'=> Html::button('返回',['type'=>'button','class'=>'btn btn-success','onclick'=>'location="'.\Yii::$app->urlManager->createUrl('sign/batchindex').'";return false;']).
-            Html::button('添加回复消息',['type'=>'button','title'=>'添加回复', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl(['sign/batch_create_msg', 'id'=>$id]).'";return false']),
+            Html::button('添加图片',['type'=>'button', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl(['sign/batch_create_msg', 'id'=>$id]).'";return false']),
         ],
         //'{export}',
         //'{toggleData}',
@@ -196,14 +106,6 @@ echo GridView::widget([
         'type' => GridView::TYPE_INFO
     ],
 ]);
-
-echo \yii\bootstrap\Modal::widget([
-        'id' => 'contact-modal',
-        'clientOptions' => false,
-        'size'=>\yii\bootstrap\Modal::SIZE_LARGE,
-    ]
-);
-
 $js='
 $(document).on("click", ".back-a",function(){
     $(".back-a").attr("href", $(this).attr("href") + "&id='.$id.'");

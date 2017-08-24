@@ -417,6 +417,39 @@ class WeChatUserUtil
         return true;
     }
 
+    /**
+     * 下载用户头像
+     * @param $pic
+     * @param $openid
+     * @param $error
+     * @return bool
+     */
+    public static function getUserPicImg($pic, $bg_image, $openid, &$error, &$pic_file, &$bg_img)
+    {
+        $res = UsualFunForNetWorkHelper::HttpGetImg($bg_image, $type , $error);
+        if(!$res) {
+            $error = '获取签到图片Url 失败';
+            \Yii::error($error. ' '. 'openId :' . $openid. '  bg_img:'.$bg_image);
+            return false;
+        }
+        $bg_img = \Yii::$app->basePath.'/runtime/signimg/bg_'.$openid.'.jpg';
+        if(!file_put_contents($bg_img, $res)) {
+            $error = '保存签到图片到本地失败';
+            return false;
+        }
+        $rst = UsualFunForNetWorkHelper::HttpGetImg($pic,$content_type,$error);
+        if(!$rst) {
+            $error ='获取PicUrl失败';
+            \Yii::error($error.'  open_Id:'. $openid .' pic:'.$pic);
+            return false;
+        }
+        $pic_file = \Yii::$app->basePath.'/runtime/signimg/pic_'.$openid.'.jpg';
+        if(!file_put_contents($pic_file,$rst)) {
+            $error = '保存PicUrl到本地失败';
+            return false;
+        }
+        return true;
+    }
 
     /**
      * 清除微信api调用次数接口
@@ -429,5 +462,37 @@ class WeChatUserUtil
         $json = json_encode(['appid'=>$app_id]);
         $res = json_decode(UsualFunForNetWorkHelper::HttpsPost($url, $json),true);
         return $res;
+    }
+
+
+    public static function genMessageModel ($post , $accessToken)
+    {
+        $data = [];
+        switch ($post['msg_type']){
+            case 0:  //TODO: 文本消息
+                $data = [
+                    'content'=>$post['content'],
+                    'msg_type'=>$post['msg_type']
+                ];break;
+            case 1: //TODO: 图文消息
+                $arr = [
+                    'title'=>$post['title'],
+                    'description'=>$post['description'],
+                    'url'=>$post['url'],
+                    'picurl'=>$post['picurl']
+                ];
+                $data['msg_type'] = $post['msg_type'];
+                $data[] = $arr;
+                break;
+            case 2:
+                $rst = (new WeChatUtil())->UploadWeChatImg($post['picurl1'],$accessToken);
+                $data = ['msg_type'=>$post['msg_type'],'media_id'=>$rst['media_id']];
+                break;
+            case 3:
+                $video = (new WeChatUtil())->UploadVideo($post['video'], $accessToken);
+                $data = ['msg_type'=>$post['msg_type'],'media_id'=>$video['media_id']];
+                break;
+        }
+        return $data;
     }
 }

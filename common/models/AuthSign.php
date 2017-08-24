@@ -45,10 +45,10 @@ class AuthSign extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'app_id' => 'App ID',
-            'user_id' => 'User ID',
-            'sign_num' => 'Sign Num',
-            'update_time' => 'Update Time',
+            'app_id' => '公众号',
+            'user_id' => '用户 ID',
+            'sign_num' => '签到次数',
+            'update_time' => '签到时间',
             'create_time' => 'Create Time',
             'remark1' => 'Remark1',
             'remark2' => 'Remark2',

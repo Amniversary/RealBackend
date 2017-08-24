@@ -39,7 +39,7 @@ class WeChatComponent extends Object
     public function init()
     {
         //TODO: 获取$_GET参数
-        $data = $_REQUEST;
+        //$data = $_REQUEST;
         $this->webAppId = WxPayConfig::APPID;
         $this->appSecret = WxPayConfig::APPSECRET;
         $this->encryptKey = WxPayConfig::ENCRYPT_KEY;
@@ -47,12 +47,12 @@ class WeChatComponent extends Object
         //TODO: 获取Xml数据信息
         $this->encryptMsg = file_get_contents("php://input");
         $this->AppId = \Yii::$app->request->get('appid','');
-        $this->openid = !empty($data['openid'])? $data['openid'] : '';
-        $this->encryptType = !empty($data['encrypt_type'])? $data['encrypt_type'] : '';
-        $this->nonce = !empty($data['nonce'])? $data['nonce'] : '';
-        $this->timestamp = !empty($data['timestamp'])? $data['timestamp'] : '';
-        $this->signature = !empty($data['signature'])? $data['signature'] : '';
-        $this->msgSignature = !empty($data['msg_signature'])? $data['msg_signature'] : '';
+        $this->openid = \Yii::$app->request->get('openid','');
+        $this->encryptType = \Yii::$app->request->get('encrypt_type','');
+        $this->nonce = \Yii::$app->request->get('nonce','');
+        $this->timestamp = \Yii::$app->request->get('timestamp','');
+        $this->signature = \Yii::$app->request->get('signature','');
+        $this->msgSignature = \Yii::$app->request->get('msg_signature','');
 
         if(!empty($this->encryptType)){
             $encrypt = $this->XmlToArr($this->encryptMsg)['Encrypt'];

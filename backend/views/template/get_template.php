@@ -32,9 +32,12 @@
         margin-bottom: 0px;
     }
     #Template-url{
-        width: 40%;
+        width: 45%;
     }
     #Template-openid{
+        width: 45%;
+    }
+    #time-option{
         width: 40%;
     }
     .test-send{
@@ -80,7 +83,7 @@ common\assets\ArtDialogAsset::register($this);
         <label class="control-label" for="template-time">定时发送</label>
         <?php echo \kartik\datetime\DateTimePicker::widget([
             'name' => 'Template[time]',
-            'options' => ['class' => 'form-control'],
+            'options' => ['class' => 'form-control','id'=>'time-option'],
             'pluginOptions' => [
                 'autoclose' => false,
                 'format' => 'yyyy-mm-dd hh:ii:00',

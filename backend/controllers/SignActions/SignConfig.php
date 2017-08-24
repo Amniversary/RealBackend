@@ -23,4 +23,5 @@ return [
     'batch_create_msg'=>'backend\controllers\SignActions\BatchCreateMsgAction',
     'batch_update_msg'=>'backend\controllers\SignActions\BatchUpdateMsgAction',
     'batch_delete_msg'=>'backend\controllers\SignActions\BatchDeleteMsgAction',
+    'user'=>'backend\controllers\SignActions\SignUserAction',
 ];

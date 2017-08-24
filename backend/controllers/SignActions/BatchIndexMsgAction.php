@@ -8,8 +8,7 @@
 
 namespace backend\controllers\SignActions;
 
-
-use backend\models\KeyWordMsgSearch;
+use backend\models\SignImageSearch;
 use yii\base\Action;
 
 class BatchIndexMsgAction extends Action
@@ -18,8 +17,8 @@ class BatchIndexMsgAction extends Action
     {
         $id = \Yii::$app->request->get('id');
         $this->controller->getView()->title = '签到消息';
-        $searchModel = new KeyWordMsgSearch();
-        $dataProvider = $searchModel->searchBatchSignMsg(\Yii::$app->request->queryParams);
+        $searchModel = new SignImageSearch();
+        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
         return $this->controller->render('batchindexmsg',[
             'searchModel'=>$searchModel,
             'dataProvider'=>$dataProvider,

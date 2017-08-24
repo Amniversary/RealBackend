@@ -51,7 +51,6 @@ class SendTemplateMsgAction extends Action
                     $error = $res;
                     if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
                         $error = iconv('utf-8','gb2312',$error);
-
                     fwrite(STDOUT, Console::ansiFormat("发送模板消息失败:  nick_name : ".$list['nick_name']." openId :" . $list['open_id']."  app_id : ".$auth->record_id."\n",[Console::FG_GREEN]));
                     fwrite(STDOUT, Console::ansiFormat("Code :".$res['errcode']. ' msg :'.$res['errmsg']."\n",[Console::FG_GREEN]));
                     \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' -- :'.var_export($error,true) .'  openId :'.$sentData->open_id .' ',Logger::LEVEL_ERROR);
@@ -59,7 +58,7 @@ class SendTemplateMsgAction extends Action
                     continue;
                 }
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($res)."--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
-                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --nick_name : ".$list['nick_name'] ." -- openId :".$list['open_id']."\n", [Console::FG_GREEN]));
+                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --nick_name : ".$list['nick_name'] ." -- openId :".$list['open_id']. " appId :".$auth->record_id."\n", [Console::FG_GREEN]));
             }
 
             fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." ----$sentData->key_word--任务执行完成!"."\n", [Console::FG_GREEN]));

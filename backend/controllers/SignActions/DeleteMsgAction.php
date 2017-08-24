@@ -12,6 +12,7 @@ namespace backend\controllers\SignActions;
 use common\models\AttentionEvent;
 use common\models\KeywordParams;
 use common\models\Resource;
+use common\models\SignImage;
 use yii\base\Action;
 use yii\db\Exception;
 
@@ -27,30 +28,18 @@ class DeleteMsgAction extends Action
             exit;
         }
 
-        $msgData = AttentionEvent::findOne(['record_id'=>$record_id]);
+        $msgData = SignImage::findOne(['id'=>$record_id]);
         if(!isset($msgData)){
             $rst['msg'] = '操作记录不存在或已经删除';
             echo json_encode($rst);
             exit;
         }
-        try{
-            $trans = \Yii::$app->db->beginTransaction();
-            if($msgData->delete() === false) {
-                $rst['msg']='删除失败';
-                \Yii::error('删除失败:'.var_export($msgData->getErrors(),true));
-                echo json_encode($rst);
-                exit;
-            }
-            KeywordParams::deleteAll(['msg_id'=>$record_id]);
-            Resource::deleteAll(['msg_id'=>$record_id]);
-            $trans->commit();
-        } catch (Exception $e){
-            $trans->rollBack();
-            $rst['msg'] = $e->getMessage();
+        if($msgData->delete() === false) {
+            $rst['msg']='删除失败';
+            \Yii::error('删除失败:'.var_export($msgData->getErrors(),true));
             echo json_encode($rst);
             exit;
         }
-
         $rst['code'] = '0';
         echo json_encode($rst);
         exit;

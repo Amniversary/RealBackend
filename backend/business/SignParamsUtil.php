@@ -9,6 +9,7 @@
 namespace backend\business;
 
 
+use common\models\AuthSign;
 use common\models\SignParams;
 
 class SignParamsUtil
@@ -31,5 +32,16 @@ class SignParamsUtil
             unset(self::$ary[$item->day_id]);
         }
         return self::$ary;
+    }
+
+    /**
+     * @param $appId
+     * @param $user_id
+     * @return null|AuthSign
+     */
+
+    public static function  getUserSignNum($appId, $user_id)
+    {
+        return AuthSign::findOne(['app_id'=>$appId, 'user_id'=> $user_id]);
     }
 }

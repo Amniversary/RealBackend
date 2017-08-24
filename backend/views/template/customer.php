@@ -109,7 +109,7 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            //'content'=> Html::button(, ['type'=>'button', 'class'=>'btn btn-primary'])
+            'content'=> Html::button('群发消息', ['type'=>'button', 'class'=>'btn btn-primary', 'onclick'=>'location="'.Yii::$app->urlManager->createUrl('template/create_batch_msg').'"; return false;'])
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
@@ -124,3 +124,6 @@ echo GridView::widget([
         'type' => GridView::TYPE_INFO
     ],
 ]);
+
+$js = '';
+$this->registerJs($js, \yii\web\View::POS_END);

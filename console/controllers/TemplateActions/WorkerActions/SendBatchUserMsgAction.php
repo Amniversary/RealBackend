@@ -2,16 +2,15 @@
 /**
  * Created by PhpStorm.
  * User: a123
- * Date: 17/8/17
- * Time: 上午10:14
+ * Date: 17/8/24
+ * Time: 下午4:06
  */
 
 namespace console\controllers\TemplateActions\WorkerActions;
 
 
 use backend\business\AuthorizerUtil;
-use backend\business\TemplateUtil;
-use backend\components\TemplateComponent;
+use backend\business\WeChatUserUtil;
 use common\models\TemplateTiming;
 use udokmeci\yii2beanstalk\BeanstalkController;
 use yii\base\Action;
@@ -19,7 +18,7 @@ use yii\db\Query;
 use yii\helpers\Console;
 use yii\log\Logger;
 
-class TemplateTaskAction extends Action
+class SendBatchUserMsgAction extends Action
 {
     public function run($job)
     {
@@ -29,14 +28,12 @@ class TemplateTaskAction extends Action
         try {
             set_time_limit(0);
             $auth = AuthorizerUtil::getAuthByOne($sentData->app_id);
-            $type = $sentData->type; //TODO: type 1 测试消息  2 群发消息
+            $type = $sentData->type; //TODO: type 3 测试消息  4 群发消息
             $accessToken = $auth->authorizer_access_token;
             $task = TemplateTiming::findOne(['id'=>$sentData->task_id]);
-            $templateData = TemplateUtil::GetTemplateById($sentData->id);
-            $template = new TemplateComponent(null,$accessToken);
             $data = json_decode(json_encode($sentData->data),true);
             $query = [];
-            if($type ==  1) {
+            if($type ==  3) {
                 $openid = $data['openid'];
                 if(empty($openid)) {
                     fwrite(STDOUT, Console::ansiFormat("test openid is null :" . $openid."  app_id : ".$auth->record_id."\n",[Console::FG_GREEN]));
@@ -44,41 +41,37 @@ class TemplateTaskAction extends Action
                 }
                 $User = AuthorizerUtil::getUserForOpenId($openid, $auth->record_id);
                 $query[] = ['client_id'=>$User->client_id,'open_id'=>$User->open_id,'nick_name'=>$User->nick_name,'app_id'=>$User->app_id];
-            }else if($type == 2){
+                unset($data['openid']);
+            }else if($type == 4){
                 $query = (new Query())
                     ->select(['client_id','open_id','nick_name','app_id'])
                     ->from('wc_client')
                     ->where('app_id = :appid and subscribe = :sub',[':appid'=>$auth->record_id,':sub'=>1])
                     ->all();
             }
-            $url = $data['url'];
-            unset($data['url']);
-            unset($data['openid']);
+            $count = count($query);
+            $i = 0;
             foreach($query as $list) {
-                $msgData = [];
-                foreach($data as $key => $v) {
-                    $value = str_replace('{{NICKNAME}}', $list['nick_name'], $v['value']);
-                    $msgData[$key] = ['value'=>$value, 'color'=> $v['color']];
-                }
-                $sendData = $template->BuildTemplate($list['open_id'],$templateData->template_id,$msgData,$url);
-                $res = $template->SendTemplateMessage($sendData);
-                if($res['errcode'] != 0 || !$res) {
-                    $error = $res;
+                $json = WeChatUserUtil::getMsgTemplate($data, $list['open_id']);
+                $rst = WeChatUserUtil::sendCustomerMsg($accessToken,$json);
+                if($rst['errcode'] != 0 || !$rst) {
+                    $error = $rst;
                     if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
                         $error = iconv('utf-8','gb2312',$error);
-                    fwrite(STDOUT, Console::ansiFormat("发送模板消息失败:  nick_name : ".$list['nick_name']." openId :" . $list['open_id']."  app_id : ".$auth->record_id."\n",[Console::FG_GREEN]));
-                    fwrite(STDOUT, Console::ansiFormat("Code :".$res['errcode']. ' msg :'.$res['errmsg'] . "template_ID :". $templateData->template_id."\n",[Console::FG_GREEN]));
+                    fwrite(STDOUT, Console::ansiFormat("发送客服消息失败:  nick_name : ".$list['nick_name']." openId :" . $list['open_id']."  app_id : ".$auth->record_id."\n",[Console::FG_GREEN]));
+                    fwrite(STDOUT, Console::ansiFormat("Code :".$rst['errcode']. ' msg :'.$rst['errmsg'] ."\n",[Console::FG_GREEN]));
                     \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' -- :'.var_export($error,true) .'  openId :'.$sentData->open_id .' ',Logger::LEVEL_ERROR);
                     \Yii::getLogger()->flush(true);
                     continue;
                 }
-                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($res)."--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
+                $i ++;
+                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($rst)."--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --nick_name : ".$list['nick_name'] ." -- openId :".$list['open_id']. " appId :".$auth->record_id."\n", [Console::FG_GREEN]));
             }
 
             $task->status = 0;
             $task->save();
-            fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." ----$sentData->key_word--任务执行完成!"."\n", [Console::FG_GREEN]));
+            fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." 消息数 $count ;--发送成功 $i --$sentData->key_word--任务执行完成!"."\n", [Console::FG_GREEN]));
             return BeanstalkController::DELETE;
         } catch (\Exception $e) {
             fwrite(STDERR, Console::ansiFormat($e->getMessage()."\n", [Console::FG_RED]));

@@ -9,4 +9,5 @@
 return [
     'get_qrcode'=>'console\controllers\ImgActions\WorkerActions\GetQrcodeImgAction',
     'delete_img'=>'console\controllers\ImgActions\WorkerActions\DeleteImgAction',
+    'gen_sign_img'=>'console\controllers\ImgActions\WorkerActions\GenSigninImgAction',
 ];

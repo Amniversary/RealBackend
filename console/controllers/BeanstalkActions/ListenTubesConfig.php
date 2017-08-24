@@ -1,5 +1,5 @@
 <?php
 return [
     'tube',
-    'click',
+    //'click',
 ];

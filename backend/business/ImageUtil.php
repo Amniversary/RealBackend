@@ -117,6 +117,90 @@ class ImageUtil
         return true;
     }
 
+    /**
+     * 生成用户签到图片
+     * @return bool
+     */
+    public static function imageSign($bgPath,$picPath,$openid,$text,&$filename,&$error) {
+        if(!function_exists('gd_info')) {
+            $error = '请开启 GD库扩展';
+            return false;
+        }
+        @ini_set('memory_limit', '128M');
+        $font = \Yii::$app->basePath.'/runtime/signimg/HiraginoW3.ttc';
+        $bg_info = getimagesize($bgPath);
+        $bg_mime = $bg_info['mime'];
+
+        switch ($bg_mime) {  //TODO: 背景图 判断图片类型
+            case 'image/gif':
+                $bg_image = imagecreatefromgif($bgPath);
+                break;
+            case 'image/jpeg':
+                $bg_image = imagecreatefromjpeg($bgPath);
+                break;
+            case 'image/png':
+                $bg_image = imagecreatefrompng($bgPath);
+                break;
+            default:
+                $error = '背景源图片类型不正确';
+                return false;
+                break;
+        }
+        $pic_info = getimagesize($picPath);
+        $picmime = $pic_info['mime'];
+        switch($picmime) { //TODO: 用户头像 判断类型
+            case 'image/gif':
+                $pic_image = imagecreatefromgif($picPath);
+                break;
+            case 'image/jpeg':
+                $pic_image = imagecreatefromjpeg($picPath);
+                break;
+            case 'image/png':
+                $pic_image = imagecreatefrompng($picPath);
+                break;
+            default:
+                $error = '头像源图片类型不正确';
+                return false;
+                break;
+        }
+
+        $target_image  = imagecreatetruecolor($bg_info[0], $bg_info[1]);
+        imagecopyresampled($target_image, $bg_image, 0, 0, 0, 0, $bg_info[0], $bg_info[1], $bg_info[0], $bg_info[1]);   //源图裁剪为目标图片大小
+        /**将输出图片设为透明**/
+
+        $new_pic_img = imagecreatetruecolor(80,80); //TODO: 创建新的图片资源 设置宽高 100*100 pic
+        $alpha = imagecolorallocatealpha($new_pic_img,0,0,0,127);
+        imagefill($new_pic_img, 0, 0, $alpha);
+        imageColorTransparent($new_pic_img,$alpha);
+        imagecopyresampled($new_pic_img,$pic_image,0,0,0,0,80,80,$pic_info[0],$pic_info[1]); //TODO: 将原图剪裁成100*100
+
+        imagecopyresampled($target_image,$new_pic_img,340,40,0,0,80,80,80,80); //TODO: 将剪裁的图片填充到底图中
+        $black = imagecolorallocate($target_image,0,0,0);
+        $red = imagecolorallocate($target_image,111,6,10);
+        $len = strlen($text['name']);
+        $name = mb_substr($text['name'],0,6);
+        imagettftext($target_image,16,0,200,60,$black,$font,$name);
+        if($len > 6) {
+            $name2 = mb_substr($text['name'],6 , 6);
+            imagettftext($target_image,16,0,200,85,$black,$font,$name2);
+        }
+        if($len > 13) {
+            $name3 = mb_substr($text['name'], 12, 6);
+            imagettftext($target_image,16,0,200,110,$black,$font,$name3);
+        }
+        imagettftext($target_image,26,0,135,725,$red,$font,$text['num']);
+        //header('content-type: image/png');
+        //imagepng($target_image);
+        $filename = \Yii::$app->basePath.'/runtime/signimg/source/bg_'.$openid.'.jpeg';
+        imagejpeg($target_image,$filename,90);
+
+        imagedestroy($bg_image);
+        imagedestroy($pic_image);
+        imagedestroy($target_image);
+        imagedestroy($new_pic_img);
+        return true;
+    }
+
 
     /**
      * @param $source_path               源图片地址

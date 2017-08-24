@@ -58,7 +58,7 @@ $gridColumns = [
                 return Html::a('删除', $url, ['class'=>'delete back-a','data-toggle'=>false,'data-pjax'=>'0']);
             },
             'msg'=>function($url, $model){
-                return Html::a('消息配置', $url, ['class'=>'back-a','style'=>'margin-right:10px']);
+                return Html::a('设置图片', $url, ['class'=>'back-a','style'=>'margin-right:10px']);
             },
             'set_key'=>function($url, $model) {
                 return Html::a('设置关键字', $url, ['class'=>'back-a', 'style'=>'margin-right:10px','data-toggle'=> 'modal', 'data-target'=>'#contact-modal']);

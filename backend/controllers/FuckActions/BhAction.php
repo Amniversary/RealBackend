@@ -35,6 +35,7 @@ use common\models\AuthorizationMenu;
 use common\models\Client;
 use common\models\QrcodeImg;
 use common\models\Resource;
+use common\models\SignImage;
 use common\models\SignParams;
 use common\models\TemplateTiming;
 use common\models\User;
@@ -48,6 +49,28 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        echo time();
+        exit;
+        JobUtil::AddCustomJob('beanstalk', 'tube', 1, $error, 999);
+
+
+        exit;
+        $bg_image = SignImage::findAll(['sign_id'=>26]);
+        $count = count($bg_image);
+        print_r($count);
+        print_r("<br />");
+        $bg =$bg_image[rand(0, ($count - 1))]['pic_url'];
+        print_r($bg);
+
+        exit;
+        $bgPath = \Yii::$app->basePath .'/runtime/signimg/bg2.jpg';
+        $picPath = \Yii::$app->basePath . '/runtime/signimg/0.jpeg';
+        $text = ['name'=>'点撒接口定时爱的世界阿坤嗒嗒嗒的撒', 'num'=>1000000];
+        if(!ImageUtil::imageSign($bgPath, $picPath, '111', $text, $filename, $error)){
+            print_r($error);exit;
+        }
+
+        exit;
         $data = [
             'appid'=>'wxfb4431191609bd1e',  //wxd396e6246bd24673  90  wxfb4431191609bd1e 1
             'EventKey'=>'121',

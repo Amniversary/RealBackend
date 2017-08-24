@@ -22,6 +22,11 @@ class TemplateTimingAction extends Action
         if(empty($Data)) {
             return false;
         }
+        foreach($Data as $list) {
+            $task = TemplateTiming::findOne(['id'=>$list->id]);
+            $task->status = 0;
+            $task->save();
+        }
         $count = count($Data);
         foreach($Data as $item) {
             $params = [
@@ -32,7 +37,7 @@ class TemplateTimingAction extends Action
                 'task_id' => $item->id,
                 'type' => $item->type
             ];
-            if(!JobUtil::AddCustomJob('templateBeanstalk','task', $params, $error)) {
+            if(!JobUtil::AddCustomJob('templateBeanstalk','task', $params, $error, 60 * 60 * 5)) {
                 \Yii::error('job error :'.var_export($error,true));
                 var_dump($error);
                 exit;
@@ -47,7 +52,7 @@ class TemplateTimingAction extends Action
     private function getTemplateTask()
     {
         $time = time();
-        $condition = 'create_time <= :tm and status = 1';
+        $condition = 'create_time <= :tm and type in (1,2) status = 1';
         $query = TemplateTiming::find()
             ->select(['id','app_id', 'template_id', 'template_data', 'status', 'type' , 'create_time'])
             ->where($condition,[':tm'=>$time])

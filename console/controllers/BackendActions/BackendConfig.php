@@ -9,4 +9,5 @@ return [
     'test1'=>'console\controllers\BackendActions\Test1Action',
     'testbh'=>'console\controllers\BackendActions\TestBhAction',
     'template_timing' => 'console\controllers\BackendActions\TemplateTimingAction',
+    'custom_timing'=>'console\controllers\BackendActions\CustomMessageTimingAction',
 ];

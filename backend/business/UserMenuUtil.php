@@ -84,6 +84,7 @@ class UserMenuUtil
         $article = [];
         $articleList = Menu::find()
             ->select(['menu_id','title'])
+            ->where(['status'=>1])
             ->all();
 
         foreach($articleList as $articled){

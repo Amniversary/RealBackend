@@ -24,23 +24,40 @@ use yii\bootstrap\Html;
 
 $gridColumns = [
     [
-
+        'label'=>'公众号',
         'attribute'=>'app_id',
         'vAlign'=>'middle',
+        'width'=>'250px',
         'value'=>function($model) {
-            return \common\models\AttentionEvent::getKeyAppId($model->app_id);
+            return \common\models\AttentionEvent::getKeyAppId($model['app_id']);
         },
         'filter'=>false
     ],
     [
-        'attribute'=>'day_id',
+        'label'=>'用户昵称',
+        'attribute'=>'user_name',
         'vAlign'=>'middle',
-        'value'=>function($model) {
-            return $model->getParamsDayName($model->day_id);
-        },
+        'width'=>'250px',
+    ],
+    [
+        'label'=>'签到次数',
+        'attribute'=>'sign_num',
+        'vAlign'=>'middle',
+        'width'=>'250px',
         'filter'=>false
     ],
     [
+        'label'=>'签到时间',
+        'attribute'=>'update_time',
+        'vAlign'=>'middle',
+        'filterType'=>'\yii\jui\DatePicker',
+        'filterWidgetOptions'=>[
+            'language'=>'zh-CN',
+            'dateFormat'=>'yyyy-MM-dd',
+            'options'=>['class'=>'form-control','style'=>'display:inline-block;']
+        ],
+    ],
+    /*[
         'width'=>'280px',
         'class' => 'kartik\grid\ActionColumn',
         'template'=>'{set_key}{msg}{delete}',
@@ -74,7 +91,7 @@ $gridColumns = [
             }
 
         ],
-    ]
+    ]*/
 ];
 
 echo GridView::widget([
@@ -86,7 +103,7 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('添加日期',['type'=>'button','id'=>'create-day' ,'class'=>'btn btn-success']),
+            //'content'=> Html::button('添加日期',['type'=>'button','id'=>'create-day' ,'class'=>'btn btn-success']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']

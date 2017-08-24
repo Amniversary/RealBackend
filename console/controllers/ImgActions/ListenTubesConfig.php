@@ -9,4 +9,5 @@
 return [
     'get_qrcode',
     'delete_img',
+    'gen_sign_img',
 ];

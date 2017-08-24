@@ -10,20 +10,22 @@ namespace backend\components;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\ImageUtil;
 use backend\business\JobUtil;
 use backend\business\ResourceUtil;
 use backend\business\SaveByTransUtil;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveAuthSignByTrans;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveUserShareByTrans;
+use backend\business\SignParamsUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use common\components\SystemParamsUtil;
-use common\models\AttentionEvent;
-use common\models\AuthorizationMenu;
-use common\models\KeywordParams;
+
 use common\models\Resource;
-use common\models\SignKeyword;
+use common\models\SignImage;
+
 use yii\db\Query;
+use yii\helpers\Console;
 
 class MessageComponent
 {
@@ -55,17 +57,15 @@ class MessageComponent
             foreach($keyword as $item){
                 $touch = $item['rule'] == 1 ?
                     $this->data['Content'] == $item['keyword'] ? true:false :
-                    strpos($item['keyword'], $this->data['Content']) !== false ? true:false;
+                    strpos($this->data['Content'], $item['keyword']) !== false ? true:false;
                 if($touch){
-                    $this->key = $item['key_id'];
+                    $this->key = $item['key_id'];         
                     if($item['global'] == '3') {
-                        if(!$this->setSignFlag()) return null;
-                        /*$this->flag = 3;
-                        $sign_params = $this->getSignParams();
-                        print_r($sign_params);
-                        if (empty( $sign_params ) || !isset($sign_params))
-                            return false;
-                        $this->signId = $sign_params['sign_id'];*/
+                        $params = ['key_word'=>'gen_sign', 'key'=>$item['key_id'] ,'data'=>$this->data];
+                        if(!JobUtil::AddCustomJob('imgBeanstalk', 'gen_sign_img', $params, $error)) {
+                            \Yii::error($error);
+                            return null;
+                        }
                     }
                     $msg = $this->getKeywordMsg();
                     $msgData = $this->getMessageItem($msg);
@@ -114,7 +114,6 @@ class MessageComponent
             //TODO: 获取被扫者用户基本信息
             $userData = AuthorizerUtil::getUserForOpenId($user_id,$this->auth->record_id);
             if(empty($userData)) {
-                \Yii::error('EventKey  User_id:'. $user_id);
                 return null;
             }
             $is_attention = AuthorizerUtil::isAttention($model->client_id); //TODO:  是否扫过其他人
@@ -304,11 +303,15 @@ class MessageComponent
         foreach($keyword as $item){
             $touch = $item['rule'] == 1 ?
                 $this->data['Content'] == $item['keyword'] ? true:false :
-                strpos($item['keyword'],$this->data['Content']) !== false ? true:false;
+                strpos($this->data['Content'], $item['keyword']) !== false ? true:false;
             if($touch){
                 $this->key = $item['key_id'];
                 if($item['global'] == '3') {
-                    if(!$this->setSignFlag()) return null;
+                    $params = ['key_word'=>'gen_sign','key'=>$item['key_id'], 'data'=>$this->data];
+                    if(!JobUtil::AddCustomJob('imgBeanstalk', 'gen_sign_img', $params, $error)) {
+                        \Yii::error($error);
+                        return null;
+                    }
                 }
                 $msg = $this->getKeywordMsg();
                 $msgData = $this->getMessageItem($msg);
@@ -538,28 +541,91 @@ class MessageComponent
      * 更新用户签到记录
      * @return bool
      */
-    public function setSignFlag()
+    public function setSignFlag(&$error)
     {
-        $User = AuthorizerUtil::getUserForOpenId($this->data['FromUserName'], $this->auth->record_id);
+        $start = microtime(true);
+        $accessToken = $this->auth->authorizer_access_token;
+        $openId = $this->data['FromUserName'];
+        $User = AuthorizerUtil::getUserForOpenId($openId, $this->auth->record_id);
         if(empty($User) || !isset($User)) {
-            \Yii::error('用户记录信息不存在:'. var_export($User,true));
-            return false;
+            $a = microtime(true);
+            $getData = WeChatUserUtil::getUserInfo($accessToken, $openId);
+            if(!isset($getData) || empty($getData)) {
+                $error  = '获取用户数据为空: openId: '.$openId .' accessToken:'.$accessToken;
+                return false;
+            }
+            if($getData['errcode'] != 0 || !$getData) {
+                $error  = '获取用户数据为空2: openId: '.$openId .' accessToken:'.$accessToken;
+                \Yii::error('获取用户信息3:'. var_export($getData,true).' openId1:'. $openId. ' accessToken1:'. $accessToken);
+                return false;
+            }
+            $getData['app_id'] = $this->auth->record_id;
+            $model = AuthorizerUtil::genModel($User,$getData);
+            if(!$model->save()){
+                $error ='保存已关注微信用户信息失败';
+                \Yii::error($error. ' :'.var_export($model->getErrors(),true));
+                return false;
+            }
+            fwrite(STDOUT, Console::ansiFormat("更新用户信息 Time : ".(microtime(true) - $a)."\n", [Console::FG_GREEN]));
+            $User = $model;
         }
-        $data = [
-            'app_id'=>$this->auth->record_id,
-            'user_id'=>1 // $User->client_id,
-        ];
+        $data = ['app_id'=>$this->auth->record_id, 'user_id'=>$User->client_id,];
         $transActions[] = new SaveAuthSignByTrans($data);
         if(!SaveByTransUtil::RewardSaveByTransaction($transActions, $error, $out)) {
             \Yii::error($error);
+            \Yii::getLogger()->flush(true);
             return false;
         }
-        if($out['is_sign'] == 1) return false;
-        $this->flag = 3;
+        if($out['is_sign'] == 1) return true;
+        fwrite(STDOUT, Console::ansiFormat("更新打卡签到 Time : ".(microtime(true) - $start)."\n", [Console::FG_GREEN]));
         $sign_params = $this->getSignParams();
-        if (empty( $sign_params ) || !isset($sign_params))
+        if (empty( $sign_params ) || !isset($sign_params)){
+            fwrite(STDOUT, Console::ansiFormat("对应日期没有配置回复图片 key_id : $this->key , day : ".date('w') ."\n", [Console::FG_GREEN]));
+            return true;
+        }
+        $a = microtime(true);
+        $bg_image = SignImage::findAll(['sign_id'=>$sign_params['sign_id']]);
+        $count = count($bg_image);
+
+        $userData = WeChatUserUtil::getUserInfo($accessToken, $User->open_id);
+        $Pic = $userData['headimgurl'];
+        if(empty($Pic)) $Pic = 'http://7xld1x.com1.z0.glb.clouddn.com/timg.jpeg';
+        if(!WeChatUserUtil::getUserPicImg($Pic, $bg_image[rand(0,($count -1))]['pic_url'], $User->open_id, $error, $pic_file, $bg_img)) {
+            \Yii::error($error);
             return false;
-        $this->signId = $sign_params['sign_id'];
+        }
+        fwrite(STDOUT, Console::ansiFormat("获取信息和图片 Time : ".(microtime(true) - $a)."\n", [Console::FG_GREEN]));
+        $b = microtime(true);
+        $UserSign = SignParamsUtil::getUserSignNum($this->auth->record_id, $User->client_id);
+        $text = ['name'=>$User->nick_name,'num'=> $UserSign->sign_num];
+        if(!ImageUtil::imageSign($bg_img, $pic_file, $User->open_id, $text, $filename, $error)) {
+            \Yii::error($error);
+            return false;
+        }
+        if(!file_exists($filename)) {
+            $error = '用户签到图片生成失败  bgimg' . $filename ;
+            \Yii::error($error.'  bgimg :'. $filename);
+            return false;
+        }
+        fwrite(STDOUT, Console::ansiFormat("生成用户签到图片 Time : ".(microtime(true) - $b)."\n", [Console::FG_GREEN]));
+        $c= microtime(true);
+        $wechat = new WeChatUtil();
+        if(!$wechat->Upload($filename, $accessToken, $rst, $error)) { //TODO: 背景图上传微信素材
+            if($rst['errcode'] == 45009) {
+                $Clear = WeChatUserUtil::ClearQuota($this->data['appid'], $accessToken);
+                if(!$Clear['errcode'] != 0)
+                    \Yii::error('Clear quota :'.var_export($Clear,true));
+            }
+            return false;
+        }
+        fwrite(STDOUT, Console::ansiFormat("上传微信图片 Time : ".(microtime(true) - $c)."\n", [Console::FG_GREEN]));
+        @unlink($filename);
+        @unlink($pic_file);
+        @unlink($bg_img);
+        $msgData = [
+            ['msg_type'=>'2', 'media_id'=>$rst['media_id']]
+        ];
+        $this->sendMessageCustom($msgData, $openId);
         return true;
     }
 }
