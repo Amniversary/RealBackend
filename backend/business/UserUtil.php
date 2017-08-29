@@ -69,63 +69,6 @@ class UserUtil
         return true;
     }
 
-
-    /**
-     * 根据家族长id 获取家族长信息
-     * @param $family_id
-     * @return null|static
-     */
-    public static function GetFamilyById($family_id)
-    {
-        return Family::findOne(['family_id' => $family_id]);
-    }
-
-    /**
-     * 保存家族长账号信息
-     * @param $family
-     * @param $error
-     * @return bool
-     */
-    public static function SaveFamily($family , &$error)
-    {
-        if(! $family instanceof Family)
-        {
-            $error = '不是家族用户对象';
-            return false;
-        }
-
-        if(!$family->save())
-        {
-            $error = '保存家族长账号信息异常';
-            \Yii::getLogger()->log($error.' : '.var_export($family->getErrors(),true),Logger::LEVEL_ERROR);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 修改家族长账号密码
-     * @param $Family
-     * @param $error
-     * @return bool
-     */
-    public static function FamilyResetPwd($Family ,&$error)
-    {
-        if (!($Family instanceof Family)) {
-            $error = '不是后台用户对象';
-            return false;
-        }
-        $Family->ResetPwd();
-        \Yii::getLogger()->log($Family->password, Logger::LEVEL_ERROR);
-        if (!$Family->save()) {
-            $error = '保存用户密码异常';
-            \Yii::getLogger()->log($error . ' :' . var_export($Family->getErrors(), true), Logger::LEVEL_ERROR);
-            return false;
-        }
-        return true;
-    }
-
     /**
      * @param $user_id
      * @return null|Client

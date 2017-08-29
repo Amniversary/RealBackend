@@ -308,7 +308,7 @@ class KeywordUtil
         $query = AuthorizerUtil::getGlobalMenuList($id);
         $error = '';
         if(!$query) {
-            $error .= '菜单列表为空, 请先设置菜单'."\n";
+            $error = '菜单列表为空, 请先设置菜单'."\n";
             return false;
         }
         try {

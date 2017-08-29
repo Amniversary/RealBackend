@@ -32,8 +32,6 @@ if (Yii::$app->controller->action->id === 'login') {
     }else{
         $cache = json_decode($json,true);
     }
-
-
     empty($pic) ? $pic = Yii::$app->user->identity->pic : $pic;
     ?>
     <?php $this->beginPage() ?>
@@ -46,7 +44,7 @@ if (Yii::$app->controller->action->id === 'login') {
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
     </head>
-    <body class="hold-transition <?= \dmstr\helpers\AdminLteHelper::skinClass() ?> sidebar-mini">
+    <body class="hold-transition <?= \dmstr\helpers\AdminLteHelper::skinClass() ?> sidebar-mini <?= explode('/', Yii::$app->request->url)['1'] == 'article' ? 'sidebar-collapse':''  ?>">
     <?php $this->beginBody() ?>
     <div class="wrapper">
 

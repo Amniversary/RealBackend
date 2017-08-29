@@ -64,10 +64,14 @@ class TemplateTaskAction extends Action
                 $res = $template->SendTemplateMessage($sendData);
                 if($res['errcode'] != 0 || !$res) {
                     $error = $res;
+                    if($res['errcode'] == 40001) {
+                        $auth = AuthorizerUtil::getAuthByOne($sentData->app_id);
+                        $template->accessToken = $auth->authorizer_access_token;
+                    }
                     if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
                         $error = iconv('utf-8','gb2312',$error);
-                    fwrite(STDOUT, Console::ansiFormat("发送模板消息失败:  nick_name : ".$list['nick_name']." openId :" . $list['open_id']."  app_id : ".$auth->record_id."\n",[Console::FG_GREEN]));
-                    fwrite(STDOUT, Console::ansiFormat("Code :".$res['errcode']. ' msg :'.$res['errmsg'] . "template_ID :". $templateData->template_id."\n",[Console::FG_GREEN]));
+                    fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."发送模板消息失败:  nick_name : ".$list['nick_name']." openId :" . $list['open_id']."  app_id : ".$auth->record_id."\n",[Console::FG_GREEN]));
+                    fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."Code :".$res['errcode']. ' msg :'.$res['errmsg'] . "template_ID :". $templateData->template_id."\n",[Console::FG_GREEN]));
                     \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' -- :'.var_export($error,true) .'  openId :'.$sentData->open_id .' ',Logger::LEVEL_ERROR);
                     \Yii::getLogger()->flush(true);
                     continue;

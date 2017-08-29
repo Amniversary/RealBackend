@@ -15,5 +15,5 @@ namespace backend\business\SaveRecordByTransactions;
 
 interface ISaveForTransaction
 {
-    function SaveRecordForTransaction(&$error,&$outInfo);
+    function SaveRecordForTransaction(&$error, &$outInfo);
 } 

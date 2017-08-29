@@ -21,5 +21,5 @@ interface IBackStatistic
      * @param $error
      * @return bool
      */
-    function ExcuteStatistic($params,&$outInfo,&$error);
+    function ExecuteStatistic($params, &$outInfo, &$error);
 } 

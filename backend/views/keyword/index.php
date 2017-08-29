@@ -23,6 +23,7 @@ use kartik\grid\GridView;
 use yii\bootstrap\Html;
 /**
  *  @var $model common\models\Keywords
+ * @var $searchModel
  *  @var $is_verify
  */
 /*if(!$is_verify){

@@ -6,31 +6,14 @@
  * Time: 19:31
  */
 return [
-    'index' => [
-        'class' => 'backend\controllers\UserManageActions\IndexAction',
-    ],
-    'create'=>[
-        'class' => 'backend\controllers\UserManageActions\CreateAction',
-    ],
-    'delete'=>[
-        'class' => 'backend\controllers\UserManageActions\DeleteAction',
-    ],
-    'resetpwd'=>[
-        'class' => 'backend\controllers\UserManageActions\ResetPwdAction',
-    ],
-    'update'=>[
-        'class' => 'backend\controllers\UserManageActions\UpdateAction',
-    ],
-    /*'setcheckno'=>[
-        'class'=>'backend\controllers\UserManageActions\SetCheckNoAction',
-    ],*/
-    'setstatus'=>[
-        'class'=>'backend\controllers\UserManageActions\SetStatusAction',
-    ],
-    'setprivilige'=>[
-        'class'=>'backend\controllers\UserManageActions\SetPriviligeAction',
-    ],
-    'getprivilige'=>[
-        'class'=>'backend\controllers\UserManageActions\GetPriviligeAction',
-    ],
+    'index' =>  'backend\controllers\UserManageActions\IndexAction',
+    'create'=> 'backend\controllers\UserManageActions\CreateAction',
+    'delete'=> 'backend\controllers\UserManageActions\DeleteAction',
+    'resetpwd'=> 'backend\controllers\UserManageActions\ResetPwdAction',
+    'update'=> 'backend\controllers\UserManageActions\UpdateAction',
+    'setstatus'=>'backend\controllers\UserManageActions\SetStatusAction',
+    'setprivilige'=>'backend\controllers\UserManageActions\SetPriviligeAction',
+    'getprivilige'=>'backend\controllers\UserManageActions\GetPriviligeAction',
+    'get_backend'=>'backend\controllers\UserManageActions\GetBackendAction',
+    'set_backend'=>'backend\controllers\UserManageActions\SetBackendAction',
 ];

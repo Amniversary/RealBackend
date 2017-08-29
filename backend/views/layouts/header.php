@@ -49,7 +49,7 @@ use yii\helpers\Html;
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header" style="height: auto">
-                            <img src="<?= empty($authInfo['head_img']) ? 'http://oss.aliyuncs.com/meiyuan/wish_type/default.png': $authInfo['head_img']; ?>" class="auth-image" alt="User Image"/>
+                            <img src="<?= empty($authInfo['qrcode_url']) ? 'http://oss.aliyuncs.com/meiyuan/wish_type/default.png': 'http://read.html5.qq.com/image?src=forum&q=5&r=0&imgflag=7&imageUrl='.$authInfo['qrcode_url']; ?>" class="auth-image" alt="User Image"/>
                             <h4 style="color: #FFF"><?= $authInfo['nick_name'] ?></h4>
                             <ul id="head-ul">
                                 <li>公众号类型 : <?= \common\models\AuthorizationList::getServiceTypeInfo($authInfo['service_type_info']) ?></li>

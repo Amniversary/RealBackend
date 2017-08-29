@@ -52,7 +52,7 @@ class TemplateTimingAction extends Action
     private function getTemplateTask()
     {
         $time = time();
-        $condition = 'create_time <= :tm and type in (1,2) status = 1';
+        $condition = 'create_time <= :tm and type in (1,2) and status = 1';
         $query = TemplateTiming::find()
             ->select(['id','app_id', 'template_id', 'template_data', 'status', 'type' , 'create_time'])
             ->where($condition,[':tm'=>$time])

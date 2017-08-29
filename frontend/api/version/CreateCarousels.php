@@ -17,7 +17,6 @@ class CreateCarousels implements IApiExecute
 {
     function execute_action($data, &$rstData,&$error, $extendData= [])
     {
-        \Yii::error('data:'.var_export($data,true));
         if(!$this->check_params($data, $error)) {
             return false;
         }

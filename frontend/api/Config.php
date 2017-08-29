@@ -25,5 +25,8 @@ return [
     'web_get_carousels'=>'WebGetCarousels',
     'web_get_issue' => 'WebGetIssue',
     'web_get_books' => 'WebGetBooks',
-    'web_get_articles' => 'WebGetArticles'
+    'web_get_articles' => 'WebGetArticles',
+    //TODO: 获取管理员登录信息接口
+    'get_user_info' => 'GetUserInfo',
+    'user_login' => 'WxUserLogin',
 ];

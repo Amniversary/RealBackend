@@ -56,7 +56,8 @@ class RealtechLoginSearch extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if(empty($user)){
+            $backend_menu = User::findByBackendUsername($user->backend_user_id, $this->type);
+            if(empty($user) || empty($backend_menu)){
                 $error = '该账号不存在';
                 return false;
             }
@@ -96,4 +97,6 @@ class RealtechLoginSearch extends Model
         }
         return $this->_user;
     }
+
+
 }

@@ -10,4 +10,6 @@ return [
     'testbh'=>'console\controllers\BackendActions\TestBhAction',
     'template_timing' => 'console\controllers\BackendActions\TemplateTimingAction',
     'custom_timing'=>'console\controllers\BackendActions\CustomMessageTimingAction',
+    'get_open_list' =>'console\controllers\BackendActions\GetOpenIdForUserInfoAction',
+    'back_statistic' => 'console\controllers\BackendActions\BackStatisticAction',
 ];

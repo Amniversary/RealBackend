@@ -26,15 +26,13 @@ class SaveByTransUtil
     public static function RewardSaveByTransaction($objList,&$error,&$outInfo = null)
     {
         $error ='';
-        if(!isset($objList) || !is_array($objList))
-        {
+        if (!isset($objList) || !is_array($objList)) {
             $error = '非法对象，不是数组';
             return false;
         }
         foreach($objList as $obj)
         {
-            if(!($obj instanceof ISaveForTransaction))
-            {
+            if (!($obj instanceof ISaveForTransaction)) {
                 $error = '对象数组中存在非ISaveForTransaction对象';
                 return false;
             }
@@ -45,14 +43,10 @@ class SaveByTransUtil
         {
             foreach($objList as $obj)
             {
-                if(!$obj->SaveRecordForTransaction($error,$outInfo))
-                {
-                    if(is_array($error))
-                    {
+                if(!$obj->SaveRecordForTransaction($error,$outInfo)) {
+                    if(is_array($error)) {
                         \Yii::getLogger()->log(var_export($error,true).' type:'.var_export($obj,true),Logger::LEVEL_ERROR);
-                    }
-                    else
-                    {
+                    } else {
                         \Yii::getLogger()->log($error.' type:'.var_export($obj,true),Logger::LEVEL_ERROR);
                     }
                     $trans->rollBack();

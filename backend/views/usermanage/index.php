@@ -1,28 +1,30 @@
 <style>
-    .user-pic
-    {
+    .user-pic {
         width: 40px;
         height: 40px;
         border-radius: 50%;
     }
-    #btn-style{
+
+    #btn-style {
 
     }
-    .back-a{
+
+    .back-a {
         display: inline-block;
         font-size: 14px;
         border-radius: 3px;
         color: #00a7d0;
-        border:1px solid #00a7d0;
+        border: 1px solid #00a7d0;
         padding: 3px 5px;
     }
-    .back-btn{
+
+    .back-btn {
         display: inline-block;
         font-size: 14px;
         margin-bottom: 0px;
         border-radius: 3px;
         color: #00a7d0;
-        border:1px solid #00a7d0;
+        border: 1px solid #00a7d0;
         padding: 3px 5px;
     }
 </style>
@@ -40,160 +42,138 @@ use yii\bootstrap\Html;
 $gridColumns = [
     ['class' => 'kartik\grid\SerialColumn'],
     [
-        'attribute'=>'username',
-        'label'=>'用户名',
-        'vAlign'=>'middle'
+        'attribute' => 'username',
+        'label' => '用户名',
+        'vAlign' => 'middle'
     ],
     [
-        'attribute'=>'email',
-        'label'=>'邮箱',
-        'vAlign'=>'middle',
+        'attribute' => 'email',
+        'label' => '邮箱',
+        'vAlign' => 'middle',
     ],
     [
-        'label'=>'头像',
-        'format'=>'html',
-        'attribute'=>'pic',
-        'vAlign'=>'middle',
-        'value'=>function($model)
-        {
-            $url = empty($model->pic)?'http://oss.aliyuncs.com/meiyuan/wish_type/default.png':$model->pic;
-            return Html::img($url,['class'=>'user-pic']);
+        'label' => '头像',
+        'format' => 'html',
+        'attribute' => 'pic',
+        'vAlign' => 'middle',
+        'value' => function ($model) {
+            $url = empty($model->pic) ? 'http://oss.aliyuncs.com/meiyuan/wish_type/default.png' : $model->pic;
+            return Html::img($url, ['class' => 'user-pic']);
         },
-        'filter'=>false,
+        'filter' => false,
     ],
     [
-        'attribute'=>'user_type',
-        'label'=>'帐号类型',
-        'width'=> '100px',
-        'vAlign'=> 'middle',
-        'value' => function($model) {
-            return $model->BackendName($model->user_type);
-        },
-        'filter' => ['1'=>'公众号管理后台','2'=>'裂变管理系统', '3'=>'小鹿微课后台'],
+        'label' => '手机号',
+        'attribute' => 'phone',
+        'vAlign' => 'middle',
     ],
     [
         'class' => 'kartik\grid\EditableColumn',
-        'width'=>'100px',
-        'attribute'=>'status',
-        'vAlign'=>'middle',
-        'value'=>function($model)
-        {
+        'width' => '100px',
+        'attribute' => 'status',
+        'vAlign' => 'middle',
+        'value' => function ($model) {
             return $model->GetStatusName();
         },
-        'filter'=>['0'=>'禁用','1'=>'正常'],
-        'headerOptions'=>['class'=>'kv-sticky-column'],
-        'contentOptions'=>['class'=>'kv-sticky-column'],
-        'editableOptions'=>function($model)
-        {
+        'filter' => ['0' => '禁用', '1' => '正常'],
+        'headerOptions' => ['class' => 'kv-sticky-column'],
+        'contentOptions' => ['class' => 'kv-sticky-column'],
+        'editableOptions' => function ($model) {
             return [
-                'formOptions'=>['action'=>'/usermanage/setstatus?user_id='.strval($model->backend_user_id)],
-                'header'=>'状态',
-                'size'=>'min',
-                'inputType'=>\kartik\editable\Editable::INPUT_DROPDOWN_LIST,
-                'displayValueConfig'=>['0'=>'禁止','1'=>'正常'],
-                'data'=>['0'=>'禁止','1'=>'正常'],
+                'formOptions' => ['action' => '/usermanage/setstatus?user_id=' . strval($model->backend_user_id)],
+                'header' => '状态',
+                'size' => 'min',
+                'inputType' => \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
+                'displayValueConfig' => ['0' => '禁止', '1' => '正常'],
+                'data' => ['0' => '禁止', '1' => '正常'],
             ];
         },
-        'refreshGrid'=>true,
+        'refreshGrid' => true,
     ],
     [
-        'label'=>'创建时间',
-        'attribute'=>'create_at',
-        'vAlign'=>'middle',
-        'value'=>function($model)
-        {
-            return date('Y-m-d H:i:s',intval($model->create_at));
+        'label' => '创建时间',
+        'attribute' => 'create_at',
+        'vAlign' => 'middle',
+        'value' => function ($model) {
+            return date('Y-m-d H:i:s', intval($model->create_at));
         },
-        'filter'=>false
+        'filter' => false
     ],
     [
-        'label'=>'最后登录时间',
-        'vAlign'=>'middle',
-        'attribute'=>'update_at',
-        'value'=>function($model){
-            return date('Y-m-d H:i:s',intval($model->update_at));
+        'label' => '最后登录时间',
+        'vAlign' => 'middle',
+        'attribute' => 'update_at',
+        'value' => function ($model) {
+            return date('Y-m-d H:i:s', intval($model->update_at));
         },
-        'filter'=>false
+        'filter' => false
     ],
     [
-        'width'=>'250px',
+        'width' => '250px',
         'class' => 'kartik\grid\ActionColumn',
-        'template'=>'{update}{delete}{resetpwd}{setprivilige}',
+        'template' => '{update}{delete}{resetpwd}{setprivilige}{get_backend}',
         'dropdown' => false,
-        'vAlign'=>'middle',
-        'urlCreator' => function($action, $model, $key, $index)
-        {
+        'vAlign' => 'middle',
+        'urlCreator' => function ($action, $model, $key, $index) {
             $url = '';
-            switch($action)
-            {
+            switch ($action) {
                 case 'update':
-                    $url = '/usermanage/update?user_id='.strval($model->backend_user_id);
+                    $url = '/usermanage/update?user_id=' . strval($model->backend_user_id);
                     break;
                 case 'delete':
-                    $url = '/usermanage/delete?user_id='.strval($model->backend_user_id);
+                    $url = '/usermanage/delete?user_id=' . strval($model->backend_user_id);
                     break;
                 case 'resetpwd':
-                    $url = '/usermanage/resetpwd?user_id='.strval($model->backend_user_id);
+                    $url = '/usermanage/resetpwd?user_id=' . strval($model->backend_user_id);
                     break;
                 case 'setprivilige':
-                    $url='/usermanage/getprivilige?user_id='.strval($model->backend_user_id);
+                    $url = '/usermanage/getprivilige?user_id=' . strval($model->backend_user_id);
+                    break;
+                case 'get_backend':
+                    $url = '/usermanage/get_backend?user_id=' . strval($model->backend_user_id);
                     break;
             }
             return $url;
         },
-        'viewOptions'=>['title'=>'查看', 'data-toggle'=>'tooltip'],
-        'updateOptions'=>['title'=>'编辑','label'=>'编辑', 'data-toggle'=>false],
-        'deleteOptions'=>['title'=>'删除','label'=>'删除','data-toggle'=>false],
-        'buttons'=>[
+        'viewOptions' => ['title' => '查看', 'data-toggle' => 'tooltip'],
+        'updateOptions' => ['title' => '编辑', 'label' => '编辑', 'data-toggle' => false],
+        'deleteOptions' => ['title' => '删除', 'label' => '删除', 'data-toggle' => false],
+        'buttons' => [
             'resetpwd' => function ($url, $model, $key) {
-                return Html::a('重置密码',$url,['class'=>'back-a','style'=>'margin-right:3%', 'data-toggle'=>'modal','data-target'=>'#contact-modal']);
+                return Html::a('重置密码', $url, ['class' => 'back-a', 'style' => 'margin-right:3%', 'data-toggle' => 'modal', 'data-target' => '#contact-modal']);
             },
-            /*'setcheckno' => function ($url, $model, $key) {
-                return Html::a('设置审核号',$url,[ 'data-toggle'=>'modal','data-target'=>'#contact-modal','style'=>'margin-left:10px;']);
-            },*/
-            'update'=>function($url,$model)
-            {
-                if($model->backend_user_id === 1) return '';
-                return Html::a('编辑',$url,['class'=>'back-a','style'=>'margin-right:3%']);
+            'update' => function ($url, $model) {
+                if ($model->backend_user_id === 1) return '';
+                return Html::a('编辑', $url, ['class' => 'back-a', 'style' => 'margin-right:3%']);
             },
-            'delete'=>function($url,$model)
-            {
-                if($model->backend_user_id === 1) return '';
-                return Html::a('删除',$url,['class'=>'delete back-a','style'=>'margin-right:3%','data-toggle'=>false,'data-confirm'=>'确定要删除该记录吗？','data-method'=>'post', 'data-pjax'=>'1']);
+            'delete' => function ($url, $model) {
+                if ($model->backend_user_id === 1) return '';
+                return Html::a('删除', $url, ['class' => 'delete back-a', 'style' => 'margin-right:3%', 'data-toggle' => false, 'data-confirm' => '确定要删除该记录吗？', 'data-method' => 'post', 'data-pjax' => '1']);
             },
-            'setprivilige'=>function($url, $model,$key)
-            {
-                return Html::a('权限',$url,['class'=>'back-a', 'data-toggle'=>'modal','data-target'=>'#contact-modal']);
-            }
+            'setprivilige' => function ($url, $model, $key) {
+                return Html::a('权限', $url, ['class' => 'back-a', 'data-toggle' => 'modal', 'data-target' => '#contact-modal', 'style' => 'margin-right:3%']);
+            },
+            'get_backend' => function ($url, $model, $key) {
+                return Html::a('后台权限', $url, ['class' => 'back-a', 'data-toggle' => 'modal', 'data-target' => '#contact-backend', 'style' => 'margin-right:3%']);
+            },
         ],
     ],
-//    ['class' => 'kartik\grid\CheckboxColumn']
 ];
 echo GridView::widget([
-    'id'=>'user-manage-list',
+    'id' => 'user-manage-list',
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'columns' => $gridColumns,
-    'containerOptions' => ['style'=>'overflow: auto;height:500px;'], // only set when $responsive = false
-    'beforeHeader'=>[
+    'containerOptions' => ['style' => 'overflow: auto;height:500px;'], // only set when $responsive = false
+    'beforeHeader' => [
         [
-//            'columns'=>[
-//                ['content'=>'Header Before 1', 'options'=>['colspan'=>4, 'class'=>'text-center warning']],
-//                ['content'=>'Header Before 2', 'options'=>['colspan'=>4, 'class'=>'text-center warning']],
-//                ['content'=>'Header Before 3', 'options'=>['colspan'=>3, 'class'=>'text-center warning']],
-//            ],
-            'options'=>['class'=>'skip-export'] // remove this row from export
+            'options' => ['class' => 'skip-export'] // remove this row from export
         ]
     ],
-    'toolbar' =>  [
-        ['content'=>
-            Html::button('新增用户', ['type'=>'button', 'title'=>'新增用户', 'class'=>'btn btn-success','id'=>'btn-style', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('usermanage/create').'";return false;']),// . ' '.
-            //Html::a('&lt;i class="glyphicon glyphicon-repeat">&lt;/i>', ['grid-demo'], ['data-pjax'=>0, 'class' => 'btn btn-default', 'title'=>Yii::t('kvgrid', 'Reset Grid')])
+    'toolbar' => [
+        ['content' =>
+            Html::button('新增用户', ['type' => 'button', 'title' => '新增用户', 'class' => 'btn btn-success', 'id' => 'btn-style', 'onclick' => 'location="' . \Yii::$app->urlManager->createUrl('usermanage/create') . '";return false;']),// . ' '.
         ],
-        //'{export}',
-        //'{toggleData}',
-        //'toggleDataContainer' => ['class' => 'btn-group-sm'],
-        //'exportContainer' => ['class' => 'btn-group-sm']
     ],
     'pjax' => true,
     'bordered' => true,
@@ -201,7 +181,7 @@ echo GridView::widget([
     'condensed' => false,
     'responsive' => true,
     'hover' => true,
-    'exportConfig'=>['xls'=>[],'html'=>[],'pdf'=>[]],
+    'exportConfig' => ['xls' => [], 'html' => [], 'pdf' => []],
     //'floatHeader' => true,
     //'floatHeaderOptions' => ['scrollingTop' => '300px'],
     //'showPageSummary' => true,
@@ -213,10 +193,16 @@ echo GridView::widget([
 echo \yii\bootstrap\Modal::widget([
         'id' => 'contact-modal',
         'clientOptions' => false,
-        'size'=>\yii\bootstrap\Modal::SIZE_LARGE,
+        'size' => \yii\bootstrap\Modal::SIZE_LARGE,
     ]
 );
-$js='
+
+echo \yii\bootstrap\Modal::widget([
+    'id' => 'contact-backend',
+    'clientOptions'=>false,
+    'size'=> \yii\bootstrap\Modal::SIZE_DEFAULT,
+]);
+$js = '
 $(".user-del").on("click",function(){
     $url = $(this).attr("href");
             $.ajax({
@@ -242,4 +228,4 @@ $(".user-del").on("click",function(){
         });
 });
 ';
-$this->registerJs($js,\yii\web\View::POS_END);
+$this->registerJs($js, \yii\web\View::POS_END);

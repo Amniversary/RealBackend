@@ -12,7 +12,6 @@ namespace console\controllers\BackendActions;
 use backend\business\JobUtil;
 use common\models\TemplateTiming;
 use yii\base\Action;
-use yii\db\Query;
 
 class CustomMessageTimingAction extends Action
 {
@@ -35,7 +34,6 @@ class CustomMessageTimingAction extends Action
                 'data'=>json_decode($list['template_data']),
                 'app_id'=>$list['app_id'],
                 'type'=>$list['type'],
-                'task_id'=>$list['id'],
             ];
             if(!JobUtil::AddCustomJob('templateBeanstalk', 'send_user_msg', $params, $error, (60*60*5))) {
                 \Yii::error($error);
@@ -51,7 +49,7 @@ class CustomMessageTimingAction extends Action
     private function getCustomTask()
     {
         $time = time();
-        $condition = 'create_time <= :tm and type in (3,4) status = 1';
+        $condition = 'create_time <= :tm and type in (3,4) and status = 1';
         $query = TemplateTiming::find()
             ->select(['id','app_id', 'template_id', 'template_data', 'status', 'type' , 'create_time'])
             ->where($condition,[':tm'=>$time])

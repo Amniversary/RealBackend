@@ -55,15 +55,17 @@ class  LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
+            $backend = User::findByBackendUsername($user->backend_user_id, 1);
+            if(empty($user) || empty($backend)){
+                $this->addError($attribute, '该账号不存在');
+                return;
+            }
+
             if(isset($user) && $user->status === 0) {
                 $this->addError($attribute,'您已被管理员禁用');
                 return;
             }
-            if(empty($user)){
-                $this->addError($attribute, '该账号不存在');
 
-                return;
-            }
             if (!$user->validatePassword($this->password)) {
                 $this->addError($attribute, '用户名或密码错误');
                 return;

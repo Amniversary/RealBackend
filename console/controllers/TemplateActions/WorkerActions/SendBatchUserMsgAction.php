@@ -30,7 +30,6 @@ class SendBatchUserMsgAction extends Action
             $auth = AuthorizerUtil::getAuthByOne($sentData->app_id);
             $type = $sentData->type; //TODO: type 3 测试消息  4 群发消息
             $accessToken = $auth->authorizer_access_token;
-            $task = TemplateTiming::findOne(['id'=>$sentData->task_id]);
             $data = json_decode(json_encode($sentData->data),true);
             $query = [];
             if($type ==  3) {
@@ -56,21 +55,22 @@ class SendBatchUserMsgAction extends Action
                 $rst = WeChatUserUtil::sendCustomerMsg($accessToken,$json);
                 if($rst['errcode'] != 0 || !$rst) {
                     $error = $rst;
+                    if($rst['errcode'] == 40001) {
+                        $auth = AuthorizerUtil::getAuthByOne($sentData->app_id);
+                        $accessToken = $auth->authorizer_access_token;
+                    }
                     if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
                         $error = iconv('utf-8','gb2312',$error);
-                    fwrite(STDOUT, Console::ansiFormat("发送客服消息失败:  nick_name : ".$list['nick_name']." openId :" . $list['open_id']."  app_id : ".$auth->record_id."\n",[Console::FG_GREEN]));
-                    fwrite(STDOUT, Console::ansiFormat("Code :".$rst['errcode']. ' msg :'.$rst['errmsg'] ."\n",[Console::FG_GREEN]));
+                    fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."发送客服消息失败:  nick_name : ".$list['nick_name']." openId :" . $list['open_id']."  app_id : ".$auth->record_id."  app_name : ".$auth->nick_name."\n",[Console::FG_GREEN]));
+                    fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."Code :".$rst['errcode']. ' msg :'.$rst['errmsg'] ."\n",[Console::FG_GREEN]));
                     \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' -- :'.var_export($error,true) .'  openId :'.$sentData->open_id .' ',Logger::LEVEL_ERROR);
                     \Yii::getLogger()->flush(true);
                     continue;
                 }
                 $i ++;
+                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --nick_name : ".$list['nick_name'] ." -- openId :".$list['open_id']. " appId :".$auth->record_id ."  app_name :". $auth->nick_name."\n", [Console::FG_GREEN]));
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($rst)."--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
-                fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --nick_name : ".$list['nick_name'] ." -- openId :".$list['open_id']. " appId :".$auth->record_id."\n", [Console::FG_GREEN]));
             }
-
-            $task->status = 0;
-            $task->save();
             fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." 消息数 $count ;--发送成功 $i --$sentData->key_word--任务执行完成!"."\n", [Console::FG_GREEN]));
             return BeanstalkController::DELETE;
         } catch (\Exception $e) {

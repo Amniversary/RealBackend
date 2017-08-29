@@ -9,6 +9,7 @@
 namespace backend\business;
 
 
+use common\models\BackendMenu;
 use common\models\User;
 use yii\db\Query;
 use common\models\UserMenu;
@@ -23,35 +24,34 @@ class UserMenuUtil
      * @param $user_id
      * @param $rootId
      * @param array $menu 菜单
-     * @param array $innerMenu  内部权限
+     * @param array $innerMenu 内部权限
      * @return array
      */
-    public static function GetUserMenu($user_id,$rootId,&$innerMenu=[])
+    public static function GetUserMenu($user_id, $rootId, &$innerMenu = [])
     {
-        $menu=[];
-        if(!is_array($innerMenu)) {
+        $menu = [];
+        if (!is_array($innerMenu)) {
             $innerMenu = [];
         }
         $query = new Query();
-        $menuList = $query->from(UserMenu::tableName().' um')->innerJoin(Menu::tableName().' mu','um.menu_id = mu.menu_id')
-            ->select(['mu.menu_id','mu.title','mu.icon','mu.url','visible'])
-            ->where(['um.user_id'=>$user_id,'mu.status'=>1,'mu.parent_id'=>$rootId])
+        $menuList = $query->from(UserMenu::tableName() . ' um')->innerJoin(Menu::tableName() . ' mu', 'um.menu_id = mu.menu_id')
+            ->select(['mu.menu_id', 'mu.title', 'mu.icon', 'mu.url', 'visible'])
+            ->where(['um.user_id' => $user_id, 'mu.status' => 1, 'mu.parent_id' => $rootId])
             ->orderBy('mu.parent_id asc,mu.order_no asc')
             ->all();
-        foreach($menuList as $m)
-        {
+        foreach ($menuList as $m) {
             $menu_id = $m['menu_id'];
-            if($m['visible'] == '1')//0 不显示菜单 没有子菜单
+            if ($m['visible'] == '1')//0 不显示菜单 没有子菜单
             {
-                $menu[$menu_id]= [
-                    'label'=>$m['title'],
-                    'icon'=>$m['icon'],
-                    'url'=>((strpos($m['url'],'*') === false) ?[$m['url']]:'#'),
-                    'items'=>[]
+                $menu[$menu_id] = [
+                    'label' => $m['title'],
+                    'icon' => $m['icon'],
+                    'url' => ((strpos($m['url'], '*') === false) ? [$m['url']] : '#'),
+                    'items' => []
                 ];
-                $menu[$menu_id]['items'] = self::GetUserMenu($user_id,$m['menu_id'],$innerMenu);
+                $menu[$menu_id]['items'] = self::GetUserMenu($user_id, $m['menu_id'], $innerMenu);
             }
-            $innerMenu[]=$m['url'];
+            $innerMenu[] = $m['url'];
         }
         return $menu;
     }
@@ -66,11 +66,30 @@ class UserMenuUtil
         $selection = [];
         $rightList = UserMenu::find()
             ->select(['menu_id'])
-            ->where(['user_id'=>$user_id])
+            ->where(['user_id' => $user_id])
             ->all();
 
         foreach ($rightList as $selected) {
             $selection[] = $selected['menu_id'];
+        }
+        return $selection;
+    }
+
+    /**
+     * 获取用户已有后台账号权限
+     * @param $user_id
+     * @return array
+     */
+    public static function GetUserBackendMenuByUserId($user_id)
+    {
+        $selection = [];
+        $rightList = BackendMenu::find()
+            ->select(['backend_id'])
+            ->where(['user_id' => $user_id])
+            ->all();
+
+        foreach ($rightList as $selected) {
+            $selection[] = $selected['backend_id'];
         }
         return $selection;
     }
@@ -83,16 +102,26 @@ class UserMenuUtil
     {
         $article = [];
         $articleList = Menu::find()
-            ->select(['menu_id','title'])
-            ->where(['status'=>1])
+            ->select(['menu_id', 'title'])
+            ->where(['status' => 1])
             ->all();
 
-        foreach($articleList as $articled){
+        foreach ($articleList as $articled) {
             $article[$articled['menu_id']] = $articled['title'];
         }
 
-        $rights = array_chunk($article,30,true);
+        $rights = array_chunk($article, 30, true);
+        return $rights;
+    }
 
+    /**
+     * 获取后台系统列表
+     * @return array
+     */
+    public static function GetUserBackendTitle()
+    {
+        $articleList = \Yii::$app->params['backend_list'];
+        $rights = array_chunk($articleList, 15, true);
         return $rights;
     }
 
@@ -102,15 +131,15 @@ class UserMenuUtil
      * @param $error
      * @return bool
      */
-    public static function isSave($model,&$error)
+    public static function isSave($model, &$error)
     {
-        if(!$model instanceof UserMenu){
+        if (!$model instanceof UserMenu) {
             $error = '不是权限信息记录';
             return false;
         }
-        if(!$model->save()){
+        if (!$model->save()) {
             $error = '保存权限信息失败';
-            \Yii::error($error . '_' .var_export($model->getErrors(),true));
+            \Yii::error($error . '_' . var_export($model->getErrors(), true));
             return false;
         }
         return true;
@@ -122,26 +151,58 @@ class UserMenuUtil
      * @param $error //TODO： 操作用户id
      * @return bool
      */
-    public static function SaveUserMenus($params,$user_id,&$error)
+    public static function SaveUserMenus($params, $user_id, &$error)
     {
         try {
             $trans = \Yii::$app->db->beginTransaction();
-            (new UserMenu())->deleteAll(['user_id'=>$user_id]);//TODO: 删除用户原有权限数据
+            (new UserMenu())->deleteAll(['user_id' => $user_id]);//TODO: 删除用户原有权限数据
             $sql = '';
             $table = \Yii::$app->db;
             foreach ($params as $parList) {
-                $sql .= sprintf('insert into %s_user_menu (user_id,menu_id) values(%s,%s);',$table->tablePrefix,$user_id,$parList);
+                $sql .= sprintf('insert into %s_user_menu (user_id,menu_id) values(%s,%s);', $table->tablePrefix, $user_id, $parList);
             }
             $rst = $table->createCommand($sql)->execute();
-            if( $rst <= 0 ){
+            if ($rst <= 0) {
                 throw new Exception('保存权限数据异常');
             }
             $trans->commit();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $trans->rollBack();
             $error = $e->getMessage();
             return false;
         }
         return true;
     }
+
+    /**
+     * 保存后台权限数据
+     * @param $params
+     * @param $user_id
+     * @param $error
+     * @return bool
+     * @throws \yii\db\Exception
+     */
+    public static function SaveUserBackendMenu($params, $user_id, &$error)
+    {
+        try {
+            $table = \Yii::$app->db;
+            $trans = $table->beginTransaction();
+            (new BackendMenu())->deleteAll(['user_id' => $user_id]);
+            $sql = '';
+            foreach ($params as $item) {
+                $sql .= sprintf('insert into %s_backend_menu (user_id, backend_id) VALUES (%s,%s);', $table->tablePrefix, $user_id, $item);
+            }
+            $rst = $table->createCommand($sql)->execute();
+            if ($rst <= 0) {
+                throw new \yii\db\Exception('保存后台权限数据异常');
+            }
+            $trans->commit();
+        } catch (Exception $e) {
+            $trans->rollBack();
+            $error = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
 } 

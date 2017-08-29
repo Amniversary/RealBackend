@@ -44,7 +44,7 @@ class WeChatUserUtil
         $url = sprintf('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s',
             $access_token);
         $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
-        return !isset($rst['errcore']) && $rst['errmsg'] == 'ok' ? true:$rst;
+        return $rst['errcode'] == 0 && $rst['errmsg'] == 'ok' ? true:$rst;
     }
 
 
@@ -68,7 +68,8 @@ class WeChatUserUtil
      * @param $error
      * @return bool|array
      */
-    public static function getCustomMenu($access_token,&$error){
+    public static function getCustomMenu($access_token,&$error)
+    {
         $url = "https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token=$access_token";
         $rst = json_decode(UsualFunForNetWorkHelper::HttpGet($url),true);
         if($rst['errcode'] != 0){
@@ -311,7 +312,7 @@ class WeChatUserUtil
      * @param $access_token
      * @return mixed
      */
-    public static function getWxFansSummary($access_token)
+    public static function getWxFansSummary($access_token,&$error)
     {
         $url = "https://api.weixin.qq.com/datacube/getusersummary?access_token=$access_token";
         $data['begin_date'] = date('Y-m-d',strtotime('-1 day'));
@@ -319,8 +320,8 @@ class WeChatUserUtil
         $json = json_encode($data);
         $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url,$json),true);
         if($rst['errcode'] != 0){
-            print_r($rst);
-            exit;
+            $error = 'Code :'. $rst['errcode'] .'  msg :'. $rst['errmsg'];
+            return false;
         }
         return $rst;
     }
@@ -452,7 +453,24 @@ class WeChatUserUtil
     }
 
     /**
-     * 清除微信api调用次数接口
+     * 获取公众号关注用户OpenId列表
+     * @param $accessToken
+     * @param null $NEXT_OPENID
+     * @return mixed    [
+     *                      total => 123 ,      //关注该公众账号的总用户数
+     *                      count => 123 ,      //拉取的OPENID个数，最大值为10000
+     *                      data => [] ,        //列表数据，OPENID的列表
+     *                      next_openid =>''    //拉取最后一个用户的OpenId
+     *                  ]
+     */
+    public static function getUserListForOpenId($accessToken, $NEXT_OPENID = null){
+        $url = "https://api.weixin.qq.com/cgi-bin/user/get?access_token=$accessToken&next_openid=$NEXT_OPENID";
+        $res = json_decode(UsualFunForNetWorkHelper::HttpGet($url),true);
+        return $res;
+    }
+
+    /**
+     * 清除微信api调用次数接口(clear_quota)
      * @param $app_id
      * @param $accessToken
      * @return mixed
@@ -464,23 +482,22 @@ class WeChatUserUtil
         return $res;
     }
 
-
+    /**
+     * 获取单次发送消息模型
+     * @param $post
+     * @param $accessToken
+     * @return array
+     * @throws HttpException
+     */
     public static function genMessageModel ($post , $accessToken)
     {
         $data = [];
         switch ($post['msg_type']){
             case 0:  //TODO: 文本消息
-                $data = [
-                    'content'=>$post['content'],
-                    'msg_type'=>$post['msg_type']
-                ];break;
+                $data = ['content'=>$post['content'], 'msg_type'=>$post['msg_type']];
+                break;
             case 1: //TODO: 图文消息
-                $arr = [
-                    'title'=>$post['title'],
-                    'description'=>$post['description'],
-                    'url'=>$post['url'],
-                    'picurl'=>$post['picurl']
-                ];
+                $arr = ['title'=>$post['title'], 'description'=>$post['description'], 'url'=>$post['url'], 'picurl'=>$post['picurl']];
                 $data['msg_type'] = $post['msg_type'];
                 $data[] = $arr;
                 break;

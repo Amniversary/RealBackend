@@ -40,7 +40,6 @@ class WebGetArticles implements  IApiExecute
         $rst['list'] = $Articles;
         $rstData['code'] = 0;
         $rstData['data'] = $rst;
-        \Yii::error(var_export($data,true));
         return true;
      }
 

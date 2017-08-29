@@ -21,24 +21,22 @@ class UsualFunForStringHelper
      * @param $error
      * @return array|false
      */
-    public static function GenRandRePacketsData($n,$sum,&$index_max,&$error)
+    public static function GenRandRePacketsData($n, $sum, &$index_max, &$error)
     {
         //$n = 20;
         //$sum = 300;
-        if($sum < $n)
-        {
+        if ($sum < $n) {
             $error = '金额总数不能小于红包个数'; //$error = '金额总数必须大于红包个数';
             return false;
         }
-        if($n > 50)
-        {
+        if ($n > 50) {
             $error = '红包数量不能大于50';
             return false;
         }
         //$sum = $sum * 100;//转为分
         $rst = [];
-        $ave = intval($sum/$n);  // 金额除去红包个数 平均值 test:3/3 = 1
-        $one_rst = rand(1,$ave); // 随机取1到平均值的数
+        $ave = intval($sum / $n);  // 金额除去红包个数 平均值 test:3/3 = 1
+        $one_rst = rand(1, $ave); // 随机取1到平均值的数
         $subSum = $one_rst;  // 1
         //$rst[] = $one_rst/100;
         $rst[] = $one_rst; // $rst = ['0'=>1];
@@ -47,22 +45,21 @@ class UsualFunForStringHelper
         $min = $one_rst; // 1
         $max = $one_rst; // 1
 
-        for($i = 2; $i <= $n; $i ++)
-        {                   //(4-1)=3 / ((3-2)+1)= 2
-                            //     3 / 2 = 1
-                            //(4-2)=2 / ((3-3)+1)= 1
-                            //     2 / 1 = 2
-            $ave = intval(($sum - $subSum)/($n - $i + 1)); // 1
-            $one_rst = rand(1,$ave); // 1
-            if($min > $one_rst) // 1 > 1
+        for ($i = 2; $i <= $n; $i++) {                   //(4-1)=3 / ((3-2)+1)= 2
+            //     3 / 2 = 1
+            //(4-2)=2 / ((3-3)+1)= 1
+            //     2 / 1 = 2
+            $ave = intval(($sum - $subSum) / ($n - $i + 1)); // 1
+            $one_rst = rand(1, $ave); // 1
+            if ($min > $one_rst) // 1 > 1
             {
                 $min = $one_rst;
-                $index_min = $i -1;
+                $index_min = $i - 1;
             }
-            if($max < $one_rst) // 1 < 1
+            if ($max < $one_rst) // 1 < 1
             {
                 $max = $one_rst;
-                $index_max = $i -1;
+                $index_max = $i - 1;
             }
             //$rst[] = $one_rst/100;
             $rst[] = $one_rst;
@@ -70,12 +67,10 @@ class UsualFunForStringHelper
         }
         $left = $sum - $subSum;
 
-        if($left > 0)
-        {
+        if ($left > 0) {
             //$rst[$index_min] = ($rst[$index_min] + $left/100);
             $rst[$index_min] = ($rst[$index_min] + $left);
-            if($rst[$index_min] > $max)
-            {
+            if ($rst[$index_min] > $max) {
                 $max = $rst[$index_min];
                 $index_max = $index_min;
             }
@@ -97,38 +92,36 @@ class UsualFunForStringHelper
         //查找最大值
         $index_max = 0;
         $max = $rst[0];
-        for($i =1; $i < $n; $i ++)
-        {
-            if($rst[$i]> $max)
-            {
+        for ($i = 1; $i < $n; $i++) {
+            if ($rst[$i] > $max) {
                 $index_max = $i;
                 $max = $rst[$i];
             }
         }
         return $rst;
     }
+
     /**
      * 生成guid
      * @return string
      */
     public static function CreateGUID()
     {
-        if (function_exists('com_create_guid'))
-        {
+        if (function_exists('com_create_guid')) {
             $guid = com_create_guid();
-            $guid = str_replace('{','',$guid);
-            $guid = str_replace('}','',$guid);
+            $guid = str_replace('{', '', $guid);
+            $guid = str_replace('}', '', $guid);
             return $guid;
-        }else{
-            mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+        } else {
+            mt_srand((double)microtime() * 10000);//optional for php 4.2.0 and up.
             $charid = strtoupper(md5(uniqid(rand(), true)));
             $hyphen = chr(45);// "-"
             $uuid = //chr(123)// "{"
-                substr($charid, 0, 8).$hyphen
-                .substr($charid, 8, 4).$hyphen
-                .substr($charid,12, 4).$hyphen
-                .substr($charid,16, 4).$hyphen
-                .substr($charid,20,12);
+                substr($charid, 0, 8) . $hyphen
+                . substr($charid, 8, 4) . $hyphen
+                . substr($charid, 12, 4) . $hyphen
+                . substr($charid, 16, 4) . $hyphen
+                . substr($charid, 20, 12);
             //.chr(125);// "}"
             return $uuid;
         }
@@ -141,10 +134,10 @@ class UsualFunForStringHelper
      * @param string $c 数据来源字符串
      * @return string 返回随即串
      */
-    public static function mt_rand_str ($l, $c = 'abcdefghijklmnopqrstuvwxyz1234567890')
+    public static function mt_rand_str($l, $c = 'abcdefghijklmnopqrstuvwxyz1234567890')
     {
         $lenC = strlen($c);
-        for ($s = '', $cl = $lenC-1, $i = 0; $i < $l; $s .= $c[mt_rand(0, $cl)], ++$i);
+        for ($s = '', $cl = $lenC - 1, $i = 0; $i < $l; $s .= $c[mt_rand(0, $cl)], ++$i) ;
         return $s;
     }
 
@@ -166,9 +159,8 @@ class UsualFunForStringHelper
     public static function get_rand_point_data($len = 16)
     {
         $rst = '0.';
-        for($i = 0; $i < $len; $i ++)
-        {
-            $rst .= mt_rand(0,9);
+        for ($i = 0; $i < $len; $i++) {
+            $rst .= mt_rand(0, 9);
         }
         return $rst;
     }
@@ -181,11 +173,11 @@ class UsualFunForStringHelper
     public static function is_identity_card($id_card_no)
     {
         $vCity = array(
-            '11','12','13','14','15','21','22',
-            '23','31','32','33','34','35','36',
-            '37','41','42','43','44','45','46',
-            '50','51','52','53','54','61','62',
-            '63','64','65','71','81','82','91'
+            '11', '12', '13', '14', '15', '21', '22',
+            '23', '31', '32', '33', '34', '35', '36',
+            '37', '41', '42', '43', '44', '45', '46',
+            '50', '51', '52', '53', '54', '61', '62',
+            '63', '64', '65', '71', '81', '82', '91'
         );
 
         if (!preg_match('/^([\d]{17}[xX\d]|[\d]{15})$/', $id_card_no)) return false;
@@ -195,25 +187,22 @@ class UsualFunForStringHelper
         $id_card_no = preg_replace('/[xX]$/i', 'a', $id_card_no);
         $vLength = strlen($id_card_no);
 
-        if ($vLength == 18)
-        {
+        if ($vLength == 18) {
             $vBirthday = substr($id_card_no, 6, 4) . '-' . substr($id_card_no, 10, 2) . '-' . substr($id_card_no, 12, 2);
         } else {
             $vBirthday = '19' . substr($id_card_no, 6, 2) . '-' . substr($id_card_no, 8, 2) . '-' . substr($id_card_no, 10, 2);
         }
 
         if (date('Y-m-d', strtotime($vBirthday)) != $vBirthday) return false;
-        if ($vLength == 18)
-        {
+        if ($vLength == 18) {
             $vSum = 0;
 
-            for ($i = 17 ; $i >= 0 ; $i--)
-            {
+            for ($i = 17; $i >= 0; $i--) {
                 $vSubStr = substr($id_card_no, 17 - $i, 1);
-                $vSum += (pow(2, $i) % 11) * (($vSubStr == 'a') ? 10 : intval($vSubStr , 11));
+                $vSum += (pow(2, $i) % 11) * (($vSubStr == 'a') ? 10 : intval($vSubStr, 11));
             }
 
-            if($vSum % 11 != 1) return false;
+            if ($vSum % 11 != 1) return false;
         }
 
         return true;
@@ -226,12 +215,25 @@ class UsualFunForStringHelper
      */
     public static function IsAllChinese($str)
     {
-        $len = preg_match('/^[\x{4e00}-\x{9fa5}]+$/u',$str);
-        if ($len)
-        {
+        $len = preg_match('/^[\x{4e00}-\x{9fa5}]+$/u', $str);
+        if ($len) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 验证是否为正确手机号
+     * @param $phone
+     * @return bool
+     */
+    public static function IsPhoneNum($phone)
+    {
+        $patten = '/^1[34578]\d{9}$/';
+        if (!preg_match($patten, $phone)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -255,12 +257,11 @@ class UsualFunForStringHelper
      */
     public static function GetHHMMSSBySeconds($seconds)
     {
-        if ($seconds>3600*24)
-        {
-            $hours = intval($seconds/3600);
-            $leftSeconds = $seconds - $hours* 3600;
-            $time = sprintf('%02s',$hours).":".gmstrftime('%M:%S', $leftSeconds);
-        }else{
+        if ($seconds > 3600 * 24) {
+            $hours = intval($seconds / 3600);
+            $leftSeconds = $seconds - $hours * 3600;
+            $time = sprintf('%02s', $hours) . ":" . gmstrftime('%M:%S', $leftSeconds);
+        } else {
             $time = gmstrftime('%H:%M:%S', $seconds);
         }
         return $time;
@@ -273,13 +274,12 @@ class UsualFunForStringHelper
      */
     public static function GetHHMMBySeconds($seconds)
     {
-        if ($seconds>3600*24)
-        {
-            $hours = intval($seconds/3600);
-            $leftSeconds = $seconds - $hours* 3600;
-            $time['H'] = sprintf('%02s',$hours);
+        if ($seconds > 3600 * 24) {
+            $hours = intval($seconds / 3600);
+            $leftSeconds = $seconds - $hours * 3600;
+            $time['H'] = sprintf('%02s', $hours);
             $time['I'] = gmstrftime('%M', $leftSeconds);
-        }else{
+        } else {
             $time['H'] = gmstrftime('%H', $seconds);
             $time['I'] = gmstrftime('%M', $seconds);
         }

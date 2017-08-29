@@ -37,7 +37,7 @@ $data = [$cache['record_id']=>$cache['nick_name']];
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? '新增' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['sign/index']), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::a('取消',\Yii::$app->urlManager->createUrl(['sign/keyword']), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
         <?php ActiveForm::end(); ?>
     </div>
