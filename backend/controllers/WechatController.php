@@ -81,7 +81,6 @@ class WechatController extends Controller
                 $resultXml = $Receive->Text($data);
                 break;
             case 'image':
-                $resultXml = $Receive->Image($data);
                 break;
             case 'location':
                 $resultXml = $Receive->Location($data);
