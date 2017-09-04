@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html style="font-size: 512px;">
+<head>
+    <meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Web App">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title></title>
+    <style type="text/css">
+        html {
+            font-family: sans-serif;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%
+        }
+
+        body {
+            margin: 0
+        }
+
+        article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+            display: block
+        }
+
+        audio, canvas, progress, video {
+            display: inline-block;
+            vertical-align: baseline
+        }
+
+        audio:not([controls]) {
+            display: none;
+            height: 0
+        }
+
+        [hidden], template {
+            display: none
+        }
+
+        a {
+            background: transparent
+        }
+
+        a:active, a:hover {
+            outline: 0
+        }
+
+        abbr[title] {
+            border-bottom: 1px dotted
+        }
+
+        b, strong {
+            font-weight: 700
+        }
+
+        dfn {
+            font-style: italic
+        }
+
+        h1 {
+            font-size: 2em;
+            margin: .67em 0
+        }
+
+        mark {
+            background: #ff0;
+            color: #000
+        }
+
+        small {
+            font-size: 80%
+        }
+
+        sub, sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative;
+            vertical-align: baseline
+        }
+
+        sup {
+            top: -.5em
+        }
+
+        sub {
+            bottom: -.25em
+        }
+
+        img {
+            border: 0
+        }
+
+        svg:not(:root) {
+            overflow: hidden
+        }
+
+        figure {
+            margin: 1em 40px
+        }
+
+        hr {
+            box-sizing: content-box;
+            height: 0
+        }
+
+        pre {
+            overflow: auto
+        }
+
+        code, kbd, pre, samp {
+            font-family: monospace, monospace;
+            font-size: 1em
+        }
+
+        button, input, optgroup, select, textarea {
+            color: inherit;
+            font: inherit;
+            margin: 0
+        }
+
+        button {
+            overflow: visible
+        }
+
+        button, select {
+            text-transform: none
+        }
+
+        button, html input[type=button], input[type=reset], input[type=submit] {
+            -webkit-appearance: button;
+            cursor: pointer
+        }
+
+        button[disabled], html input[disabled] {
+            cursor: default
+        }
+
+        button::-moz-focus-inner, input::-moz-focus-inner {
+            border: 0;
+            padding: 0
+        }
+
+        input {
+            line-height: normal
+        }
+
+        input[type=checkbox], input[type=radio] {
+            box-sizing: border-box;
+            padding: 0
+        }
+
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+            height: auto
+        }
+
+        input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-search-decoration {
+            -webkit-appearance: none
+        }
+
+        fieldset {
+            border: 1px solid silver;
+            margin: 0 2px;
+            padding: .35em .625em .75em
+        }
+
+        legend {
+            border: 0;
+            padding: 0
+        }
+
+        textarea {
+            overflow: auto
+        }
+
+        optgroup {
+            font-weight: 700
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0
+        }
+
+        td, th {
+            padding: 0
+        }
+
+        dd, dl, dt, h1, h2, h3, h4, h5, h6, li, ol, ul {
+            margin: 0;
+            padding: 0
+        }
+
+        h1 {
+            font-size: 20px
+        }
+
+        h2 {
+            font-size: 18px
+        }
+
+        h3 {
+            font-size: 16px
+        }
+
+        h4, h5, h6 {
+            font-size: 100%;
+            font-weight: 400
+        }
+
+        p {
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            font-size: 100px;
+            font-family: Helvetica Neue, Helvetica, Arial, Microsoft Yahei, sans-serif
+        }
+
+        body {
+            font-size: .14rem
+        }
+
+        #app1, body, html {
+            height: 100%
+        }</style>
+    <style type="text/css">.outer[_v-578d3312] {
+        position: relative;
+        color: #fff;
+        text-align: center;
+        overflow: hidden
+    }
+
+    .blur[_v-578d3312] {
+        -webkit-filter: blur(80px);
+        -moz-filter: blur(80px);
+        -ms-filter: blur(80px);
+        filter: blur(80px)
+    }
+
+    .bg[_v-578d3312] {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        z-index: -1;
+        transform: translateX(-50%);
+        -webkit-transform: translateX(-50%)
+    }
+
+    .black-mask[_v-578d3312] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: .85;
+        z-index: -1;
+        background-color: #000;
+        max-width: 100%;
+        display: block;
+        margin: 0
+    }
+
+    .content[_v-578d3312] {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        display: -webkit-flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center
+    }
+
+    .content-inner[_v-578d3312] {
+        text-align: center;
+        width: 100%;
+        font-size: .18rem;
+        letter-spacing: 1px;
+        margin-top: -10px
+    }
+
+    .btn[_v-578d3312] {
+        font-size: .16rem;
+        width: 3.15rem;
+        height: .48rem;
+        line-height: .48rem;
+        display: inline-block;
+        margin-top: .36rem;
+        border-radius: 3px;
+        border: 2px solid #fff;
+        text-decoration: none;
+        color: inherit
+    }
+    </style>
+    <meta name="wxm:timeline_title" content="快来听蔡康永老师上历史课！">
+    <meta name="wxm:appmessage_title" content="快来听蔡康永老师上历史课！">
+    <meta name="wxm:appmessage_desc" content="王者荣耀首档文化栏目《王者历史课》开课啦">
+    <meta name="wxm:img_url"
+          content="http://wxsnsdythumb.video.qq.com/109/20250/snsvideodownload?filekey=3026020101041f301d02016d040253480410b0ceb50eb7e68ed7374463c7bf2b0cd3020253460400&amp;hy=SH&amp;storeid=32303137303832343134343831303030303238613936313336666664393330343561333230613030303030303664&amp;bizid=1023">
+    <meta name="wxm:link" content="https://mp.weixin.qq.com/tp/ad_detail_info?page_key=4dc02e028ad115c9e82876873360f6ffca140532b2cbfc65c49c25d1c56370a2421641251192f060ad53ed317804b078#wechat_redirect">
+</head>
+<body class="template" ontouchstart="">
+<div class="outer" _v-578d3312="" style="height:100%" id="container">
+    <img class="bg blur" alt="" style="max-height: 100%; display: block; margin: 0rem" _v-578d3312="" src="http://wxsnsdythumb.video.qq.com/109/20250/snsvideodownload?filekey=3026020101041f301d02016d040253480410b0ceb50eb7e68ed7374463c7bf2b0cd3020253460400&amp;hy=SH&amp;storeid=32303137303832343134343831303030303238613936313336666664393330343561333230613030303030303664&amp;bizid=1023">
+    <div class="black-mask" _v-578d3312=""></div>
+    <img alt="" style="max-width: 100%; display: block; margin: 0rem" _v-578d3312=""
+         src="http://wxsnsdythumb.video.qq.com/109/20250/snsvideodownload?filekey=3026020101041f301d02016d040253480410b0ceb50eb7e68ed7374463c7bf2b0cd3020253460400&amp;hy=SH&amp;storeid=32303137303832343134343831303030303238613936313336666664393330343561333230613030303030303664&amp;bizid=1023">
+</div>
+<script mustcache="">var PageData = {
+            "adCanvasInfo": {
+                "PageList": {
+                    "Page": [{
+                        "backgroundColor": "#3d4c99",
+                        "backgroundCover": null,
+                        "componentItemList": {
+                            "componentItem": [{
+                                "componentIdx": "0",
+                                "expand": "0",
+                                "fileSize": "1367971",
+                                "id": "11852874_11852875_61",
+                                "initHeight": "360",
+                                "initWidth": "640",
+                                "name": "页面顶部",
+                                "paddingBottom": "0",
+                                "paddingLeft": "0",
+                                "paddingRight": "0",
+                                "paddingTop": "0",
+                                "pageIdx": "0",
+                                "sightDisplayHeight": "421",
+                                "sightDisplayType": "0",
+                                "sightDisplayWidth": "750",
+                                "sightThumbUrl": "http://wxsnsdythumb.video.qq.com/109/20250/snsvideodownload?filekey=3026020101041f301d02016d040253480410b0ceb50eb7e68ed7374463c7bf2b0cd3020253460400&hy=SH&storeid=32303137303832343134343831303030303238613936313336666664393330343561333230613030303030303664&bizid=1023",
+                                "sightVideoUrl": "http://wxsnsdy.video.qq.com/105/20210/snsdyvideodownload?m=f2322b58898513df2c8d18f7078d7e83&filekey=30270201010420301e020169040253480410f2322b58898513df2c8d18f7078d7e83020314dfa30400&hy=SH&storeid=32303137303832343134343831303030303330396438313336666664393330343561333230613030303030303639&bizid=1023",
+                                "type": "61",
+                                "widgetType": "top"
+                            }, {
+                                "componentIdx": "1",
+                                "expand": "0",
+                                "fileSize": "306841",
+                                "id": "11852874_11852876_41",
+                                "imageHeight": "912",
+                                "imageWidth": "750",
+                                "name": "顶部图",
+                                "paddingBottom": "0",
+                                "paddingLeft": "0",
+                                "paddingRight": "0",
+                                "paddingTop": "0",
+                                "pageIdx": "0",
+                                "pureImageUrl": "http://wxsnsdythumb.video.qq.com/109/20204/snsvideodownload?filekey=30270201010420301e02016d0402534804109dcacf6ec94f2bd36f6070f299247cdf020304ae990400&hy=SH&storeid=32303137303832343032353531303030303132623934313336666664393336663561333230613030303030303664&bizid=1023",
+                                "showAdvanced": "0",
+                                "type": "41",
+                                "widgetType": "image"
+                            }]
+                        }
+                    }, {
+                        "backgroundColor": "#3d4c99",
+                        "backgroundCover": null,
+                        "componentItemList": {
+                            "componentItem": {
+                                "componentIdx": "0",
+                                "expand": "0",
+                                "fileSize": "7857222",
+                                "id": "11852874_11852877_62",
+                                "isFullScreen": "1",
+                                "name": "全屏长视频",
+                                "paddingBottom": "0",
+                                "paddingLeft": "0",
+                                "paddingRight": "0",
+                                "paddingTop": "0",
+                                "pageIdx": "1",
+                                "showAdvanced": "0",
+                                "streamDisplayHeight": "1334",
+                                "streamDisplayType": "1",
+                                "streamDisplayWidth": "750",
+                                "streamVideoThumb": "http://wxsnsdythumb.video.qq.com/109/20250/snsvideodownload?filekey=30270201010420301e02016d04025348041080c2d11aac74260e3b6df6aa340798a0020301ef060400&hy=SH&storeid=32303137303832343134353930303030303239316262313336666664393330343561333230613030303030303664&bizid=1023",
+                                "streamVideoUrl": "http://wxsnsdy.video.qq.com/105/20210/snsdyvideodownload?m=93466c904acca6744f6c53229adafacd&filekey=30270201010420301e02016904025348041093466c904acca6744f6c53229adafacd020377e4460400&hy=SH&storeid=32303137303832343134353930303030303234353432313336666664393330343561333230613030303030303639&bizid=1023",
+                                "type": "62",
+                                "widgetType": "video"
+                            }
+                        }
+                    }, {
+                        "backgroundColor": "#3d4c99",
+                        "backgroundCover": null,
+                        "componentItemList": {
+                            "componentItem": [{
+                                "componentGroupList": {
+                                    "componentGroup": [{
+                                        "componentItem": {
+                                            "fileSize": "304132",
+                                            "id": "11852874_11852878_41",
+                                            "imageHeight": "1125",
+                                            "imageWidth": "750",
+                                            "paddingBottom": "0",
+                                            "paddingLeft": "0",
+                                            "paddingRight": "0",
+                                            "paddingTop": "0",
+                                            "pureImageUrl": "http://wxsnsdythumb.video.qq.com/109/20204/snsvideodownload?filekey=30270201010420301e02016d040253480410b1fcf2a5686448f1b8b56d6103deade2020304a4040400&hy=SH&storeid=32303137303832343032353633383030306338343862313336666664393331343630333230613030303030303664&bizid=1023",
+                                            "type": "41"
+                                        }
+                                    }, {
+                                        "componentItem": {
+                                            "fileSize": "303614",
+                                            "id": "11852874_11852879_41",
+                                            "imageHeight": "1125",
+                                            "imageWidth": "750",
+                                            "paddingBottom": "0",
+                                            "paddingLeft": "0",
+                                            "paddingRight": "0",
+                                            "paddingTop": "0",
+                                            "pureImageUrl": "http://wxsnsdythumb.video.qq.com/109/20204/snsvideodownload?filekey=30270201010420301e02016d040253480410101237351be3c64a2b24d5aeeb5fb92e020304a1fe0400&hy=SH&storeid=32303137303832343135323134313030303263646662313336666664393336663561333230613030303030303664&bizid=1023",
+                                            "type": "41"
+                                        }
+                                    }, {
+                                        "componentItem": {
+                                            "fileSize": "302906",
+                                            "id": "11852874_11852880_41",
+                                            "imageHeight": "1125",
+                                            "imageWidth": "750",
+                                            "paddingBottom": "0",
+                                            "paddingLeft": "0",
+                                            "paddingRight": "0",
+                                            "paddingTop": "0",
+                                            "pureImageUrl": "http://wxsnsdythumb.video.qq.com/109/20204/snsvideodownload?filekey=30270201010420301e02016d0402534804100731051d032269337d150bd363fb7a190203049f3a0400&hy=SH&storeid=32303137303832343135323134373030303665306139313336666664393337303561333230613030303030303664&bizid=1023",
+                                            "type": "41"
+                                        }
+                                    }, {
+                                        "componentItem": {
+                                            "fileSize": "303035",
+                                            "id": "11852874_11852881_41",
+                                            "imageHeight": "1125",
+                                            "imageWidth": "750",
+                                            "paddingBottom": "0",
+                                            "paddingLeft": "0",
+                                            "paddingRight": "0",
+                                            "paddingTop": "0",
+                                            "pureImageUrl": "http://wxsnsdythumb.video.qq.com/109/20204/snsvideodownload?filekey=30270201010420301e02016d040253480410c7cdf4d734edfc1a6b1a13e1023d677c0203049fbb0400&hy=SH&storeid=32303137303832343135323135303030303365393035313336666664393336663561333230613030303030303664&bizid=1023",
+                                            "type": "41"
+                                        }
+                                    }]
+                                },
+                                "componentIdx": "0",
+                                "expand": "0",
+                                "id": "11852874_11852882_101",
+                                "isFullScreen": "0",
+                                "name": "轮播图",
+                                "paddingBottom": "0",
+                                "paddingLeft": "0",
+                                "paddingRight": "0",
+                                "paddingTop": "0",
+                                "pageCtrType": "1",
+                                "pageIdx": "2",
+                                "showAdvanced": "0",
+                                "type": "101",
+                                "widgetType": "image"
+                            }, {
+                                "componentIdx": "1",
+                                "expand": "0",
+                                "fileSize": "123753",
+                                "id": "11852874_11852883_41",
+                                "imageHeight": "209",
+                                "imageWidth": "750",
+                                "name": "轮播固定条图",
+                                "paddingBottom": "0",
+                                "paddingLeft": "0",
+                                "paddingRight": "0",
+                                "paddingTop": "0",
+                                "pageIdx": "2",
+                                "pureImageUrl": "http://wxsnsdythumb.video.qq.com/109/20204/snsvideodownload?filekey=30270201010420301e02016d040253480410f7b323239d6699e460153f081a0bb26c020301e3690400&hy=SH&storeid=32303137303832343032353635343030306338613038313336666664393336663561333230613030303030303664&bizid=1023",
+                                "showAdvanced": "0",
+                                "type": "41",
+                                "widgetType": "image"
+                            }]
+                        }
+                    }, {
+                        "backgroundColor": "#3d4c99",
+                        "backgroundCover": null,
+                        "componentItemList": {
+                            "componentItem": [{
+                                "componentIdx": "0",
+                                "expand": "0",
+                                "fileSize": "298209",
+                                "id": "11852874_11852884_41",
+                                "imageHeight": "1125",
+                                "imageWidth": "750",
+                                "name": "尾页大图",
+                                "paddingBottom": "0",
+                                "paddingLeft": "0",
+                                "paddingRight": "0",
+                                "paddingTop": "0",
+                                "pageIdx": "3",
+                                "pureImageUrl": "http://wxsnsdythumb.video.qq.com/109/20204/snsvideodownload?filekey=30270201010420301e02016d040253480410181e30f7150acf71838be3aa6a5eaeb60203048ce10400&hy=SH&storeid=32303137303832343032353731353030303931636239313336666664393336663561333230613030303030303664&bizid=1023",
+                                "showAdvanced": "0",
+                                "type": "41",
+                                "widgetType": "image"
+                            }, {
+                                "borderSize": "2",
+                                "btnBgColorTheme": "#ffc90d",
+                                "btnBorderColorTheme": "#3d4c99",
+                                "btnFontType": "1",
+                                "btnHeight": "80",
+                                "btnJumpUrl": "https://as.weixin.qq.com/cgi-bin/redirect?comp_id=11852885",
+                                "btnStyle": "1",
+                                "btnTitle": "马上开讲",
+                                "btnType": "0",
+                                "componentIdx": "1",
+                                "expand": "0",
+                                "fontColor": "#000000",
+                                "fontSize": "30",
+                                "id": "11852874_11852885_21",
+                                "name": "马上开讲",
+                                "origBtnJumpUrl": "http://v.qq.com/x/page/b0540tn4c8t.html?ADTAG=media.buy.beiyong3.20170822",
+                                "paddingBottom": "64",
+                                "paddingLeft": "185",
+                                "paddingRight": "185",
+                                "paddingTop": "50",
+                                "pageIdx": "3",
+                                "showAdvanced": "0",
+                                "subType": "0",
+                                "type": "21",
+                                "widgetType": "button"
+                            }]
+                        }
+                    }]
+                },
+                "basicRootFontSize": "1",
+                "basicWidth": "750",
+                "btnType": "1",
+                "canvasName": "王者原生-最终版-2",
+                "fileSize": "11167683",
+                "fromPageId": "1701596196",
+                "id": ["11852874", "11852808"],
+                "pageID": "1701596195",
+                "shareDesc": "王者荣耀首档文化栏目《王者历史课》开课啦",
+                "shareThumbUrl": "http://wxsnsdythumb.video.qq.com/109/20250/snsvideodownload?filekey=3026020101041f301d02016d040253480410b0ceb50eb7e68ed7374463c7bf2b0cd3020253460400&hy=SH&storeid=32303137303832343134343831303030303238613936313336666664393330343561333230613030303030303664&bizid=1023",
+                "shareTitle": "快来听蔡康永老师上历史课！",
+                "shareWebUrl": "https://mp.weixin.qq.com/tp/ad_detail_info?page_key=4dc02e028ad115c9e82876873360f6ffca140532b2cbfc65c49c25d1c56370a2a7dceb0e77af6c2ccf48a0c0ddc8b427",
+                "sizeType": "1",
+                "supportInfo": {"qid": null, "subType": "0"},
+                "top_type": "61",
+                "type": null,
+                "videoFileSize": "7857222"
+            },
+            "aid": "",
+            "app_id": "",
+            "app_img": "",
+            "appuin": "",
+            "auto": "",
+            "data": {"app_img": ""},
+            "engine": "",
+            "source": "",
+            "verify": 0
+        }
+        ;</script>
+<script src="//wximg.qq.com/wxp/libs/wxmoment/0.0.4/wxmoment.min.js"></script>
+<script src="//wximg.qq.com/wxp/canvas-luodiye/h5/static/mpa-luodiye-h5.60a4250bf96354151f4e.js"></script>
+<script type="text/javascript"
+        src="//wximg.qq.com/wxp/assets/template/dist/js/moment_canvas.53a8ae2cd397eb84824a.js"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
+//页面引入 Js 变量
 $this->registerJs($js,\yii\web\View::POS_END);
 
-刷新按钮
+//刷新按钮
 Html::button('刷新数据', ['type'=>'button','id'=>'data-fresh', 'title'=>'测试刷新', 'class'=>'btn btn-success']).' '.
 gridview客户端更新脚本：
 $("#user-manage-list").yiiGridView("applyFilter");
@@ -11,17 +12,8 @@ $("#contact-modal").modal("hide");
 自带弹框组件属性：
 data-toggle="modal" data-target="#contact-modal"
 
-
-        $modifyPwdLog->remark5 = strval($borrowRecord->borrow_fund_id);
-        $modifyPwdLog->remark6 = $billRecord->bill_id;
-        $modifyPwdLog->remark7 = strval($billInfo->account_info_id);
-        $modifyPwdLog->remark9 = sprintf('%s用账户余额还了借款【%s】，第【%s】期',$user->nick_name,$params['pay_money'],$billRecord->cur_stage);
-
-
-
 js获取gridview的checkbox列的所有值的脚本：
 var keys = $("#wish_search_list").yiiGridView("getSelectedRows");
-
 
 artdialog提示函数：
 artDialog.tips = function (content, time) {
@@ -178,3 +170,4 @@ echo \yii\bootstrap\Alert::widget([
 
     //错误日志
     \Yii::getLogger()->log('client_id:'.$client->client_id,Logger::LEVEL_ERROR);
+    \Yii::error();
