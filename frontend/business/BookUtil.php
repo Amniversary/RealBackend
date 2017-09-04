@@ -42,6 +42,7 @@ class BookUtil
             \Yii::error($error.' :'.var_export($model->getErrors(),true));
             return false;
         }
+
         return true;
     }
 

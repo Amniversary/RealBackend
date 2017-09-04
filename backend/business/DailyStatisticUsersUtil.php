@@ -9,80 +9,102 @@
 namespace backend\business;
 
 
-use backend\components\ExitUtil;
-use common\components\QrCodeUtil;
 use common\components\SystemParamsUtil;
-use common\models\AccountInfo;
 use common\models\Client;
+use common\models\FansStatistics;
 use common\models\SystemParams;
-use common\models\UserDailyStatistic;
 use yii\base\Exception;
 use yii\db\Query;
 use yii\log\Logger;
 
-class DailyStatisticUsersUtil {
-
-    public static function GetDailyFansNum($rd){
-        $query = (new Query())
-            ->select(['al.record_id','ifnull(new_user,0) as new_user','ifnull(net_user,0) as net_user','ifnull(count_user,0) as count_user'])
-            ->from('wc_authorization_list al')
-            ->innerJoin('wc_statistics_count sc','al.record_id = sc.app_id and al.record_id = :rd',[':rd'=>$rd])
-            ->leftJoin('wc_fans_statistics fs','al.record_id = fs.app_id and fs.statistics_date =:date',[':date'=>date('Y-m-d')])->one();
-        return $query;
-    }
+class DailyStatisticUsersUtil
+{
     /**
-     * 当日统计人数
+     * 根据AppId 获取今日昨日粉丝24小时统计
+     * @param $appId
+     * @return mixed
+     */
+    public static function getDailyFansNum($appId, $day = 0)
+    {
+        $db = \Yii::$app->db;
+        $sql = 'select sum(net_user) as net_user, sum(new_user) as new_user, sum(cancel_user) as cancel_user, statistics_date
+from wc_fans_date where create_time = :date ';
+        if ($appId != 0) {
+            $sql .= sprintf(' and app_id = %d', $appId);
+        }
+        $sql .= ' group by statistics_date';
+        $sql .= ' order by statistics_date asc';
+        $time = $day == 0 ? date('Y-m-d') : date('Y-m-d', strtotime("-$day day"));
+        $rst = $db->createCommand($sql, [':date' => $time])->queryAll();
+        if (empty($rst)) {
+            $rst[] = ['name' => 'empty'];
+        }
+        $net_user = [];
+        $new_user = [];
+        $cancel_user = [];
+        $date = [];
+        for ($i = 0; $i < 24; $i++) {
+            foreach ($rst as $item) {
+                if (!isset($item['statistics_date']) || $item['statistics_date'] != $i) {
+                    $net_user[$i] = 0;
+                    $new_user[$i] = 0;
+                    $cancel_user[$i] = 0;
+                } else {
+                    $net_user[$i] = intval($item['net_user']);
+                    $new_user[$i] = intval($item['new_user']);
+                    $cancel_user[$i] = intval($item['cancel_user']);
+                }
+            }
+            $date[] = $i. ' 时';
+        }
+        $rstData = [
+            'net_user' => ['name' => '净增用户', 'data' => $net_user],
+            'new_user' => ['name' => '新增用户', 'data' => $new_user],
+            'cancel_user' => ['name' => '减少用户', 'data' => $cancel_user],
+            'date' => $date
+        ];
+        return $rstData;
+    }
+
+    /**
+     * 根据AppId 获取前7天数据信息
+     * @param $appId
      * @return array
      */
-    public static function StatisticDailyUsers()
+    public static function getFansNum($appId, $day = 7)
     {
-        $dailyUsers = [];
-        $condition = 'DATE_FORMAT(create_time,\'%Y-%m-%d\') = DATE_FORMAT(NOW(),\'%Y-%m-%d\')';
-        $query =new Query();
-        $sql = $query
-            ->select(['COUNT(*) as usernum','DATE_FORMAT(create_time,\'%Y-%m-%d\') as dailytime'])
-            ->from(Client::tableName())
-            ->where($condition)
-            ->all();
-        foreach($sql as $s)
-        {
-            $dailyUsers[$s['dailytime']] = $s['usernum'];
+        $db = \Yii::$app->db;
+        $sql = 'select sum(new_user) as new_user, sum(cancel_user) as cancel_user, sum(net_user) as net_user, sum(total_user + net_user) as total_user, statistics_date
+        from wc_fans_statistics where statistics_date BETWEEN :start and :end';
+        if ($appId != 0) {
+            $sql .= sprintf(' and app_id = %d', $appId);
         }
-        return $dailyUsers;
-    }
-
-
-    /**
-     * 查询当天前13条记录
-     * @return array
-     */
-    public static function GetStatisticRecord()
-    {
-        $condition = 'DATE_FORMAT(data_time,\'%Y-%m-%d\') < DATE_FORMAT(NOW(),\'%Y-%m-%d\')';
-        $query =new Query();
-        $sql = $query
-            ->select(['user_day_num','data_time'])
-            ->from(UserDailyStatistic::tableName())
-            ->where($condition)
-            ->orderBy('data_time desc')
-            ->limit(13)
-            ->all();
-        $record = [];
-        foreach($sql as $s)
-        {
-            $record[$s['data_time']] =  $s['user_day_num'];
+        $sql .= ' group by statistics_date';
+        $rst = $db->createCommand($sql, [
+            ':start' => date('Y-m-d', strtotime("-$day day")),
+            ':end' => date('Y-m-d'),
+        ])->queryAll();
+        $net_user = [];
+        $cancel_user = [];
+        $new_user = [];
+        $total_user = [];
+        $date = [];
+        foreach ($rst as $item) {
+            $net_user[] = intval($item['net_user']);
+            $cancel_user[] = intval($item['cancel_user']);
+            $new_user[] = intval($item['new_user']);
+            $total_user[] = intval($item['total_user']);
+            $date[] = $item['statistics_date'];
         }
-        return $record;
-    }
 
-    /**
-     * 获取注册总人数
-     * @return number
-     */
-    public static function StatisticsSumUser()
-    {
-        list($time,$sum) = MonthStatisticUsersUtil::MergeMonthRecord();
-        return array_sum($sum);
+        $data = [
+            'net_user' => ['name' => '净增用户', 'data' => $net_user],
+            'cancel_user' => ['name' => '减少用户', 'data' => $cancel_user],
+            'new_user' => ['name' => '新增用户', 'data' => $new_user],
+            'total_user' => ['name' => '总用户', 'data' => $total_user],
+            'date' => $date
+        ];
+        return $data;
     }
 
 
@@ -97,51 +119,42 @@ class DailyStatisticUsersUtil {
         $daily_time = [];
         $vs = [];
         $date = date('Y-m-d');
-        for($i = 0; $i < 14 ; $i ++)
-        {
-            $time[] = date('Y-m-d',strtotime("-$i day"));
+        for ($i = 0; $i < 14; $i++) {
+            $time[] = date('Y-m-d', strtotime("-$i day"));
         }
         sort($time);
-        if(array_key_exists('',$dailys)){
+        if (array_key_exists('', $dailys)) {
             $daily_temp[$date] = 0;
-            $merges = array_merge($recodes,$daily_temp);
+            $merges = array_merge($recodes, $daily_temp);
             ksort($merges);
-            foreach($merges as $m => $n)
-            {
-                $daily_time[$m] = intval($n) ;
+            foreach ($merges as $m => $n) {
+                $daily_time[$m] = intval($n);
             }
             //var_dump(array_key_exists('2016-03-31',$dailytime));
-            for($j = 0; $j < 14; $j++){
-                $Exist = array_key_exists($time[$j],$daily_time);
-                if($Exist)
-                {
-                    $vs[]= $daily_time[$time[$j]];
-                }
-                else
-                {
+            for ($j = 0; $j < 14; $j++) {
+                $Exist = array_key_exists($time[$j], $daily_time);
+                if ($Exist) {
+                    $vs[] = $daily_time[$time[$j]];
+                } else {
                     $vs[] = 0;
                 }
             }
-            return [$time,$vs];
+            return [$time, $vs];
         }
-        $merges = array_merge($recodes,$dailys);
+        $merges = array_merge($recodes, $dailys);
         ksort($merges);
-        foreach($merges as $m => $n )
-        {
+        foreach ($merges as $m => $n) {
             $daily_time[$m] = intval($n);
         }
-        for($j = 0; $j < 14; $j++){
-            $Exist = array_key_exists($time[$j],$daily_time);
-            if($Exist)
-            {
-                $vs[]= $daily_time[$time[$j]];
-            }
-            else
-            {
+        for ($j = 0; $j < 14; $j++) {
+            $Exist = array_key_exists($time[$j], $daily_time);
+            if ($Exist) {
+                $vs[] = $daily_time[$time[$j]];
+            } else {
                 $vs[] = 0;
             }
         }
-        return [$time,$vs];
+        return [$time, $vs];
     }
 
     /**
@@ -151,82 +164,54 @@ class DailyStatisticUsersUtil {
      * @return bool
      * @throws \yii\db\Exception
      */
-    public static function StatisticDailyWord(&$timenum,&$error)
+    public static function StatisticDailyWord(&$timenum, &$error)
     {
-        $startime = SystemParamsUtil::GetSystemParam('statistic_day_users_date',true);//获取初始时间
-        $createtime = date('Y-m-d').' 00:00:00'; //获取用户创建时间
+        $startime = SystemParamsUtil::GetSystemParam('statistic_day_users_date', true);//获取初始时间
+        $createtime = date('Y-m-d') . ' 00:00:00'; //获取用户创建时间
 
         $condition = 'create_time < :et AND create_time >= :startime';
-        $query =new Query();
+        $query = new Query();
         $sql = $query
-            ->select(['date_format(create_time,\'%Y-%m-%d\') as account_time','count(*) as usernum'])
+            ->select(['date_format(create_time,\'%Y-%m-%d\') as account_time', 'count(*) as usernum'])
             ->from(Client::tableName())
-            ->where($condition,[':startime'=>$startime,':et'=>$createtime])
+            ->where($condition, [':startime' => $startime, ':et' => $createtime])
             ->groupBy('date_format(create_time,\'%Y-%m-%d\') ASC')
             ->all();
         $timenum = 0;
-        if(count($sql) > 0)
-        {
+        if (count($sql) > 0) {
             $trans = \Yii::$app->db->beginTransaction();
             try {
 
-                foreach ($sql as $num)
-                {
+                foreach ($sql as $num) {
                     $timenum++;
                     $model = new UserDailyStatistic();
                     $model->data_time = $num['account_time'];
                     $model->user_day_num = $num['usernum'];
 
-                    if (!DailyStatisticUsersUtil::Save($model, $error))
-                    {
+                    if (!DailyStatisticUsersUtil::Save($model, $error)) {
                         throw new Exception($error);
                     }
 
                 }
 
                 $trans->commit();
-            }
-            catch (Exception $e)
-            {
+            } catch (Exception $e) {
                 $trans->rollBack();
                 $error = $e->getMessage();
                 return false;
             }
         }
 
-        $revamp = SystemParams::find()->where(['code'=>'statistic_day_users_date'])->one();
+        $revamp = SystemParams::find()->where(['code' => 'statistic_day_users_date'])->one();
         $revamp->value2 = $createtime;
-        if(!$revamp->save()){
+        if (!$revamp->save()) {
             $error = '更新日统计初始时间失败';
-            \Yii::getLogger()->log($error . ':' . var_export($revamp->getErrors()),Logger::LEVEL_ERROR);
+            \Yii::getLogger()->log($error . ':' . var_export($revamp->getErrors()), Logger::LEVEL_ERROR);
             return false;
         }
         return true;
     }
 
-
-    /**
-     * 保存统计信息
-     * @param $model
-     * @param $error
-     * @return bool
-     */
-    public static function Save($model,&$error)
-    {
-
-        if (!$model instanceof UserDailyStatistic)
-        {
-            $error = '不是统计信息记录';
-            return false;
-        }
-        if (!$model->save())
-        {
-            $error = '保存统计信息失败';
-            \Yii::getLogger()->log($error . ' :' . var_export($model->getErrors(), true), Logger::LEVEL_ERROR);
-            return false;
-        }
-        return true;
-    }
 
     /**
      * 获取首页公众号统计信息
@@ -237,8 +222,8 @@ class DailyStatisticUsersUtil {
         $sql = 'select SUM(count_user) as count,SUM(cumulate_user) as cumulate_user from `wc_statistics_count`';
         $rst = \Yii::$app->db->createCommand($sql)->queryOne();
         $count = 'select ifnull(sum(new_user),0) as new_user, ifnull(sum(net_user),0) as net_user from wc_fans_statistics WHERE statistics_date = :date';
-        $res =\Yii::$app->db->createCommand($count,[':date'=>date('Y-m-d')])->queryOne();
-        $arr = array_merge($rst,$res);
+        $res = \Yii::$app->db->createCommand($count, [':date' => date('Y-m-d')])->queryOne();
+        $arr = array_merge($rst, $res);
         return $arr;
     }
 }

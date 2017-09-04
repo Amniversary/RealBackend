@@ -35,12 +35,12 @@ class  LoginForm extends Model
         ];
     }
 
-    public function  attributeLabels()
+    public function attributeLabels()
     {
         return [
-            'username'=>'用户名',
-            'password'=>'密码',
-            'rememberMe'=>'记住我'
+            'username' => '用户名',
+            'password' => '密码',
+            'rememberMe' => '记住我'
         ];
     }
 
@@ -56,16 +56,18 @@ class  LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             $backend = User::findByBackendUsername($user->backend_user_id, 1);
-            if(empty($user) || empty($backend)){
+            if (empty($user)) {
                 $this->addError($attribute, '该账号不存在');
                 return;
             }
-
-            if(isset($user) && $user->status === 0) {
-                $this->addError($attribute,'您已被管理员禁用');
+            if (empty($backend)) {
+                $this->addError($attribute, '该账号没有登录权限');
                 return;
             }
-
+            if (isset($user) && $user->status === 0) {
+                $this->addError($attribute, '您已被管理员禁用');
+                return;
+            }
             if (!$user->validatePassword($this->password)) {
                 $this->addError($attribute, '用户名或密码错误');
                 return;
@@ -84,19 +86,19 @@ class  LoginForm extends Model
         if ($this->validate()) {
             //TODO：登录成功后保存权限到memcache
             $user_id = $this->_user->backend_user_id;
-            $key = 'user_menu_'.strval($user_id);
+            $key = 'user_menu_' . strval($user_id);
             $cnt = \Yii::$app->cache->get($key);
-            if($cnt === false || empty(json_decode($cnt,true))) {
-                $phpLock = new PhpLock('get_user_menu_'.$user_id);
+            if ($cnt === false || empty(json_decode($cnt, true))) {
+                $phpLock = new PhpLock('get_user_menu_' . $user_id);
                 $phpLock->lock();
                 $cnt = \Yii::$app->cache->get($key);
-                if($cnt === false || empty(json_decode($cnt,true))) {
+                if ($cnt === false || empty(json_decode($cnt, true))) {
                     $innerMenu = [];
-                    $menus = UserMenuUtil::GetUserMenu($user_id,0,$innerMenu);
+                    $menus = UserMenuUtil::GetUserMenu($user_id, 0, $innerMenu);
                     $menuStr = json_encode($menus);
                     $powerStr = json_encode($innerMenu);
-                    \Yii::$app->cache->set($key,$menuStr);
-                    $key_power = 'user_power_'.$user_id;
+                    \Yii::$app->cache->set($key, $menuStr);
+                    $key_power = 'user_power_' . $user_id;
                     \Yii::$app->cache->set($key_power, $powerStr);
                 }
                 $phpLock->unlock();
@@ -105,7 +107,7 @@ class  LoginForm extends Model
             $this->_user->save();
 
             //TODO: session系统头像
-            \Yii::$app->session['pic_'.$user_id] = empty($this->_user->pic)?'http://oss.aliyuncs.com/meiyuan/wish_type/default.png':$this->_user->pic;
+            \Yii::$app->session['pic_' . $user_id] = empty($this->_user->pic) ? 'http://oss.aliyuncs.com/meiyuan/wish_type/default.png' : $this->_user->pic;
             return Yii::$app->user->login($this->_user, $this->rememberMe ? 3600 * 24 * 30 : 0);
         } else {
             return false;

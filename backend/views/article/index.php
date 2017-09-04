@@ -9,6 +9,18 @@
         position: relative;
         padding: 1px 15px 0 15px;
     }
+    .btn_check_all
+     {
+         width: 25px;
+         height: 25px;
+         background-color: #fff;
+         color: #008d4c;
+         border: 1px solid;
+         border-radius: 3px;
+         vertical-align: middle;
+         text-align: center;
+         /*font-weight: bold;*/
+     }
 </style>
 <?php
 use kartik\grid\GridView;
@@ -61,6 +73,11 @@ $gridColumns = [
             return $len > 20 ? mb_substr($model->title, 0, 15) . '...' : $model->title;
         },
         'filter' => false
+    ],
+    [
+        'attribute'=>'order_no',
+        'vAlign'=>'middle',
+        'width'=>'60px'
     ],
     [
         'attribute' => 'target_user',
@@ -150,9 +167,7 @@ echo GridView::widget([
     'containerOptions' => ['style' => 'overflow: auto;height:750px;font-size:14px;'],
     'beforeHeader' => [['options' => ['class' => 'skip-export']]],
     'toolbar' => [
-        [
-            'content' => '',
-        ],
+
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
     ],

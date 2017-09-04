@@ -7,12 +7,12 @@ $this->title = 'Real数据平台';
 ?>
 <style>
     .content-header{position: relative;  padding: 1px 15px 0 15px;}
-    #w0{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}
-    #w1{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}
-    #w2{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}
-    #w3{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}
-    #w4{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}
-    #w5{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}
+    /*#w0{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}*/
+    /*#w1{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}*/
+    /*#w2{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}*/
+    /*#w3{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}*/
+    /*#w4{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}*/
+    /*#w5{ width:31%; display: inline-block;margin-right: 2% ;margin-bottom:10px;}*/
 </style>
 
 <div class="row">
@@ -32,7 +32,6 @@ $this->title = 'Real数据平台';
         <div class="small-box bg-green">
             <div class="inner">
                 <h3><?= $model['net_user'] ?></h3>
-
                 <p>今日净增粉丝</p>
             </div>
             <div class="icon">

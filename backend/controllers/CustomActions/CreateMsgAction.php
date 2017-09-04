@@ -41,7 +41,7 @@ class CreateMsgAction extends Action
         if($model->load($load) && $model->save()){
             return $this->controller->redirect(['custom_msg','menu_id'=>$menu_id]);
         }else{
-            return $this->controller->render('createsonmsg',[
+            return $this->controller->render('createmsg',[
                 'model'=>$model,
                 'cache'=>$Cache,
                 'menu_id'=>$menu_id

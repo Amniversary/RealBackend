@@ -209,7 +209,6 @@ class User extends ActiveRecord implements IdentityInterface
             \Yii::error('password:' . $password . '; soucePwd:' . $soucePwd);
             return false;
         }
-
         return Yii::$app->security->validatePassword($password, $this->pwd_hash);
     }
 

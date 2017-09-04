@@ -6,7 +6,7 @@
  * Time: 上午10:45
  */
 
-namespace frontend\api\version;
+namespace frontend\api\version\BooksBackend;
 
 
 use frontend\api\IApiExecute;
@@ -22,7 +22,7 @@ class GetArticle implements IApiExecute
         }
         $id = $data['data']['article_id'];
         $article = ArticlesUtil::GetArticleById($id);
-        if(empty($article)) {
+        if (empty($article)) {
             $error = '获取章节失败, 章节已删除或不存在';
             return false;
         }

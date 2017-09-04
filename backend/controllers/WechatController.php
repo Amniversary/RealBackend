@@ -27,14 +27,15 @@ class WechatController extends Controller
     public $error = '公众号授权异常：';
 
 
-    public function actionTest(){
-        $postData['query_auth_code'] =  111;
+    public function actionTest()
+    {
+        $postData['query_auth_code'] = 111;
         $postData['openid'] = 'dsadsadsadas';
         $url = 'http://wxmp.gatao.cn/wechat/index';
         print_r($postData);
         echo "<br />";
         print_r(json_encode($postData));
-        UsualFunForNetWorkHelper::HttpsPost($url,$postData);
+        UsualFunForNetWorkHelper::HttpsPost($url, $postData);
         echo "ok";
     }
 
@@ -48,21 +49,21 @@ class WechatController extends Controller
         $openid = $post['openid'];
         //\Yii::error('POST::'.var_export($post,true));
         $WeChat = new WeChatUtil();
-        $WeChat->getQueryAuth($query_auth_code,$rst,$error);
+        $WeChat->getQueryAuth($query_auth_code, $rst, $error);
         //\Yii::error('AUTH_INFO::'.var_export($rst['authorization_info'],true));
         $AuthInfo = $rst['authorization_info'];
-        $content = $query_auth_code.'_from_api';
+        $content = $query_auth_code . '_from_api';
         $url = sprintf('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s',
             $AuthInfo['authorizer_access_token']);
         $data = [
-            'touser'=>$openid,
-            'msgtype'=>'text',
-            'text'=>['content'=>$content]
+            'touser' => $openid,
+            'msgtype' => 'text',
+            'text' => ['content' => $content]
         ];
         //\Yii::error('curlData::'.var_export($data,true));
         $json = json_encode($data);
-        $rst = UsualFunForNetWorkHelper::HttpsPost($url,$json);
-        \Yii::error('全网回调：'.var_export($rst,true));
+        $rst = UsualFunForNetWorkHelper::HttpsPost($url, $json);
+        \Yii::error('全网回调：' . var_export($rst, true));
     }
 
     /**
@@ -75,8 +76,7 @@ class WechatController extends Controller
         $data = $WeChat->decryptMsg;
         $data['appid'] = $WeChat->AppId;
         $this->SaveUserUpdate($data['FromUserName'], $WeChat->AppId);
-        switch ($WeChat->MsgType)
-        {
+        switch ($WeChat->MsgType) {
             case 'text':
                 $resultXml = $Receive->Text($data);
                 break;
@@ -103,10 +103,10 @@ class WechatController extends Controller
                 break;
         }
 
-        if($resultXml == null) return null;
-        if(!$WeChat->encryptMsg($resultXml,$encryptMsg)){
+        if ($resultXml == null) return null;
+        if (!$WeChat->encryptMsg($resultXml, $encryptMsg)) {
             $errMsg = $WeChat->getErrorMsg($WeChat->errorCode);
-            \Yii::error('errMsg : '. $errMsg);
+            \Yii::error('errMsg : ' . $errMsg);
             return null;
         }
         //\Yii::error('encrypt:'.$resultXml);
@@ -120,31 +120,31 @@ class WechatController extends Controller
     public function actionCallbackurl()
     {
         $data = $_REQUEST;
-        if(empty($data['auth_code'])){
-            \Yii::error('auth_code is empty :' . var_export($data,true));
-            throw new HttpException(500,'获取auth_code失败，auth_code为空');
+        if (empty($data['auth_code'])) {
+            \Yii::error('auth_code is empty :' . var_export($data, true));
+            throw new HttpException(500, '获取auth_code失败，auth_code为空');
         }
         $WeChat = new WeChatUtil();
         //TODO: 获取授权公众号的授权数据
-        if(!$WeChat->getQueryAuth($data['auth_code'],$res,$error)){
-            throw new HttpException(500,$error);
+        if (!$WeChat->getQueryAuth($data['auth_code'], $res, $error)) {
+            throw new HttpException(500, $error);
         }
         $AuthInfo = $res['authorization_info'];
-        empty($AuthInfo['authorizer_appid'])?ExitUtil::ExitWithMessage($this->error.'无法获取授权AppId'):'';
-        empty($AuthInfo['authorizer_access_token'])?ExitUtil::ExitWithMessage($this->error.'无法获取授权凭证access_token'):'';
-        empty($AuthInfo['authorizer_refresh_token'])?ExitUtil::ExitWithMessage($this->error.'无法获取授权刷新凭证refresh_token'):'';
+        empty($AuthInfo['authorizer_appid']) ? ExitUtil::ExitWithMessage($this->error . '无法获取授权AppId') : '';
+        empty($AuthInfo['authorizer_access_token']) ? ExitUtil::ExitWithMessage($this->error . '无法获取授权凭证access_token') : '';
+        empty($AuthInfo['authorizer_refresh_token']) ? ExitUtil::ExitWithMessage($this->error . '无法获取授权刷新凭证refresh_token') : '';
 
         //TODO: 获取授权人帐号基本信息和公众号的基本信息
-        if(!$WeChat->getAuthorizeInfo($AuthInfo['authorizer_appid'],$outInfo,$error)){
-            throw new HttpException(500,$error);
+        if (!$WeChat->getAuthorizeInfo($AuthInfo['authorizer_appid'], $outInfo, $error)) {
+            throw new HttpException(500, $error);
         }
         $authorizer_info = $outInfo['authorizer_info'];
 
         //TODO: 保存授权数据
         //TODO: 处理公众号粉丝数据统计
-        $transActions[] = new SaveAuthorizeInfoByTrans($AuthInfo,$authorizer_info);
-        if(!SaveByTransUtil::RewardSaveByTransaction($transActions,$error,$out)){
-            throw new HttpException(500,$error);
+        $transActions[] = new SaveAuthorizeInfoByTrans($AuthInfo, $authorizer_info);
+        if (!SaveByTransUtil::RewardSaveByTransaction($transActions, $error, $out)) {
+            throw new HttpException(500, $error);
         }
 
         return $this->redirect(['publiclist/index']);
@@ -157,19 +157,20 @@ class WechatController extends Controller
      */
     private function getRulesAppid($rules)
     {
-        $strstr = strstr($rules,"/");
-        $strrpos = strtok($strstr,"/");
+        $strstr = strstr($rules, "/");
+        $strrpos = strtok($strstr, "/");
         return $strrpos;
     }
 
-    private function SaveUserUpdate($Openid, $app_id){
+    private function SaveUserUpdate($Openid, $app_id)
+    {
         $auth = AuthorizerUtil::getAuthOne($app_id);
-        if(!isset($auth)) {
+        if (!isset($auth)) {
             return false;
         }
         $User = AuthorizerUtil::getUserForOpenId($Openid, $auth->record_id);
-        if(!isset($User) || empty($User)) {
-           return false;
+        if (!isset($User) || empty($User)) {
+            return false;
         }
         $User->update_time = date('Y-m-d H:i:s');
         $User->save();

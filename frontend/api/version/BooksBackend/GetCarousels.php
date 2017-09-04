@@ -6,7 +6,7 @@
  * Time: 下午2:18
  */
 
-namespace frontend\api\version;
+namespace frontend\api\version\BooksBackend;
 
 
 use frontend\api\IApiExecute;
@@ -14,7 +14,7 @@ use frontend\business\CarouselsUtil;
 
 class GetCarousels implements IApiExecute
 {
-    function execute_action($data, &$rstData,&$error, $extendData= [])
+    function execute_action($data, &$rstData, &$error, $extendData = [])
     {
         $rst = CarouselsUtil::GetCarouselInfo(false);
         $rst = empty($rst) ? [] : $rst;

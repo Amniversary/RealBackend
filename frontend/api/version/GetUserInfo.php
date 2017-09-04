@@ -20,20 +20,21 @@ class GetUserInfo implements IApiExecute
             $error = '用户名, 不能为空';
             return false;
         }
+        $rst = [];
         $username = explode(',', $data['data']['username']);
-        foreach($username as $item) {
-            if(empty($item))
+        foreach ($username as $item) {
+            if (empty($item))
                 continue;
-            $User = User::findOne(['username' =>$item]);
+            $User = User::findOne(['username' => $item]);
             if (empty($User)) {
-                $error = "{{$item}}".'该账号不存在';
+                $error = "{{$item}}" . '该账号不存在';
                 return false;
             }
             if (isset($User) && $User->status === 0) {
-                $error = $User->username.' 该账号已被管理员禁用';
+                $error = $User->username . ' 该账号已被管理员禁用';
                 return false;
             }
-            $data[] = [
+            $rst[] = [
                 'id' => intval($User->backend_user_id),
                 'username' => $User->username,
                 'email' => $User->email,
@@ -44,7 +45,7 @@ class GetUserInfo implements IApiExecute
             ];
         }
         $rstData['code'] = 0;
-        $rstData['data'] = $data;
+        $rstData['data'] = $rst;
         return true;
     }
 }

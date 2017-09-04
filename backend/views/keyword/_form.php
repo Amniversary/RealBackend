@@ -34,7 +34,7 @@ $data = [$cache['record_id']=>$cache['nick_name']];
         <?php $form = ActiveForm::begin(); ?>
         <?= $form->field($model,'app_id')->dropDownList($data,['disabled'=>'disabled','style'=>'width:200px']) ?>
         <hr>
-        <?= $form->field($model, 'rule')->dropDownList(['2'=>'模糊匹配','1'=>'精准匹配'],['style'=>'width:200px']) ?>
+        <?= $form->field($model, 'rule')->dropDownList(['2'=>'模糊匹配','1'=>'精准匹配','3'=>'图片匹配'],['style'=>'width:200px']) ?>
         <hr>
         <?= $form->field($model, 'keyword')->textInput() ?>
         <br/>
@@ -49,5 +49,19 @@ $data = [$cache['record_id']=>$cache['nick_name']];
     </div>
 <?php
 $js = '
+$(document).ready(function(){
+    if($("#keywords-rule option:selected").val() == 3) {
+        $(".field-keywords-keyword").hide();
+    }else{
+        $(".field-keywords-keyword").show();
+    }
+})
+$("#keywords-rule").change(function(){
+    if($("#keywords-rule option:selected").val() == 3) {
+        $(".field-keywords-keyword").hide();
+    }else{
+        $(".field-keywords-keyword").show();
+    }
+})
 ';
 $this->registerJs($js,\yii\web\View::POS_END);

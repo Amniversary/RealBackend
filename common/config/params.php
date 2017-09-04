@@ -8,5 +8,5 @@ return [
     'is_test'=>'1', //TODO: 测试环境
     'is_maintain'=>'0', //TODO: 维护状态
     'activity_key'=>'Wg9Y3PRwr8eNOwMToQqpSrGpv9uw0jlPyMbVVTuT',
-
+    'pwd_crypt_key' => 'uwjd7&#$!dhow1236547diyf',
 ];

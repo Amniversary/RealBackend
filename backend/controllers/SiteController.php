@@ -29,11 +29,11 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error','testok1','noprivilige','statisticapilog','nocache'],
+                        'actions' => ['login', 'error','testok1','noprivilige','statisticapilog','nocache','indexrecharge'],
                         'allow' => true
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'index', 'indexrecharge'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -92,6 +92,7 @@ class SiteController extends Controller
             'model'=>$rst
         ]);
     }
+
 
     public function actionLogin()
     {

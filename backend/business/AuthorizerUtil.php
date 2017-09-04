@@ -29,7 +29,23 @@ class AuthorizerUtil
         return AuthorizationList::findOne(['authorizer_appid' => $appid, 'status' => 1]);
     }
 
-
+    /**
+     * 获取所有公众号昵称
+     * @return mixed
+     */
+    public static function getAuthListName()
+    {
+        $query = (new Query())
+            ->select(['record_id', 'nick_name'])
+            ->from('wc_authorization_list')
+            ->where('verify_type_info in (0,3,4,5)')
+            ->all();
+        $data[0] = '总数据';
+        foreach($query as $item) {
+            $data[$item['record_id']] = $item['nick_name'];
+        }
+        return $data;
+    }
     /**
      * 根据记录Id 获取公众号信息
      * @param $record_id
@@ -128,6 +144,7 @@ class AuthorizerUtil
             ->where('app_id = :appid or key_id in (select key_id from wc_batch_keyword_list where app_id = :appid)', [':appid' => $app_id])->all();
         return $query;
     }
+
 
     /**
      * 保存消息数据模型

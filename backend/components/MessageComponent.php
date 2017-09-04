@@ -12,6 +12,7 @@ namespace backend\components;
 use backend\business\AuthorizerUtil;
 use backend\business\ImageUtil;
 use backend\business\JobUtil;
+use backend\business\KeywordUtil;
 use backend\business\ResourceUtil;
 use backend\business\SaveByTransUtil;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveAuthSignByTrans;
@@ -197,6 +198,48 @@ class MessageComponent
             }
         }
         return $data;
+    }
+
+    /**
+     * 获取回复图片自动回复消息
+     */
+    public function getKeyImageMessage()
+    {
+        if(AuthorizerUtil::isVerify($this->auth->verify_type_info)) {
+            $this->VerifyKeyWordImage();
+            return null;
+        } else {
+            $keyword = AuthorizerUtil::getKeyword($this->auth->record_id);
+            foreach($keyword as $item){
+                $touch = $item['rule'] == 3 ? true : false;
+                if($touch) {
+                    $this->key = $item['key_id'];
+                    $msg = $this->getKeywordMsg();
+                    $msgData = $this->getMessageItem($msg);
+                    break;
+                }
+            }
+            if(!$msgData) return null;
+            $rst = $msgData[0];
+        }
+        return $rst;
+    }
+
+    /**
+     * 检测是否认证公众号
+     */
+    public function VerifyKeyWordImage()
+    {
+        $keyword = AuthorizerUtil::getKeyword($this->auth->record_id);
+        foreach($keyword as $item){
+            $touch = $item['rule'] == 3 ? true : false;
+            if($touch){
+                $this->key = $item['key_id'];
+                $msg = $this->getKeywordMsg();
+                $msgData = $this->getMessageItem($msg);
+                $this->sendMessageCustom($msgData,$this->data['FromUserName']);
+            }
+        }
     }
 
     /**

@@ -10,6 +10,7 @@ namespace frontend\business;
 
 
 use common\models\Articles;
+use common\models\ArticleSystemParams;
 use yii\db\Query;
 
 class ArticlesUtil
@@ -21,9 +22,18 @@ class ArticlesUtil
      */
     public static function GetArticleById($id)
     {
-        return Articles::findOne(['id'=>$id]);
+        return Articles::findOne(['id' => $id]);
     }
 
+    /**
+     * 根据id 获取文章配置信息
+     * @param $id
+     * @return null|ArticleSystemParams
+     */
+    public static function GetArticleParamsById($id)
+    {
+        return ArticleSystemParams::findOne(['id' => $id]);
+    }
 
     /**
      * 保存文章记录信息
@@ -31,16 +41,16 @@ class ArticlesUtil
      * @param $error
      * @return bool
      */
-    public static function SaveArticles($model , &$error)
+    public static function SaveArticles($model, &$error)
     {
-        if(!($model instanceof Articles)) {
+        if (!($model instanceof Articles)) {
             $error = '不是文章记录对象';
             return false;
         }
 
-        if(!$model->save()) {
+        if (!$model->save()) {
             $error = '保存文章记录失败';
-            \Yii::error($error .' :'.var_export($model->getErrors(),true));
+            \Yii::error($error . ' :' . var_export($model->getErrors(), true));
             return false;
         }
 
@@ -59,12 +69,12 @@ class ArticlesUtil
         $query = (new Query())
             ->from('wc_articles')
             ->select(['id', 'title', 'pic', 'description', 'url', 'status', 'create_time', 'update_time'])
-            ->where(['book_id'=>$bookId])
+            ->where(['book_id' => $bookId])
             ->offset(($page_no - 1) * $page_size)
             ->limit($page_size)
             ->all();
 
-       return $query;
+        return $query;
     }
 
     /**
@@ -74,30 +84,42 @@ class ArticlesUtil
      */
     public static function GetArticleCount($bookId)
     {
-        return Articles::find()->select(['count(1) as num'])->where(['book_id'=>$bookId])->limit(1)->scalar();
+        return Articles::find()->select(['count(1) as num'])->where(['book_id' => $bookId])->limit(1)->scalar();
     }
 
     public static function GetWebArticleList($id, $page_no = 1, $page_size = 20)
     {
         $rst = Articles::find()->select(['id', 'title', 'pic', 'description', 'url'])
-            ->where(['book_id'=>$id,'status'=>1])
-            ->offset(($page_no - 1)* $page_size)
+            ->where(['book_id' => $id, 'status' => 1])
+            ->offset(($page_no - 1) * $page_size)
             ->limit($page_size)->all();
 
-        if(empty($rst)) {
+        if (empty($rst)) {
             $rst = [];
         }
         $data = [];
-        foreach($rst as $item) {
+        foreach ($rst as $item) {
             $data[] = [
-                'id'=>$item->id,
-                'title' =>$item->title,
-                'pic'=>$item->pic,
-                'description'=>$item->description,
-                'url'=>$item->url
+                'id' => $item->id,
+                'title' => $item->title,
+                'pic' => $item->pic,
+                'description' => $item->description,
+                'url' => $item->url
             ];
         }
-
         return $data;
+    }
+
+    public static function GetArticleMenu($system_id)
+    {
+        $params = sprintf('select carousel_id from wc_article_system_menu where system_id = %s', $system_id);
+        $condition = 'carousel_id in ('.$params.') and action_type = 2 and status = 1';
+        $query = (new Query())
+            ->select(['carousel_id', 'pic_url', 'url', 'description'])
+            ->from('wc_carousel')
+            ->where($condition)
+            ->all();
+
+        return $query;
     }
 }

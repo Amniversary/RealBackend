@@ -22,7 +22,11 @@ class CreateAction extends Action
         $Cache = WeChatUserUtil::getCacheInfo();
         $model->app_id = $Cache['record_id'];
         $model->global = 0;
-        if($model->load(\Yii::$app->request->post()) && $model->save()){
+        $post = \Yii::$app->request->post();
+        if($post['Keywords']['rule'] == 3){
+            $post['Keywords']['keyword'] = '图片匹配';
+        }
+        if($model->load($post) && $model->save()){
             return $this->controller->redirect('createkey');
         }else{
             return $this->controller->render('_form',[

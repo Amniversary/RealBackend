@@ -57,14 +57,19 @@ class RealtechLoginSearch extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             $backend_menu = User::findByBackendUsername($user->backend_user_id, $this->type);
-            if(empty($user) || empty($backend_menu)){
+            if(empty($user)){
                 $error = '该账号不存在';
+                return false;
+            }
+            if(empty($backend_menu)) {
+                $error = '该账号没有登录权限';
                 return false;
             }
             if(isset($user) && $user->status === 0) {
                 $error = '您已被管理员禁用';
                 return false;
             }
+
             if (!$user->validatePassword($this->password)) {
                 $error = '用户名或密码错误';
                 return false;

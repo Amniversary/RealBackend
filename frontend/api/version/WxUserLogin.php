@@ -27,7 +27,7 @@ class WxUserLogin implements IApiExecute
             return false;
         }
         $type = $data['data']['type'];
-        $post = $data['data']['RealtechLoginSearch'];
+        $post['RealtechLoginSearch'] = $data['data']['RealtechLoginSearch'];
         $model = new RealtechLoginSearch();
         if (!$model->load($post)) {
             \Yii::error('post::' . var_export($post, true));

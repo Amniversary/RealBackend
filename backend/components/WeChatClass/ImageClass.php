@@ -25,13 +25,11 @@ class ImageClass
 
     public function image()
     {
+        $content = '';
         $appId = $this->data['appid'];
         $openid = $this->data['FromUserName'];
         $auth = AuthorizerUtil::getAuthOne($appId);
         $accessToken = $auth->authorizer_access_token;
-        if(!in_array($auth->record_id,\Yii::$app->params['WxVipParams'])) {
-            return null;
-        }
         $User = AuthorizerUtil::getUserForOpenId($openid, $auth->record_id);
         if(empty($User) || !isset($User)) {
             $getData = WeChatUserUtil::getUserInfo($accessToken, $openid);
@@ -46,8 +44,23 @@ class ImageClass
                 \Yii::error($error. ' :'.var_export($model->getErrors(),true));
                 return null;
             }
-            $User = $model;
         }
+        if(in_array($auth->record_id,\Yii::$app->params['WxVipParams'])) {
+            $content = $this->getImageGenVip();
+            return $content;
+        }
+        $msgObj = new MessageComponent($this->data, 1);
+        $msgObj->getKeyImageMessage();
+        return $content;
+    }
+
+    public function getImageGenVip()
+    {
+        $appId = $this->data['appid'];
+        $openid = $this->data['FromUserName'];
+        $auth = AuthorizerUtil::getAuthOne($appId);
+        $accessToken = $auth->authorizer_access_token;
+        $User = AuthorizerUtil::getUserForOpenId($openid, $auth->record_id);
         if($User->is_vip == 1) {
             return null;
         }
@@ -59,8 +72,8 @@ class ImageClass
         }
         switch($auth->record_id) {
             case 84: $num = 2; break;
-            case 85: $num = 1;break;
-            case 86: $num = 3;break;
+            case 85: $num = 1; break;
+            case 86: $num = 3; break;
             case 89: $num = 4; break;
             default: $num = 0; break;
         }
