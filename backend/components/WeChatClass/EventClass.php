@@ -43,7 +43,7 @@ class EventClass
     /**
      * 处理微信关注事件
      */
-    public function subscribe()
+    public function     subscribe()
     {
         $appid = $this->data['appid'];
         $openid = $this->data['FromUserName'];  //TODO: 触发事件用户openId
@@ -51,30 +51,27 @@ class EventClass
 
         $auth = AuthorizerUtil::getAuthOne($appid); //TODO: 获取公众号信息
         $access_token = $auth->authorizer_access_token;
-        if(empty($auth)) return null;   //TODO: 如果公众号不存在
-        if(isset($auth->record_id)) {   //TODO: 处理用户关注统计
-            $DataPrams =['key_word'=>'attention','app_id'=>$auth->record_id, 'type'=>1];
-            if(!JobUtil::AddCustomJob('attentionBeanstalk','attention',$DataPrams,$error))
+        if (empty($auth)) return null;   //TODO: 如果公众号不存在
+        if (isset($auth->record_id)) {   //TODO: 处理用户关注统计
+            $DataPrams = ['key_word' => 'attention', 'app_id' => $auth->record_id, 'type' => 1];
+            if (!JobUtil::AddCustomJob('attentionBeanstalk', 'attention', $DataPrams, $error))
                 \Yii::error($error);
         }
         //TODO: 获取用户基本信息
-        if(AuthorizerUtil::isVerify($auth->verify_type_info)) {
-            $getData = WeChatUserUtil::getUserInfo($access_token,$openid); //TODO: 请求获取用户信息
-            if(isset($getData['errcode']) && $getData['errcode'] != 0) {
-                \Yii::error('获取用户信息:'. var_export($getData,true).' openId : '. $openid );
-                return null;
-            }
+        if (AuthorizerUtil::isVerify($auth->verify_type_info)) {
+            $getData = WeChatUserUtil::getUserInfo($access_token, $openid); //TODO: 请求获取用户信息
+            if (!$getData) return null;
             $getData['app_id'] = $auth->record_id;
-            $UserInfo = AuthorizerUtil::getUserForOpenId($openid,$auth->record_id);
-            $model = AuthorizerUtil::genModel($UserInfo,$getData);
-            if(!$model->save()){
-                \Yii::error('保存微信用户信息失败：'.var_export($model->getErrors(),true));
+            $UserInfo = AuthorizerUtil::getUserForOpenId($openid, $auth->record_id);
+            $model = AuthorizerUtil::genModel($UserInfo, $getData);
+            if (!$model->save()) {
+                \Yii::error('保存微信用户信息失败：' . var_export($model->getErrors(), true));
                 return null;
             }
-            if(in_array($auth->record_id,\Yii::$app->params['WxAuthParams'])){
-                if(empty($UserInfo)) {
+            if (in_array($auth->record_id, \Yii::$app->params['WxAuthParams'])) {
+                if (empty($UserInfo)) {
                     $params = ['key_word' => 'get_qrcode', 'data' => $this->data];
-                    if(!JobUtil::AddCustomJob('imgBeanstalk','get_qrcode',$params,$error)) {
+                    if (!JobUtil::AddCustomJob('imgBeanstalk', 'get_qrcode', $params, $error)) {
                         \Yii::error($error);
                     }
                 }
@@ -92,18 +89,18 @@ class EventClass
     public function unSubscribe()
     {
         $AuthInfo = AuthorizerUtil::getAuthOne($this->data['appid']);
-        if(empty($AuthInfo) || !isset($AuthInfo)){
-            \Yii::error('找不到对应的公众号信息 ： AppId:'.$this->data['appid'] );
+        if (empty($AuthInfo) || !isset($AuthInfo)) {
+            \Yii::error('找不到对应的公众号信息 ： AppId:' . $this->data['appid']);
             return null;
         }
         $openid = $this->data['FromUserName'];
         //TODO: 如果已关注 查出用户信息
-        $DataPrams =['key_word'=>'cancel_attention','app_id'=>$AuthInfo->record_id, 'type'=>2];
-        if(!JobUtil::AddCustomJob('attentionBeanstalk','attention',$DataPrams,$error))
+        $DataPrams = ['key_word' => 'cancel_attention', 'app_id' => $AuthInfo->record_id, 'type' => 2];
+        if (!JobUtil::AddCustomJob('attentionBeanstalk', 'attention', $DataPrams, $error))
             \Yii::error($error);
 
-        $UserInfo = AuthorizerUtil::getUserForOpenId($openid,$AuthInfo->record_id);
-        if(!empty($UserInfo)){
+        $UserInfo = AuthorizerUtil::getUserForOpenId($openid, $AuthInfo->record_id);
+        if (!empty($UserInfo)) {
             $UserInfo->subscribe = 0;
             $UserInfo->update_time = date('Y-m-d H:i:s');
             $UserInfo->save();
@@ -116,73 +113,69 @@ class EventClass
      * 处理点击事件 生成二维码图片
      * @return null
      */
-    public function  getQrCodeImg(&$error) {
+    public function getQrCodeImg(&$error)
+    {
         $start = microtime(true);
         $openid = $this->data['FromUserName'];
         $auth = AuthorizerUtil::getAuthOne($this->data['appid']);
         $access_token = $auth->authorizer_access_token;
-        $client = AuthorizerUtil::getUserForOpenId($openid,$auth->record_id);
-        if(!$client) {
+        $client = AuthorizerUtil::getUserForOpenId($openid, $auth->record_id);
+        if (!$client) {
             $a = microtime(true);
             $getData = WeChatUserUtil::getUserInfo($access_token, $openid);
-            if(!isset($getData) || empty($getData)) {
-                $error  = '获取用户数据为空: openId: '.$openid .' accessToken:'.$access_token;
-                \Yii::error('获取用户信息2：'.var_export($getData,true),' openId:'. $openid . ' accessToken:'.$access_token);
-                return false;
-            }
-            if($getData['errcode'] != 0 || !$getData) {
-                $error  = '获取用户数据为空2: openId: '.$openid .' accessToken:'.$access_token;
-                \Yii::error('获取用户信息3:'. var_export($getData,true).' openId1:'. $openid. ' accessToken1:'. $access_token);
+            if (!$getData) {
+                $error = '获取用户数据为空: openId: ' . $openid . ' accessToken:' . $access_token;
+                \Yii::error($error);
                 return false;
             }
             $getData['app_id'] = $auth->record_id;
-            $model = AuthorizerUtil::genModel($client,$getData);
-            if(!$model->save()){
-                $error ='保存已关注微信用户信息失败';
-                \Yii::error($error. ' :'.var_export($model->getErrors(),true));
+            $model = AuthorizerUtil::genModel($client, $getData);
+            if (!$model->save()) {
+                $error = '保存已关注微信用户信息失败';
+                \Yii::error($error . ' :' . var_export($model->getErrors(), true));
                 return false;
             }
-            fwrite(STDOUT, Console::ansiFormat("更新用户信息 Time : ".(microtime(true) - $a)."\n", [Console::FG_GREEN]));
+            fwrite(STDOUT, Console::ansiFormat("更新用户信息 Time : " . (microtime(true) - $a) . "\n", [Console::FG_GREEN]));
             $client = $model;
         }
         $img = ImageUtil::GetQrcodeImg($client->client_id);
-        if(!isset($img) || empty($img)) {  //TODO: 如果图片不存在  重新生成并上传
+        if (!isset($img) || empty($img)) {  //TODO: 如果图片不存在  重新生成并上传
             $b = microtime(true);
-            $userData = WeChatUserUtil::getUserInfo($access_token,$openid);
-            fwrite(STDOUT, Console::ansiFormat("获取用户信息  Time : ".(microtime(true) - $b)."\n", [Console::FG_GREEN]));
+            $userData = WeChatUserUtil::getUserInfo($access_token, $openid);
+            fwrite(STDOUT, Console::ansiFormat("获取用户信息  Time : " . (microtime(true) - $b) . "\n", [Console::FG_GREEN]));
 
-            if(empty($userData['headimgurl'])) {
+            if (empty($userData['headimgurl'])) {
                 $userData['headimgurl'] = 'http://7xld1x.com1.z0.glb.clouddn.com/timg.jpeg';
             }
             $c = microtime(true);
-            if(!WeChatUserUtil::getQrcodeSendImg($access_token,$openid,$userData['headimgurl'],$qrcode_file,$pic_file,$error)) {
-                $error = '获取二维码图片失败 '.$error;
+            if (!WeChatUserUtil::getQrcodeSendImg($access_token, $openid, $userData['headimgurl'], $qrcode_file, $pic_file, $error)) {
+                $error = '获取二维码图片失败 ' . $error;
                 return false;
             }
-            fwrite(STDOUT, Console::ansiFormat("获取二维码和用户头像地址: Time : ".(microtime(true) - $c)."\n", [Console::FG_GREEN]));
+            fwrite(STDOUT, Console::ansiFormat("获取二维码和用户头像地址: Time : " . (microtime(true) - $c) . "\n", [Console::FG_GREEN]));
             $text = $userData['nickname'];
             $d = microtime(true);
-            if(!ImageUtil::imagemaking($qrcode_file,$pic_file,$openid,$text,$bg_img,$error)){
+            if (!ImageUtil::imagemaking($qrcode_file, $pic_file, $openid, $text, $bg_img, $error)) {
                 return false;
             }
-            fwrite(STDOUT, Console::ansiFormat("生成海报图片: Time : ".(microtime(true) - $d)."\n", [Console::FG_GREEN]));
-            if(!file_exists($bg_img)) {
-                $error = '海报生成失败: bg_img:'. $bg_img . ' qrcode_img:' . $qrcode_file . ' pic:'. $pic_file;
+            fwrite(STDOUT, Console::ansiFormat("生成海报图片: Time : " . (microtime(true) - $d) . "\n", [Console::FG_GREEN]));
+            if (!file_exists($bg_img)) {
+                $error = '海报生成失败: bg_img:' . $bg_img . ' qrcode_img:' . $qrcode_file . ' pic:' . $pic_file;
                 return false;
             }
             $e = microtime(true);
             $wechat = new WeChatUtil();
-            if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
-                if($rst['errcode'] == 45009) {
+            if (!$wechat->Upload($bg_img, $access_token, $rst, $error)) { //TODO: 背景图上传微信素材
+                if ($rst['errcode'] == 45009) {
                     $Clear = WeChatUserUtil::ClearQuota($this->data['appid'], $access_token);
-                    if(!$Clear['errcode'] != 0) {
-                        \Yii::error('Clear quota :'.var_export($Clear,true));
+                    if (!$Clear['errcode'] != 0) {
+                        \Yii::error('Clear quota :' . var_export($Clear, true));
                         \Yii::getLogger()->flush(true);
                     }
                 }
                 return false;
             }
-            fwrite(STDOUT, Console::ansiFormat("上传微信图片: Time : ".(microtime(true) - $e)."\n", [Console::FG_GREEN]));
+            fwrite(STDOUT, Console::ansiFormat("上传微信图片: Time : " . (microtime(true) - $e) . "\n", [Console::FG_GREEN]));
             $model = new QrcodeImg();
             $model->client_id = $client->client_id;
             $model->media_id = $rst['media_id'];
@@ -192,7 +185,7 @@ class EventClass
             $unlink = microtime(true);
             @unlink($qrcode_file);
             @unlink($pic_file);
-            fwrite(STDOUT, Console::ansiFormat("删除图片地址 : Time : ".(microtime(true) - $unlink)."\n", [Console::FG_GREEN]));
+            fwrite(STDOUT, Console::ansiFormat("删除图片地址 : Time : " . (microtime(true) - $unlink) . "\n", [Console::FG_GREEN]));
             /*$imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
             if(!JobUtil::AddCustomJob('imgBeanstalk','delete_img',$imgParams,$error)) {
                 \Yii::error($error); \Yii::getLogger()->flush(true);
@@ -200,43 +193,43 @@ class EventClass
         } else {
             $time = time();
             $outTime = intval(($time - $img->update_time) / 86400);
-            if($outTime >= 3){
+            if ($outTime >= 3) {
                 $f = microtime(true);
-                $userData = WeChatUserUtil::getUserInfo($access_token,$openid);
-                fwrite(STDOUT, Console::ansiFormat("更新用户信息 2 Time : ".(microtime(true) - $f)."\n", [Console::FG_GREEN]));
-                if(empty($userData['headimgurl'])) {
+                $userData = WeChatUserUtil::getUserInfo($access_token, $openid);
+                fwrite(STDOUT, Console::ansiFormat("更新用户信息 2 Time : " . (microtime(true) - $f) . "\n", [Console::FG_GREEN]));
+                if (empty($userData['headimgurl'])) {
                     $userData['headimgurl'] = 'http://7xld1x.com1.z0.glb.clouddn.com/timg.jpeg';
                 }
                 $g = microtime(true);
-                if(!WeChatUserUtil::getQrcodeSendImg($access_token,$openid,$userData['headimgurl'],$qrcode_file,$pic_file,$error)) {
-                    $error = '获取图片失败 '.$error;
+                if (!WeChatUserUtil::getQrcodeSendImg($access_token, $openid, $userData['headimgurl'], $qrcode_file, $pic_file, $error)) {
+                    $error = '获取图片失败 ' . $error;
                     return false;
                 }
-                fwrite(STDOUT, Console::ansiFormat("获取二维码和用户头像地址2: Time : ".(microtime(true) - $g)."\n", [Console::FG_GREEN]));
+                fwrite(STDOUT, Console::ansiFormat("获取二维码和用户头像地址2: Time : " . (microtime(true) - $g) . "\n", [Console::FG_GREEN]));
                 $text = $userData['nickname'];
                 $h = microtime(true);
-                if(!ImageUtil::imagemaking($qrcode_file,$pic_file,$openid,$text,$bg_img,$error)){
+                if (!ImageUtil::imagemaking($qrcode_file, $pic_file, $openid, $text, $bg_img, $error)) {
                     return false;
                 }
-                fwrite(STDOUT, Console::ansiFormat("生成海报图片2: Time : ".(microtime(true) - $h)."\n", [Console::FG_GREEN]));
-                if(!file_exists($bg_img)) {
-                    $error = '海报生成失败2: bg_img:'. $bg_img . ' qrcode_img:' . $qrcode_file . ' pic:'. $pic_file;
+                fwrite(STDOUT, Console::ansiFormat("生成海报图片2: Time : " . (microtime(true) - $h) . "\n", [Console::FG_GREEN]));
+                if (!file_exists($bg_img)) {
+                    $error = '海报生成失败2: bg_img:' . $bg_img . ' qrcode_img:' . $qrcode_file . ' pic:' . $pic_file;
                     return false;
                 }
                 $i = microtime(true);
                 $wechat = new WeChatUtil();
-                if(!$wechat->Upload($bg_img,$access_token,$rst,$error)) { //TODO: 背景图上传微信素材
-                    if($rst['errcode'] == 45009) {
-                        fwrite(STDOUT, Console::ansiFormat("图片Api请求达到日上限执行清理 "."\n", [Console::FG_GREEN]));
+                if (!$wechat->Upload($bg_img, $access_token, $rst, $error)) { //TODO: 背景图上传微信素材
+                    if ($rst['errcode'] == 45009) {
+                        fwrite(STDOUT, Console::ansiFormat("图片Api请求达到日上限执行清理 " . "\n", [Console::FG_GREEN]));
                         $Clear = WeChatUserUtil::ClearQuota($this->data['appid'], $access_token);
-                        if(!$Clear['errcode'] != 0) {
-                            \Yii::error('Clear quota :'.var_export($Clear,true));
+                        if (!$Clear['errcode'] != 0) {
+                            \Yii::error('Clear quota :' . var_export($Clear, true));
                             \Yii::getLogger()->flush(true);
                         }
                     }
                     return false;
                 }
-                fwrite(STDOUT, Console::ansiFormat("上传微信图片2: Time : ".(microtime(true) - $i)."\n", [Console::FG_GREEN]));
+                fwrite(STDOUT, Console::ansiFormat("上传微信图片2: Time : " . (microtime(true) - $i) . "\n", [Console::FG_GREEN]));
                 /*$imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
                 if(!JobUtil::AddCustomJob('imgBeanstalk','delete_img',$imgParams,$error)) {
                     \Yii::error($error); \Yii::getLogger()->flush(true);
@@ -248,17 +241,17 @@ class EventClass
                 $unlink2 = microtime(true);
                 @unlink($qrcode_file);
                 @unlink($pic_file);
-                fwrite(STDOUT, Console::ansiFormat("删除图片地址2 : Time : ".(microtime(true) - $unlink2)."\n", [Console::FG_GREEN]));
+                fwrite(STDOUT, Console::ansiFormat("删除图片地址2 : Time : " . (microtime(true) - $unlink2) . "\n", [Console::FG_GREEN]));
             }
             $media_id = $img->media_id;
         }
         $msgObj = new MessageComponent($this->data);
         $msgData = [
-            ['msg_type'=>'0', 'content'=>\Yii::$app->params['qrcode_msg'][0]],
-            ['msg_type'=>'2', 'media_id'=>$media_id],
+            ['msg_type' => '0', 'content' => \Yii::$app->params['qrcode_msg'][0]],
+            ['msg_type' => '2', 'media_id' => $media_id],
         ];
-        $msgObj->sendMessageCustom($msgData,$openid);
-        fwrite(STDOUT, Console::ansiFormat("任务结束时间: Time : ".(microtime(true) - $start)."\n\n", [Console::FG_GREEN]));
+        $msgObj->sendMessageCustom($msgData, $openid);
+        fwrite(STDOUT, Console::ansiFormat("任务结束时间: Time : " . (microtime(true) - $start) . "\n\n", [Console::FG_GREEN]));
         return true;
     }
 

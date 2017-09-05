@@ -34,12 +34,8 @@ class GetOpenIdForUserInfoAction extends Action
             $client = AuthorizerUtil::getUserForOpenId($openid,$auth->record_id);
             if(!$client) {
                 $getData = WeChatUserUtil::getUserInfo($accessToken, $openid);
-                if(!isset($getData) || empty($getData)) {
+                if(!$getData) {
                     echo '获取用户数据为空: openId: '.$openid .' accessToken:'.$accessToken."\n";
-                    continue;
-                }
-                if($getData['errcode'] != 0 || !$getData) {
-                    echo '获取用户数据为空2: openId: '.$openid .' accessToken:'.$accessToken ."\n";
                     continue;
                 }
                 $getData['app_id'] = $auth->record_id;

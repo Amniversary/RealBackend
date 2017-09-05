@@ -52,8 +52,67 @@ class BhAction extends Action
 {
     public function run()
     {
-        echo "<pre>";$rst = User::findByBackendUsername(1,5);
-        print_r($rst);exit;
+        echo "<pre>";
+        $rst = DailyStatisticUsersUtil::getDailyFansNum(78);
+        if(empty($rst)) {
+            $rst[] = ['name'=> 'empty'];
+        }
+        for($i = 0; $i< 24 ; $i ++) {
+            foreach($rst as $item) {
+                if(!isset($item['statistics_date']) || $item['statistics_date'] != $i) {
+                    $net_user[$i] = 0;
+    //                $new_user[$i] = 0;
+    //                $cancel_user[$i] = 0;
+                }else{
+                    $net_user[$i] = intval($item['net_user']);
+                    break;
+    //                $new_user[$i] = $rst[$i]['new_user'];
+    //                $cancel_user[$i] = $rst[$i]['cancel_user'];
+                }
+            }
+            $date[] = $i;
+        }
+        $rstData = [
+            'net_user' => $net_user,
+//            'new_user' => $new_user,
+//            'cancel_user' => $cancel_user,
+            'date' => $date
+        ];
+        print_r($rstData);
+        exit;
+        $time = date('H',1504454400);
+        $i = date('H');
+        var_dump(intval($i));
+        var_dump(intval($time));
+
+        exit;
+        $se = [
+            'name'=>'2121',
+            'data'=>[1,2,4,51,3],
+        ];
+        $rst  =  DailyStatisticUsersUtil::getWeekFansNum(0);
+        print_r($rst['net_user']);
+print_r($se);
+        exit;
+        $sql_net = 'select sum(net_user) as num from wc_fans_statistics where app_id = :apd and statistics_date < :date';
+        $net_count = \Yii::$app->db->createCommand($sql_net,[':apd'=>14, ':date'=>date('Y-m-d')])->queryScalar();
+        print_r($net_count);
+        exit;
+        $rst = DailyStatisticUsersUtil::getDailyFansNum(0);
+        print_r($rst);
+
+
+
+
+        exit;
+        $rst = AuthorizerUtil::getAuthListName();
+        $data = [];
+        foreach($rst as $item)
+        {
+            $data[$item['record_id']] = $item['nick_name'];
+        }
+        //$rst = User::findByBackendUsername(1,5);
+        print_r($data);exit;
         print_r(\Yii::$app->params['backend_list']);exit;
         /*$rst = sprintf('%.4f',  round(0 / 21221,4)) * 100;
         print_r($rst);

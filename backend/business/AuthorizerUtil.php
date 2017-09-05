@@ -101,6 +101,7 @@ class AuthorizerUtil
     public static function genModel($model, $getData)
     {
         if (empty($model) || !isset($model)) {
+            unset($model);
             $model = new Client();
             if (!isset($getData['openid'])) {
                 \Yii::error('not OpenId: ' . var_export($getData, true));
@@ -125,8 +126,6 @@ class AuthorizerUtil
         $model->province = isset($getData['province']) ? $getData['province'] : '';
         $model->subscribe_time = isset($getData['subscribe_time']) ? $getData['subscribe_time'] : '';
         $model->update_time = date('Y-m-d H:i:s');
-
-
         return $model;
     }
 
@@ -260,10 +259,7 @@ class AuthorizerUtil
     public static function SaveUserInfo($access_token, $openid, $appid, $UserInfo)
     {
         $getData = WeChatUserUtil::getUserInfo($access_token, $openid); //TODO: 请求获取用户信息
-        if (isset($getData['errcode']) && $getData['errcode'] != 0) {
-            \Yii::error('获取用户信息：' . var_export($getData, true));
-            return false;
-        }
+        if (!$getData) return false;
         $getData['appid'] = $appid;
         $model = AuthorizerUtil::genModel($UserInfo, $getData);
         if (!$model->save()) {

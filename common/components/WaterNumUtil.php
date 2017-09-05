@@ -137,7 +137,7 @@ where prename = \'%s\' and createdate=\'%s\';
         return $rstStr;
     }
 
-    public  static function GenWaterNumUseLock($preName = 'NO.',$isIncludePre = true, $isIncludeDate = true,$date ='' ,$length = 4)
+    public static function GenWaterNumUseLock($preName = 'NO.',$isIncludePre = true, $isIncludeDate = true,$date ='' ,$length = 4)
     {
         $connection = new Connection(['dsn'=>\Yii::$app->db->dsn,
             'username'=>\Yii::$app->db->username,

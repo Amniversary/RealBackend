@@ -76,11 +76,15 @@ class WechatController extends Controller
         $data = $WeChat->decryptMsg;
         $data['appid'] = $WeChat->AppId;
         $this->SaveUserUpdate($data['FromUserName'], $WeChat->AppId);
+        if($data['FromUserName'] == 'ol_EGvw_V3rXYILgc7QEOVVBrxwg'){
+            \Yii::error('FromUserName: '.var_export($data,true));
+        }
         switch ($WeChat->MsgType) {
             case 'text':
                 $resultXml = $Receive->Text($data);
                 break;
             case 'image':
+                $resultXml = $Receive->Image($data);
                 break;
             case 'location':
                 $resultXml = $Receive->Location($data);

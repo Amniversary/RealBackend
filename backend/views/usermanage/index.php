@@ -140,20 +140,25 @@ $gridColumns = [
         'deleteOptions' => ['title' => '删除', 'label' => '删除', 'data-toggle' => false],
         'buttons' => [
             'resetpwd' => function ($url, $model, $key) {
+                if($model->backend_user_id != Yii::$app->user->id) return '';
                 return Html::a('重置密码', $url, ['class' => 'back-a', 'style' => 'margin-right:3%', 'data-toggle' => 'modal', 'data-target' => '#contact-modal']). "<br />";
             },
             'update' => function ($url, $model) {
                 if ($model->backend_user_id === 1) return '';
+                if ($model->backend_user_id !=  Yii::$app->user->id) return  '';
                 return Html::a('编辑', $url, ['class' => 'back-a', 'style' => 'margin-right:3%']);
             },
             'delete' => function ($url, $model) {
                 if ($model->backend_user_id === 1) return '';
+                if ($model->backend_user_id !=  Yii::$app->user->id) return  '';
                 return Html::a('删除', $url, ['class' => 'delete back-a', 'style' => 'margin-right:3%', 'data-toggle' => false, 'data-confirm' => '确定要删除该记录吗？', 'data-method' => 'post', 'data-pjax' => '1']);
             },
             'setprivilige' => function ($url, $model, $key) {
+                if ($model->backend_user_id !=  Yii::$app->user->id) return  '';
                 return Html::a('权限', $url, ['class' => 'back-a', 'data-toggle' => 'modal', 'data-target' => '#contact-modal', 'style' => 'margin-right:3%;margin-top: 2%;']);
             },
             'get_backend' => function ($url, $model, $key) {
+                if ($model->backend_user_id !=  Yii::$app->user->id) return  '';
                 return Html::a('后台权限', $url, ['class' => 'back-a', 'data-toggle' => 'modal', 'data-target' => '#contact-backend', 'style' => 'margin-right:3%;margin-top: 2%;']);
             },
         ],

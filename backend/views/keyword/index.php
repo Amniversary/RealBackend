@@ -53,10 +53,13 @@ $gridColumns = [
         'attribute'=>'rule',
         'vAlign'=>'middle',
         'value'=>function($model){
+            $rst = '';
             switch($model->rule){
                 case 1: $rst = '精准匹配';break;
                 case 2: $rst = '模糊匹配';break;
                 case 3: $rst = '图片匹配';break;
+                case 4: $rst = '语音匹配';break;
+                case 5: $rst = '视频匹配';break;
             }
             return  $rst;
         },

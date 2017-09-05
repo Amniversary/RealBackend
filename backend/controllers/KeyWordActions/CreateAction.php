@@ -23,8 +23,10 @@ class CreateAction extends Action
         $model->app_id = $Cache['record_id'];
         $model->global = 0;
         $post = \Yii::$app->request->post();
-        if($post['Keywords']['rule'] == 3){
-            $post['Keywords']['keyword'] = '图片匹配';
+        switch($post['Keywords']['rule']) {
+            case 3: $post['Keywords']['keyword'] = '图片匹配';break;
+            case 4: $post['Keywords']['keyword'] = '语音匹配';break;
+            case 5: $post['keywords']['keyword'] = '视频匹配';break;
         }
         if($model->load($post) && $model->save()){
             return $this->controller->redirect('createkey');

@@ -15,6 +15,8 @@ use backend\business\TemplateUtil;
 use backend\components\WeChatClass\EventClass;
 use backend\components\WeChatClass\ImageClass;
 use backend\components\WeChatClass\TextClass;
+use backend\components\WeChatClass\VideoClass;
+use backend\components\WeChatClass\VoiceClass;
 use common\components\UsualFunForNetWorkHelper;
 
 class ReceiveType
@@ -90,9 +92,6 @@ class ReceiveType
      */
     public function Image($arr,$flag = 0)
     {
-        if($arr['FromUserName'] == 'ol_EGvw_V3rXYILgc7QEOVVBrxwg'){
-            \Yii::error('arr:'.var_export($arr,true));
-        }
         $img = new ImageClass($arr);
         $content = $img->image();
         $resultStr = TemplateUtil::GetMsgTemplate($arr, $content);
@@ -112,7 +111,10 @@ class ReceiveType
      */
     public function Voice($arr,$flag = 0)
     {
-        return null;
+        $voice = new VoiceClass($arr);
+        $content = $voice->Voice();
+        $resultStr = TemplateUtil::GetMsgTemplate($arr, $content);
+        return $resultStr;
     }
 
     /**
@@ -120,7 +122,10 @@ class ReceiveType
      */
     public function Video($arr,$flag = 0)
     {
-        return null;
+        $video = new VideoClass($arr);
+        $content = $video->Video();
+        $resultStr = TemplateUtil::GetMsgTemplate($arr, $content);
+        return $resultStr;
     }
 
     /**

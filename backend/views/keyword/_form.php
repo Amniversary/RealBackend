@@ -34,7 +34,7 @@ $data = [$cache['record_id']=>$cache['nick_name']];
         <?php $form = ActiveForm::begin(); ?>
         <?= $form->field($model,'app_id')->dropDownList($data,['disabled'=>'disabled','style'=>'width:200px']) ?>
         <hr>
-        <?= $form->field($model, 'rule')->dropDownList(['2'=>'模糊匹配','1'=>'精准匹配','3'=>'图片匹配'],['style'=>'width:200px']) ?>
+        <?= $form->field($model, 'rule')->dropDownList(['2'=>'模糊匹配','1'=>'精准匹配','3'=>'图片匹配','4'=>'语音匹配','5'=>'视频匹配'],['style'=>'width:200px']) ?>
         <hr>
         <?= $form->field($model, 'keyword')->textInput() ?>
         <br/>
@@ -50,17 +50,23 @@ $data = [$cache['record_id']=>$cache['nick_name']];
 <?php
 $js = '
 $(document).ready(function(){
-    if($("#keywords-rule option:selected").val() == 3) {
-        $(".field-keywords-keyword").hide();
-    }else{
+$vue = $("#keywords-rule option:selected").val();
+    if($vue == 1) {
         $(".field-keywords-keyword").show();
+    }else if($vue == 2){
+        $(".field-keywords-keyword").show();
+    }else {
+        $(".field-keywords-keyword").hide();
     }
 })
 $("#keywords-rule").change(function(){
-    if($("#keywords-rule option:selected").val() == 3) {
-        $(".field-keywords-keyword").hide();
-    }else{
+$rst = $("#keywords-rule option:selected").val()
+    if($rst == 1) {
         $(".field-keywords-keyword").show();
+    }else if($rst == 2) {
+        $(".field-keywords-keyword").show();
+    }else{
+        $(".field-keywords-keyword").hide();
     }
 })
 ';

@@ -23,8 +23,6 @@ class UsualFunForStringHelper
      */
     public static function GenRandRePacketsData($n, $sum, &$index_max, &$error)
     {
-        //$n = 20;
-        //$sum = 300;
         if ($sum < $n) {
             $error = '金额总数不能小于红包个数'; //$error = '金额总数必须大于红包个数';
             return false;

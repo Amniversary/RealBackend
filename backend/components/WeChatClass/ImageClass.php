@@ -25,7 +25,6 @@ class ImageClass
 
     public function image()
     {
-        $content = '';
         $appId = $this->data['appid'];
         $openid = $this->data['FromUserName'];
         $auth = AuthorizerUtil::getAuthOne($appId);
@@ -33,10 +32,7 @@ class ImageClass
         $User = AuthorizerUtil::getUserForOpenId($openid, $auth->record_id);
         if(empty($User) || !isset($User)) {
             $getData = WeChatUserUtil::getUserInfo($accessToken, $openid);
-            if(isset($getData['errcode']) && $getData['errcode'] != 0) {
-                \Yii::error('微信请求不到用户信息数据 : Code : '.$getData['errcode'] . '  msg: '.$getData['errmsg']);
-                return null;
-            }
+            if(!$getData) return null;
             $getData['app_id'] = $auth->record_id;
             $model = AuthorizerUtil::genModel($User,$getData);
             if(!$model->save()){
@@ -50,10 +46,15 @@ class ImageClass
             return $content;
         }
         $msgObj = new MessageComponent($this->data, 1);
-        $msgObj->getKeyImageMessage();
+        //TODO: type 类型 3 图片匹配  4 语音匹配 5 视频匹配
+        $content = $msgObj->getKeyImageMessage(3);
         return $content;
     }
 
+    /**
+     * 接收图片消息  更新用户vip状态
+     * @return null|string
+     */
     public function getImageGenVip()
     {
         $appId = $this->data['appid'];

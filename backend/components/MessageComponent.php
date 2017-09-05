@@ -201,17 +201,18 @@ class MessageComponent
     }
 
     /**
-     * 获取回复图片自动回复消息
+     * 根据类型  获取回复自动回复消息
      */
-    public function getKeyImageMessage()
+    public function getKeyImageMessage($type)
     {
+        if(empty($type)) return null;
         if(AuthorizerUtil::isVerify($this->auth->verify_type_info)) {
-            $this->VerifyKeyWordImage();
+            $this->VerifyKeyWordImage($type);
             return null;
         } else {
             $keyword = AuthorizerUtil::getKeyword($this->auth->record_id);
             foreach($keyword as $item){
-                $touch = $item['rule'] == 3 ? true : false;
+                $touch = $item['rule'] == $type ? true : false;
                 if($touch) {
                     $this->key = $item['key_id'];
                     $msg = $this->getKeywordMsg();
@@ -228,11 +229,11 @@ class MessageComponent
     /**
      * 检测是否认证公众号
      */
-    public function VerifyKeyWordImage()
+    public function VerifyKeyWordImage($type)
     {
         $keyword = AuthorizerUtil::getKeyword($this->auth->record_id);
         foreach($keyword as $item){
-            $touch = $item['rule'] == 3 ? true : false;
+            $touch = $item['rule'] == $type ? true : false;
             if($touch){
                 $this->key = $item['key_id'];
                 $msg = $this->getKeywordMsg();
@@ -593,15 +594,7 @@ class MessageComponent
         if(empty($User) || !isset($User)) {
             $a = microtime(true);
             $getData = WeChatUserUtil::getUserInfo($accessToken, $openId);
-            if(!isset($getData) || empty($getData)) {
-                $error  = '获取用户数据为空: openId: '.$openId .' accessToken:'.$accessToken;
-                return false;
-            }
-            if($getData['errcode'] != 0 || !$getData) {
-                $error  = '获取用户数据为空2: openId: '.$openId .' accessToken:'.$accessToken;
-                \Yii::error('获取用户信息3:'. var_export($getData,true).' openId1:'. $openId. ' accessToken1:'. $accessToken);
-                return false;
-            }
+            if(!isset($getData) || empty($getData)) return false;
             $getData['app_id'] = $this->auth->record_id;
             $model = AuthorizerUtil::genModel($User,$getData);
             if(!$model->save()){
