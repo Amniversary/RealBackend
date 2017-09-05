@@ -59,6 +59,7 @@ class SendBatchUserMsgAction extends Action
                         $auth = AuthorizerUtil::getAuthByOne($sentData->app_id);
                         $accessToken = $auth->authorizer_access_token;
                     }
+                    if($rst['errcode'] == 45015) continue;
                     if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
                         $error = iconv('utf-8','gb2312',$error);
                     fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."发送客服消息失败:  nick_name : ".$list['nick_name']." openId :" . $list['open_id']."  app_id : ".$auth->record_id."  app_name : ".$auth->nick_name."\n",[Console::FG_GREEN]));

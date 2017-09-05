@@ -19,23 +19,23 @@ class CustomMessageTimingAction extends Action
     {
         set_time_limit(0);
         $msgData = $this->getCustomTask();
-        if(empty($msgData)) {
+        if (empty($msgData)) {
             return false;
         }
-        foreach($msgData as  $item) {
-            $task = TemplateTiming::findOne(['id'=>$item['id']]);
+        foreach ($msgData as $item) {
+            $task = TemplateTiming::findOne(['id' => $item['id']]);
             $task->status = 0;
             $task->save();
         }
         $count = count($msgData);
-        foreach($msgData as $list) {
+        foreach ($msgData as $list) {
             $params = [
-                'key_word'=>'send_batch_msg',
-                'data'=>json_decode($list['template_data']),
-                'app_id'=>$list['app_id'],
-                'type'=>$list['type'],
+                'key_word' => 'send_batch_msg',
+                'data' => json_decode($list['template_data']),
+                'app_id' => $list['app_id'],
+                'type' => $list['type'],
             ];
-            if(!JobUtil::AddCustomJob('templateBeanstalk', 'send_user_msg', $params, $error, (60*60*5))) {
+            if (!JobUtil::AddCustomJob('templateBeanstalk', 'send_user_msg', $params, $error, (60 * 60 * 24))) {
                 \Yii::error($error);
                 var_dump($error);
                 return false;
@@ -51,8 +51,8 @@ class CustomMessageTimingAction extends Action
         $time = time();
         $condition = 'create_time <= :tm and type in (3,4) and status = 1';
         $query = TemplateTiming::find()
-            ->select(['id','app_id', 'template_id', 'template_data', 'status', 'type' , 'create_time'])
-            ->where($condition,[':tm'=>$time])
+            ->select(['id', 'app_id', 'template_id', 'template_data', 'status', 'type', 'create_time'])
+            ->where($condition, [':tm' => $time])
             ->all();
 
         return $query;

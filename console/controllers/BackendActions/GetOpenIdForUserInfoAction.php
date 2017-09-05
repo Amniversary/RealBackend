@@ -15,18 +15,23 @@ use yii\base\Action;
 
 class GetOpenIdForUserInfoAction extends Action
 {
-    public function run($appId)
+    public function run($appId ,$next_openid)
     {
         echo "执行时间 :". date('Y-m-d H:i:s') ."\n";
+        $this->getUserListForClient($appId, $next_openid, $total, $i);
+        $time = date('Y-m-d H:i:s');
+        echo "粉丝数 ".$total . "条;  更新成功 $i 条  date :$time \n";
+
+    }
+
+    private function getUserListForClient($appId, $next_openid = null, &$total, &$i)
+    {
         $auth = AuthorizerUtil::getAuthByOne($appId);
-        if(empty($auth) ||
-            !isset($auth)) {
-            echo "找不到对应公众号信息\n";exit;
-        }
         $accessToken = $auth->authorizer_access_token;
-        $rst = WeChatUserUtil::getUserListForOpenId($auth->authorizer_access_token);
-        if(isset($rst['errcode']) || isset($rst['errmsg'])) {
-            echo "Code :" .$rst['errcode'] . ' msg :' .$rst['errmsg'] ."\n";exit;
+        $rst = WeChatUserUtil::getUserListForOpenId($accessToken, $next_openid);
+        $total = $rst['total'];
+        if(!isset($rst['data']['openid'])) {
+            return false;
         }
         $openList = $rst['data']['openid'];
         $i = 0;
@@ -49,8 +54,10 @@ class GetOpenIdForUserInfoAction extends Action
                 $i ++ ;
             }
         }
-        $time = date('Y-m-d H:i:s');
-        echo "粉丝数 ".$rst['total'] . "条;  更新成功 $i 条  date :$time \n";
+        if(!empty($rst['next_openid'])) {
+            $this->getUserListForClient($appId, $rst['next_openid'], $total, $num);
+            $i += $num;
+        }
+        return true;
     }
-
 }

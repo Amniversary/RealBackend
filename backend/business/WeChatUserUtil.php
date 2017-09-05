@@ -31,8 +31,12 @@ class WeChatUserUtil
             $openid,
             $lang);
         $res = json_decode(UsualFunForNetWorkHelper::HttpGet($url), true);
-        $result = !array_key_exists('errcode', $res) ? $res : false;
-        if (!$result) \Yii::error('微信请求不到用户信息数据 :' . var_export($result, true));
+        if(empty($res)) $res = [];
+        $result = !array_key_exists('errcode', $res) ?  $res : false;
+        if (empty($result)) {
+            \Yii::error('微信请求不到用户信息数据 :' . var_export($result, true));
+            return false;
+        }
         return $result;
     }
 

@@ -19,26 +19,26 @@ class TemplateTimingAction extends Action
     {
         set_time_limit(0);
         $Data = $this->getTemplateTask();
-        if(empty($Data)) {
+        if (empty($Data)) {
             return false;
         }
-        foreach($Data as $list) {
-            $task = TemplateTiming::findOne(['id'=>$list->id]);
+        foreach ($Data as $list) {
+            $task = TemplateTiming::findOne(['id' => $list->id]);
             $task->status = 0;
             $task->save();
         }
         $count = count($Data);
-        foreach($Data as $item) {
+        foreach ($Data as $item) {
             $params = [
-                'key_word'=>'template_task',
+                'key_word' => 'template_task',
                 'id' => $item->template_id,
-                'data' => json_decode($item->template_data,true),
+                'data' => json_decode($item->template_data, true),
                 'app_id' => $item->app_id,
                 'task_id' => $item->id,
                 'type' => $item->type
             ];
-            if(!JobUtil::AddCustomJob('templateBeanstalk','task', $params, $error, 60 * 60 * 5)) {
-                \Yii::error('job error :'.var_export($error,true));
+            if (!JobUtil::AddCustomJob('templateBeanstalk', 'task', $params, $error, (60 * 60 * 24))) {
+                \Yii::error('job error :' . var_export($error, true));
                 var_dump($error);
                 exit;
             }
@@ -54,8 +54,8 @@ class TemplateTimingAction extends Action
         $time = time();
         $condition = 'create_time <= :tm and type in (1,2) and status = 1';
         $query = TemplateTiming::find()
-            ->select(['id','app_id', 'template_id', 'template_data', 'status', 'type' , 'create_time'])
-            ->where($condition,[':tm'=>$time])
+            ->select(['id', 'app_id', 'template_id', 'template_data', 'status', 'type', 'create_time'])
+            ->where($condition, [':tm' => $time])
             ->all();
 
         return $query;

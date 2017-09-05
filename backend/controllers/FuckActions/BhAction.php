@@ -19,6 +19,7 @@ use backend\business\ResourceUtil;
 use backend\business\SaveByTransUtil;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveArticleTotalByTrans;
 use backend\business\SignParamsUtil;
+use backend\business\UserMenuUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use backend\components\MessageComponent;
@@ -53,6 +54,12 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        $auth = AuthorizerUtil::getAuthByOne(15);
+        $USer = WeChatUserUtil::getUserInfo($auth->authorizer_access_token, 'o3WvUw7VgX1N6dMFHLxaY7D0JszI');
+//        $rst = WeChatUserUtil::getUserListForOpenId($auth->authorizer_access_token, 'o3GvUw8Q60ND-Hsa2UMlA7BUSJQU');
+        var_dump($USer);
+
+        exit;
         $rst = DailyStatisticUsersUtil::getDailyFansNum(78);
         if(empty($rst)) {
             $rst[] = ['name'=> 'empty'];
