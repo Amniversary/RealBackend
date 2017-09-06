@@ -20,18 +20,20 @@ class SetKeyWordAction extends Action
 {
     public function run($msg_id)
     {
+        $rst = ['code' => '1', 'msg' => ''];
         $cache = WeChatUserUtil::getCacheInfo();
         if(empty($msg_id)) {
-            ExitUtil::ExitWithMessage('消息id不能为空');
+            $rst['msg'] = '消息id 不能为空';
+            echo json_encode($rst);exit;
         }
         $msg = AttentionEvent::findOne(['record_id'=>$msg_id]);
         if(!isset($msg)){
-            ExitUtil::ExitWithMessage('消息记录不存在');
+            $rst['msg'] = '消息记录不存在';
+            echo json_encode($rst);exit;
         }
         $params = \Yii::$app->request->post('title');
         if(isset($params))
         {
-            $rst = ['code' => '1', 'msg' => ''];
             $error = '';
             if(!KeywordUtil::SaveKeyWordParams($params,$cache['record_id'],$msg_id,$error)) {
                 $rst['msg'] = $error;

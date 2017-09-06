@@ -40,7 +40,7 @@ use yii\helpers\Html;
 
                 <?php if (!empty($authInfo)) { ?>
                 <!-- 公众号头部 -->
-                <?php $authData = \backend\business\DailyStatisticUsersUtil::GetDailyFansNum($authInfo['record_id']);  ?>
+                <?php $authData = \backend\business\DailyStatisticUsersUtil::GetDailyFansNumber($authInfo['record_id']);  ?>
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= empty($authInfo['head_img']) ? 'http://oss.aliyuncs.com/meiyuan/wish_type/default.png':$authInfo['head_img']; ?>" class="user-image" alt="User Image"/>

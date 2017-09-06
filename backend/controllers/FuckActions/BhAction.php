@@ -54,13 +54,14 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
-        $auth = AuthorizerUtil::getAuthByOne(15);
-        $USer = WeChatUserUtil::getUserInfo($auth->authorizer_access_token, 'o3WvUw7VgX1N6dMFHLxaY7D0JszI');
-//        $rst = WeChatUserUtil::getUserListForOpenId($auth->authorizer_access_token, 'o3GvUw8Q60ND-Hsa2UMlA7BUSJQU');
-        var_dump($USer);
+        $arr = [1,3,5,6,6];
+        $rst = implode(',', $arr);
+
+        print_r($rst);
+
 
         exit;
-        $rst = DailyStatisticUsersUtil::getDailyFansNum(78);
+        $rst = DailyStatisticUsersUtil::getDailyFansNum(15);
         if(empty($rst)) {
             $rst[] = ['name'=> 'empty'];
         }
@@ -68,13 +69,13 @@ class BhAction extends Action
             foreach($rst as $item) {
                 if(!isset($item['statistics_date']) || $item['statistics_date'] != $i) {
                     $net_user[$i] = 0;
-    //                $new_user[$i] = 0;
-    //                $cancel_user[$i] = 0;
+                    //                $new_user[$i] = 0;
+                    //                $cancel_user[$i] = 0;
                 }else{
                     $net_user[$i] = intval($item['net_user']);
                     break;
-    //                $new_user[$i] = $rst[$i]['new_user'];
-    //                $cancel_user[$i] = $rst[$i]['cancel_user'];
+                    //                $new_user[$i] = $rst[$i]['new_user'];
+                    //                $cancel_user[$i] = $rst[$i]['cancel_user'];
                 }
             }
             $date[] = $i;
@@ -86,6 +87,14 @@ class BhAction extends Action
             'date' => $date
         ];
         print_r($rstData);
+        exit;
+        $auth = AuthorizerUtil::getAuthByOne(15);
+        $USer = WeChatUserUtil::getUserInfo($auth->authorizer_access_token, 'o3WvUw7VgX1N6dMFHLxaY7D0JszI');
+//        $rst = WeChatUserUtil::getUserListForOpenId($auth->authorizer_access_token, 'o3GvUw8Q60ND-Hsa2UMlA7BUSJQU');
+        var_dump($USer);
+
+        exit;
+
         exit;
         $time = date('H',1504454400);
         $i = date('H');

@@ -16,12 +16,20 @@ class IndexAction extends Action
 {
     public function run()
     {
+        $post = \Yii::$app->request->get('tag');
         $this->controller->getView()->title = '公众号列表';
         $searchModel = new PublicListSearch();
-        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
-        return $this->controller->render('index',[
-            'searchModel'=>$searchModel,
-            'dataProvider'=>$dataProvider,
+        if (empty($post) || !isset($post)) {
+            $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+        } else {
+            if (empty($post['auth'])) $post['auth'] = [0];
+            $params = implode(',', $post['auth']);
+            $dataProvider = $searchModel->searchTag($params, \Yii::$app->request->queryParams);
+        }
+        return $this->controller->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'data' => $post['title']
         ]);
     }
 }

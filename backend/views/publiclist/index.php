@@ -16,6 +16,9 @@
         border:1px solid #00a7d0;
         padding: 3px 5px;
     }
+    .tag-label{
+        margin-left: 10px;
+    }
 </style>
 <?php
 
@@ -27,6 +30,7 @@ $gridColumns = [
         'attribute'=>'record_id',
         'vAlign'=>'middle',
         'label' =>'#',
+        'filter'=>false
     ],
     [
         'attribute'=>'nick_name',
@@ -130,7 +134,8 @@ echo GridView::widget([
     'beforeHeader'=>[['options'=>['class'=>'skip-export']]],
     'toolbar'=> [
         [
-            'content'=> Html::button('添加公众号',['type'=>'button','title'=>'添加公众号', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('publiclist/create').'";return false;']),
+            'content'=>Html::a('选择标签',Yii::$app->urlManager->createUrl('publiclist/get_tag_list') , ['type'=>'button', 'class'=> 'btn btn-success' ,'title'=>'选择标签', 'data-toggle' => 'modal', 'data-target' => '#contact-modal']).
+                Html::button('添加公众号',['type'=>'button','title'=>'添加公众号', 'class'=>'btn btn-success', 'onclick'=>'location="'.\Yii::$app->urlManager->createUrl('publiclist/create').'";return false;']),
         ],
         'toggleDataContainer' => ['class' => 'btn-group-sm'],
         'exportContainer' => ['class' => 'btn-group-sm']
@@ -147,7 +152,21 @@ echo GridView::widget([
     ],
 ]);
 
-$js='
+
+echo \yii\bootstrap\Modal::widget([
+        'id' => 'contact-modal',
+        'clientOptions' => false,
+        'size' => \yii\bootstrap\Modal::SIZE_DEFAULT,
+    ]
+);
+if(empty($data)) $data = [];
+foreach($data as $item) {
+    $js .= '$(document).ready(function(){
+       $(".pull-left div").append("<label class=\"back-btn tag-label\">'.$item.'</label>");
+});';
+}
+
+$js .='
 $(".back-a").on("click",function(){
     $url = $(this).attr("href");
             $.ajax({

@@ -106,7 +106,7 @@ class KeywordUtil
      * 获取签到对应配置关键字
      * @return array
      */
-    public static function GetSignKeyWord()
+    public static function  GetSignKeyWord()
     {
         $article = [];
         $articleList = Keywords::find()
