@@ -18,16 +18,21 @@
 
     .col {
         display: inline-block;
-        border: 1px solid #3c8dbc;
-        width: 20%;
+        border: 1px solid #cee2ee;
+        width: 15%;
         text-align: center;
         float: left;
     }
 
-    .bg-black {
+    .bg-blue {
         background-color: #3c8dbc !important;
     }
-
+    .bg-black {
+        background-color: #434348 !important;
+    }
+    .bg-green{
+        background-color: #90ed7d !important;
+    }
     /*!* 统计图表样式 *!*/
 
     /*#w0,#w1,#w2,#w3,#w4,#w5,#w6,#w7,#w8,#w9,#w10,#w11*/
@@ -58,10 +63,60 @@
  * @var $Thirty
  */
 
+/*echo \yii\bootstrap\Alert::widget([
+    'body'=>'下列为净增用户数据!',
+    'options'=>[
+        'class'=>'alert-info',
+    ]
+]);*/
 ?>
 <div class="user-form" style="height:1100px;font-size:14px;">
     <div>
         <h3><?= $authList[$app_id] ?></h3>
+        <div class="top">
+            <div class="col">
+                <div class="bg-blue">今天</div>
+                <div><?= array_sum($ToDay['net_user']['data']) ?></div>
+                <div class="bg-black">今天</div>
+                <div><?= array_sum($ToDay['new_user']['data']) ?></div>
+                <div class="bg-green">今天</div>
+                <div><?= array_sum($ToDay['cancel_user']['data']) ?></div>
+            </div>
+            <div class="col">
+                <div class="bg-blue">昨天</div>
+                <div><?= array_sum($Yesterday['net_user']['data']) ?></div>
+                <div class="bg-black">昨天</div>
+                <div><?= array_sum($Yesterday['new_user']['data']) ?></div>
+                <div class="bg-green">昨天</div>
+                <div><?= array_sum($Yesterday['cancel_user']['data']) ?></div>
+            </div>
+            <div class="col">
+                <div class="bg-blue">七天</div>
+                <div><?= array_sum($WeekNum['net_user']['data']) ?></div>
+                <div class="bg-black">七天</div>
+                <div><?= array_sum($WeekNum['new_user']['data']) ?></div>
+                <div class="bg-green">七天</div>
+                <div><?= array_sum($WeekNum['cancel_user']['data']) ?></div>
+            </div>
+            <div class="col">
+                <div class="bg-blue">十四天</div>
+                <div><?= array_sum($FourTeen['net_user']['data']) ?></div>
+                <div class="bg-black">十四天</div>
+                <div><?= array_sum($FourTeen['new_user']['data']) ?></div>
+                <div class="bg-green">十四天</div>
+                <div><?= array_sum($FourTeen['cancel_user']['data']) ?></div>
+            </div>
+            <div class="col">
+                <div class="bg-blue">三十天</div>
+                <div><?= array_sum($Thirty['net_user']['data']) ?></div>
+                <div class="bg-black">三十天</div>
+                <div><?= array_sum($Thirty['new_user']['data']) ?></div>
+                <div class="bg-green">三十天</div>
+                <div><?= array_sum($Thirty['cancel_user']['data']) ?></div>
+            </div>
+        </div>
+
+
         <?= \yii\helpers\Html::dropDownList('auth-list',[$app_id],$authList,['class'=>'auth-list select']) ?>
         <select class="select-change select">
             <option value="1">今天 / 昨天</option>

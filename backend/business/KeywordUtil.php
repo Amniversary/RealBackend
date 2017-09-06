@@ -215,6 +215,7 @@ class KeywordUtil
         $article = [];
         $articleList = AuthorizationList::find()
             ->select(['record_id','nick_name'])
+            ->orderBy('record_id')
             ->all();
 
         foreach($articleList as $articled){

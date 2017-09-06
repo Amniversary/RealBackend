@@ -54,10 +54,32 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
-        $arr = [1,3,5,6,6];
-        $rst = implode(',', $arr);
+        $auth = AuthorizerUtil::getAuthByOne(78);
+        //$USer = WeChatUserUtil::getUserInfo($auth->authorizer_access_token,'oajZPw-mTZfpVB9BLH67rWbouVyA');
+        $msg  = [
+            'msg_type'=>0,
+            'content' =>'111',
+        ];
+        $json = WeChatUserUtil::getMsgTemplate($msg, 'oajZPw-mTZfpVB9BLH67rWbouVyA');
+        $rst = WeChatUserUtil::sendCustomerMsg($auth->authorizer_access_token, $json);
+//        $rst = WeChatUserUtil::getUserListForOpenId($auth->authorizer_access_token, 'o3GvUw8Q60ND-Hsa2UMlA7BUSJQU');
+        var_dump($rst);
 
-        print_r($rst);
+
+        exit;
+        $article = [];
+        $articleList = AuthorizationList::find()
+            ->select(['record_id','nick_name'])
+            ->orderBy('record_id')
+            ->all();
+
+        foreach($articleList as $articled){
+            $article[$articled['record_id']] = $articled['nick_name'];
+        }
+        $rights = array_chunk($article,30,true);
+
+        print_r($rights);
+
 
 
         exit;
@@ -88,12 +110,7 @@ class BhAction extends Action
         ];
         print_r($rstData);
         exit;
-        $auth = AuthorizerUtil::getAuthByOne(15);
-        $USer = WeChatUserUtil::getUserInfo($auth->authorizer_access_token, 'o3WvUw7VgX1N6dMFHLxaY7D0JszI');
-//        $rst = WeChatUserUtil::getUserListForOpenId($auth->authorizer_access_token, 'o3GvUw8Q60ND-Hsa2UMlA7BUSJQU');
-        var_dump($USer);
 
-        exit;
 
         exit;
         $time = date('H',1504454400);
