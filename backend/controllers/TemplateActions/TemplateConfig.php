@@ -20,4 +20,5 @@ return [
     'set_auth'=>'backend\controllers\TemplateActions\SetAuthAction',
     'get_auth'=>'backend\controllers\TemplateActions\GetAuthAction',
     'start_task'=> 'backend\controllers\TemplateActions\StartTaskAction',
+    'status'=>'backend\controllers\TemplateActions\IndexStatusAction',
 ];

@@ -126,7 +126,7 @@ $gridColumns = [
         'template'=>'{setauth}{update}{delete}',
         'dropdown'=>false,
         'vAlign'=>'middle',
-        'width'=>'250px',
+        'width'=>'270px',
         'urlCreator'=> function($action, $model , $key , $index){
             $url = '';
             switch ($action){

@@ -9,6 +9,7 @@
 namespace backend\business;
 
 
+use common\models\ArticleOrder;
 use common\models\AttentionEvent;
 use common\models\Authorization;
 use common\models\AuthorizationList;
@@ -176,6 +177,23 @@ class KeywordUtil
     }
 
     /**
+     * 获取图文乱序公众号
+     * @return array
+     */
+    public static function GetOrderAuth()
+    {
+        $query = (new Query())->from('wc_article_order')
+            ->select(['app_id'])
+            ->all();
+        $rst = [];
+        foreach($query as $item)
+        {
+            $rst[] = $item['app_id'];
+        }
+        return $rst;
+    }
+
+    /**
      * 保存公众号关键字配置
      * @param $params
      * @param $app_id
@@ -259,6 +277,33 @@ class KeywordUtil
             $table = \Yii::$app->db;
             foreach ($params as $parList) {
                 $sql .= sprintf('insert into %s_batch_keyword_list (key_id,app_id) values(%s,%s);',$table->tablePrefix,$key_id,$parList);
+            }
+            $rst = $table->createCommand($sql)->execute();
+            if( $rst <= 0 ){
+                throw new Exception('保存权限数据异常');
+            }
+            $trans->commit();
+        } catch(Exception $e) {
+            $trans->rollBack();
+            $error = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 保存公众号配置
+     * @return bool
+     * @throws \yii\db\Exception
+     */
+        public static function SaveOrderAuthParams($params,&$error){
+        try {
+            $trans = \Yii::$app->db->beginTransaction();
+            (new ArticleOrder())->deleteAll();//TODO: 删除用户原有权限数据
+            $sql = '';
+            $table = \Yii::$app->db;
+            foreach ($params as $parList) {
+                $sql .= sprintf('insert into %s_article_order (app_id) values(%s);',$table->tablePrefix,$parList);
             }
             $rst = $table->createCommand($sql)->execute();
             if( $rst <= 0 ){

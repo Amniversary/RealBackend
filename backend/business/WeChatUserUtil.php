@@ -527,7 +527,7 @@ class WeChatUserUtil
      * 微信告警通知
      * @param $remark           //错误内容备注
      * @param null $toUser      //发送的用户名   ['1', '2']
-     * @param $auth_name
+     * @param $auth_name        //报警内容    Ps: 这里用了公众号名称
      * @param int $alarmType    //报警类型  0 :普通告警  1: 系统错误告警
      * @param int $channels     //告警通道  gzh:服务号告警   sms:短信通道告警
      * @param int $status       //告警状态  0:警告  1:错误

@@ -22,6 +22,7 @@ use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
 use common\components\SystemParamsUtil;
 
+use common\models\ArticleOrder;
 use common\models\Resource;
 use common\models\SignImage;
 
@@ -84,12 +85,22 @@ class MessageComponent
      * @return null
      */
     public function VerifySendAttentionMessage(){
+        $msgData = $this->getMessageModel();
+        $order = ArticleOrder::findOne(['app_id'=> $this->auth->record_id]);
+        if(!empty($order)) {
+            foreach($msgData as &$item) {
+                if($item['msg_type'] == 1) {
+                    $msg_type = $item['msg_type'];
+                    unset($item['msg_type']);
+                    shuffle($item);
+                    $item['msg_type'] = $msg_type;
+                }
+            }
+        }
         if(AuthorizerUtil::isVerify($this->auth->verify_type_info)) {
-            $msgData = $this->getMessageModel();
             $this->sendMessageCustom($msgData,$this->data['FromUserName']);
             return null;
         } else {
-            $msgData = $this->getMessageModel();
             if(!$msgData) return null;
             $rst = $msgData[0];
         }
