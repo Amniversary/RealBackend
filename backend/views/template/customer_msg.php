@@ -210,7 +210,6 @@ if(!confirm("确定要删除该记录吗？")){
         return false;
 }
 $url = $(this).attr("href");
-alert($url);
     $.ajax({
         type: "POST",
         url: $url,

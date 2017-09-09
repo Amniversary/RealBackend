@@ -12,4 +12,5 @@ return [
     'custom_timing'=>'console\controllers\BackendActions\CustomMessageTimingAction',
     'get_open_list' =>'console\controllers\BackendActions\GetOpenIdForUserInfoAction',
     'back_statistic' => 'console\controllers\BackendActions\BackStatisticAction',
+    'customer_timing'=> 'console\controllers\BackendActions\CustomerTimingAction',
 ];

@@ -299,10 +299,11 @@ class AuthorizerUtil
             if ($auth->alarm_status == 1) {
                 $alarm = Alarm::findOne(['app_id' => $auth->record_id, 'create_time' => date('Y-m-d')]);
                 if (!empty($alarm)) {
-                    if ($alarm['alarm_num'] >= 3) return false;;
-                    $time = time() - strtotime($alarm['alarm_time']);
+                    if ($alarm['alarm_num'] >= 3) return false;
+                    $time = intval((time() - strtotime($alarm['alarm_time'])) / 60);
                     if ($time < 30) return false;
                     $alarm['alarm_num'] += 1;
+                    $alarm['alarm_time'] = date('Y-m-d H:i:s');
                     $alarm->save();
                 } else {
                     $model = new Alarm();
@@ -312,8 +313,8 @@ class AuthorizerUtil
                     $model->create_time = date('Y-m-d');
                     $model->save();
                 }
-                $remark = $text."接口告警 :'.\n" . "消息发送失败 : \nCode :" . $rst['errcode'] . ' errmsg :' . $rst['errmsg'];
-                if (!WeChatUserUtil::WeChatAlarmNotice($remark, $auth->nick_name,\Yii::$app->params['toUser'])) {
+                $remark = $text."接口告警 :\n" . "消息发送失败 : \nCode :" . $rst['errcode'] . ' errmsg :' . $rst['errmsg'];
+                if (!WeChatUserUtil::WeChatAlarmNotice($remark, $auth->nick_name, \Yii::$app->params['toUser'])) {
                     return false;
                 }
             }

@@ -55,8 +55,10 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
-        echo time();
-
+        $o1 = '2017-09-09 15:30:00';
+        $o2 = '2017-09-09 15:29:00';
+        $time = intval((strtotime($o1) - strtotime($o2)) / 60);
+        print_r($time);
         exit;
         for($i = 0; $i <= 10 ; $i ++ ){
         if (in_array(48004, \Yii::$app->params['WxError'])) {

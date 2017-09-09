@@ -96,7 +96,7 @@ $gridColumns = [
         'refreshGrid' => true,
     ],
     [
-        'width' => '200px',
+        'width' => '270px',
         'class' => 'kartik\grid\ActionColumn',
         'template' => '{wxbackend}{set_alarm}',
         'dropdown' => false,

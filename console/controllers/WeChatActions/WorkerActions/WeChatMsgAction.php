@@ -9,6 +9,7 @@
 namespace console\controllers\WeChatActions\WorkerActions;
 
 
+use backend\business\AuthorizerUtil;
 use backend\business\WeChatUserUtil;
 use udokmeci\yii2beanstalk\BeanstalkController;
 use yii\base\Action;
@@ -42,6 +43,7 @@ class WeChatMsgAction extends Action
                 fwrite(STDOUT, Console::ansiFormat(" --$sentData->key_word- $json-accessToken: $sentData->authorizer_access_token --- $error no jobrecord "."\n", [Console::FG_GREEN]));
                 \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' rst : '.var_export($rst,true) .'-accessToken : '. $sentData->authorizer_access_token.'--'.$json .' :'.$error,Logger::LEVEL_ERROR);
                 \Yii::getLogger()->flush(true);
+                AuthorizerUtil::isAlarms($rst, $sentData->app_id, '发送消息');
                 return BeanstalkController::DELETE;
             }
             fwrite(STDOUT, Console::ansiFormat("rst: $rst "."\n", [Console::FG_GREEN]));

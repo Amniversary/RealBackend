@@ -44,7 +44,7 @@ class CustomerTimingAction extends Action
             }
         }
         $date = date('Y-m-d H:i:s');
-        echo "执行群发客服消息 $count 条,  时间 : $date \n";
+        echo "执行群发客服消息任务 $count 条,  时间 : $date \n";
         exit;
     }
 
