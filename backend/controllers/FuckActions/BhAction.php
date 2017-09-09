@@ -10,6 +10,7 @@ namespace backend\controllers\FuckActions;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\CustomUtil;
 use backend\business\DailyStatisticUsersUtil;
 use backend\business\DataCubeUtil;
 use backend\business\ImageUtil;
@@ -54,6 +55,57 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        echo time();
+
+        exit;
+        for($i = 0; $i <= 10 ; $i ++ ){
+        if (in_array(48004, \Yii::$app->params['WxError'])) {
+            //TODO: 判断公众号是否开启告警 这里每次都要重新获取数据
+            //$auth = AuthorizerUtil::getAuthByOne($sentData->app_id);
+            if (1) {
+                //$alarm = Alarm::findOne(['app_id' => $auth->record_id, 'create_time' => date('Y-m-d')]);
+                $alarm = ['alarm_num'=>$i, 'alarm_time'=> '2017-09-03 12:12:12'];
+                    if ($alarm['alarm_num'] >= 3) exit;
+                    $time = time() - strtotime($alarm['alarm_time']);
+                    if ($time < 30) exit;
+                    $alarm['alarm_num'] += 1;
+                print_r($alarm);
+            }
+        }
+        }
+
+        exit;
+        $time = time();
+        $date = (strtotime('+30 minutes') -$time) / 60;
+        print_r($date);
+        exit;
+        $remark = '消息接口告警 :'."\n".'消息发送失败 :'."\n".'Code - 123123 errmsg - Creating default object from empty value!';
+        if(!WeChatUserUtil::WeChatAlarmNotice($remark, \Yii::$app->params['toUser'])){
+            print_r('false');
+        }
+        echo '1';
+        exit;
+        $code = 48004;
+        if(in_array($code, \Yii::$app->params['WxError'])) {
+            echo 'true';
+            $key = array_search($code, \Yii::$app->params['WxError']);
+            echo $key;exit;
+        }
+        echo 'false';
+
+        exit;
+
+
+        $data = [];
+        $rst = CustomUtil::getCustomerMsg(12);
+        $msgObj = new MessageComponent($data);
+        $msgData = $msgObj->getMessageItem($rst);
+        print_r($msgData);
+        exit;
+        $test = '';
+        $json = json_decode($test,true);
+        var_dump($json);
+        exit;
         $auth = AuthorizerUtil::getAuthByOne(78);
         //$USer = WeChatUserUtil::getUserInfo($auth->authorizer_access_token,'oajZPw-mTZfpVB9BLH67rWbouVyA');
         $msg  = [

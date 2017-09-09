@@ -22,8 +22,8 @@ class KeyWordMsgSearch extends AttentionEvent
     public function rules()
     {
         return [
-            [['event_id','app_id', 'msg_type', 'flag'], 'integer'],
-            [['create_time','content' ,'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
+            [['event_id', 'app_id', 'msg_type', 'flag'], 'integer'],
+            [['create_time', 'content', 'remark1', 'remark2', 'remark3', 'remark4'], 'safe'],
         ];
     }
 
@@ -45,7 +45,7 @@ class KeyWordMsgSearch extends AttentionEvent
     public function search($params)
     {
         $cacheInfo = WeChatUserUtil::getCacheInfo();
-        $query = AttentionEvent::find()->where(['app_id'=>$cacheInfo['record_id'],'flag'=>1])->orderBy('order_no asc,event_id asc');
+        $query = AttentionEvent::find()->where(['app_id' => $cacheInfo['record_id'], 'flag' => 1])->orderBy('order_no asc,event_id asc');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,14 +57,14 @@ class KeyWordMsgSearch extends AttentionEvent
             return $dataProvider;
         }
 
-        if(!empty($this->create_time)){
-            $start_time = date('Y-m-d 00:00:00',strtotime($this->create_time));
-            $end_time = date('Y-m-d 23:00:00',strtotime($this->create_time));
-            $query->andFilterWhere(['between' , 'create_time', $start_time, $end_time]);
+        if (!empty($this->create_time)) {
+            $start_time = date('Y-m-d 00:00:00', strtotime($this->create_time));
+            $end_time = date('Y-m-d 23:00:00', strtotime($this->create_time));
+            $query->andFilterWhere(['between', 'create_time', $start_time, $end_time]);
         }
         $query->andFilterWhere([
             'msg_type' => $this->msg_type,
-            'event_id' =>$this->event_id,
+            'event_id' => $this->event_id,
         ]);
 
         return $dataProvider;
@@ -73,8 +73,8 @@ class KeyWordMsgSearch extends AttentionEvent
     public function searchSignMsg($params)
     {
         $cacheInfo = WeChatUserUtil::getCacheInfo();
-        $params = 'select msg_id from wc_sign_message where sign_id = '.$params['id'];
-        $condition = sprintf('app_id = %s and record_id in ('.$params.') and flag = 3',$cacheInfo['record_id']);
+        $params = 'select msg_id from wc_sign_message where sign_id = ' . $params['id'];
+        $condition = sprintf('app_id = %s and record_id in (' . $params . ') and flag = 3', $cacheInfo['record_id']);
         $query = AttentionEvent::find()
             ->where($condition)
             ->orderBy('order_no asc,event_id asc');
@@ -89,14 +89,14 @@ class KeyWordMsgSearch extends AttentionEvent
             return $dataProvider;
         }
 
-        if(!empty($this->create_time)){
-            $start_time = date('Y-m-d 00:00:00',strtotime($this->create_time));
-            $end_time = date('Y-m-d 23:00:00',strtotime($this->create_time));
-            $query->andFilterWhere(['between' , 'create_time', $start_time, $end_time]);
+        if (!empty($this->create_time)) {
+            $start_time = date('Y-m-d 00:00:00', strtotime($this->create_time));
+            $end_time = date('Y-m-d 23:00:00', strtotime($this->create_time));
+            $query->andFilterWhere(['between', 'create_time', $start_time, $end_time]);
         }
         $query->andFilterWhere([
             'msg_type' => $this->msg_type,
-            'event_id' =>$this->event_id,
+            'event_id' => $this->event_id,
         ]);
 
         return $dataProvider;
@@ -104,8 +104,8 @@ class KeyWordMsgSearch extends AttentionEvent
 
     public function searchBatchSignMsg($params)
     {
-        $params = 'select msg_id from wc_sign_message where sign_id = '.$params['id'];
-        $condition = 'record_id in ('.$params.') and flag = 3';
+        $params = 'select msg_id from wc_sign_message where sign_id = ' . $params['id'];
+        $condition = 'record_id in (' . $params . ') and flag = 3';
         $query = AttentionEvent::find()
             ->where($condition)
             ->orderBy('order_no asc,event_id asc');
@@ -120,14 +120,46 @@ class KeyWordMsgSearch extends AttentionEvent
             return $dataProvider;
         }
 
-        if(!empty($this->create_time)){
-            $start_time = date('Y-m-d 00:00:00',strtotime($this->create_time));
-            $end_time = date('Y-m-d 23:00:00',strtotime($this->create_time));
-            $query->andFilterWhere(['between' , 'create_time', $start_time, $end_time]);
+        if (!empty($this->create_time)) {
+            $start_time = date('Y-m-d 00:00:00', strtotime($this->create_time));
+            $end_time = date('Y-m-d 23:00:00', strtotime($this->create_time));
+            $query->andFilterWhere(['between', 'create_time', $start_time, $end_time]);
         }
         $query->andFilterWhere([
             'msg_type' => $this->msg_type,
-            'event_id' =>$this->event_id,
+            'event_id' => $this->event_id,
+        ]);
+
+        return $dataProvider;
+    }
+
+
+    public function searchBatchParams($params)
+    {
+        $params = 'select msg_id from wc_batch_customer_params where task_id = ' . $params['id'];
+        $condition = 'record_id in (' . $params . ') and flag = 4';
+        $query = AttentionEvent::find()
+            ->where($condition)
+            ->orderBy('order_no asc,event_id asc');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        if (!empty($this->create_time)) {
+            $start_time = date('Y-m-d 00:00:00', strtotime($this->create_time));
+            $end_time = date('Y-m-d 23:00:00', strtotime($this->create_time));
+            $query->andFilterWhere(['between', 'create_time', $start_time, $end_time]);
+        }
+        $query->andFilterWhere([
+            'msg_type' => $this->msg_type,
+            'event_id' => $this->event_id,
         ]);
 
         return $dataProvider;

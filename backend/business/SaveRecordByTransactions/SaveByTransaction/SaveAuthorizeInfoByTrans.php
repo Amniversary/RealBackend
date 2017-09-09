@@ -50,6 +50,7 @@ class SaveAuthorizeInfoByTrans implements ISaveForTransaction
             $model->authorizer_refresh_token = $this->AuthInfo['authorizer_refresh_token'];
             $model->func_info = json_encode($this->AuthInfo['func_info']);
             $model->status = 1;
+            $model->alarm_status = 1;
             $model->user_id = \Yii::$app->user->id;
             $model->nick_name = $this->extend['nick_name'];
             $model->head_img = $this->extend['head_img'];

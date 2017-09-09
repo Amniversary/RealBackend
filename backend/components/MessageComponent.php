@@ -375,6 +375,7 @@ class MessageComponent
                 $paramData = [
                     'key_word'=>'wx_msg',
                     'open_id'=>$openid,
+                    'app_id' => $this->auth->record_id,
                     'authorizer_access_token'=>$this->auth->authorizer_access_token,
                     'item'=>$item
                 ];
@@ -484,6 +485,7 @@ class MessageComponent
                 $paramData = [
                     'key_word'=>'click_msg',
                     'open_id'=>$openid,
+                    'app_id' => $this->auth->record_id,
                     'authorizer_access_token'=>$this->auth->authorizer_access_token,
                     'item'=>$item
                 ];

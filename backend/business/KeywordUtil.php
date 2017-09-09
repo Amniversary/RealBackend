@@ -227,6 +227,26 @@ class KeywordUtil
     }
 
     /**
+     * 返回所有认证公众号列表
+     * @return array
+     */
+    public static function GetAuthParamsByApprove(){
+        $article = [];
+        $articleList = AuthorizationList::find()
+            ->select(['record_id','nick_name'])
+            ->where('verify_type_info in (0,3,4,5)')
+            ->orderBy('record_id')
+            ->all();
+
+        foreach($articleList as $articled){
+            $article[$articled['record_id']] = $articled['nick_name'];
+        }
+        $rights = array_chunk($article,25,true);
+
+        return $rights;
+    }
+
+    /**
      * 保存公众号配置
      * @return bool
      * @throws \yii\db\Exception

@@ -67,6 +67,7 @@ class SendCustomerAction extends Action
         $paramData = [
             'key_word'=>'wx_msg',
             'open_id'=>$User->open_id,
+            'app_id' => $auth->record_id,
             'authorizer_access_token'=>$accessToken,
             'item'=>$data
         ];

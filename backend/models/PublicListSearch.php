@@ -44,7 +44,7 @@ class PublicListSearch extends PublicListForm
     public function search($params)
     {
         $query = (new Query())
-            ->select(['al.record_id','nick_name','service_type_info','verify_type_info','head_img','ifnull(new_user,0) as new_user','ifnull(net_user,0) as net_user','ifnull(count_user,0) as count_user'])
+            ->select(['al.record_id','nick_name','service_type_info','verify_type_info','head_img', 'alarm_status','ifnull(new_user,0) as new_user','ifnull(net_user,0) as net_user','ifnull(count_user,0) as count_user'])
             ->from('wc_authorization_list al')
             ->innerJoin('wc_statistics_count sc','al.record_id = sc.app_id')
             ->leftJoin('wc_fans_statistics fs','al.record_id = fs.app_id and fs.statistics_date =:date',[':date'=>date('Y-m-d')]);
@@ -80,7 +80,7 @@ class PublicListSearch extends PublicListForm
     public function searchTag($params, $load)
     {
         $query = (new Query())
-            ->select(['al.record_id','nick_name','service_type_info','verify_type_info','head_img','ifnull(new_user,0) as new_user','ifnull(net_user,0) as net_user','ifnull(count_user,0) as count_user'])
+            ->select(['al.record_id','nick_name','service_type_info','verify_type_info','head_img', 'alarm_status','ifnull(new_user,0) as new_user','ifnull(net_user,0) as net_user','ifnull(count_user,0) as count_user'])
             ->from('wc_authorization_list al')
             ->innerJoin('wc_statistics_count sc','al.record_id = sc.app_id and al.record_id in ('.$params.')')
             ->leftJoin('wc_fans_statistics fs','al.record_id = fs.app_id and fs.statistics_date =:date',[':date'=>date('Y-m-d')]);

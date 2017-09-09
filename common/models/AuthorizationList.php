@@ -13,6 +13,7 @@ use Yii;
  * @property string $authorizer_refresh_token
  * @property string $func_info
  * @property integer $status
+ * @property integer $alarm_status
  * @property integer $user_id
  * @property string $nick_name
  * @property string $head_img
@@ -50,7 +51,7 @@ class AuthorizationList extends \yii\db\ActiveRecord
     {
         return [
             [['authorizer_appid', 'authorizer_access_token', 'authorizer_refresh_token', 'authorization_info'], 'required'],
-            [['status', 'user_id', 'service_type_info', 'verify_type_info', 'idc'], 'integer'],
+            [['status', 'alarm_status', 'user_id', 'service_type_info', 'verify_type_info', 'idc'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
             [['authorizer_appid', 'nick_name', 'user_name', 'alias', 'principal_name',  'remark1', 'remark2', 'remark3', 'remark4'], 'string', 'max' => 100],
             [['authorizer_access_token', 'authorizer_refresh_token', 'head_img', 'qrcode_url', 'business_info'], 'string', 'max' => 300],
@@ -70,6 +71,7 @@ class AuthorizationList extends \yii\db\ActiveRecord
             'authorizer_refresh_token' => '授权刷新令牌凭证',
             'func_info' => '授权权限集json格式',
             'status' => '状态',
+            'alarm_status' => '告警状态',
             'user_id' => '操作人ID',
             'nick_name' => '授权方昵称',
             'head_img' => '授权方头像',

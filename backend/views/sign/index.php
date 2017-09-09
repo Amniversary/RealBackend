@@ -105,7 +105,7 @@ echo GridView::widget([
 echo \yii\bootstrap\Modal::widget([
         'id' => 'contact-modal',
         'clientOptions' => false,
-        'size'=>\yii\bootstrap\Modal::SIZE_LARGE,
+        'size'=>\yii\bootstrap\Modal::SIZE_DEFAULT,
     ]
 );
 $js='

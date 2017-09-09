@@ -9,6 +9,7 @@
 namespace backend\business;
 
 
+use common\models\Alarm;
 use common\models\AttentionEvent;
 use common\models\AuthorizationList;
 use common\models\AuthorizationMenu;
@@ -41,11 +42,12 @@ class AuthorizerUtil
             ->where('verify_type_info in (0,3,4,5)')
             ->all();
         $data[0] = '总数据';
-        foreach($query as $item) {
+        foreach ($query as $item) {
             $data[$item['record_id']] = $item['nick_name'];
         }
         return $data;
     }
+
     /**
      * 根据记录Id 获取公众号信息
      * @param $record_id
@@ -283,5 +285,40 @@ class AuthorizerUtil
         return true;
     }
 
-
+    /**
+     * 是否告警
+     * @param $rst
+     * @param $app_id
+     * @return bool
+     */
+    public static function isAlarms($rst, $app_id, $text = '')
+    {
+        if (in_array($rst['errcode'], \Yii::$app->params['WxError'])) {
+            //TODO: 判断公众号是否开启告警 这里每次都要重新获取数据
+            $auth = AuthorizerUtil::getAuthByOne($app_id);
+            if ($auth->alarm_status == 1) {
+                $alarm = Alarm::findOne(['app_id' => $auth->record_id, 'create_time' => date('Y-m-d')]);
+                if (!empty($alarm)) {
+                    if ($alarm['alarm_num'] >= 3) return false;;
+                    $time = time() - strtotime($alarm['alarm_time']);
+                    if ($time < 30) return false;
+                    $alarm['alarm_num'] += 1;
+                    $alarm->save();
+                } else {
+                    $model = new Alarm();
+                    $model->app_id = $auth->record_id;
+                    $model->alarm_num = 1;
+                    $model->alarm_time = date('Y-m-d H:i:s');
+                    $model->create_time = date('Y-m-d');
+                    $model->save();
+                }
+                $remark = $text."接口告警 :'.\n" . "消息发送失败 : \nCode :" . $rst['errcode'] . ' errmsg :' . $rst['errmsg'];
+                if (!WeChatUserUtil::WeChatAlarmNotice($remark, $auth->nick_name,\Yii::$app->params['toUser'])) {
+                    return false;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
 }

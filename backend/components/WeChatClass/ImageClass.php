@@ -83,6 +83,7 @@ class ImageClass
         $params = [
             'key_word'=>'send_vip_msg',
             'open_id'=>$openid,
+            'app_id' => $auth->record_id,
             'accessToken'=>$accessToken,
             'item' => $item
         ];

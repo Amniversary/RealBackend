@@ -165,6 +165,12 @@ class WechatController extends Controller
         return $strrpos;
     }
 
+    /**
+     * 更新用户与公众号的互动时间
+     * @param $Openid
+     * @param $app_id
+     * @return bool
+     */
     private function SaveUserUpdate($Openid, $app_id)
     {
         $auth = AuthorizerUtil::getAuthOne($app_id);

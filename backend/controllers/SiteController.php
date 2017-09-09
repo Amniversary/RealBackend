@@ -29,11 +29,11 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error','testok1','noprivilige','statisticapilog','nocache','indexrecharge'],
+                        'actions' => ['login', 'error','testok1','noprivilige','statisticapilog','nocache'],
                         'allow' => true
                     ],
                     [
-                        'actions' => ['logout', 'index', 'indexrecharge'],
+                        'actions' => ['logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

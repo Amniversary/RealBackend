@@ -66,20 +66,35 @@ class TagUtil
     {
         try {
             $trans = \Yii::$app->db->beginTransaction();
-            (new SystemTagMenu())->deleteAll(['tag_id'=>$tag_id]);//TODO: 删除用户原有权限数据
+            (new SystemTagMenu())->deleteAll(['tag_id' => $tag_id]);//TODO: 删除用户原有权限数据
             $sql = '';
             $table = \Yii::$app->db;
             foreach ($params as $parList) {
-                $sql .= sprintf('insert into %s_system_tag_menu (tag_id, auth_id) values(%s,%s);',$table->tablePrefix,$tag_id,$parList);
+                $sql .= sprintf('insert into %s_system_tag_menu (tag_id, auth_id) values(%s,%s);', $table->tablePrefix, $tag_id, $parList);
             }
             $rst = $table->createCommand($sql)->execute();
-            if( $rst <= 0 ){
+            if ($rst <= 0) {
                 throw new Exception('保存权限数据异常');
             }
             $trans->commit();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $trans->rollBack();
             $error = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+    public static function SaveTemplateParams($params, $task, &$error)
+    {
+        if (!is_array($params)) {
+            $error = '数据不是数组';
+            return false;
+        }
+        $task->app_list = json_encode($params);
+        if (!$task->save()) {
+            $error = '保存任务公众号失败';
+            \Yii::error($error . ' ' . var_export($task->getErrors(), true));
             return false;
         }
         return true;

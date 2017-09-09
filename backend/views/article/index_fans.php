@@ -3,11 +3,9 @@
         position: relative;
         padding: 1px 15px 0 15px;
     }
-
     .content {
         padding: 0 15px 0 15px;
     }
-
     .user-form {
         /*width: 80%;*/
         margin: 0 auto;
@@ -15,7 +13,6 @@
         border-radius: 5px;
         overflow: hidden;
     }
-
     .col {
         display: inline-block;
         border: 1px solid #cee2ee;
@@ -23,27 +20,18 @@
         text-align: center;
         float: left;
     }
-
     .bg-blue {
         background-color: #3c8dbc !important;
     }
     .bg-black {
         background-color: #434348 !important;
     }
-    .bg-green{
+    .bg-green {
         background-color: #90ed7d !important;
     }
-    /*!* 统计图表样式 *!*/
-
-    /*#w0,#w1,#w2,#w3,#w4,#w5,#w6,#w7,#w8,#w9,#w10,#w11*/
-    /*{*/
-    /*width: 80%;*/
-    /*margin: 0 auto;*/
-    /*}*/
     .highcharts-container {
         padding: 10px 0;
     }
-
     .select {
         float: right;
         margin: 10px 20px 5px 0;
@@ -54,6 +42,7 @@
 </style>
 <?php
 /**
+ * 粉丝折线图统计
  * @var $authList
  * @var $app_id
  * @var $ToDay
@@ -62,13 +51,6 @@
  * @var $FourTeen
  * @var $Thirty
  */
-
-/*echo \yii\bootstrap\Alert::widget([
-    'body'=>'下列为净增用户数据!',
-    'options'=>[
-        'class'=>'alert-info',
-    ]
-]);*/
 ?>
 <div class="user-form" style="height:1100px;font-size:14px;">
     <div>
@@ -117,7 +99,7 @@
         </div>
 
 
-        <?= \yii\helpers\Html::dropDownList('auth-list',[$app_id],$authList,['class'=>'auth-list select']) ?>
+        <?= \yii\helpers\Html::dropDownList('auth-list', [$app_id], $authList, ['class' => 'auth-list select']) ?>
         <select class="select-change select">
             <option value="1">今天 / 昨天</option>
             <option value="7">近七天</option>
@@ -131,7 +113,7 @@
      */
     echo \miloschuman\highcharts\Highcharts::widget([
         'options' => [
-            'title' => ['text' => date('Y-m-d').'今日24小时粉丝统计'],
+            'title' => ['text' => date('Y-m-d') . '今日24小时粉丝统计'],
             'yAxis' => [
                 'allowDecimals' => false,
                 'title' => ['text' => '日期 / 粉丝数']
@@ -139,7 +121,7 @@
             'xAxis' => [
                 'categories' => $ToDay['date']
             ],
-            'series' => [$ToDay['net_user'],$ToDay['new_user'],$ToDay['cancel_user']],
+            'series' => [$ToDay['net_user'], $ToDay['new_user'], $ToDay['cancel_user']],
             'credits' => ['enabled' => false],
         ]]);
 
@@ -148,7 +130,7 @@
      */
     echo \miloschuman\highcharts\Highcharts::widget([
         'options' => [
-            'title' => ['text' => date('Y-m-d',strtotime('-1 day')).'昨日24小时粉丝统计'],
+            'title' => ['text' => date('Y-m-d', strtotime('-1 day')) . '昨日24小时粉丝统计'],
             'yAxis' => [
                 'allowDecimals' => false,
                 'title' => ['text' => '日期 / 粉丝数']
@@ -156,7 +138,7 @@
             'xAxis' => [
                 'categories' => $Yesterday['date']
             ],
-            'series' => [$Yesterday['net_user'],$Yesterday['new_user'],$Yesterday['cancel_user']],
+            'series' => [$Yesterday['net_user'], $Yesterday['new_user'], $Yesterday['cancel_user']],
             'credits' => ['enabled' => false],
         ]]);
 
@@ -173,26 +155,26 @@
             'xAxis' => [
                 'categories' => $WeekNum['date']
             ],
-            'series' => [$WeekNum['net_user'],$WeekNum['new_user'],$WeekNum['cancel_user']],
+            'series' => [$WeekNum['net_user'], $WeekNum['new_user'], $WeekNum['cancel_user']],
             'credits' => ['enabled' => false],
         ]]);
 
-     /**
-      * 粉丝累计统计 近七天
-      */
-        echo \miloschuman\highcharts\Highcharts::widget([
-            'options' => [
-                'title' => ['text' => '近七天累计粉丝统计'],
-                'yAxis' => [
-                    'allowDecimals' => false,
-                    'title' => ['text' => '日期 / 粉丝数']
-                ],
-                'xAxis' => [
-                    'categories' => $WeekNum['date']
-                ],
-                'series' => [$WeekNum['total_user']],
-                'credits' => ['enabled' => false],
-            ]]);
+    /**
+     * 粉丝累计统计 近七天
+     */
+    echo \miloschuman\highcharts\Highcharts::widget([
+        'options' => [
+            'title' => ['text' => '近七天累计粉丝统计'],
+            'yAxis' => [
+                'allowDecimals' => false,
+                'title' => ['text' => '日期 / 粉丝数']
+            ],
+            'xAxis' => [
+                'categories' => $WeekNum['date']
+            ],
+            'series' => [$WeekNum['total_user']],
+            'credits' => ['enabled' => false],
+        ]]);
     /**
      * 粉丝统计-近十四天
      */
@@ -206,7 +188,7 @@
             'yAxis' => [
                 'title' => ['text' => '日期 / 粉丝数']
             ],
-            'series' => [$FourTeen['net_user'],$FourTeen['cancel_user'],$FourTeen['new_user']],
+            'series' => [$FourTeen['net_user'], $FourTeen['cancel_user'], $FourTeen['new_user']],
             'credits' => [
                 'enabled' => false
             ],
@@ -244,7 +226,7 @@
             'yAxis' => [
                 'title' => ['text' => '日期 / 粉丝数']
             ],
-            'series' => [$Thirty['net_user'], $Thirty['cancel_user'],$Thirty['new_user']],
+            'series' => [$Thirty['net_user'], $Thirty['cancel_user'], $Thirty['new_user']],
             'credits' => [
                 'enabled' => false
             ],

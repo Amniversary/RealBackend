@@ -31,8 +31,8 @@ class WeChatUserUtil
             $openid,
             $lang);
         $res = json_decode(UsualFunForNetWorkHelper::HttpGet($url), true);
-        if(empty($res)) $res = [];
-        $result = !array_key_exists('errcode', $res) ?  $res : false;
+        if (empty($res)) $res = [];
+        $result = !array_key_exists('errcode', $res) ? $res : false;
         if (empty($result)) {
             \Yii::error('微信请求不到用户信息数据 :' . var_export($result, true));
             return false;
@@ -499,7 +499,7 @@ class WeChatUserUtil
      * @return array
      * @throws HttpException
      */
-    public static function genMessageModel($post, $accessToken)
+    public static function genMessageModel($post, $accessToken = null)
     {
         $data = [];
         switch ($post['msg_type']) {
@@ -521,5 +521,39 @@ class WeChatUserUtil
                 break;
         }
         return $data;
+    }
+
+    /**
+     * 微信告警通知
+     * @param $remark           //错误内容备注
+     * @param null $toUser      //发送的用户名   ['1', '2']
+     * @param $auth_name
+     * @param int $alarmType    //报警类型  0 :普通告警  1: 系统错误告警
+     * @param int $channels     //告警通道  gzh:服务号告警   sms:短信通道告警
+     * @param int $status       //告警状态  0:警告  1:错误
+     * @return bool
+     */
+    public static function WeChatAlarmNotice($remark, $auth_name, $toUser = null, $alarmType = 0, $channels = 0, $status = 0)
+    {
+        $url = 'http://alarm.gatao.cn/api/doalarm';
+        $post = [
+            'alarmType' => $alarmType,
+            'alarmTime' => time(),
+            'alarmMsg' => $auth_name.'接口报警',
+            'alarmRemark' => $remark,
+            'channels' => $channels == 0 ? ['gzh'] : ($channels == 2 ? ['sms'] : ['gzh', 'sms']),
+            'toUsers' => $toUser == null ? ['Gavean'] : $toUser,
+        ];
+        if ($alarmType == 1) {
+            $post['alarmHost'] = $_SERVER['REMOTE_ADDR'];
+            $post['alarmService'] = '公众号数据平台';
+            $post['alarmStatus'] = !$status ? '警告' : '错误';
+        }
+        $json = json_encode($post);
+        $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url, $json), true);
+        if ($rst['code'] == 0) {
+            return true;
+        }
+        return false;
     }
 }

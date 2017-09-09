@@ -203,35 +203,28 @@ $(document).ready(function(){
     $vue = $(".updt-bt").attr("href") + "&id='.$id.'";
     $(".updt-bt").attr("href",$vue);
 });
-$("#customMsg-pjax").on("click",".delete",function(){
-if(!confirm("确定要删除该记录吗？"))
-    {
-        return false;
-    }
-    $url = $(this).attr("href");
-            $.ajax({
+$("#customMsg-pjax").on("click",".delete",function (){
+if(!confirm("确定要删除该记录吗？")) {
+    return false;
+}
+$url = $(this).attr("href");
+    $.ajax({
         type: "POST",
         url: $url,
         data: "",
-        success: function(data)
-            {
-               data = $.parseJSON(data);
-                if(data.code == "0")
-                {
-                    $("#customMsg").yiiGridView("applyFilter");
-                }
-                else
-                {
-                    alert("删除失败：" + data.msg);
-                    
-                }
-            },
-        error: function (XMLHttpRequest, textStatus, errorThrown)
-            {
-                alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
-             }
-        });
-       return false;
+        success: function(data) {
+            data = $.parseJSON(data);
+            if(data.code == "0") {
+                $("#customMsg").yiiGridView("applyFilter");
+            } else {
+                alert("删除失败：" + data.msg);
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("服务器繁忙，稍后再试，状态：" + XMLHttpRequest.status);
+        }
+    });
+   return false;
 });
 
 ';

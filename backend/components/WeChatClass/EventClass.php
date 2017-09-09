@@ -43,7 +43,7 @@ class EventClass
     /**
      * 处理微信关注事件
      */
-    public function     subscribe()
+    public function subscribe()
     {
         $appid = $this->data['appid'];
         $openid = $this->data['FromUserName'];  //TODO: 触发事件用户openId
