@@ -34,6 +34,7 @@ use common\components\OssUtil;
 use common\components\SystemParamsUtil;
 use common\components\UsualFunForNetWorkHelper;
 use common\components\UsualFunForStringHelper;
+use common\models\ArticleOrder;
 use common\models\ArticleTotal;
 use common\models\AttentionEvent;
 use common\models\AuthorizationList;
@@ -55,6 +56,27 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        (new ArticleOrder())->deleteAll();
+        exit;
+        $auth = AuthorizerUtil::getAuthByOne(14);
+        $data = ['appid'=>$auth->authorizer_appid];
+        $msgObj = new MessageComponent($data);
+        $model = $msgObj->getMessageModel();
+        $model[1][] = [
+            'title'
+        ];
+        foreach($model as &$item) {
+            if($item['msg_type'] == 1) {
+                $msg_type = $item['msg_type'];
+                unset($item['msg_type']);
+                shuffle($item);
+                $item['msg_type'] = $msg_type;
+            }
+        }
+
+
+
+        exit;
         $o1 = '2017-09-09 15:30:00';
         $o2 = '2017-09-09 15:29:00';
         $time = intval((strtotime($o1) - strtotime($o2)) / 60);

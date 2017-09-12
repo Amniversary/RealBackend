@@ -43,12 +43,12 @@ class CustomerStatistics extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'task_id' => 'Task ID',
-            'app_id' => 'App ID',
-            'user_count' => 'User Count',
-            'user_num' => 'User Num',
-            'create_time' => 'Create Time',
-            'remark1' => 'Remark1',
+            'task_id' => '任务 ID',
+            'app_id' => '公众号',
+            'user_count' => '总用户数',
+            'user_num' => '送达人数',
+            'create_time' => '结束时间',
+            'remark1' => '备用字段1',
         ];
     }
 }

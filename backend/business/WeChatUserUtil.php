@@ -471,9 +471,11 @@ class WeChatUserUtil
      *                      next_openid =>''    //拉取最后一个用户的OpenId
      *                  ]
      */
-    public static function getUserListForOpenId($accessToken, $NEXT_OPENID = null)
+    public static function getUserListForOpenId($accessToken, $NEXT_OPENID)
     {
-        $url = "https://api.weixin.qq.com/cgi-bin/user/get?access_token=$accessToken&next_openid=$NEXT_OPENID";
+        $url = "https://api.weixin.qq.com/cgi-bin/user/get?access_token=$accessToken";
+        if(!empty($NEXT_OPENID))
+            $url .= "&next_openid=$NEXT_OPENID";
         $res = json_decode(UsualFunForNetWorkHelper::HttpGet($url), true);
         return $res;
     }

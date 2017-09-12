@@ -15,8 +15,11 @@ use yii\base\Action;
 
 class GetOpenIdForUserInfoAction extends Action
 {
-    public function run($appId ,$next_openid)
+    public function run($appId, $next_openid)
     {
+        if(empty($next_openid)) {
+            $next_openid = '';
+        }
         echo "执行时间 :". date('Y-m-d H:i:s') ."\n";
         $this->getUserListForClient($appId, $next_openid, $total, $i);
         $time = date('Y-m-d H:i:s');
@@ -29,6 +32,9 @@ class GetOpenIdForUserInfoAction extends Action
         $auth = AuthorizerUtil::getAuthByOne($appId);
         $accessToken = $auth->authorizer_access_token;
         $rst = WeChatUserUtil::getUserListForOpenId($accessToken, $next_openid);
+        if(isset($rst['errcode'])) {
+            var_dump($rst);exit;
+        }
         $total = $rst['total'];
         if(!isset($rst['data']['openid'])) {
             return false;

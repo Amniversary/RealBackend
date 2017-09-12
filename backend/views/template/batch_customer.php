@@ -104,7 +104,7 @@ $gridColumns = [
                 return Html::a('删除', $url, ['class' => 'delete back-a', 'data-toggle' => false, 'data-method' => 'post', 'data-pjax' => '1', 'style' => 'margin-right:2%']);
             },
             'status' => function ($url, $model) {
-                if($model->status < 2) return '';
+                if($model->status > 0) return '';
                 return Html::a('状态', $url, ['class' => 'back-a']);
             }
         ],

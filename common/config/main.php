@@ -54,7 +54,7 @@ return [
             'host'=>"127.0.0.1",
             'port'=>11303,
             'connectTimeout'=>1,
-            'sleep'=> 0,
+            'sleep'=> false,
         ],
         'imgBeanstalk'=>[
             'class'=>'udokmeci\yii2beanstalk\Beanstalk',
@@ -67,6 +67,13 @@ return [
             'class'=>'udokmeci\yii2beanstalk\Beanstalk',
             'host'=>"127.0.0.1",
             'port'=>11305,
+            'connectTimeout'=>1,
+            'sleep'=>false
+        ],
+        'getUserBeanstalk'=>[
+            'class'=>'udokmeci\yii2beanstalk\Beanstalk',
+            'host'=>'127.0.0.1',
+            'port'=>11306,
             'connectTimeout'=>1,
             'sleep'=>false
         ]

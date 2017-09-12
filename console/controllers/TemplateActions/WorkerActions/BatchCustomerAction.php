@@ -62,9 +62,10 @@ class BatchCustomerAction extends Action
                         \Yii::getLogger()->log("--$sentData->key_word--" . '任务处理失败，jobid：' . $jobId . ' -- :' . var_export($error, true) . '  openId :' . $sentData->open_id . ' ', Logger::LEVEL_ERROR);
                         \Yii::getLogger()->flush(true);
                         if(!AuthorizerUtil::isAlarms($rst, $auth->record_id, '群发客服任务消息')) break;
-                        continue;
+                        break;
                     }
                 }
+                if($rst['errcode'] != 0) continue;
                 $i++;
                 fwrite(STDOUT, Console::ansiFormat("--$sentData->key_word--" . date('Y-m-d H:i:s') . " --nick_name : " . $list['nick_name'] . " -- openId :" . $list['open_id'] . " appId :" . $auth->record_id . "  app_name :" . $auth->nick_name . "\n", [Console::FG_GREEN]));
                 fwrite(STDOUT, Console::ansiFormat("--$sentData->key_word--" . date('Y-m-d H:i:s') . " --" . json_encode($rst) . "--$sentData->key_word--  Everything is allright" . "\n", [Console::FG_GREEN]));

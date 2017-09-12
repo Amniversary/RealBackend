@@ -18,11 +18,13 @@ class WorkerimgController extends BeanstalkController
     const DELAY_TIME = 1;
 
     const DELAY_MAX = 3;
+
     public function init()
     {
         $this->beanstalk = \Yii::$app->imgBeanstalk;
         parent::init();
     }
+
     public function listenTubes()
     {
         return require(__DIR__ . '/ImgActions/ListenTubesConfig.php');
