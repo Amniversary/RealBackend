@@ -152,6 +152,7 @@ class CarouselsUtil
         return $rst;
     }
 
+
     public static function GetCarousels()
     {
         return Carousel::find()->where(['action_type' => 1, 'status' => 1])->orderBy('order_no asc')->all();
@@ -209,5 +210,24 @@ class CarouselsUtil
             ->one();
 
         return $query;
+    }
+
+    public static function getBookCarousel()
+    {
+        $recordList = Carousel::find()->where(['action_type' => 3, 'status' => 1])->orderBy('order_no asc')->all();
+        $out = [];
+        if (!isset($recordList) || empty($recordList)) {
+            return $out;
+        }
+        foreach ($recordList as $model) {
+            $ary = [
+                'id' => $model->carousel_id,
+                'pic_url' => $model->pic_url,
+                'url' => $model->url,
+                'description' => $model->description,
+            ];
+            $out[] = $ary;
+        }
+        return $out;
     }
 }

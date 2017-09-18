@@ -9,6 +9,7 @@ namespace frontend\controllers\FuckActions;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\JobUtil;
 use backend\business\WeChatUserUtil;
 use common\components\IOSBuyUtil;
 use common\components\MoneyUtil;
@@ -27,6 +28,8 @@ use common\models\StatisticsCount;
 use frontend\api\version\CreateCarousels;
 use frontend\api\version\GetUserInfo;
 use frontend\api\version\WxUserLogin;
+use frontend\business\ClientUtil;
+use frontend\business\DynamicUtil;
 use frontend\business\RongCloud\UserUtil;
 
 use frontend\business\WeeklyUtil;
@@ -40,6 +43,18 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
+        $rst = ClientUtil::getBookUserForUnionId('oNirq0FTxP1WARQmz2pzJq2nYbkc');
+print_r($rst);
+        exit;
+        $params = [
+            'app_id' => 14 ,
+        ];
+        if(!JobUtil::AddCustomJob('getUserBeanstalk', 'get_user', $params, $error, (60 *60 * 48))){
+            print_r($error);exit;
+        }
+        echo 'OK';
+
+        exit;
             \Yii::$app->cache->delete('carousels_info');
             echo "1";
             exit;
@@ -2651,334 +2666,6 @@ print_r('kaa');
             print_r($a);
 
             exit;
-            $data['user_id'] = 2;
-            $a = DynamicUtil::GetNewDynamicListInfo($data, 1, 10);
-            foreach ($a as $list) {
-                $s = array_search($list, $a);
-                $list['is_click'] = 0;
-                $click_info = \Yii::$app->cache->get('get_dynamic_like_' . $list['user_id'] . '_' . $list['dynamic_id'] . '_' . $user_id);
-                if ($click_info !== false) {
-                    $list['is_click'] = 1;
-                }
-                $a[$s] = $list;
-
-            }
-            print_r("<pre>");
-            print_r($a);
-            exit;
-
-
-            $data = DynamicUtil::GetDynamicById(2);
-            $a = DynamicUtil::GetCommentListInfo($data, 1, 10);
-            print_r("<pre>");
-            print_r($a);
-            exit;
-            $data = [
-                'key_word' => 'set_tencent_im',
-                'user_id' => '-1',
-                'nick_name' => '系统消息',
-                'pic' => 'http://oss-cn-hangzhou.aliyuncs.com/mblive/meibo-test/system_icon.png',
-            ];
-            //注册腾讯用户
-            if (!JobUtil::AddImJob('tencent_im', $data, $error)) {
-                \Yii::getLogger()->log('im job save error :' . $error, Logger::LEVEL_ERROR);
-                print_r($error);
-                exit;
-            }
-            echo 'OK';
-            exit;
-            $test = '您好,一起摇摆?';
-            if (!TimRestApi::openim_batch_send_msg($test, $error)) {
-                print_r('发送腾讯云消息失败:' . $error);
-                exit;
-            }
-            echo "ok";
-            exit;
-
-
-            $test = 'meiboadmin';
-            $a = intval($test);
-            echo $a;
-            exit;
-            $test = '来呀,快活呀dsdsadasdasdas';
-            if (!TimRestApi::openim_send_msg('20', '86', $test, $error)) {
-                print_r('发送腾讯云消息失败:' . $error);
-                exit;
-            }
-            echo 'ok';
-            exit;
-
-
-            $test = '来呀,快活呀dsdsadasdasdas';
-            if (!TimRestApi::openim_batch_send_msg($test, $error)) {
-                print_r('发送腾讯云消息失败:' . $error);
-                exit;
-            }
-            echo 'ok';
-            exit;
-            $data['user_id'] = 3;
-            $a = DynamicUtil::GetNewDynamicListInfo($data, 1, 10);
-            print_r("<pre>");
-            print_r($a);
-            exit;
-            $data = [
-                'key_word' => 'sasa',
-                'dynamic_id' => '1',
-                'user_id' => '1',
-                'to_user_id' => '2',
-                'content' => 'dasdas',
-                'status' => 1
-            ];
-
-            $a = DynamicUtil::NewCommentModel($data);
-            print_r("<pre>");
-            print_r($a->attributes);
-
-
-
-            exit;
-            $data = DynamicUtil::GetDynamicById(2);
-            $test = DynamicUtil::GetCommentListInfo($data, 1, 10);
-            $Dynamic_list = [];
-
-            //$Dynamic_list = json_encode($Dynamic_list);
-            print_r("<pre>");
-            print_r($test);
-
-            exit;
-            $data['data'] = [
-                'unique_no' => 15857108643,
-                'dynamic_type' => '2',
-                'content' => '',
-                'pic' => 'http://image.dili360.com/photo/hdtj/2012/0214/34_15141200419_20120214095238.jpg',
-                'dim_pic' => 'dasda',
-                'red_money' => 10
-            ];
-            $a = new ZhiBoAddDynamic();
-            if (!$a->excute_action($data, $rstData, $error)) {
-                print_r($error);
-                exit;
-            }
-            print_r("<pre>");
-            print_r($rstData);
-
-            exit;
-            $a = \Yii::$app->cache->get('get_api_version');
-            print_r($a);
-            exit;
-            $a = acosh(1);
-            echo $a;
-            exit;
-            $stack = array("orange", "banana", "apple", "raspberry");
-            $fruit = array_keys($stack, 'banana', true);
-            print_r("<pre>");
-            print_r($stack);
-            print_r($fruit);
-            exit;
-            $rst = UsualFunForStringHelper::GenRandRePacketsData(10, 100, $index, $error);
-            print_r("<pre>");
-            print_r($rst);
-            print_r($index);
-            print_r($error);
-            exit;
-            $sum = 6; $n = 3;
-            $ave = intval($sum / $n);
-            $a = rand(1, $ave);
-            print_r($ave);
-            print_r("<br />");
-            print_r($a);
-
-            exit;
-
-
-            $a = 1;
-            if (!in_array($a, [1, 2, 3, 4, 5])) {
-                echo 'no';
-                exit;
-            }
-            echo 'ok';
-
-            exit;
-
-            //透传消息发送 //dc212469be51b4bade3a5365ea208e60
-            $cid = 'dc212469be51b4bade3a5365ea208e60'; //sb懊悔 bfbc99b2d18d6e5d675e27e7ea3cfa97 //4330ce9b3845f5641b702e3fcc3c163e
-            //$cid1 = 'df76d318237ee969d2b4c857bd2353c0';
-            //$cid2 = '9faa6cea1cb02a692433abb1ec3105a7';
-            //9faa6cea1cb02a692433abb1ec3105a7
-
-            if (!GeTuiUtil::PushListMessage('您的好友[Gavean.]开始直播了，快去瞅瞅！', '5-137-2053-1283-猫王', [$cid], $error)) {
-                var_dump($error);
-                exit;
-            }
-            var_dump('ok');
-            exit;
-            $aa = \Yii::$app->cache->get('app_version_info');
-            print_r($aa);
-
-            exit;
-            $a = GiftUtil::GetGiftScoreType();
-            print_r($a);
-
-
-            exit;
-            $a = ChatPersonGroupUtil::GetLivingOwner(1, 1);
-            print_r($a);
-            exit;
-            $query = (new Query())
-                ->select(['client_id as user_id', 'unique_no', 'register_type', 'nick_name', 'level_no as level_id'])
-                ->from('mb_client bc')
-                ->innerJoin('mb_client_active ca', 'bc.client_id = ca.user_id')
-                ->join('join', '(SELECT ROUND(RAND() * (SELECT MAX(client_id) FROM `mb_client`)) + 100 AS id) AS t2')
-                ->where(['and', 'status = 1', 'level_no < 15', 'bc.client_id between t2.id - 100 and t2.id'])
-                ->orderBy('bc.client_id ASC')
-                ->limit(55)
-                ->all();
-
-            print_r($query);
-
-            exit;
-            $data = [
-                'key_word' => 'set_tencent_im',
-                'user_id' => 45120,
-                'nick_name' => '',
-                'pic' => '',
-            ];
-            //注册腾讯用户
-            if (!JobUtil::AddImJob('tencent_im', $data, $error)) {
-                \Yii::getLogger()->log('im job save error :' . $error, Logger::LEVEL_ERROR);
-            }
-            echo "ok";
-            EXIT;
-           /* \Yii::$app->cache->delete('get_robot_params_20');
-            echo "Ok";
-
-            exit;*/
-            $data = [
-                "app_id" => "com.mb.mibo",
-                "app_version_inner" => "18",
-                "api_version" => "v2",
-                "device_type" => "1",
-                "device_no" => "869271024814623",
-                "action_name" => "get_robot",
-                "has_data" => "1",
-                "data_type" => "json",
-                "data" =>
-                    [
-                        "unique_no" => "15857108643",
-                        "register_type" => "1",
-                        "living_id" => "167",
-                    ]
-            ];
-
-            $a = new ZhiBoGetRobot();
-            if (!$a->excute_action($data, $rstData, $error)) {
-                print_r($error);
-                exit;
-            }
-            print_r($rstData);
-            exit;
-            $time = 0;
-            for ($i = 0; $i < 3; $i++) {
-                $time++;
-            }
-            print_r($time);
-            exit;
-
-            $robot_num[] = ['1' => 'a', '2' => 2];
-            $robot_num[] = [2, 3];
-            $num = count($robot_num);
-            print_r($num);
-            exit;
-            $robot_num = array_merge($robot_num, $aa);
-            print_r($robot_num);
-            exit;
-            $num = rand(1, 1000);
-            print_r($num);
-            exit;
-            $a = NUll;
-            if (!isset($a)) {
-                echo "null";
-                exit;
-            }
-            echo "ok";
-            exit;
-
-            \Yii::$app->cache->delete('cache_ranstr');
-            echo 'ok';
-            exit;
-            $a = \Yii::$app->cache->get('cache_ranstr');
-            print_r($a);
-            exit;
-            if (!LivingUtil::GetUserLevelInfo(408, $LevelInfo, $error)) {
-                print_r($error);
-                exit;
-            }
-            print_r("<pre>");
-            print_r($LevelInfo);
-            exit;
-
-            $version = SystemParamsUtil::GetSystemParam('set_version_agreement', true, 'value2');
-
-            $s = explode(',', $version);
-            if (!in_array('v1', $s)) {
-                echo "NO";
-                exit;
-            }
-            print_r($s);
-            exit;
-
-            //透传消息发送
-            $cid = 'dc212469be51b4bade3a5365ea208e60'; //sb懊悔 bfbc99b2d18d6e5d675e27e7ea3cfa97 //4330ce9b3845f5641b702e3fcc3c163e
-            //$cid1 = 'df76d318237ee969d2b4c857bd2353c0';
-            //$cid2 = '9faa6cea1cb02a692433abb1ec3105a7';
-            //9faa6cea1cb02a692433abb1ec3105a7
-
-            if (!GeTuiUtil::PushListMessage('您好好友[Gavean.]开始直播了，快去瞅瞅！', '5-137-2053-1283-猫王', [$cid], $error)) {
-                var_dump($error);
-                exit;
-            }
-            var_dump('ok');
-            exit;
-
-            $key = '13616686709';
-            $info = \Yii::$app->cache->get('mb_api_login_' . $key);
-            $info = unserialize($info);
-            print_r($info);
-            exit;
-            $key = '18072701434'; //烈强  18223663852 //孝义 18820005847 //大飞 18072701434
-            \Yii::$app->cache->delete('mb_api_login_' . $key);
-            echo 'OK';
-            $goods = ClientGoodsUtil::GetBeanCommodityList();
-            print_r($goods);
-            exit;
-            $login = \Yii::$app->cache->get('mb_api_login_oVKOWs3b0_b7cpfG5YHxHo7j0A90');
-            $login = unserialize($login);
-            print_r($login);
-            exit;
-
-            $model = [
-                'fun_id' => 1,
-                'create_time' => date('Y-m-d H:i:s'),
-                'unique_no' => 2131321321,
-                'device_no' => 2,
-                'device_type' => 3,
-                'remark1' => time(),
-                'remark2' => 'asdawqwq',
-                'remark3' => '127.0.0.1',
-            ];
-
-            $data = [
-                'key_word' => 'set_api_log',
-                'data' => serialize($model),
-            ];
-
-            if (!JobUtil::AddApiJob('set_api_job', $data, $error)) {
-                \Yii::getLogger()->log('api job save error:' . $error, Logger::LEVEL_ERROR);
-                return false;
-            }
-
-            echo "OK";
-            exit;
             $fileName = './api_logs/api_log_' . date('Y-m-d') . '.txt';
             /*$my_file = fopen($fileName,'a');
             $int = fwrite($my_file,$data."\n");*/
@@ -2988,115 +2675,6 @@ print_r('kaa');
                 exit;
             }
             //fclose($my_file);
-            echo 'OK' . $int;
-            exit;
-            $a = ClientUtil::GetClientOtherByUserId(35502);
-            if (!empty($a)) {
-                echo "1";
-                print_r($a);
-                exit;
-            }
-            echo 2;
-            print_r($a);
-
-            exit;
-            $test = (new Query())
-                ->select(['quality_id', 'quality'])
-                ->from('mb_living_parameters')
-                ->all();
-            $testS = [];
-            foreach ($test as $q) {
-                $testS[$q['quality_id']] = $q['quality'];
-            }
-            print_r("<pre>");
-            print_r($testS);
-            exit;
-
-
-            $data =
-                [
-                    'api_version' => 'v1',
-                    'device_type' => 'dsadsadasd',
-                    'device_no' => '',
-                    'action_name' => 'get_client_info',
-                    'has_data' => '1',
-                    'data_type' => 'json',
-                    'data' =>
-                        [
-                            'unique_no' => '15857108643',
-                            'user_id' => '8',
-                            'register_type' => '1',
-                            'fields' =>
-                                [
-
-                                ],
-                        ]
-                ];
-            $a = new ZhiBoGetClientInfo();
-            if (!$a->excute_action($data, $rstData, $error)) {
-                print_r($error);
-                exit;
-            }
-            print_r("<pre>");
-            print_r($rstData);
-
-
-            exit;
-
-
-            $info = LivingUtil::GetLivingImInfo(8);
-            if (empty($info)) {
-                echo "null";
-                exit;
-            }
-            print_r($info);
-            exit;
-
-            $data = ['use' => 'becos tuainsdj', 'seK' => '龙根炮王强'];
-            if (!JobUtil::AddImJob('tube', $data, $error)) {
-                print_r($error);
-                exit;
-            }
-
-            echo 'ok';
-            exit;
-
-            /*\Yii::$app->cache->delete('mb_api_login_15857108643');
-            exit;*/
-
-            /*$info = \Yii::$app->cache->get('mb_api_login_15857108643');
-            $info = unserialize($info);
-            print_r("<pre>");
-            print_r($info);
-            echo "OK";
-            exit;*/
-            $data =
-                [
-                    'api_version' => 'v1',
-                    'device_type' => 'dsadsadasd',
-                    'device_no' => '',
-                    'action_name' => 'get_client_info',
-                    'has_data' => '1',
-                    'data_type' => 'json',
-                    'data' =>
-                        [
-                            'unique_no' => '15857108643',
-                            'user_id' => '8',
-                            'register_type' => '1',
-                            'fields' =>
-                                [
-
-                                ],
-                        ]
-                ];
-            $a = new ZhiBoGetClientInfo();
-            if (!$a->excute_action($data, $rstData, $error)) {
-                print_r($error);
-                exit;
-            }
-            print_r("<pre>");
-            print_r($rstData);
-
 
             exit;
             /*$a = 'aaa';
@@ -3167,23 +2745,9 @@ print_r('kaa');
             $url = 'http://120.26.69.248/msg/QueryBalance?account=4q9v4e&pswd=o5eF7fIO';
             $back = UsualFunForNetWorkHelper::HttpGet($url);
             echo $back;
-
-
             exit;
 
 
-            //211 焦丫
-            $phone = \Yii::$app->params['service_tel'];
-            $bean_num = 30;
-            $text_content = '亲爱的用户，由于网络延迟原因，您充值的' . $bean_num . '蜜豆或赠送豆现已到账，请到“我的豆”页面核实，若还有问题请加官方客服QQ群' . $phone . '咨询';
-            if (!TimRestApi::openim_send_Text_msg('25', $text_content, $error)) {
-                \Yii::getLogger()->log('发送腾讯云通知消息异常: ' . $error, Logger::LEVEL_ERROR);
-                $error = '充值成功，发送腾讯云私信失败!';
-                echo $error;
-                exit;
-            }
-            echo 'OK';
-            exit;
 
             $a = AlipayUtil::QueryOrderStatus('ZHF-RG-16-07-040014', '', $out);
             print_r('<pre>');

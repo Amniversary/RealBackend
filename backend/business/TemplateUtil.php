@@ -19,14 +19,22 @@ class TemplateUtil
     public static function GetMsgTemplate($arr, $contentStr)
     {
         $msg_type = 0;
-        if(is_array($contentStr) && isset($contentStr['msg_type'])) {
+        if (is_array($contentStr) && isset($contentStr['msg_type'])) {
             $msg_type = $contentStr['msg_type'];
         }
-        switch(intval($msg_type)){
-            case  1: $rst = self::transmitNews($arr,$contentStr); break;
-            case  2: $rst = self::transmitImg($arr, $contentStr); break;
-            case  3: $rst = self::transmitVideo($arr, $contentStr); break;
-            default: $rst = self::transmitText($arr, $contentStr); break;
+        switch (intval($msg_type)) {
+            case  1:
+                $rst = self::transmitNews($arr, $contentStr);
+                break;
+            case  2:
+                $rst = self::transmitImg($arr, $contentStr);
+                break;
+            case  3:
+                $rst = self::transmitVideo($arr, $contentStr);
+                break;
+            default:
+                $rst = self::transmitText($arr, $contentStr);
+                break;
         }
         return $rst;
     }
@@ -40,13 +48,13 @@ class TemplateUtil
      */
     public static function transmitText($arr, $content, $flag = 0)
     {
-        if($content == null){
+        if ($content == null) {
             return null;
         }
-        if(is_array($content)){
+        if (is_array($content)) {
             $content = $content['content'];
         }
-        if(strpos($content,'from_callback')){
+        if (strpos($content, 'from_callback')) {
             $arr['MsgType'] = 'text';
         }
         $textXml = "<xml>
@@ -56,7 +64,7 @@ class TemplateUtil
                         <Content><![CDATA[%s]]></Content>
                         <FunFlag>%s</FunFlag>
                     </xml>";
-        $resultStr = sprintf($textXml, $arr['FromUserName'], $arr['ToUserName'], time(),str_replace("\r\n",PHP_EOL,$content),$flag);
+        $resultStr = sprintf($textXml, $arr['FromUserName'], $arr['ToUserName'], time(), str_replace("\r\n", PHP_EOL, $content), $flag);
         return $resultStr;
     }
 
@@ -67,28 +75,28 @@ class TemplateUtil
      * @param $content
      * @return null|string
      */
-    public static function transmitNews($arr, $content){
-        if($content == null) return null;
+    public static function transmitNews($arr, $content)
+    {
+        if ($content == null) return null;
         unset($content['msg_type']);
         $count = count($content);
         $newsXml = "<xml>
-                        <ToUserName><![CDATA[%s]]></ToUserName>
-                        <FromUserName><![CDATA[%s]]></FromUserName>
-                        <CreateTime>%s</CreateTime>
+                        <ToUserName><![CDATA[".$arr['FromUserName']."]]></ToUserName>
+                        <FromUserName><![CDATA[". $arr['ToUserName'] ."]]></FromUserName>
+                        <CreateTime>". time() . "</CreateTime>
                         <MsgType><![CDATA[news]]></MsgType>
-                        <ArticleCount>%s</ArticleCount>
+                        <ArticleCount>".$count."</ArticleCount>
                         <Articles>";
-        foreach($content as $item){
+        foreach ($content as $item) {
             $newsXml .= "<item>
-                            <Title><![CDATA[".$item['title']."]]></Title>
-                            <Description><![CDATA[".$item['description']."]]></Description>
-                            <PicUrl><![CDATA[".$item['picurl']."]]></PicUrl>
-                            <Url><![CDATA[".$item['url']."]]></Url>
+                            <Title><![CDATA[" . $item['title'] . "]]></Title>
+                            <Description><![CDATA[" . $item['description'] . "]]></Description>
+                            <PicUrl><![CDATA[" . $item['picurl'] . "]]></PicUrl>
+                            <Url><![CDATA[" . $item['url'] . "]]></Url>
                         </item>";
         }
         $newsXml .= "</Articles></xml>";
-        $resultStr = sprintf($newsXml,$arr['FromUserName'],$arr['ToUserName'],time(),$count);
-        return $resultStr;
+        return $newsXml;
     }
 
 
@@ -98,8 +106,9 @@ class TemplateUtil
      * @param $content
      * @return null|string
      */
-    public static function transmitImg($arr,$content){
-        if($content == null) return null;
+    public static function transmitImg($arr, $content)
+    {
+        if ($content == null) return null;
         $imgXml = "<xml>
                     <ToUserName><![CDATA[%s]]></ToUserName>
                     <FromUserName><![CDATA[%s]]></FromUserName>
@@ -109,7 +118,7 @@ class TemplateUtil
                     <MediaId><![CDATA[%s]]></MediaId>
                     </Image>
                    </xml>";
-        $resultStr = sprintf($imgXml,$arr['FromUserName'],$arr['ToUserName'],time(),$content['media_id']);
+        $resultStr = sprintf($imgXml, $arr['FromUserName'], $arr['ToUserName'], time(), $content['media_id']);
         return $resultStr;
     }
 
@@ -119,8 +128,9 @@ class TemplateUtil
      * @param $content
      * @return null|string
      */
-    public static function transmitVideo($arr,$content){
-        if($content == null) return null;
+    public static function transmitVideo($arr, $content)
+    {
+        if ($content == null) return null;
         $xml = "<xml>
                     <ToUserName><![CDATA[%s]]></ToUserName>
                     <FromUserName><![CDATA[%s]]></FromUserName>
@@ -130,7 +140,7 @@ class TemplateUtil
                         <MediaId><![CDATA[%s]]></MediaId>
                     </Voice>
                 </xml>";
-        return $resultStr = sprintf($xml,$arr['FromUserName'],$arr['ToUserName'],time(),$content['media_id']);
+        return $resultStr = sprintf($xml, $arr['FromUserName'], $arr['ToUserName'], time(), $content['media_id']);
     }
 
     /**
@@ -140,6 +150,6 @@ class TemplateUtil
      */
     public static function GetTemplateById($id)
     {
-        return Template::findOne(['id'=>$id]);
+        return Template::findOne(['id' => $id]);
     }
 }

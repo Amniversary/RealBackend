@@ -12,4 +12,6 @@ return [
     'get_tag_list' => 'backend\controllers\PublicListActions\GetTagListAction',
     'set_tag_list' => 'backend\controllers\PublicListActions\SetTagListAction',
     'set_alarm' => 'backend\controllers\PublicListActions\SetAlarmAction',
+    'compare' => 'backend\controllers\PublicListActions\CompareAction',
+    'compare_info' => 'backend\controllers\PublicListActions\CompareInfoAction',
 ];

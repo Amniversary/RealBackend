@@ -86,6 +86,17 @@ use yii\widgets\ActiveForm;
             text-align: center;
             /*font-weight: bold;*/
         }
+        #drop-auth{
+            height:2.4em;
+        }
+        #drop-1{
+            margin: 0 0 30px 5px;
+            text-align: left;
+        }
+        #drop-2{
+            margin: 0 0 30px 5px;
+            text-align: left;
+        }
     </style>
     <div class="check-title">
         <p><?='设置公众号'?></p>
@@ -94,14 +105,15 @@ use yii\widgets\ActiveForm;
         <?php
                 echo Html::button('&nbsp;' , ['class'=>'btn_check_all']).'&nbsp;&nbsp;'
                     .Html::button('设置公众号' , ['class' =>'btn btn-success check-refuse','id'=>'btn_refuse']).'&nbsp;&nbsp;';
-        echo Html::button('返回' , ['data-dismiss'=>'modal','aria-hidden'=>'true','class' =>'btn btn-success']);
+        echo Html::button('返回' , ['data-dismiss'=>'modal','aria-hidden'=>'true','class' =>'btn btn-success']).'&nbsp;&nbsp;';
+        echo Html::dropDownList('list',['1'],['1'=>'全部','2'=>'已认证','3'=>'未认证'],['class'=>'btn btn-success', 'id'=> 'drop-auth']);
         ?>
     </div>
     <div class="user-info">
         <p>公众号信息</p>
     </div>
-    <div class="relate-contain">
-        <?php $form = ActiveForm::begin(['id'=>'set_title']);
+    <div class="relate-contain" id="drop-0">
+        <?php $form = ActiveForm::begin(['id'=>'set_title1']);
 
             foreach($rights as $right)
             {
@@ -111,6 +123,30 @@ use yii\widgets\ActiveForm;
 
         ?>
         <?php ActiveForm::end(); ?>
+    </div>
+    <div id="drop-1">
+        <?php $form = ActiveForm::begin(['id'=>'set_title2']);
+
+        foreach($params_one as $right)
+        {
+            $options = ['class'=>'check-list','itemOptions'=>['labelOptions'=>['class'=>'lebal-dis']]];
+            echo Html::checkboxList('title',$selections,$right,$options);
+        }
+
+        ?>
+        <?php ActiveForm::end(); ?>
+    </div>
+    <div id="drop-2">
+        <?php $form = ActiveForm::begin(['id'=>'set_title3']);
+
+        foreach($params_two as $right)
+        {
+            $options = ['class'=>'check-list','itemOptions'=>['labelOptions'=>['class'=>'lebal-dis']]];
+            echo Html::checkboxList('title',$selections,$right,$options);
+        }
+        ?>
+        <?php ActiveForm::end(); ?>
+
     </div>
     <div class="bottom-div"></div>
 <?php
@@ -128,6 +164,22 @@ $(".btn_check_all").click(function() {
         }
     });
 
+$(document).ready(function(){
+    $("#drop-1, #drop-2").hide();
+});
+$("#drop-auth").change(function(){
+    $vue = $("#drop-auth option:selected").val();
+    if($vue == "1") {
+        $("#drop-0").show();
+        $("#drop-1,#drop-2").hide();
+    }else if($vue == "2") {
+        $("#drop-0, #drop-2").hide();
+        $("#drop-1").show();
+    }else if($vue == "3") {
+        $("#drop-2").show();
+        $("#drop-0, #drop-1").hide();
+    }
+});
 
 $(".check-refuse" ).on("click",function(){
         if($("#has_submit").val() == "1")
@@ -146,7 +198,8 @@ $(".check-refuse" ).on("click",function(){
             {
                 $("#has_submit").val("1");
                 $url = "/batchkeyword/setauthlist?key_id='.$keyword->key_id.'";
-                SubmitCheck($url,$("#set_title").serialize());
+               $vue = $("#drop-auth option:selected").val();
+                SubmitCheck($url,$("#set_title" + $vue).serialize());
             }
         }
 });

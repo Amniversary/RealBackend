@@ -29,11 +29,15 @@ class GetAuthListAction extends Action
         }
         $selection = KeywordUtil::GetCustomAuthById($id);//TODO:公众号已有配置
         $rights = KeywordUtil::GetAuthParams();//TODO: 配置列表
+        $params_one = KeywordUtil::GetAuthParamsByApprove();
+        $params_two = KeywordUtil::GetAuthParamsNotApprove();
         $this->controller->layout='main_empty';
         return $this->controller->render('setauthlist',[
             'menu_list'=>$menu_list,
             'rights'=>$rights,
             'selections' =>$selection,
+            'params_one' =>$params_one,
+            'params_two' => $params_two,
         ]);
     }
 }

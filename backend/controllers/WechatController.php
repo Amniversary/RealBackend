@@ -78,7 +78,7 @@ class WechatController extends Controller
         $this->SaveUserUpdate($data['FromUserName'], $WeChat->AppId);
 //        if($data['FromUserName'] == 'ol_EGvw_V3rXYILgc7QEOVVBrxwg'){
 //            \Yii::error('FromUserName: '.var_export($data,true));
-//        }
+//      }
         switch ($WeChat->MsgType) {
             case 'text':
                 $resultXml = $Receive->Text($data);

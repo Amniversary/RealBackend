@@ -20,6 +20,7 @@ use backend\business\ResourceUtil;
 use backend\business\SaveByTransUtil;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveArticleTotalByTrans;
 use backend\business\SignParamsUtil;
+use backend\business\TemplateUtil;
 use backend\business\UserMenuUtil;
 use backend\business\WeChatUserUtil;
 use backend\business\WeChatUtil;
@@ -56,12 +57,42 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
-        (new ArticleOrder())->deleteAll();
+        $data = ['1'=>1, '3'=>3,'6'=>3];
+        $rst =  ['3'=>4, '1'=>5];
+        $query = array_merge($data, $rst);
+
+        print_r($query);
+
+
         exit;
-        $auth = AuthorizerUtil::getAuthByOne(14);
+        CustomUtil::getCustomerMsg();
+
+        exit;
+        $d = time();
+        $time = strtotime('2017-09-14 15:23:34');
+        echo intval(($d - $time) / 60);
+        echo "<br/>";
+        echo $time;
+
+        exit;
+        $auth = AuthorizerUtil::getAuthByOne(118);
         $data = ['appid'=>$auth->authorizer_appid];
         $msgObj = new MessageComponent($data);
         $model = $msgObj->getMessageModel();
+        if(!$model) {
+            echo "no";exit;
+        }
+        $rst = $model[0];
+        $arr = [
+            'FromUserName' =>'111',
+            'ToUserName' =>'222',
+        ];
+        $Temp = TemplateUtil::GetMsgTemplate($arr, $rst);
+        print_r($Temp);
+
+
+        exit;
+
         $model[1][] = [
             'title'
         ];

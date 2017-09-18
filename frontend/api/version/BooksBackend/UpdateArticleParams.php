@@ -18,7 +18,6 @@ class UpdateArticleParams implements IApiExecute
 {
     function execute_action($data, &$rstData, &$error, $extendData = [])
     {
-        \Yii::error('update_article:'.var_export($data,true));
         if (!$this->Check_Params($data, $error)) {
             return false;
         }

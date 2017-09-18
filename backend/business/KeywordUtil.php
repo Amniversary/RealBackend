@@ -264,6 +264,41 @@ class KeywordUtil
         return $rights;
     }
 
+    public static function GetAuthCompare()
+    {
+        $query = AuthorizationList::find()
+            ->select(['record_id', 'nick_name'])
+            ->where('verify_type_info in (0,3,4,5)')
+            ->orderBy('record_id')
+            ->all();
+        $rst = [];
+        foreach($query as $item) {
+            $rst[$item['record_id']] = $item['nick_name'];
+        }
+
+       return $rst;
+    }
+
+    /**
+     * 返回所有未认证公众号
+     * @return array
+     */
+    public static function GetAuthParamsNotApprove()
+    {
+        $article = [];
+        $articleList = AuthorizationList::find()
+            ->select(['record_id', 'nick_name'])
+            ->where('verify_type_info not in (0,3,4,5)')
+            ->orderBy('record_id')
+            ->all();
+
+        foreach($articleList as $articled) {
+            $article[$articled['record_id']] = $articled['nick_name'];
+        }
+        $rights = array_chunk($article, 25 , true);
+
+        return $rights;
+    }
     /**
      * 保存公众号配置
      * @return bool

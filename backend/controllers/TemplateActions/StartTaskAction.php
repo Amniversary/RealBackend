@@ -59,7 +59,7 @@ class StartTaskAction extends Action
             ];
             foreach ($decode as $item) {
                 $params['app_id'] = $item;
-                if (!JobUtil::AddCustomJob('templateBeanstalk', 'batch_customer', $params, $error, (60 * 60 * 24))) {
+                if (!JobUtil::AddCustomJob('templateBeanstalk', 'batch_customer', $params, $error, (60 * 60 * 48))) {
                     \Yii::error('job error :' . $error);
                 }
             }

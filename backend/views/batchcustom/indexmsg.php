@@ -106,6 +106,7 @@ $gridColumns = [
             return empty($model->event_id) ? '':$model->event_id;
         },
         'width'=>'100px',
+        'filter'=>false,
     ],
     [
         'class' => 'kartik\grid\EditableColumn',
@@ -131,6 +132,7 @@ $gridColumns = [
             'dateFormat'=>'yyyy-MM-dd',
             'options'=>['class'=>'form-control','style'=>'display:inline-block;']
         ],
+        'filter'=>false,
     ],
     [
         'class'=>'kartik\grid\ActionColumn',
@@ -199,9 +201,8 @@ echo \yii\bootstrap\Modal::widget([
 );
 
 $js='
-$(document).ready(function(){
-    $vue = $(".updt-bt").attr("href") + "&id='.$id.'";
-    $(".updt-bt").attr("href",$vue);
+$(document).on("click", ".updt-bt", function(){
+    $(this).attr("href", $(this).attr("href") + "&id='.$id.'");
 });
 $("#customMsg-pjax").on("click",".delete",function (){
 if(!confirm("确定要删除该记录吗？")) {

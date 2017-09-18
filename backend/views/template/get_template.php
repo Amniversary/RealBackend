@@ -1,4 +1,4 @@
-<style>
+    <style>
     .user-pic
     {
         width: 80px;

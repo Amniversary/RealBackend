@@ -113,7 +113,7 @@ class ArticlesUtil
     public static function GetArticleMenu($system_id)
     {
         $params = sprintf('select carousel_id from wc_article_system_menu where system_id = %s', $system_id);
-        $condition = 'carousel_id in ('.$params.') and action_type = 2 and status = 1';
+        $condition = 'carousel_id in ('.$params.') or (carousel_id in ('.$params.') and action_type = 2) and status = 1';
         $query = (new Query())
             ->select(['carousel_id', 'pic_url', 'url', 'description'])
             ->from('wc_carousel')

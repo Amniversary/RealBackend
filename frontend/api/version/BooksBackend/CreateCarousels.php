@@ -49,7 +49,7 @@ class CreateCarousels implements IApiExecute
         $fieldLabels = ['图片url', '轮播图类型'];
         $len = count($fields);
         for ($i = 0; $i < $len; $i++) {
-            \Yii::error('datform:' . $dataProtocal['data'][$fields[$i]]);
+            //\Yii::error('datform:' . $dataProtocal['data'][$fields[$i]]);
             if (!isset($dataProtocal['data'][$fields[$i]]) || empty($dataProtocal['data'][$fields[$i]])) {
                 $error = $fieldLabels[$i] . '不能为空';
                 return false;

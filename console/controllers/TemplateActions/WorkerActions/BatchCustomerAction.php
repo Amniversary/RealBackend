@@ -27,19 +27,20 @@ class BatchCustomerAction extends Action
     {
         $jobId = $job->getId();
         $sentData = $job->getData();
-        fwrite(STDOUT, Console::ansiFormat("客服消息任务开始 :" . date('Y-m-d H:i:s') . "---$sentData->key_word-- in job id:[$jobId]---" . "\n", [Console::FG_GREEN]));
         try {
             set_time_limit(0);
+            @ini_set('memory_limit', '300M');
             $auth = AuthorizerUtil::getAuthByOne($sentData->app_id);
             $accessToken = $auth->authorizer_access_token;
             $data = json_decode(json_encode($sentData->msgData), true);
             $component = ['appid' => $auth->authorizer_appid];
             $msgObj = new MessageComponent($component);
             $msgData = $msgObj->getMessageItem($data);
+            fwrite(STDOUT, Console::ansiFormat("客服消息任务开始   $auth->nick_name  :" . date('Y-m-d H:i:s') . "---$sentData->key_word-- in job id:[$jobId]---" . "\n", [Console::BG_GREEN]));
             $query = (new Query())
                 ->select(['client_id', 'open_id', 'nick_name', 'app_id'])
                 ->from('wc_client')
-                ->where('app_id = :appid and subscribe = :sub', [':appid' => $auth->record_id, ':sub' => 1])
+                ->where('app_id = :appid and update_time between :star and :end', [':appid' => $auth->record_id, ':star'=>date('Y-m-d H:i:s',strtotime('-48 hours')), ':end'=>date('Y-m-d H:i:s')])
                 ->all();
 //            $query[] = ['client_id'=>9617, 'open_id'=>'ol_EGvw_V3rXYILgc7QEOVVBrxwg','nick_name'=>'Gavean', 'app_id' => 76];
             $count = count($query);
@@ -54,7 +55,10 @@ class BatchCustomerAction extends Action
                             $auth = AuthorizerUtil::getAuthByOne($sentData->app_id);
                             $accessToken = $auth->authorizer_access_token;
                         }
-                        if ($rst['errcode'] == 45015) continue;
+                        if ($rst['errcode'] == 45015) {
+//                            fwrite(STDOUT, Console::ansiFormat("响应超时用户 ".$list['nick_name'] ." :" . date('Y-m-d H:i:s') ."\n", [Console::BG_YELLOW]));
+                            continue;
+                        }
                         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
                             $error = iconv('utf-8', 'gb2312', $error);
                         fwrite(STDOUT, Console::ansiFormat("--$sentData->key_word--" . date('Y-m-d H:i:s') . "  群发客服消息失败:  nick_name : " . $list['nick_name'] . " openId :" . $list['open_id'] . "  app_id : " . $auth->record_id . "  app_name : " . $auth->nick_name . "\n", [Console::FG_RED]));
@@ -74,7 +78,7 @@ class BatchCustomerAction extends Action
             $record = new CustomerStatistics();
             $record->attributes = $recordData;
             $record->save();
-            fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s') . " 消息数 $count ;--发送成功 $i --$sentData->key_word--任务执行完成!" . "\n", [Console::FG_GREEN]));
+            fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s') . " 消息数 $count ;--发送成功 $i --$sentData->key_word-- $auth->nick_name 任务执行完成!" . "\n", [Console::FG_GREEN]));
             return BeanstalkController::DELETE;
         } catch (\Exception $e) {
             fwrite(STDERR, Console::ansiFormat($e->getMessage() . "\n", [Console::FG_RED]));

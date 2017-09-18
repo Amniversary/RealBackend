@@ -24,6 +24,7 @@ class ApiAction extends Action
     {
         $error = '';
         $POST = json_decode(file_get_contents("php://input"), true);
+
         if (!isset($POST['action_name']) ||
             !isset($POST['data'])
         ) {
@@ -82,12 +83,12 @@ class ApiAction extends Action
         }
         $class = new $actionClass;
         try {
-            if (!$class->execute_action($POST, $rst, $error)) {
-                $rstOut['msg'] = $error;
-                \Yii::error($error . ' 执行异常 action : ' . $action_name);
-                echo json_encode($rstOut);
-                exit;
-            }
+        if (!$class->execute_action($POST, $rst, $error)) {
+            $rstOut['msg'] = $error;
+            \Yii::error($error . ' 执行异常 action : ' . $action_name);
+            echo json_encode($rstOut);
+            exit;
+        }
         } catch (Exception $e) {
             \Yii::error('Exception Error : ' . $e->getMessage());
             exit;

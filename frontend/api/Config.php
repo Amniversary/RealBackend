@@ -35,4 +35,17 @@ return [
     'get_user_info' => 'GetUserInfo',
     'user_login' => 'WxUserLogin',
 
+    //TODO: 微信小程序
+    'add_user' => 'ReadingBook\AddUser',
+    'add_dynamic' => 'ReadingBook\AddDynamic',
+    'add_comment' => 'ReadingBook\AddComment',
+    'get_dynamic' => 'ReadingBook\GetDynamic',
+    'get_dynamic_list' => 'ReadingBook\GetDynamicList',
+    'get_comment_list' => 'ReadingBook\GetCommentList',
+    'add_collect' => 'ReadingBook\AddCollect',
+    'get_collect_list' => 'ReadingBook\GetCollectList',
+    'del_dynamic' => 'ReadingBook\DelDynamic',
+    'get_book_carousels' => 'ReadingBook\GetCarousels',
+    'del_collect' => 'ReadingBook\DelCollect',
+    'get_user' => 'ReadingBook\GetUser',
 ];
