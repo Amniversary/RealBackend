@@ -37,7 +37,8 @@
         "codeception/verify": "*",
         "pjkui/kindeditor": "dev-master",
         "kartik-v/yii2-widget-datetimepicker": "*",
-        "kartik-v/yii2-widget-datepicker": "@dev"
+        "kartik-v/yii2-widget-datepicker": "@dev",
+        "qcloud/weapp-sdk": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

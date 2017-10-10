@@ -42,7 +42,8 @@ class AddUser implements IApiExecute
                 'pic' => $rawData['avatarUrl'],
                 'city' => isset($rawData['city']) ? $rawData['city'] : '',
                 'province' => isset($rawData['province']) ? $rawData['province'] : '',
-                'country' => isset($rawData['country']) ? $rawData['country'] : ''
+                'country' => isset($rawData['country']) ? $rawData['country'] : '',
+                'remark1' => date('Y-m-d H:i:s')
             ];
             $model = ClientUtil::NewBookUserModel($data);
             if (!$model->save()) {

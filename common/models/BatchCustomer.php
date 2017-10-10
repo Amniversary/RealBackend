@@ -33,7 +33,7 @@ class BatchCustomer extends \yii\db\ActiveRecord
         return [
             [['status', 'create_time'], 'integer'],
             [['task_name', 'remark1', 'remark2'], 'string', 'max' => 100],
-            [['app_list'], 'string', 'max' => 500],
+            [['app_list'], 'string', 'max' => 1000],
             ['task_name', 'required'],
         ];
     }

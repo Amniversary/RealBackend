@@ -65,7 +65,7 @@ class WeChatUserUtil
     {
         $url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=$access_token";
         $json = json_encode($data, JSON_UNESCAPED_UNICODE);
-        \Yii::error('json:'.$json);
+        //\Yii::error('json:'.$json);
         return json_decode(UsualFunForNetWorkHelper::HttpsPost($url, $json), true);
     }
 
@@ -282,7 +282,7 @@ class WeChatUserUtil
                 $data['button'][$key]['sub_button'] = $info;
             }
         }
-        \Yii::error('button:'.var_export($data,true));
+        //\Yii::error('button:'.var_export($data,true));
         return WeChatUserUtil::setCustomMenu($access_token, $data);
     }
 

@@ -33,11 +33,13 @@ class GetDynamic implements IApiExecute
                 return false;
             }
         }
+
+
         $callback = [
             'dynamic_id'=>$Dynamic->dynamic_id,
             'title' => $Dynamic->title,
             'pic'=> $Dynamic->pic,
-            'content'=> $Dynamic->content,
+            'content'=> htmlspecialchars_decode($Dynamic->content),
             'voice'=> empty($voice->voice) ? '': $voice->voice,
             'count' => intval($Dynamic->count),
             'comment_count'=> intval($Dynamic->comment_count),

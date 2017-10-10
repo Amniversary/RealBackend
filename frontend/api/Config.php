@@ -34,7 +34,8 @@ return [
     //TODO: 获取管理员登录信息接口
     'get_user_info' => 'GetUserInfo',
     'user_login' => 'WxUserLogin',
-
+    'set_vip' => 'WxSetVip',
+    'upload_token' => 'UploadToken',
     //TODO: 微信小程序
     'add_user' => 'ReadingBook\AddUser',
     'add_dynamic' => 'ReadingBook\AddDynamic',

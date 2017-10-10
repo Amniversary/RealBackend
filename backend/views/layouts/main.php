@@ -44,7 +44,7 @@ if (Yii::$app->controller->action->id === 'login') {
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
     </head>
-    <body class="hold-transition <?= \dmstr\helpers\AdminLteHelper::skinClass() ?> sidebar-mini <?= in_array(explode('/', Yii::$app->request->url)['1'],\Yii::$app->params['collapse']) ? 'sidebar-collapse':''  ?>">
+    <body class="hold-transition <?= \dmstr\helpers\AdminLteHelper::skinClass() ?> sidebar-mini <?= in_array(substr(\Yii::$app->request->url, 1),\Yii::$app->params['collapse']) ? 'sidebar-collapse':''  ?>">
     <?php $this->beginBody() ?>
     <div class="wrapper">
 

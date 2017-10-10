@@ -30,7 +30,16 @@ common\assets\ArtDialogAsset::register($this);
 
 
 $gridColumns = [
-    ['class' => 'kartik\grid\SerialColumn'],
+//    [
+//        'class' => 'kartik\grid\SerialColumn',
+//        'attribute'=>'id',
+//    ],
+    [
+        'attribute'=>'id',
+        'vAlign'=>'middle',
+        'filter'=>false,
+        'label'=>'#',
+    ],
     [
         'attribute' => 'task_name',
         'vAlign' => 'middle',

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "cccdd0fccb59a0499130c2aafc2ff462",
+    "content-hash": "767a64b6599d69dc91820a507b778881",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -2815,6 +2815,53 @@
             "time": "2016-10-10 12:19:37"
         },
         {
+            "name": "qcloud/weapp-sdk",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tencentyun/wafer-php-server-sdk.git",
+                "reference": "edcd441c5c5620aecb6f18fc7391f55133f50d1d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/tencentyun/wafer-php-server-sdk/edcd441c5c5620aecb6f18fc7391f55133f50d1d.zip",
+                "reference": "edcd441c5c5620aecb6f18fc7391f55133f50d1d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.*",
+                "satooshi/php-coveralls": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "QCloud_WeApp_SDK\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "miusuncle",
+                    "email": "miusuncle@gmail.com",
+                    "homepage": "http://miusuncle.github.io/"
+                }
+            ],
+            "description": "php sdk for qcloud weapp server",
+            "homepage": "https://www.qcloud.com/",
+            "keywords": [
+                "qcloud",
+                "sdk",
+                "weapp"
+            ],
+            "time": "2016-11-20 10:43:59"
+        },
+        {
             "name": "rmrevin/yii2-fontawesome",
             "version": "2.13.0",
             "source": {
@@ -4931,7 +4978,8 @@
         "callmez/yii2-wechat-sdk": 20,
         "udokmeci/yii2-beanstalk": 20,
         "pjkui/kindeditor": 20,
-        "kartik-v/yii2-widget-datepicker": 20
+        "kartik-v/yii2-widget-datepicker": 20,
+        "qcloud/weapp-sdk": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

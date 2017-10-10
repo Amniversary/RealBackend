@@ -33,6 +33,7 @@ class GetUserInfoAction extends Action
             $this->getUserListForClient($sentData->app_id, $next_openid, $total, $i);
             $time = date('Y-m-d H:i:s');
             fwrite(STDOUT, Console::ansiFormat("粉丝数 " . intval($total) . "条;  更新成功 ". intval($i) ."条  date :$time \n", [Console::BG_YELLOW]));
+            WeChatUserUtil::WeChatAlarmNotice('数据添加完成', $sentData->app_id, ['Gavean']);
             return BeanstalkController::DELETE;
         } catch (\Exception $e) {
             fwrite(STDERR, Console::ansiFormat($e->getMessage() . "\n", [Console::BG_RED]));
@@ -65,6 +66,7 @@ class GetUserInfoAction extends Action
                 }
                 $getData['app_id'] = $auth->record_id;
                 $model = AuthorizerUtil::genModel($client, $getData);
+                $model->update_time = '';
                 if (!$model->save()) {
                     $error = '保存已关注微信用户信息失败 ';
                     \Yii::error($error. ' :'. var_export($model->getErrors(),true));
@@ -72,7 +74,7 @@ class GetUserInfoAction extends Action
                     fwrite(STDOUT, Console::ansiFormat($error. "\n", [Console::BG_BLUE]));
                     continue;
                 }
-                fwrite(STDOUT, Console::ansiFormat("新增用户 :" . $model->nick_name . " open_id :" . $model->open_id . "\n", [Console::BG_BLUE]));
+                fwrite(STDOUT, Console::ansiFormat("新增用户 :" . $model->nick_name . " open_id :" . $model->open_id . " 公众号: " . $auth->nick_name."\n", [Console::BG_BLUE]));
                 $i++;
             }
         }

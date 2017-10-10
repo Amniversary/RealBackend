@@ -17,7 +17,7 @@
     .col {
         display: inline-block;
         border: 1px solid #cee2ee;
-        width: 17%;
+        width: 16%;
         text-align: center;
         /*float: left;*/
     }
@@ -41,10 +41,12 @@ common\assets\ArtDialogAsset::register($this);
     <?php $form = ActiveForm::begin() ?>
         <div id="left">
             <?= $form->field($model, 'compare_one')->dropDownList($auth, ['style'=> 'width:200px']) ?>
+            <input id="one-hide" type="hidden" name="CompareForm[one_name]" value="" />
         </div>
 
         <div style="margin-left: 10px">
             <?= $form->field($model, 'compare_two')->dropDownList($auth, ['style'=> 'width:200px']) ?>
+            <input id="two-hide" type="hidden" name="CompareForm[two_name]" value="" />
         </div>
         <hr>
 
@@ -63,6 +65,15 @@ common\assets\ArtDialogAsset::register($this);
 
 <?php
 $js = '
+$(document).ready(function(){
+    $("#one-hide").val($("#compareform-compare_one option:selected").text());
+    $("#two-hide").val($("#compareform-compare_two option:selected").text());
+});
+
+$("#compareform-compare_one, #compareform-compare_two").change(function(){
+    $("#one-hide").val($("#compareform-compare_one option:selected").text());
+    $("#two-hide").val($("#compareform-compare_two option:selected").text());
+});
     artDialog.tips = function(content, time) {
        return artDialog({
             id:"Tips",
@@ -76,7 +87,7 @@ $js = '
 
 $(document).on("click", "#compare", function(){
     var dialog = art.dialog({
-            title: "测试消息发送中 ...",
+            title: "数据信息比对中 ...",
             fixed:true,
             lock:true,
     });
@@ -88,13 +99,13 @@ $(document).on("click", "#compare", function(){
            data = $.parseJSON(data);
            if(data.code == 0){
                 artDialog.tips("数据比对完成!");
-                console.log(data.data);
                 $("#data").show();
-                $("#info").append("<div class=\"col\"><div class=\"bg-color\">公众号1总数</div><div>" + data.data.count_one + "</div></div>");
-                $("#info").append("<div class=\"col\"><div class=\"bg-color\">公众号2总数</div><div>" + data.data.count_two + "</div></div>");
+                $("#info").append("<div class=\"col\"><div class=\"bg-color\">(" + data.data.one_name + ")总数</div><div>" + data.data.count_one + "</div></div>");
+                $("#info").append("<div class=\"col\"><div class=\"bg-color\">(" + data.data.two_name + ")总数</div><div>" + data.data.count_two + "</div></div>");
                 $("#info").append("<div class=\"col\"><div class=\"bg-color\">总数</div><div>" + data.data.max + "</div></div>");
                 $("#info").append("<div class=\"col\"><div class=\"bg-color\">去除重复用户总数</div><div>" + data.data.count_json + "</div></div>");
                 $("#info").append("<div class=\"col\"><div class=\"bg-color\">重复数</div><div>" + data.data.poor + "</div></div>");
+                $("#info").append("<div class=\"col\"><div class=\"bg-color\">重复率</div><div>" + data.data.rate + "%</div></div>");
            }else{
                 art.dialog.alert("比对失败：" + data.msg);
            }

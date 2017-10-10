@@ -17,7 +17,6 @@ class CreateBook implements IApiExecute
 {
     function execute_action($data, &$rstData, &$error, $extendData = [])
     {
-        \Yii::error('create_book:'.var_export($data,true));
         if (!$this->check_params($data, $error)) {
             return false;
         }

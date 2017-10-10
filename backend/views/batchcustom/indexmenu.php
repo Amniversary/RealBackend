@@ -55,7 +55,7 @@ $gridColumns = [
         'attribute'=>'url',
         'vAlign'=>'middle',
         'value'=>function($model){
-            return empty($model->url) ? '':$model->url;
+            return empty($model->url) ? '':mb_substr($model->url, 0 ,15) . '....' ;
         },
         'filter'=>false
     ],

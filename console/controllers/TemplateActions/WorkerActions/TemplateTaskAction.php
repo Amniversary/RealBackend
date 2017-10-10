@@ -74,7 +74,9 @@ class TemplateTaskAction extends Action
                     fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."Code :".$res['errcode']. ' msg :'.$res['errmsg'] . "template_ID :". $templateData->template_id."\n",[Console::FG_GREEN]));
                     \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' -- :'.var_export($error,true) .'  openId :'.$sentData->open_id .' ',Logger::LEVEL_ERROR);
                     \Yii::getLogger()->flush(true);
-                    if(!AuthorizerUtil::isAlarms($res, $sentData->app_id, '发送模板任务消息')) break;
+                    if(\Yii::$app->params['is_alarm'] == 1){
+                        if(!AuthorizerUtil::isAlarms($res, $sentData->app_id, '发送模板任务消息')) break;
+                    }
                     continue;
                 }
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($res)."--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));

@@ -65,7 +65,9 @@ class BatchCustomerAction extends Action
                         fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s') . "  Code :" . $rst['errcode'] . ' msg :' . $rst['errmsg'] . "\n", [Console::FG_RED]));
                         \Yii::getLogger()->log("--$sentData->key_word--" . '任务处理失败，jobid：' . $jobId . ' -- :' . var_export($error, true) . '  openId :' . $sentData->open_id . ' ', Logger::LEVEL_ERROR);
                         \Yii::getLogger()->flush(true);
-                        if(!AuthorizerUtil::isAlarms($rst, $auth->record_id, '群发客服任务消息')) break;
+                        if(\Yii::$app->params['is_alarm'] == 1) {
+                            if (!AuthorizerUtil::isAlarms($rst, $auth->record_id, '群发客服任务消息')) break;
+                        }
                         break;
                     }
                 }

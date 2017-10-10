@@ -57,13 +57,27 @@ class BhAction extends Action
     public function run()
     {
         echo "<pre>";
-        $data = ['1'=>1, '3'=>3,'6'=>3];
-        $rst =  ['3'=>4, '1'=>5];
-        $query = array_merge($data, $rst);
-
-        print_r($query);
-
-
+        foreach([6,86] as $item) {
+            $query = (new Query())->from('wc_client')
+                ->select(['client_id', 'nick_name', 'city', 'province', 'country'])
+                ->where('app_id = :ap',[':ap'=>$item])
+                ->all();
+            $data = [];
+            $count = count($query);
+            foreach($query as $v) {
+                $data[$v['client_id']] = $v['nick_name'].$v['city'].$v['province'].$v['country'];
+            }
+            $json[] = $data;
+            $sum[] = $count;
+            unset($count);
+            unset($data);
+        }
+        $data = ['1'=>1, '3'=>3,'6'=>3, 'a'=>3];
+        $rst =  ['3'=>4, '1'=>5, '5'=>1, 2=>3,6=>3];
+        $out = array_unique(array_intersect($json[1],$json[0]));
+        $count = count($out);
+        print_r($out);
+        print_r($count);
         exit;
         CustomUtil::getCustomerMsg();
 

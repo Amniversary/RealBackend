@@ -83,16 +83,16 @@ class ApiAction extends Action
         }
         $class = new $actionClass;
         try {
-        if (!$class->execute_action($POST, $rst, $error)) {
-            $rstOut['msg'] = $error;
-            \Yii::error($error . ' 执行异常 action : ' . $action_name);
-            echo json_encode($rstOut);
-            exit;
-        }
+            if (!$class->execute_action($POST, $rst, $error)) {
+                $rstOut['msg'] = $error;
+                \Yii::error($error . ' 执行异常 action : ' . $action_name);
+                echo json_encode($rstOut);
+                exit;
+            }
         } catch (Exception $e) {
             \Yii::error('Exception Error : ' . $e->getMessage());
             exit;
         }
-        echo json_encode($rst, JSON_UNESCAPED_UNICODE);
+        echo json_encode($rst, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
     }
 }

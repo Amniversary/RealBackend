@@ -38,7 +38,9 @@ class SendVipMsgAction extends Action
                 fwrite(STDOUT, Console::ansiFormat(" --$sentData->key_word- $json-accessToken: $sentData->authorizer_access_token --- $error no jobrecord "."\n", [Console::FG_GREEN]));
                 \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' rst : '.var_export($rst,true) .'-accessToken : '. $sentData->authorizer_access_token.'--'.$json .' :'.$error,Logger::LEVEL_ERROR);
                 \Yii::getLogger()->flush(true);
-                AuthorizerUtil::isAlarms($rst, $sentData->app_id, '成为Vip消息');
+                if(\Yii::$app->params['is_alarm'] == 1) {
+                    AuthorizerUtil::isAlarms($rst, $sentData->app_id, '成为Vip消息');
+                }
                 return BeanstalkController::DELETE;
             }
             fwrite(STDOUT, Console::ansiFormat("rst: $rst "."\n", [Console::FG_GREEN]));

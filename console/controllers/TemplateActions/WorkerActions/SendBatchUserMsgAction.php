@@ -66,7 +66,9 @@ class SendBatchUserMsgAction extends Action
                     fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."Code :".$rst['errcode']. ' msg :'.$rst['errmsg'] ."\n",[Console::FG_GREEN]));
                     \Yii::getLogger()->log('任务处理失败，jobid：'.$jobId.' -- :'.var_export($error,true) .'  openId :'.$sentData->open_id .' ',Logger::LEVEL_ERROR);
                     \Yii::getLogger()->flush(true);
-                    if(!AuthorizerUtil::isAlarms($rst, $sentData->app_id, 'Template-发送消息')) break;
+                    if(\Yii::$app->params['is_alarm'] == 1) {
+                        if (!AuthorizerUtil::isAlarms($rst, $sentData->app_id, 'Template-发送消息')) break;
+                    }
                     continue;
                 }
                 $i ++;

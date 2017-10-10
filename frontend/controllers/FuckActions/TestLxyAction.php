@@ -109,6 +109,10 @@ class TestLxyAction extends Action
 
     public function run()
     {
+        $arr = ['json' => 'has-data'];
+        $rst = json_encode($arr);
+        UsualFunForNetWorkHelper::HttpsPost('http://www.test.cn/fuck/bh', $rst,  ['OpenId:111', 'AppId:d222']);
+        exit;
         $str = 'a:7:{s:9:"device_no";s:36:"D7CB7EC5-EE22-4FF4-B745-46F8712E6C8C";s:7:"user_id";i:238924;s:11:"verify_code";N;s:11:"client_type";i:2;s:9:"unique_no";s:11:"15669097386";s:9:"nick_name";s:6:"甜甜";s:8:"is_inner";s:1:"2";}';
         $info = unserialize($str);
         var_dump($info);

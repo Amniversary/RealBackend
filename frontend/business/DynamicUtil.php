@@ -10,6 +10,7 @@ namespace frontend\business;
 
 
 use common\models\Collect;
+use common\models\Comments;
 use common\models\StudyingDynamic;
 use common\models\Voice;
 use yii\db\Query;
@@ -100,10 +101,22 @@ class DynamicUtil
                 'content'=>$item['content'],
                 'create_at'=>$item['create_at'],
             ];
-            $rst[$id]['comments'] = self::getCommentList($dynamic_id, $item['comment_id']);
+            $rst[$id]['comments'] = self::getComments($dynamic_id, $item['comment_id'])->content;
         }
         return $rst;
     }
+
+    /**
+     * 获取回复信息
+     * @param $dynamic_id
+     * @param $comment_id
+     * @return null|Comments
+     */
+    public static function getComments($dynamic_id, $comment_id)
+    {
+        return Comments::findOne(['dynamic_id'=> $dynamic_id, 'parent_id'=> $comment_id]);
+    }
+
 
     /**
      * 获取用户收藏列表

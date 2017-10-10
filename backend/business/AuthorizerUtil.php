@@ -291,7 +291,7 @@ class AuthorizerUtil
      * @param $app_id
      * @return bool
      */
-    public static function isAlarms($rst, $app_id, $text = '')
+    public static function isAlarms($rst, $app_id, $text = '', $toUser = null)
     {
         if (in_array($rst['errcode'], \Yii::$app->params['WxError'])) {
             //TODO: 判断公众号是否开启告警 这里每次都要重新获取数据
@@ -314,7 +314,10 @@ class AuthorizerUtil
                     $model->save();
                 }
                 $remark = $text."接口告警 :\n" . "消息发送失败 : \nCode :" . $rst['errcode'] . ' errmsg :' . $rst['errmsg'];
-                if (!WeChatUserUtil::WeChatAlarmNotice($remark, $auth->nick_name, \Yii::$app->params['toUser'])) {
+                if(empty($toUser)) {
+                    $toUser = \Yii::$app->params['toUser'];
+                }
+                if (!WeChatUserUtil::WeChatAlarmNotice($remark, $auth->nick_name, $toUser)) {
                     return false;
                 }
             }
