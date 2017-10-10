@@ -31,3 +31,4 @@ phpunit.phar
 # local phpunit config
 /phpunit.xml
 *.css
+/wafer-php-server-demo-master
