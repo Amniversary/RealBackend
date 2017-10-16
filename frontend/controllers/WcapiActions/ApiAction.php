@@ -45,7 +45,7 @@ class ApiAction extends Action
     public function run()
     {
         $rstOut = ['code' => 1, 'msg' => ''];
-        $rst = ['code' => 0, 'data' => '', 'msg' => ''];
+        $rst = ['code' => 0, 'msg' => '', 'data' => '',];
         $error = '';
 
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
@@ -55,7 +55,7 @@ class ApiAction extends Action
         }
         if (!$this->check_post_params($error)) {
             $rstOut['msg'] = $error;
-            echo json_encode($rstOut);
+            echo json_encode($rstOut, 256);
             exit;
         }
         $POST = json_decode(file_get_contents("php://input"), true);
@@ -64,21 +64,21 @@ class ApiAction extends Action
         $configFile = \Yii::$app->getBasePath() . '/api/Config.php';
         if (!file_exists($configFile)) {
             $rstOut['msg'] = '找不到配置接口文件';
-            echo json_encode($rstOut);
+            echo json_encode($rstOut, 256);
             exit;
         }
         $funData = require($configFile);
         if (!isset($funData[$action_name])) {
             $rstOut['msg'] = '找不到对应接口';
             \Yii::error($rstOut['msg'] . '  action : ' . $action_name);
-            echo json_encode($rstOut);
+            echo json_encode($rstOut, 256);
             exit;
         }
         $actionClass = 'frontend\api\version\\' . $funData[$action_name];
         if (!class_exists($actionClass)) {
             $rstOut['msg'] = '找不到对应接口类';
             \Yii::error($rstOut['msg'] . '  actionClass :' . $actionClass);
-            echo json_encode($rstOut);
+            echo json_encode($rstOut, 256);
             exit;
         }
         $class = new $actionClass;
@@ -86,7 +86,7 @@ class ApiAction extends Action
             if (!$class->execute_action($POST, $rst, $error)) {
                 $rstOut['msg'] = $error;
                 \Yii::error($error . ' 执行异常 action : ' . $action_name);
-                echo json_encode($rstOut);
+                echo json_encode($rstOut, 256);
                 exit;
             }
         } catch (Exception $e) {

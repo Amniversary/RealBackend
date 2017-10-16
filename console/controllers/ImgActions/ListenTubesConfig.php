@@ -10,4 +10,5 @@ return [
     'get_qrcode',
     'delete_img',
     'gen_sign_img',
+    'gen_later_img',
 ];

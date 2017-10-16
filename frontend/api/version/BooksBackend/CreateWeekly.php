@@ -15,14 +15,14 @@ use frontend\business\WeeklyUtil;
 
 class CreateWeekly implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) {
+        if (!$this->check_params($dataProtocol, $error)) {
             return false;
         }
         $model = new Weekly();
-        $model->title = $data['data']['title'];
-        $model->weeks = date('YW', $data['data']['weeks']);
+        $model->title = $dataProtocol['data']['title'];
+        $model->weeks = date('YW', $dataProtocol['data']['weeks']);
         $model->status = 1;
         $model->create_time = date('Y-m-d H:i:s');
         $model->update_time = date('Y-m-d H:i:s');
@@ -35,13 +35,13 @@ class CreateWeekly implements IApiExecute
         return true;
     }
 
-    private function check_params($dataProtocal, &$error)
+    private function check_params($dataProtocol, &$error)
     {
         $fields = ['title', 'weeks'];
         $fieldLabels = ['周刊标题', '周刊周数'];
         $len = count($fields);
         for ($i = 0; $i < $len; $i++) {
-            if (!isset($dataProtocal['data'][$fields[$i]]) || empty($dataProtocal['data'][$fields[$i]])) {
+            if (!isset($dataProtocol['data'][$fields[$i]]) || empty($dataProtocol['data'][$fields[$i]])) {
                 $error = $fieldLabels[$i] . '不能为空';
                 return false;
             }

@@ -21,11 +21,8 @@ class KeywordAction  extends Action
         $this->controller->getView()->title = '签到关键字设置';
         $cache = WeChatUserUtil::getCacheInfo();
         $is_verify = false;
-        switch($cache['verify_type_info']){
-            case 0: $is_verify = true;break;
-            case 3: $is_verify = true;break;
-            case 4: $is_verify = true;break;
-            case 5: $is_verify = true;break;
+        if(in_array($cache['verify_type_info'], [0, 3, 4, 5])) {
+            $is_verify = true;
         }
         $searchModel = new BatchKeywordSearch();
         $dataProvider = $searchModel->searchSign(\Yii::$app->request->queryParams);

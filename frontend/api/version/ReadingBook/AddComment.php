@@ -18,25 +18,25 @@ use frontend\business\SaveRecordByTransactions\SaveByTransaction\AddCommentSaveB
 
 class AddComment implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) return false;
-        $type = $data['data']['type'];
-        $dynamic_id = $data['data']['dynamic_id'];
+        if (!$this->check_params($dataProtocol, $error)) return false;
+        $type = $dataProtocol['data']['type'];
+        $dynamic_id = $dataProtocol['data']['dynamic_id'];
         $Dynamic = DynamicUtil::getDynamicById($dynamic_id);
         if (empty($Dynamic)) {
             $error = '动态记录不存在或已删除';
             return false;
         }
         if ($type == 2) {
-            if (!isset($data['data']['parent_id'])) {
+            if (!isset($dataProtocol['data']['parent_id'])) {
                 $error = '评论id  不能为空';
                 return false;
             }
         }
         $user_id = '';
-        if (!empty($data['data']['user_id'])) {
-            $user_id = $data['data']['user_id'];
+        if (!empty($dataProtocol['data']['user_id'])) {
+            $user_id = $dataProtocol['data']['user_id'];
             $User = ClientUtil::getBookUserById($user_id);
             $user_id = $User->client_id;
             if (empty($User))
@@ -46,8 +46,8 @@ class AddComment implements IApiExecute
         $model = new Comments();
         $model->dynamic_id = $Dynamic->dynamic_id;
         $model->user_id = $user_id;
-        $model->parent_id = $type == 2 ? intval($data['data']['parent_id']) : 0;
-        $model->content = $data['data']['content'];
+        $model->parent_id = $type == 2 ? intval($dataProtocol['data']['parent_id']) : 0;
+        $model->content = $dataProtocol['data']['content'];
         $model->status = 1;
         $model->create_at = time();
         $transAction[] = new AddCommentSaveByTrans($model);
@@ -59,13 +59,13 @@ class AddComment implements IApiExecute
         return true;
     }
 
-    private function check_params($dataTotal, &$error)
+    private function check_params($dataProtocol, &$error)
     {
         $files = ['dynamic_id', 'content', 'type'];
         $filesLabel = ['动态id', '评论内容', '评论类型'];
         $len = count($files);
         for ($i = 0; $i < $len; $i++) {
-            if (!isset($dataTotal['data'][$files[$i]]) || empty($dataTotal['data'][$files[$i]])) {
+            if (!isset($dataProtocol['data'][$files[$i]]) || empty($dataProtocol['data'][$files[$i]])) {
                 $error .= $filesLabel[$i] . '不能为空';
                 return false;
             }

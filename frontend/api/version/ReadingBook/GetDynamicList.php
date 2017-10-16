@@ -14,14 +14,14 @@ use frontend\business\DynamicUtil;
 
 class GetDynamicList implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
 
-        if (!$this->check_params($data, $error)) return false;
-        $page_no = $data['data']['page_no'];
-        $page_size = $data['data']['page_size'];
-        $type = $data['data']['type'];
-        $user_id = $data['data']['user_id'];
+        if (!$this->check_params($dataProtocol, $error)) return false;
+        $page_no = $dataProtocol['data']['page_no'];
+        $page_size = $dataProtocol['data']['page_size'];
+        $type = $dataProtocol['data']['type'];
+        $user_id = $dataProtocol['data']['user_id'];
         if(empty($user_id)) {
             $user_id = 0;
         }
@@ -44,13 +44,13 @@ class GetDynamicList implements IApiExecute
         return true;
     }
 
-    private function check_params($dataTotal, &$error)
+    private function check_params($dataProtocol, &$error)
     {
         $files = ['type', 'page_no', 'page_size'];
         $filesLabel = ['类型', '分页数', '记录数'];
         $len = count($files);
         for ($i = 0; $i < $len; $i++) {
-            if (!isset($dataTotal['data'][$files[$i]]) || empty($dataTotal['data'][$files[$i]])) {
+            if (!isset($dataProtocol['data'][$files[$i]]) || empty($dataProtocol['data'][$files[$i]])) {
                 $error = $filesLabel[$i] . '不能为空';
                 return false;
             }

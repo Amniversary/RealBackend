@@ -10,6 +10,8 @@ namespace frontend\components;
 
 
 use common\models\CSessionInfo;
+use frontend\business\SaveByTransUtil;
+use frontend\business\SaveRecordByTransactions\SaveByTransaction\AddUserInfoSaveByTrans;
 
 
 class CSessionInfoComponent
@@ -90,7 +92,7 @@ class CSessionInfoComponent
 //        $SessionInfo->save();
         $sql = 'update cClient'.$params['id'].' set last_visit_time = :date where id = :id';
         \Yii::$app->db->createCommand($sql,[':date'=>date('Y-m-d H:i:s', $now_time), ':id'=> $SessionInfo['id']])->execute();
-        return $SessionInfo['user_info'];
+        return $SessionInfo;
     }
 
     /**
@@ -102,25 +104,9 @@ class CSessionInfoComponent
      */
     private function SaveUser($params, $decode)
     {
-        $sql = 'insert into cClient'.$params['id'].' set nickName = :nN, avatarUrl = :pic, language = :lang, gender = :sex, province = :province, country = :country, city =:city, uuid = :uuid, skey = :skey, create_time = :creTime,last_visit_time = :lastTime,
-open_id = :openid,session_key= :session ,user_info=:userinfo';
-        $rst = \Yii::$app->db->createCommand($sql,[
-            ':nN' => $decode['nickName'],
-            ':pic' => $decode['avatarUrl'],
-            ':lang' => $decode['language'],
-            ':city' => $decode['city'],
-            ':sex' => $decode['gender'],
-            ':province' => $decode['province'],
-            ':country' => $decode['country'],
-            ':uuid' => $params['uuid'],
-            ':skey' => $params['skey'],
-            ':creTime' => $params['create_time'],
-            ':lastTime' => $params['last_visit_time'],
-            ':openid' => $params['openid'],
-            ':session' => $params['session_key'],
-            ':userinfo' => $params['user_info']
-        ])->execute();
-        if ($rst <= 0 || $rst == false) {
+        $transActions[] = new AddUserInfoSaveByTrans($params, $decode);
+        if(!SaveByTransUtil::SaveByTransaction($transActions, $error, $out)) {
+            \Yii::error($error);
             return false;
         }
         return true;
@@ -139,6 +125,8 @@ open_id = :openid,session_key= :session ,user_info=:userinfo';
               `open_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
               `uuid` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
               `avatarUrl` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+              `real_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+              `phone` varchar(100) COLLATE utf8mb4_unicode_ci,
               `language` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
               `gender` int(11) DEFAULT NULL,
               `province` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,

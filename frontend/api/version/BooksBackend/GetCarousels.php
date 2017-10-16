@@ -14,7 +14,7 @@ use frontend\business\CarouselsUtil;
 
 class GetCarousels implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
         $rst = CarouselsUtil::GetCarouselInfo(false);
         $rst = empty($rst) ? [] : $rst;

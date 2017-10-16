@@ -14,12 +14,12 @@ use frontend\business\DynamicUtil;
 
 class DelCollect implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) return false;
-        $dynamic_id = $data['data']['dynamic_id'];
-        $user_id = $data['data']['user_id'];
-        unset($data);
+        if (!$this->check_params($dataProtocol, $error)) return false;
+        $dynamic_id = $dataProtocol['data']['dynamic_id'];
+        $user_id = $dataProtocol['data']['user_id'];
+        unset($dataProtocol);
         $collect = DynamicUtil::getCollect($user_id, $dynamic_id);
         $collect->delete();
         $rstData['code'] = 0;

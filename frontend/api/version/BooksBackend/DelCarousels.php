@@ -14,13 +14,13 @@ use frontend\business\CarouselsUtil;
 
 class DelCarousels implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!isset($data['data']['id']) || empty($data['data']['id'])) {
+        if (!isset($dataProtocol['data']['id']) || empty($dataProtocol['data']['id'])) {
             $error = '轮播图 id 不能为空';
             return false;
         }
-        $id = $data['data']['id'];
+        $id = $dataProtocol['data']['id'];
         $Carousels = CarouselsUtil::GetCarousel($id);
         if (empty($Carousels) || !isset($Carousels)) {
             $error = '轮播图记录不存在';

@@ -81,6 +81,7 @@ class TemplateTaskAction extends Action
                 }
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($res)."--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --nick_name : ".$list['nick_name'] ." -- openId :".$list['open_id']. " appId :".$auth->record_id."\n", [Console::FG_GREEN]));
+                sleep(2);
             }
 
             $task->status = 0;

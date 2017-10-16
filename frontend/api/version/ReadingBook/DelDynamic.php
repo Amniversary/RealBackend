@@ -14,13 +14,13 @@ use frontend\business\DynamicUtil;
 
 class DelDynamic implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if(!isset($data['data']['dynamic_id']) || empty($data['data']['dynamic_id'])) {
+        if(!isset($dataProtocol['data']['dynamic_id']) || empty($dataProtocol['data']['dynamic_id'])) {
             $error = '动态id , 不能为空';
             return false;
         }
-        $Dynamic = DynamicUtil::getDynamicById($data['data']['dynamic_id']);
+        $Dynamic = DynamicUtil::getDynamicById($dataProtocol['data']['dynamic_id']);
         if(empty($Dynamic)) {
             $error = '删除失败, 动态记录不存在或已删除';
             return false;

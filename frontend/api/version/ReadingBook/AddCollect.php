@@ -16,17 +16,17 @@ use frontend\business\DynamicUtil;
 
 class AddCollect implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) return false;
-        $dynamic_id = $data['data']['dynamic_id'];
+        if (!$this->check_params($dataProtocol, $error)) return false;
+        $dynamic_id = $dataProtocol['data']['dynamic_id'];
         $Dynamic = DynamicUtil::getDynamicById($dynamic_id);
         if (empty($Dynamic)) {
             $error = '收藏失败, 动态不存在或已删除';
             return false;
         }
 
-        $user_id = $data['data']['user_id'];
+        $user_id = $dataProtocol['data']['user_id'];
         $collect = DynamicUtil::getCollect($user_id, $dynamic_id);
         if(!empty($collect)) {
             $error = '您已经收藏过了';
@@ -46,13 +46,13 @@ class AddCollect implements IApiExecute
         return true;
     }
 
-    private function check_params($dataTotal, &$error)
+    private function check_params($dataProtocol, &$error)
     {
         $files = ['user_id', 'dynamic_id'];
         $filesLabel = ['用户id', '动态id'];
         $len = count($files);
         for ($i = 0; $i < $len; $i++) {
-            if (!isset($dataTotal['data'][$files[$i]]) || empty($dataTotal['data'][$files[$i]])) {
+            if (!isset($dataProtocol['data'][$files[$i]]) || empty($dataProtocol['data'][$files[$i]])) {
                 $error .= $filesLabel[$i] . '不能为空';
                 return false;
             }

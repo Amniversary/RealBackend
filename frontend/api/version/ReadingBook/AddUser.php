@@ -15,14 +15,14 @@ use frontend\components\DuobbComponent;
 
 class AddUser implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) return false;
-        $code = $data['data']['code'];
-        $rawData = json_decode($data['data']['rawData'], true);
-        $signature = $data['data']['signature'];
-        $encryptedData = $data['data']['encryptedData'];
-        $iv = $data['data']['iv'];
+        if (!$this->check_params($dataProtocol, $error)) return false;
+        $code = $dataProtocol['data']['code'];
+        $rawData = json_decode($dataProtocol['data']['rawData'], true);
+        $signature = $dataProtocol['data']['signature'];
+        $encryptedData = $dataProtocol['data']['encryptedData'];
+        $iv = $dataProtocol['data']['iv'];
 
         $Component = new DuobbComponent();
         $session_rst = $Component->getCodeBySessionKey($code);
@@ -66,13 +66,13 @@ class AddUser implements IApiExecute
         return true;
     }
 
-    private function check_params($dataTotal, &$error)
+    private function check_params($dataProtocol, &$error)
     {
         $files = ['code', 'rawData','signature', 'encryptedData', 'iv'];
         $filesLabel = ['登录凭证', '原始串', '签名串', '加密串', '初始向量'];
         $len = count($files);
         for ($i = 0; $i < $len; $i++) {
-            if (!isset($dataTotal['data'][$files[$i]]) || empty($dataTotal['data'][$files[$i]])) {
+            if (!isset($dataProtocol['data'][$files[$i]]) || empty($dataProtocol['data'][$files[$i]])) {
                 $error .= $filesLabel[$i] . '不能为空';
                 return false;
             }

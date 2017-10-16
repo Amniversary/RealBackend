@@ -14,13 +14,13 @@ use frontend\business\CarouselsUtil;
 
 class WebGetCarousels implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if(empty($data['data']['book_id']) || !isset($data['data']['book_id'])) {
+        if(empty($dataProtocol['data']['book_id']) || !isset($dataProtocol['data']['book_id'])) {
             $error = '书籍Id ,不能为空';
             return false;
         }
-        $rst = CarouselsUtil::GetWebCarousels($data['data']['book_id']);
+        $rst = CarouselsUtil::GetWebCarousels($dataProtocol['data']['book_id']);
         $rst = empty($rst) ? [] : $rst;
         $rstData['code'] = 0;
         $rstData['data'] = $rst;

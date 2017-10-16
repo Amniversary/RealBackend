@@ -15,7 +15,7 @@ use yii\db\Query;
 
 class GetArticleParamsList implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
         $query = (new Query())
             ->select(['id', 'title', 'qrcode_url', 'create_time', 'update_time'])

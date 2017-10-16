@@ -14,13 +14,13 @@ use frontend\business\BookUtil;
 
 class GetBook implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (empty($data['data']['book_id']) || !isset($data['data']['book_id'])) {
+        if (empty($dataProtocol['data']['book_id']) || !isset($dataProtocol['data']['book_id'])) {
             $error = '书籍Id , 不能为空';
             return false;
         }
-        $id = $data['data']['book_id'];
+        $id = $dataProtocol['data']['book_id'];
         $book = BookUtil::GetBook($id);
         if (empty($book)) {
             $error = '获取书籍失败 , 记录已删除或不存在';

@@ -14,26 +14,26 @@ use frontend\business\CarouselsUtil;
 
 class UpdateCarousels implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) {
+        if (!$this->check_params($dataProtocol, $error)) {
             return false;
         }
         $url = '';
-        if (isset($data['data']['url'])) {
-            $url = $data['data']['url'];
+        if (isset($dataProtocol['data']['url'])) {
+            $url = $dataProtocol['data']['url'];
         }
-        $id = $data['data']['id'];
+        $id = $dataProtocol['data']['id'];
         $Carousel = CarouselsUtil::GetCarousel($id);
         if (empty($Carousel)) {
             $error = '轮播图记录不存在';
             return false;
         }
-        $Carousel->action_type = $data['data']['action_type'];
-        $Carousel->pic_url = $data['data']['pic_url'];
+        $Carousel->action_type = $dataProtocol['data']['action_type'];
+        $Carousel->pic_url = $dataProtocol['data']['pic_url'];
         $Carousel->url = $url;
-        $Carousel->description = $data['data']['description'];
-        $Carousel->status = $data['data']['status'];
+        $Carousel->description = $dataProtocol['data']['description'];
+        $Carousel->status = $dataProtocol['data']['status'];
         $Carousel->update_time = date('Y-m-d H:i:s');
         if (!CarouselsUtil::SaveCarousel($Carousel, $error)) {
             return false;
@@ -44,18 +44,18 @@ class UpdateCarousels implements IApiExecute
         return true;
     }
 
-    private function check_params($dataProtocal, &$error)
+    private function check_params($dataProtocol, &$error)
     {
         $fields = ['id', 'pic_url', 'action_type;'];
         $fieldLabels = ['轮播图id', '图片url', '轮播图类型'];
         $len = count($fields);
         for ($i = 0; $i < $len; $i++) {
-            if (!isset($dataProtocal['data'][$fields[$i]]) || empty($dataProtocal['data'][$fields[$i]])) {
+            if (!isset($dataProtocol['data'][$fields[$i]]) || empty($dataProtocol['data'][$fields[$i]])) {
                 $error = $fieldLabels[$i] . '不能为空';
                 return false;
             }
         }
-        if (!isset($dataProtocal['data']['status'])) {
+        if (!isset($dataProtocol['data']['status'])) {
             $error = '状态值不能为空';
             return false;
         }

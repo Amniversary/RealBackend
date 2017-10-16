@@ -69,6 +69,7 @@ class SendTemplateMsgAction extends Action
                 $i ++ ;
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($res)."--$sentData->key_word--  Everything is allright"."\n", [Console::FG_GREEN]));
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --nick_name : ".$list['nick_name'] ." -- openId :".$list['open_id']. " appId :".$auth->record_id . " app_name : " . $auth->nick_name."\n", [Console::FG_GREEN]));
+                sleep(2);
             }
             fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')."  消息数 $count ; --发送成功 $i --$sentData->key_word--任务执行完成!"."\n", [Console::FG_GREEN]));
             return BeanstalkController::DELETE;

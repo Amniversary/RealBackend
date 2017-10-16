@@ -14,11 +14,11 @@ use frontend\business\ClientUtil;
 
 class WxSetVip implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if(!$this->check_params($data, $error)) return false;
-        $open_id = $data['data']['openid'];
-        $appid = $data['data']['appid'];
+        if(!$this->check_params($dataProtocol, $error)) return false;
+        $open_id = $dataProtocol['data']['openid'];
+        $appid = $dataProtocol['data']['appid'];
         $auth = ClientUtil::getAuthOne($appid);
         $User = ClientUtil::getUserForOpenId($open_id, $auth->record_id);
         if(empty($User)) {

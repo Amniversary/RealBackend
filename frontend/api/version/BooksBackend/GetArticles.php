@@ -15,14 +15,14 @@ use frontend\business\BookUtil;
 class GetArticles implements IApiExecute
 {
 
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) {
+        if (!$this->check_params($dataProtocol, $error)) {
             return false;
         }
-        $book_id = $data['data']['book_id'];
-        $page_no = $data['data']['page_no'];
-        $page_size = $data['data']['page_size'];
+        $book_id = $dataProtocol['data']['book_id'];
+        $page_no = $dataProtocol['data']['page_no'];
+        $page_size = $dataProtocol['data']['page_size'];
         $book = BookUtil::GetBook($book_id);
         if (empty($book) || !isset($book)) {
             $error = '书籍记录信息不存在';
@@ -47,13 +47,13 @@ class GetArticles implements IApiExecute
     }
 
 
-    private function check_params($dataProtocal, &$error)
+    private function check_params($dataProtocol, &$error)
     {
         $fields = ['book_id', 'page_no', 'page_size'];
         $fieldLabels = ['书籍id', '分页数', '记录数'];
         $len = count($fields);
         for ($i = 0; $i < $len; $i++) {
-            if (!isset($dataProtocal['data'][$fields[$i]]) || empty($dataProtocal['data'][$fields[$i]])) {
+            if (!isset($dataProtocol['data'][$fields[$i]]) || empty($dataProtocol['data'][$fields[$i]])) {
                 $error = $fieldLabels[$i] . '不能为空';
                 return false;
             }

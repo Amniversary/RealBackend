@@ -11,5 +11,5 @@ namespace frontend\api;
 
 interface IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = []);
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = []);
 }

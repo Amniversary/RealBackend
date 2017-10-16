@@ -14,13 +14,13 @@ use frontend\business\CarouselsUtil;
 
 class GetCarousel implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (empty($data['data']['id'] || !isset($data['data']['id']))) {
+        if (empty($dataProtocol['data']['id'] || !isset($dataProtocol['data']['id']))) {
             $error = '轮播图id , 不能为空';
             return false;
         }
-        $id = $data['data']['id'];
+        $id = $dataProtocol['data']['id'];
         $carousel = CarouselsUtil::GetCarousel($id);
         if (empty($carousel)) {
             $error = '获取轮播图失败, 记录已删除或不存在';

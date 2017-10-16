@@ -25,10 +25,10 @@ class AuthComponent
         $cappinfo_data = $this->get_cappinfo($appid);
         $ret['appid'] = !isset($cappinfo_data['appid']) ? '' : $cappinfo_data['appid'];
         $ret['secret'] = !isset($cappinfo_data['secret']) ? '' : $cappinfo_data['secret'];
+        $ret['returnData'] = '';
         if (empty($cappinfo_data) || ($cappinfo_data == false)) {
             $ret['returnCode'] = ReturnCode::MA_NO_APPID;
             $ret['returnMessage'] = 'NO_APPID';
-            $ret['returnData'] = '';
             return $ret;
         }
         $id = $cappinfo_data['id'];
@@ -40,14 +40,12 @@ class AuthComponent
         if (!$json_rst) {
             $ret['returnCode'] = ReturnCode::MA_WEIXIN_NET_ERR;
             $ret['returnMessage'] = 'WEIXIN_NET_ERR';
-            $ret['returnData'] = '';
             return $ret;
         }
         $json_message = json_decode($json_rst,true);
         if (isset($json_message['errcode']) && isset($json_message['errmsg'])) {
             $ret['returnCode'] = ReturnCode::MA_WEIXIN_CODE_ERR;
             $ret['returnMessage'] = 'WEIXIN_CODE_ERR';
-            $ret['returnData'] = '';
             return $ret;
         }
         //TODO:  初始化用户解密信息
@@ -63,7 +61,6 @@ class AuthComponent
             //TODO : 兼容旧的解密算法
             if ($iv == "old") {
                 $user_info = $this->aes128cbc_Decrypt($encrypt_data, $session_key);
-//                \Yii::error('userinfo : '.var_export($user_info));
                 $user_info = base64_encode($user_info);
             } else {
                 $pc = new DecryptComponent($appid, $session_key);
@@ -73,7 +70,6 @@ class AuthComponent
             if ($user_info === false || $errCode !== 0) {
                 $ret['returnCode'] = ReturnCode::MA_DECRYPT_ERR;
                 $ret['returnMessage'] = 'DECRYPT_FAIL';
-                $ret['returnData'] = '';
                 return $ret;
             }
 
@@ -94,7 +90,6 @@ class AuthComponent
             if($change_result === false) {
                 $ret['returnCode'] = ReturnCode::MA_CHANGE_SESSION_ERR;
                 $ret['returnMessage'] = 'CHANGE_SESSION_ERR';
-                $ret['returnData'] = '';
                 return $ret;
             }
             if ($change_result === true) {
@@ -118,7 +113,6 @@ class AuthComponent
         } else {
             $ret['returnCode'] = ReturnCode::MA_WEIXIN_RETURN_ERR;
             $ret['returnMessage'] = 'WEIXIN_RETURN_ERR';
-            $ret['returnData'] = '';
         }
         return $ret;
     }
@@ -128,7 +122,6 @@ class AuthComponent
      * @param $id  //UUID
      * @param $skey  //skey
      * @return bool
-     *
      */
     public function auth($id, $skey, $appid)
     {
@@ -144,8 +137,6 @@ class AuthComponent
         }
         $login_duration = $cappinfo_data['login_duration'];
         $session_duration = $cappinfo_data['session_duration'];
-//        $ip = $cappinfo_data['ip'];
-//        $qcloud_appid = $cappinfo_data['qcloud_appid'];
         $params = [
             'id' => $cappinfo_data['id'],
             'uuid' => $id,
@@ -162,10 +153,11 @@ class AuthComponent
             $ret['returnData'] = '';
             return $ret;
         }
-        $arr_result['user_info'] = json_decode(base64_decode($auth_result));
+        $result['user_info'] = json_decode(base64_decode($auth_result['user_info']),true);
+        $result['user_info']['id'] = $auth_result['id'];
         $ret['returnCode'] = ReturnCode::MA_OK;
         $ret['returnMessage'] = 'AUTH_SUCCESS';
-        $ret['returnData'] = $arr_result;
+        $ret['returnData'] = $result;
         return $ret;
     }
 

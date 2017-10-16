@@ -14,20 +14,20 @@ use frontend\api\IApiExecute;
 
 class WxUserLogin implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!isset($data['data']['type'])) {
+        if (!isset($dataProtocol['data']['type'])) {
             $error = 'type类型, 不能为空';
             return false;
         }
-        if (!isset($data['data']['RealtechLoginSearch']) ||
-            empty($data['data']['RealtechLoginSearch'])
+        if (!isset($dataProtocol['data']['RealtechLoginSearch']) ||
+            empty($dataProtocol['data']['RealtechLoginSearch'])
         ) {
             $error = '参数缺少 RealtechLoginSearch';
             return false;
         }
-        $type = $data['data']['type'];
-        $post['RealtechLoginSearch'] = $data['data']['RealtechLoginSearch'];
+        $type = $dataProtocol['data']['type'];
+        $post['RealtechLoginSearch'] = $dataProtocol['data']['RealtechLoginSearch'];
         $model = new RealtechLoginSearch();
         if (!$model->load($post)) {
             \Yii::error('post::' . var_export($post, true));

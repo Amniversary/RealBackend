@@ -14,7 +14,7 @@ use Qiniu\Auth;
 
 class UploadToken implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
         $params = \Yii::$app->params['QiNiuOss'];
         $auth = new Auth($params['ak'],$params['sk']);

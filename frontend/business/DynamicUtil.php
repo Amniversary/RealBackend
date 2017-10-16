@@ -63,7 +63,7 @@ class DynamicUtil
             ->from('wc_studying_dynamic sd')
             ->leftJoin('wc_collect c', 'sd.dynamic_id = c.dynamic_id and user_id = :ud', [':ud' => $user_id])
             ->where(['type'=> $type])
-            ->orderBy('create_at asc')
+            ->orderBy('create_at desc')
             ->offset(($page_no -1) * $page_size)
             ->limit($page_size)
             ->all();

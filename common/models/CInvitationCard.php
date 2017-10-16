@@ -38,7 +38,9 @@ class CInvitationCard extends \yii\db\ActiveRecord
     {
         return [
             [['bride', 'bridegroom', 'wedding_time', 'site', 'status', 'latitude', 'longitude', 'create_time'], 'required'],
-            [['phone', 'status', 'create_time'], 'integer'],
+            [['status', 'create_time'], 'integer'],
+            ['phone', 'match', 'pattern' => '/^1\d{10}$/u', 'message' =>'手机号不正确'],
+            ['phone', 'string', 'min' => 11, 'max' => 11],
             [['latitude', 'longitude'], 'number'],
             [['bride', 'bridegroom'], 'string', 'max' => 50],
             [['wedding_time', 'remark1', 'remark2'], 'string', 'max' => 100],

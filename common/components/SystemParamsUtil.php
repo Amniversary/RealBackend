@@ -16,7 +16,7 @@ use yii\log\Logger;
  * Class 系统参数辅助类
  * @package common\components
  */
-    class SystemParamsUtil
+class SystemParamsUtil
 {
     private static $paramList = null;
 

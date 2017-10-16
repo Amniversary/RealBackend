@@ -152,7 +152,7 @@ class WxPayApi
             throw new WxPayException("缺少统一支付接口必填参数trade_type！");
         }
 	
-	$inputObj->SetNotify_url('http://'.$_SERVER['HTTP_HOST'].WxPayConfig::getConfig('NOTIFY_URL'));
+		$inputObj->SetNotify_url('http://'.$_SERVER['HTTP_HOST'].WxPayConfig::getConfig('NOTIFY_URL'));
 
         $inputObj->SetAppid(WxPayConfig::getConfig('APPID'));//公众账号ID
         $inputObj->SetMch_id(WxPayConfig::getConfig('MCHID'));//商户号

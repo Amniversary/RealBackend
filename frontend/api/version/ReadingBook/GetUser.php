@@ -14,13 +14,13 @@ use frontend\business\ClientUtil;
 
 class GetUser implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!isset($data['data']['user_id']) || empty($data['data']['user_id'])) {
+        if (!isset($dataProtocol['data']['user_id']) || empty($dataProtocol['data']['user_id'])) {
             $error = '用户Id, 不能为空';
             return false;
         }
-        $user_id = $data['data']['user_id'];
+        $user_id = $dataProtocol['data']['user_id'];
         $User = ClientUtil::getBookUserById($user_id);
         if(empty($User)) {
             $error = '用户信息不存在';

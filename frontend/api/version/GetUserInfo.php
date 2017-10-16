@@ -14,14 +14,14 @@ use frontend\api\IApiExecute;
 
 class GetUserInfo implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (empty($data['data']['username']) || !isset($data['data']['username'])) {
+        if (empty($dataProtocol['data']['username']) || !isset($dataProtocol['data']['username'])) {
             $error = '用户名, 不能为空';
             return false;
         }
         $rst = [];
-        $username = explode(',', $data['data']['username']);
+        $username = explode(',', $dataProtocol['data']['username']);
         foreach ($username as $item) {
             if (empty($item))
                 continue;

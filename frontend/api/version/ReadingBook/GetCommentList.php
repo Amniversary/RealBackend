@@ -14,15 +14,15 @@ use frontend\business\DynamicUtil;
 
 class GetCommentList implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if(!$this->check_params($data, $error)) {
+        if(!$this->check_params($dataProtocol, $error)) {
             \Yii::error($error);
             return false;
         }
-        $page_no = $data['data']['page_no'];
-        $page_size = $data['data']['page_size'];
-        $dynamic_id = $data['data']['dynamic_id'];
+        $page_no = $dataProtocol['data']['page_no'];
+        $page_size = $dataProtocol['data']['page_size'];
+        $dynamic_id = $dataProtocol['data']['dynamic_id'];
         if($page_no <= 0) $page_no = 1;
         if($page_size <= 0) $page_size = 10;
         $Dynamic = DynamicUtil::getDynamicById($dynamic_id);

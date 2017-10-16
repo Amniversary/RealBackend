@@ -17,6 +17,7 @@ use common\models\BatchAttention;
 use common\models\BatchKeywordList;
 use common\models\KeywordParams;
 use common\models\Keywords;
+use common\models\LaterKeyword;
 use common\models\MenuList;
 use common\models\SignKeyword;
 use yii\base\Exception;
@@ -56,7 +57,7 @@ class KeywordUtil
      * @param $sign_id
      * @return array
      */
-    public static function GetSignKeyParams($sign_id)
+    public static function  GetSignKeyParams($sign_id)
     {
         $query = (new Query())
             ->select(['key_id'])
@@ -68,6 +69,25 @@ class KeywordUtil
             $rst[] = $item['key_id'];
         }
        return $rst;
+    }
+
+    /**
+     * 根据签到id配置获取已配置关键字id列表
+     * @param $later_id
+     * @return array
+     */
+    public static function GetLaterKeyParams($later_id)
+    {
+        $query = (new Query())
+            ->select(['key_id'])
+            ->from('wc_later_keyword')
+            ->where(['later_id'=>$later_id])
+            ->all();
+        $rst = [];
+        foreach ($query as $item) {
+            $rst[] = $item['key_id'];
+        }
+        return $rst;
     }
 
     /**
@@ -113,6 +133,26 @@ class KeywordUtil
         $articleList = Keywords::find()
             ->select(['key_id','keyword'])
             ->where(['global'=>3])
+            ->all();
+
+        foreach($articleList as $articled){
+            $article[$articled['key_id']] = $articled['keyword'];
+        }
+        $rights = array_chunk($article,30,true);
+        return $rights;
+    }
+
+
+    /**
+     * 获取签到对应配置关键字
+     * @return array
+     */
+    public static function GetLaterKeyWord()
+    {
+        $article = [];
+        $articleList = Keywords::find()
+            ->select(['key_id','keyword'])
+            ->where(['global'=>4])
             ->all();
 
         foreach($articleList as $articled){
@@ -491,4 +531,27 @@ class KeywordUtil
         return true;
     }
 
+
+    public static function SaveLaterKeyWordParams($params, $id, &$error)
+    {
+        try {
+            $trans = \Yii::$app->db->beginTransaction();
+            (new LaterKeyword())->deleteAll(['later_id'=>$id]);//TODO: 删除用户原有权限数据
+            $sql = '';
+            $table = \Yii::$app->db;
+            foreach ($params as $parList) {
+                $sql .= sprintf('insert into %s_later_keyword (key_id, later_id) values(%s,%s);',$table->tablePrefix,$parList,$id);
+            }
+            $rst = $table->createCommand($sql)->execute();
+            if( $rst <= 0 ){
+                throw new Exception('保存权限数据异常');
+            }
+            $trans->commit();
+        } catch(Exception $e) {
+            $trans->rollBack();
+            $error = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
 }

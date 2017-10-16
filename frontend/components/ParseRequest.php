@@ -20,19 +20,18 @@ class ParseRequest
     {
         $ret['version'] = 1;
         $ret['componentName'] = 'MA';
+        $ret['returnData'] = '';
         if ($this->is_json($request_json)) {
             $decode_data = json_decode($request_json, true);
             //TODO : 验证接口名是否为空
             if (!isset($decode_data['interface']['interfaceName'])) {
                 $ret['returnCode'] = ReturnCode::MA_NO_INTERFACE;
                 $ret['returnMessage'] = 'NO_INTERFACENAME_PARA';
-                $ret['returnData'] = '';
                 return json_encode($ret);
             }
             if (!isset($decode_data['interface']['para'])) { //TODO: 验证code,encrypt_data,iv,appid
                 $ret['returnCode'] = ReturnCode::MA_NO_PARA;
                 $ret['returnMessage'] = 'NO_PARA';
-                $ret['returnData'] = '';
                 return json_encode($ret);
             }
             $interfaceName = $decode_data['interface']['interfaceName'];
@@ -54,13 +53,11 @@ class ParseRequest
                 default:
                     $ret['returnCode'] = ReturnCode::MA_INTERFACE_ERR;
                     $ret['returnMessage'] = 'INTERFACENAME_PARA_ERR';
-                    $ret['returnData'] = '';
                     break;
             }
         } else {
             $ret['returnCode'] = ReturnCode::MA_REQUEST_ERR;
             $ret['returnMessage'] = 'REQUEST_IS_NOT_JSON';
-            $ret['returnData'] = '';
         }
         //\Yii::error('rst_json : '. json_encode($ret));
         return json_encode($ret);

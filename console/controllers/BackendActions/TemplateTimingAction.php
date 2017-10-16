@@ -37,7 +37,7 @@ class TemplateTimingAction extends Action
                 'task_id' => $item->id,
                 'type' => $item->type
             ];
-            if (!JobUtil::AddCustomJob('templateBeanstalk', 'task', $params, $error, (60 * 60 * 24))) {
+            if (!JobUtil::AddCustomJob('templateBeanstalk', 'task', $params, $error, (60 * 60 * 24 * 15))) {
                 \Yii::error('job error :' . var_export($error, true));
                 var_dump($error);
                 exit;

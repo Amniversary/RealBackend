@@ -204,6 +204,60 @@ class ImageUtil
         return true;
     }
 
+    /**
+     * 生成用户签到图片
+     * @return bool
+     */
+    public static function imageLater($bgPath, &$filename, &$error)
+    {
+        if (!function_exists('gd_info')) {
+            $error = '请开启 GD库扩展';
+            return false;
+        }
+        @ini_set('memory_limit', '128M');
+        $font = \Yii::$app->basePath . '/runtime/signimg/HiraginoW3.ttc';
+        $bg_info = getimagesize($bgPath);
+        $bg_mime = $bg_info['mime'];
+
+        switch ($bg_mime) {  //TODO: 背景图 判断图片类型
+            case 'image/gif':
+                $bg_image = imagecreatefromgif($bgPath);
+                break;
+            case 'image/jpeg':
+                $bg_image = imagecreatefromjpeg($bgPath);
+                break;
+            case 'image/png':
+                $bg_image = imagecreatefrompng($bgPath);
+                break;
+            default:
+                $error = '背景源图片类型不正确';
+                return false;
+                break;
+        }
+        $target_image = imagecreatetruecolor(500, 825);
+        imagecopyresampled($target_image, $bg_image, 0, 0, 0, 0, 500, 825, $bg_info[0], $bg_info[1]);   //源图裁剪为目标图片大小
+        /**将输出图片设为透明**/
+
+        $black = imagecolorallocate($target_image, 255, 255, 255);
+        $back = imagecolorallocate($target_image, 0,0,0);
+        $text = date('Y.m.d');
+        $x = 500;
+        $y = 825;
+        $font_size = 14;
+        //imagettftext($target_image, 18, 0, $x * 0.4 ,$y * 0.95, $black, $font, $text);
+        imagettftext($target_image, $font_size, 0, ($x+3) * 0.4 , $y * 0.95, $black, $font, $text);
+        imagettftext($target_image, $font_size, 0, ($x-1)* 0.4, $y * 0.95, $black, $font, $text);
+        imagettftext($target_image, $font_size, 0, $x* 0.4, ($y-1) * 0.95, $black, $font, $text);
+        imagettftext($target_image, $font_size, 0, $x* 0.4, ($y+1) * 0.95, $black, $font, $text);
+        imagettftext($target_image, $font_size, 0, $x* 0.4 , $y * 0.95, $back, $font, $text);
+//        header('content-type: image/png');
+//        imagepng($target_image);
+        $filename = \Yii::$app->basePath . '/runtime/signimg/source/bg_' . time() . '.jpeg';
+        imagejpeg($target_image, $filename, 90);
+        imagedestroy($bg_image);
+        imagedestroy($target_image);
+        return true;
+    }
 
     /**
      * @param $source_path               源图片地址
@@ -232,7 +286,6 @@ class ImageUtil
 
         $target_width = intval($source_width * $scale);        //缩放比例
         $target_height = intval($source_height * $scale);
-
         switch ($source_mime)              //判断图片类型
         {
             case 'image/gif':

@@ -21,13 +21,13 @@ return [
     'update_article' => 'BooksBackend\UpdateArticle',
     'get_articles' => 'BooksBackend\GetArticles',
     'get_article' => 'BooksBackend\GetArticle',
-    'create_article_params'=>'BooksBackend\CreateArticleParams',
-    'update_article_params'=>'BooksBackend\UpdateArticleParams',
-    'del_article_params' =>'BooksBackend\DeleteArticleParams',
-    'get_article_params_list'=>'BooksBackend\GetArticleParamsList',
+    'create_article_params' => 'BooksBackend\CreateArticleParams',
+    'update_article_params' => 'BooksBackend\UpdateArticleParams',
+    'del_article_params' => 'BooksBackend\DeleteArticleParams',
+    'get_article_params_list' => 'BooksBackend\GetArticleParamsList',
     'get_article_params' => 'BooksBackend\GetArticleParams',
     //TODO: Web接口
-    'web_get_carousels'=>'BooksBackend\WebGetCarousels',
+    'web_get_carousels' => 'BooksBackend\WebGetCarousels',
     'web_get_issue' => 'BooksBackend\WebGetIssue',
     'web_get_books' => 'BooksBackend\WebGetBooks',
     'web_get_articles' => 'BooksBackend\WebGetArticles',
@@ -49,4 +49,9 @@ return [
     'get_book_carousels' => 'ReadingBook\GetCarousels',
     'del_collect' => 'ReadingBook\DelCollect',
     'get_user' => 'ReadingBook\GetUser',
+    //TODO: 婚礼小程序
+    'create_invitation' => 'Wedding\CreateInvitation',
+    'get_invitation_list' => 'Wedding\GetInvitationList',
+    'set_admin' => 'Wedding\SetAdmin',
+    'get_balance' => 'Wedding\GetBalance',
 ];

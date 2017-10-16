@@ -15,13 +15,13 @@ use frontend\api\IApiExecute;
 
 class CreateBook implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) {
+        if (!$this->check_params($dataProtocol, $error)) {
             return false;
         }
-        $weekly_id = $data['data']['weekly_id'];
-        $title = $data['data']['title'];
+        $weekly_id = $dataProtocol['data']['weekly_id'];
+        $title = $dataProtocol['data']['title'];
         $model = new Books();
         $model->title = $title;
         $model->weekly_id = $weekly_id;
@@ -37,10 +37,10 @@ class CreateBook implements IApiExecute
             \Yii::error($error . ' :' . var_export($model->getErrors(), true));
             return false;
         }
-        if (!empty($data['data']['config_id']) || isset($data['data']['config_id'])) {
+        if (!empty($dataProtocol['data']['config_id']) || isset($dataProtocol['data']['config_id'])) {
             $BookParams = new BookParamsMenu();
             $BookParams->book_id = $model->book_id;
-            $BookParams->system_id = $data['data']['config_id'];
+            $BookParams->system_id = $dataProtocol['data']['config_id'];
             $BookParams->save();
         }
         $rstData['code'] = 0;
@@ -49,13 +49,13 @@ class CreateBook implements IApiExecute
     }
 
 
-    private function check_params($dataProtocal, &$error)
+    private function check_params($dataProtocol, &$error)
     {
         $fields = ['weekly_id', 'title'];
         $fieldLabels = ['周刊id', '书籍标题'];
         $len = count($fields);
         for ($i = 0; $i < $len; $i++) {
-            if (!isset($dataProtocal['data'][$fields[$i]]) || empty($dataProtocal['data'][$fields[$i]])) {
+            if (!isset($dataProtocol['data'][$fields[$i]]) || empty($dataProtocol['data'][$fields[$i]])) {
                 $error = $fieldLabels[$i] . '不能为空';
                 return false;
             }

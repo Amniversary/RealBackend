@@ -14,13 +14,13 @@ use frontend\business\WeeklyUtil;
 
 class GetWeekly implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) {
+        if (!$this->check_params($dataProtocol, $error)) {
             return false;
         }
-        $page_no = $data['data']['page_no'];
-        $page_size = $data['data']['page_size'];
+        $page_no = $dataProtocol['data']['page_no'];
+        $page_size = $dataProtocol['data']['page_size'];
         if ($page_no <= 0) {
             $page_no = 1;
         }

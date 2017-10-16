@@ -14,13 +14,13 @@ use frontend\business\ArticlesUtil;
 
 class GetArticle implements IApiExecute
 {
-    function execute_action($data, &$rstData,&$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData,&$error, $extendData = [])
     {
-        if(empty($data['data']['article_id']) || !isset($data['data']['article_id'])){
+        if(empty($dataProtocol['data']['article_id']) || !isset($dataProtocol['data']['article_id'])){
             $error = '章节id , 不能为空';
             return false;
         }
-        $id = $data['data']['article_id'];
+        $id = $dataProtocol['data']['article_id'];
         $article = ArticlesUtil::GetArticleById($id);
         if (empty($article)) {
             $error = '获取章节失败, 章节已删除或不存在';

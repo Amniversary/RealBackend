@@ -14,23 +14,23 @@ use frontend\business\ArticlesUtil;
 class UpdateArticle implements IApiExecute
 {
 
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) {
+        if (!$this->check_params($dataProtocol, $error)) {
             return false;
         }
-        $id = $data['data']['id'];
+        $id = $dataProtocol['data']['id'];
         $Article = ArticlesUtil::GetArticleById($id);
         if (empty($Article) || !isset($Article)) {
             $error = '章节信息记录不存在';
             return false;
         }
 
-        $Article->title = $data['data']['title'];
-        $Article->pic = $data['data']['pic'];
-        $Article->description = $data['data']['description'];
-        $Article->url = $data['data']['url'];
-        $Article->status = $data['data']['status'];
+        $Article->title = $dataProtocol['data']['title'];
+        $Article->pic = $dataProtocol['data']['pic'];
+        $Article->description = $dataProtocol['data']['description'];
+        $Article->url = $dataProtocol['data']['url'];
+        $Article->status = $dataProtocol['data']['status'];
         if (!ArticlesUtil::SaveArticles($Article, $error)) {
             return false;
         }

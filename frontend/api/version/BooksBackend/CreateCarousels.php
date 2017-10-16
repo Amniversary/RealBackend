@@ -15,19 +15,19 @@ use frontend\business\CarouselsUtil;
 
 class CreateCarousels implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->check_params($data, $error)) {
+        if (!$this->check_params($dataProtocol, $error)) {
             return false;
         }
         $url = '';
-        if (isset($data['data']['url'])) {
-            $url = $data['data']['url'];
+        if (isset($dataProtocol['data']['url'])) {
+            $url = $dataProtocol['data']['url'];
         }
         $model = new Carousel();
-        $model->pic_url = $data['data']['pic_url'];
-        $model->action_type = $data['data']['type'];
-        $model->description = $data['data']['description'];
+        $model->pic_url = $dataProtocol['data']['pic_url'];
+        $model->action_type = $dataProtocol['data']['type'];
+        $model->description = $dataProtocol['data']['description'];
         $model->url = $url;
         $model->status = 1;
         $model->create_time = date('Y-m-d H:i:s');
@@ -43,14 +43,14 @@ class CreateCarousels implements IApiExecute
     }
 
 
-    private function check_params($dataProtocal, &$error)
+    private function check_params($dataProtocol, &$error)
     {
         $fields = ['pic_url', 'type'];
         $fieldLabels = ['图片url', '轮播图类型'];
         $len = count($fields);
         for ($i = 0; $i < $len; $i++) {
-            //\Yii::error('datform:' . $dataProtocal['data'][$fields[$i]]);
-            if (!isset($dataProtocal['data'][$fields[$i]]) || empty($dataProtocal['data'][$fields[$i]])) {
+            //\Yii::error('datform:' . $dataProtocolProtocal['data'][$fields[$i]]);
+            if (!isset($dataProtocol['data'][$fields[$i]]) || empty($dataProtocol['data'][$fields[$i]])) {
                 $error = $fieldLabels[$i] . '不能为空';
                 return false;
             }

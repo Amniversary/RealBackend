@@ -85,4 +85,26 @@ class BatchKeywordSearch extends Keywords
 
         return $dataProvider;
     }
+
+    public function searchLater($params)
+    {
+        $query = Keywords::find()->where(['global'=>4]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'rule'=>$this->rule,
+        ]);
+
+
+        return $dataProvider;
+    }
 }

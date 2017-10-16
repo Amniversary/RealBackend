@@ -16,22 +16,22 @@ use yii\db\Exception;
 
 class CreateArticleParams implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (!$this->Check_Params($data, $error)) {
+        if (!$this->Check_Params($dataProtocol, $error)) {
             return false;
         }
         $qrcode_url = '';
-        if (!empty($data['data']['qrcode_url'])) {
-            $qrcode_url = $data['data']['qrcode_url'];
+        if (!empty($dataProtocol['data']['qrcode_url'])) {
+            $qrcode_url = $dataProtocol['data']['qrcode_url'];
         }
-        $carousel = $data['data']['carousel'];
+        $carousel = $dataProtocol['data']['carousel'];
         if (!is_array($carousel)) {
             $error = '数据错误 , 轮播图不是数组对象';
             return false;
         }
         $model = new ArticleSystemParams();
-        $model->title = $data['data']['title'];
+        $model->title = $dataProtocol['data']['title'];
         $model->qrcode_url = $qrcode_url;
         $model->create_time = date('Y-m-d H:i:s');
         $model->update_time = date('Y-m-d H:i:s');
@@ -45,7 +45,7 @@ class CreateArticleParams implements IApiExecute
             if (!empty($carousel)) {
                 (new ArticleSystemMenu())->deleteAll(['system_id' => $model->id]);
                 $sql = '';
-                foreach ($data['data']['carousel'] as $item) {
+                foreach ($dataProtocol['data']['carousel'] as $item) {
                     $sql .= sprintf('insert into %s_article_system_menu(system_id, carousel_id) VALUES (%s,%s);', \Yii::$app->db->tablePrefix, $model->id, $item);
                 }
                 $rst = \Yii::$app->db->createCommand($sql)->execute();
@@ -65,13 +65,13 @@ class CreateArticleParams implements IApiExecute
         return true;
     }
 
-    private function Check_Params($dataProtocal, &$error)
+    private function Check_Params($dataProtocol, &$error)
     {
         $files = ['title', 'carousel'];
         $fileList = ['配置标题', '轮播图'];
         $len = count($files);
         for ($i = 0; $i < $len; $i++) {
-            if (!isset($dataProtocal['data'][$files[$i]]) || empty($dataProtocal['data'][$files[$i]])) {
+            if (!isset($dataProtocol['data'][$files[$i]]) || empty($dataProtocol['data'][$files[$i]])) {
                 $error = $fileList[$i] . '不能为空';
                 return false;
             }

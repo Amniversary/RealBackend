@@ -14,17 +14,17 @@ use frontend\business\DynamicUtil;
 
 class GetDynamic implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if(!$this->check_params($data, $error)) return false;
-        $dynamic_id = $data['data']['dynamic_id'];
+        if(!$this->check_params($dataProtocol, $error)) return false;
+        $dynamic_id = $dataProtocol['data']['dynamic_id'];
         $Dynamic = DynamicUtil::getDynamicById( $dynamic_id);
         if(empty($Dynamic)) {
             $error = '动态记录信息不存在或已删除';
             return false;
         }
         $voice = DynamicUtil::getVoiceById($Dynamic->dynamic_id);
-        if($data['data']['type'] == 1) {
+        if($dataProtocol['data']['type'] == 1) {
             $sql = 'update wc_studying_dynamic set count = count + 1 where dynamic_id = :dy';
             $res = \Yii::$app->db->createCommand($sql,[':dy'=>$Dynamic->dynamic_id])->execute();
             if($res <= 0) {
@@ -51,13 +51,13 @@ class GetDynamic implements IApiExecute
         return true;
     }
 
-    private function check_params($dataTotal, &$error)
+    private function check_params($dataProtocol, &$error)
     {
         $files = ['dynamic_id', 'type'];
         $filesLabel = ['动态id', '动态类型'];
         $len = count($files);
         for ($i = 0; $i < $len; $i++) {
-            if (!isset($dataTotal['data'][$files[$i]]) || empty($dataTotal['data'][$files[$i]])) {
+            if (!isset($dataProtocol['data'][$files[$i]]) || empty($dataProtocol['data'][$files[$i]])) {
                 $error .= $filesLabel[$i] . '不能为空';
                 return false;
             }

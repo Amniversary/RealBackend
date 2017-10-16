@@ -14,13 +14,13 @@ use frontend\business\WeeklyUtil;
 
 class GetOneWeekly implements IApiExecute
 {
-    function execute_action($data, &$rstData, &$error, $extendData = [])
+    function execute_action($dataProtocol, &$rstData, &$error, $extendData = [])
     {
-        if (empty($data['data']['weekly_id']) || !isset($data['data']['weekly_id'])) {
+        if (empty($dataProtocol['data']['weekly_id']) || !isset($dataProtocol['data']['weekly_id'])) {
             $error = '周刊id , 不能为空';
             return false;
         }
-        $weekly_id = $data['data']['weekly_id'];
+        $weekly_id = $dataProtocol['data']['weekly_id'];
         $weekly = WeeklyUtil::GetWeekly($weekly_id);
         if (empty($weekly)) {
             $error = '获取周刊失败, 记录已删除或不存在';
