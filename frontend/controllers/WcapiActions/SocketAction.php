@@ -11,6 +11,8 @@ namespace frontend\controllers\WcapiActions;
 
 use common\components\UsualFunForNetWorkHelper;
 use yii\base\Action;
+use yii\base\Exception;
+use yii\web\HttpException;
 
 class SocketAction extends Action
 {
@@ -25,9 +27,7 @@ class SocketAction extends Action
         }
         $header = \Yii::$app->request->headers;
         $ServerName = $header['ServerName'];
-        $OpenId = $header['OpenId'];
-        $AppId = $header['AppId'];
-        $MethodName = !empty($header['MethodName']) ? $header['MethodName'] : 'url';
+        $MethodName = !empty($header['MethodName']) ? $header['MethodName'] : '';
         $ConfigFile = \Yii::$app->getBasePath() . '/config/ServersConfig.php';
         if (!file_exists($ConfigFile)) {   //TODO : 检测配置文件是否存在
             $rst['code'] = 10001;
@@ -43,30 +43,39 @@ class SocketAction extends Action
             echo json_encode($rst);
             exit;
         }
-        if(!isset($Server[$ServerName][$MethodName])) {
-            $rst['code'] = 10001;
-            $rst['msg'] = '配置文件错误, 找不到对应扩展服务名';
-            \Yii::error($rst['msg'] . ' MethodName :' . $MethodName);
-            echo json_encode($rst);
-            exit;
+        $count = count($Server[$ServerName]);
+        //TODO: 从配置列表中随机获取
+        $request = $Server[$ServerName]['default'][mt_rand(0, $count-1)];
+        if(array_key_exists($MethodName, $Server[$ServerName])) {
+            $request = $Server[$ServerName][$MethodName]['default'][mt_rand(0, $count-1)];
         }
-        $request = $Server[$ServerName][$MethodName];
-        $count = count($request);
         $resources = file_get_contents('php://input');
         $result = '';
+        $headers = [];
+        $headerConfig = ['servername', 'methodname', 'x-wx-code', 'x-wx-encrypted-data', 'x-wx-iv', 'x-wx-id', 'x-wx-skey', 'appid', 'openid', 'userid'];
+        foreach($header as $item => $v) {
+            if(!in_array($item, $headerConfig)) continue;
+            $headers[] = "$item:$v[0]";
+        }
         switch ($_SERVER['REQUEST_METHOD']) {
-            case 'GET':                        //TODO: 从配置列表中随机获取( 暂时处理 )      将Header头中的OpenId 和AppId 带过去
-                $result = UsualFunForNetWorkHelper::HttpGet($request[mt_rand(0,$count-1)], ["OpenId:$OpenId", "AppId:$AppId"]);
+            case 'GET':                                       //TODO: 将header参数带上
+                $result = UsualFunForNetWorkHelper::HttpGet($request, $headers);
                 break;
             case 'POST':
-                $result = UsualFunForNetWorkHelper::HttpsPost($request[mt_rand(0,$count-1)], $resources, ["OpenId:$OpenId", "AppId:$AppId"]);
+                $result = UsualFunForNetWorkHelper::HttpsPost($request, $resources, $headers);
                 break;
             case 'OPTIONS':
                 \Yii::$app->response->statusCode = 200;
                 break;
         }
         $end = round(microtime(TRUE) * 1000);
-        \Yii::error(sprintf('socket 时间:%sms', $end - $begin));
+        if(empty($result)) {
+            $rst['code'] = 10001;
+            $rst['msg'] = '系统错误';
+            echo json_encode($rst);
+            exit;
+        }
+        \Yii::error(sprintf('socket 时间:%sms, url : %s', $end - $begin, $request));
         return $result;
     }
 
@@ -75,7 +84,7 @@ class SocketAction extends Action
     private function CheckParams(&$error)
     {
         $header = \Yii::$app->request->headers;
-        $paramsName = ['ServerName', 'OpenId', 'AppId'];
+        $paramsName = ['ServerName'];
         $count = count($paramsName);
         for ($i = 0; $i < $count; $i++) {
             if (!isset($header[$paramsName[$i]]) || empty($header[$paramsName[$i]])) {

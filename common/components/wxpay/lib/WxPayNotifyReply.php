@@ -29,7 +29,7 @@ class WxPayNotifyReply extends  WxPayDataBase
 	 * 获取错误码 FAIL 或者 SUCCESS
 	 * @return string $return_code
 	 */
-	public function GetReturn_code()
+	public function 	GetReturn_code()
 	{
 		return $this->values['return_code'];
 	}
