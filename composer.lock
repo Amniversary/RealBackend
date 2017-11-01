@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "767a64b6599d69dc91820a507b778881",
+    "content-hash": "d907b38e85b68b50350cfe440ea694e2",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -4521,12 +4521,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-redis.git",
-                "reference": "c50382e4d9d10d13d2c998baf973d68e06fa6977"
+                "reference": "f3f5e97f5692638bee42ed57561326ac56ed9a87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/yiisoft/yii2-redis/c50382e4d9d10d13d2c998baf973d68e06fa6977.zip",
-                "reference": "c50382e4d9d10d13d2c998baf973d68e06fa6977",
+                "url": "https://files.phpcomposer.com/files/yiisoft/yii2-redis/f3f5e97f5692638bee42ed57561326ac56ed9a87.zip",
+                "reference": "f3f5e97f5692638bee42ed57561326ac56ed9a87",
                 "shasum": ""
             },
             "require": {
@@ -4561,7 +4561,7 @@
                 "session",
                 "yii2"
             ],
-            "time": "2017-04-18 23:59:20"
+            "time": "2017-09-20 08:30:09"
         },
         {
             "name": "yiisoft/yii2-sphinx",
@@ -4976,6 +4976,7 @@
         "kartik-v/yii2-grid": 20,
         "kartik-v/yii2-krajee-base": 20,
         "callmez/yii2-wechat-sdk": 20,
+        "yiisoft/yii2-redis": 20,
         "udokmeci/yii2-beanstalk": 20,
         "pjkui/kindeditor": 20,
         "kartik-v/yii2-widget-datepicker": 20,

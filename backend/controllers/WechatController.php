@@ -142,7 +142,7 @@ class WechatController extends Controller
             throw new HttpException(500, $error);
         }
         $authorizer_info = $outInfo['authorizer_info'];
-
+        //\Yii::error('auth :'.var_export($AuthInfo,true));
         //TODO: 保存授权数据
         //TODO: 处理公众号粉丝数据统计
         $transActions[] = new SaveAuthorizeInfoByTrans($AuthInfo, $authorizer_info);

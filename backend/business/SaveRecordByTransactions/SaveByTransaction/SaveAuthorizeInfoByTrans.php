@@ -38,6 +38,7 @@ class SaveAuthorizeInfoByTrans implements ISaveForTransaction
             $model->service_type_info = $this->extend['service_type_info']['id'];
             $model->verify_type_info = $this->extend['verify_type_info']['id'];
             $model->alias = $this->extend['alias'];
+            $model->status = 1;
             $model->qrcode_url = $this->extend['qrcode_url'];
             $model->business_info = json_encode($this->extend['business_info']);
             $model->signature = $this->extend['signature'];

@@ -37,7 +37,6 @@ class LivingControl
     public function __construct()
     {
         $this->cache = \Yii::$app->cache;
-
         // 加锁，防止并发
         $lock = 3;
         while ($lock > 0) {

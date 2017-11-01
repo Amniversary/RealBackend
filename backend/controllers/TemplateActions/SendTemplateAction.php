@@ -108,7 +108,7 @@ class SendTemplateAction extends Action
                     'data'=>$post,
                     'app_id'=>$auth['record_id']
                 ];
-                if(!JobUtil::AddCustomJob('templateBeanstalk','send_template',$params,$error,(60 * 60 * 24 * 15))) {
+                if(!JobUtil::AddCustomJob('templateBeanstalk','send_template',$params,$error,(60 * 60 * 24 * 30))) {
                     $rst['msg'] = $error;
                     echo json_encode($rst);exit;
                 }

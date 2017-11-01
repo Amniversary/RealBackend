@@ -45,7 +45,7 @@ class ApiAction extends Action
     public function run()
     {
         $rstOut = ['code' => 1, 'msg' => ''];
-        $rst = ['code' => 0, 'msg' => '', 'data' => '',];
+        $rst = ['code' => 0, 'data' => '', 'msg' => ''];
         $error = '';
 
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {

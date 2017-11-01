@@ -51,7 +51,7 @@ class BatchCustomerAction extends Action
                     $rst = WeChatUserUtil::sendCustomerMsg($accessToken, $json);
                     if ($rst['errcode'] != 0 || !$rst) {
                         $error = $rst;
-                        if ($rst['errcode'] == 40001) {
+                        if ($rst['errcode'] == 40001 || $rst['errcode'] == 42001) {
                             $auth = AuthorizerUtil::getAuthByOne($sentData->app_id);
                             $accessToken = $auth->authorizer_access_token;
                         }
