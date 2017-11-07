@@ -51,16 +51,4 @@ class WaferController extends Controller
         TunnelService::handle($handler, ['checkLogin' => true]);
     }
 
-
-    /**
-     * 会话服务器  获取用户鉴权参数信息
-     * @return array|int
-     */
-    public function actionMina_auth()
-    {
-        $request = file_get_contents('php://input');
-        $parse_request = new ParseRequest();
-        $rst = $parse_request->parse_json($request);
-        return $rst;
-    }
 }

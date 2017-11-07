@@ -49,9 +49,5 @@ return [
     'get_book_carousels' => 'ReadingBook\GetCarousels',
     'del_collect' => 'ReadingBook\DelCollect',
     'get_user' => 'ReadingBook\GetUser',
-    //TODO: 婚礼小程序
-    'create_invitation' => 'Wedding\CreateInvitation',
-    'get_invitation_list' => 'Wedding\GetInvitationList',
-    'set_admin' => 'Wedding\SetAdmin',
-    'get_balance' => 'Wedding\GetBalance',
+    'send_broadcast' => 'Notice\SendBroadcast',
 ];

@@ -22,12 +22,15 @@ class SendBroadcast implements IApiExecute
         $type = $dataProtocol['data']['type'];
         $content = $dataProtocol['data']['content'];
         $result = TunnelService::broadcast($tunnelIds, $type, $content);
+        \Yii::error('result:'.var_export($result,true));
         if($result['code'] !== 0 && !empty($result['data']['invalidTunnelIds'])) {
             $invalidTunnelIds = $result['data']['invalidTunnelIds'];
+            $cache = \Yii::$app->cache;
             foreach($invalidTunnelIds as $tunnelId) {
                 $index = array_search($tunnelId, $tunnelIds);
                 if($index !== false) {
-                    \Yii::$app->redis->del('UserTunnel_'.$index);
+                    $cache->delete('UserTunnel_'.$index);
+                    $cache->delete($tunnelId);
                 }
             }
         }
@@ -38,11 +41,11 @@ class SendBroadcast implements IApiExecute
     private function check_params($dataProtocol, &$error)
     {
         $files = ['tunnelIds', 'type', 'content'];
-        $filesLabel = ['用户id', '消息类型', '消息内容'];
+        $filesLabel = ['信道id', '消息类型', '消息内容'];
         $len = count($files);
         for ($i = 0; $i < $len; $i++) {
             if (!isset($dataProtocol['data'][$files[$i]]) || empty($dataProtocol['data'][$files[$i]])) {
-                $error = $filesLabel . '不能为空';
+                $error = $filesLabel[$i] . '不能为空';
                 return false;
             }
         }

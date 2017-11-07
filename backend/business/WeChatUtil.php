@@ -266,7 +266,6 @@ class WeChatUtil
             \Yii::error($error . ' -' . var_export($rst, true));
             return false;
         }
-
         return true;
     }
 

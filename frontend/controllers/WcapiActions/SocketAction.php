@@ -75,7 +75,7 @@ class SocketAction extends Action
             echo json_encode($rst);
             exit;
         }
-        \Yii::error(sprintf('socket 时间:%sms, url : %s', $end - $begin, $request));
+//        \Yii::error(sprintf('socket 时间:%sms, url : %s', $end - $begin, $request));
         return $result;
     }
 
