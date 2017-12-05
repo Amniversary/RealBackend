@@ -10,6 +10,7 @@ namespace backend\controllers;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\JobUtil;
 use backend\business\SaveByTransUtil;
 use backend\business\SaveRecordByTransactions\SaveByTransaction\SaveAuthorizeInfoByTrans;
 use backend\business\WeChatUserUtil;
@@ -76,43 +77,23 @@ class WechatController extends Controller
         $data = $WeChat->decryptMsg;
         $data['appid'] = $WeChat->AppId;
         $this->SaveUserUpdate($data['FromUserName'], $WeChat->AppId);
-//        if($data['FromUserName'] == 'ol_EGvw_V3rXYILgc7QEOVVBrxwg'){
-//            \Yii::error('FromUserName: '.var_export($data,true));
-//      }
+        
         switch ($WeChat->MsgType) {
-            case 'text':
-                $resultXml = $Receive->Text($data);
-                break;
-            case 'image':
-                $resultXml = $Receive->Image($data);
-                break;
-            case 'location':
-                $resultXml = $Receive->Location($data);
-                break;
-            case 'voice':
-                $resultXml = $Receive->Voice($data);
-                break;
-            case 'video':
-                $resultXml = $Receive->Video($data);
-                break;
-            case 'link':
-                $resultXml = $Receive->Link($data);
-                break;
-            case 'event':
-                $resultXml = $Receive->Event($data);
-                break;
-            default:
-                $resultXml = null;
-                break;
+            case 'text': $resultXml = $Receive->Text($data); break;
+            case 'image': $resultXml = $Receive->Image($data); break;
+            case 'location': $resultXml = $Receive->Location($data); break;
+            case 'voice': $resultXml = $Receive->Voice($data); break;
+            case 'video': $resultXml = $Receive->Video($data); break;
+            case 'link': $resultXml = $Receive->Link($data); break;
+            case 'event': $resultXml = $Receive->Event($data); break;
+            default: $resultXml = null; break;
         }
-
         if ($resultXml == null) return null;
         if (!$WeChat->encryptMsg($resultXml, $encryptMsg)) {
             $errMsg = $WeChat->getErrorMsg($WeChat->errorCode);
             \Yii::error('errMsg : ' . $errMsg);
             return null;
         }
-        //\Yii::error('encrypt:'.$resultXml);
         return $encryptMsg;
     }
 
@@ -149,7 +130,12 @@ class WechatController extends Controller
         if (!SaveByTransUtil::RewardSaveByTransaction($transActions, $error, $out)) {
             throw new HttpException(500, $error);
         }
-
+        AuthorizerUtil::CreateClient($out['record_id']);
+        //TODO: 异步拉取公众号历史用户
+        $params = ['app_id' => $out['record_id']];
+        if(!JobUtil::AddCustomJob('getUserBeanstalk', 'get_user', $params, $error, (60 * 60 * 48))){
+            var_dump($error);exit;
+        }
         return $this->redirect(['publiclist/index']);
     }
 
@@ -178,11 +164,16 @@ class WechatController extends Controller
             return false;
         }
         $User = AuthorizerUtil::getUserForOpenId($Openid, $auth->record_id);
-        if (!isset($User) || empty($User)) {
-            return false;
+        if (isset($User) || !empty($User)) {
+            $User->update_time = date('Y-m-d H:i:s');
+            $User->save();
         }
-        $User->update_time = date('Y-m-d H:i:s');
-        $User->save();
+        if($auth->record_id == 76) {
+            $QueryUser = AuthorizerUtil::getQueryUserForOpenId($auth->record_id, $Openid);
+            if(isset($QueryUser) || !empty($QueryUser)) {
+                AuthorizerUtil::updateUserInfo($auth->record_id, $Openid);
+            }
+        }
         return true;
     }
 }

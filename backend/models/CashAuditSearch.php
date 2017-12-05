@@ -92,15 +92,15 @@ class CashAuditSearch extends Model
 
     public function getCashList()
     {
-        $url = "https://16075509.ririyuedu.com/socket/response.do";
+        $url = "https://access.djtaoke.cn/socket/response.do";
         $json = '{"action_name":"get_cash_audit", "data":"get_cash_audit"}';
         $header = ["servername:wedding"];
         $rst = json_decode(UsualFunForNetWorkHelper::HttpsPost($url, $json, $header), true);
         if ($rst['code'] !== 0) {
-            \Yii::error($rst['code'] . ' :'.  $rst['msg']);
-            return false;
+            \Yii::error(var_export($rst,true));
+            return [];
         }
-        return $rst['data'];
+        return (empty($rst['data'])) ? [] : $rst['data'];
     }
 
     private function searchId($query)

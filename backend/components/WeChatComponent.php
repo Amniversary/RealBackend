@@ -233,7 +233,6 @@ class WeChatComponent extends Object
             $random = $this->getRandomStr();
             $text = $random . pack("N", strlen($text)) . $text . $appid;
             //TODO: 网络字节序
-
             $module = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
             $iv = substr($key, 0, 16);
             //TODO: 使用自定义的填充方式对明文进行补位填充

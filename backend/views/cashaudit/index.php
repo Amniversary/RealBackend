@@ -72,20 +72,20 @@ $gridColumns = [
             switch ($model['status']) {
                 case '1': $str = '未审核'; break;
                 case '2': $str = '已打款'; break;
-                case '0': $str = '已拒绝'; break;
+                case '0': $str = '打款失败'; break;
                 case '3': $str = '打款中'; break;
                 default : $str = '未知类型'; break;
             }
             return $str;
         },
-        'filter' => ['1' => '未审核', '2' => '已打款', '0' => '已拒绝', '3'=> '打款中'],
+        'filter' => ['1' => '未审核', '2' => '已打款', '0' => '打款失败', '3'=> '打款中'],
     ],
     [
         'attribute' => 'cash_rate',
         'vAlign' => 'middle',
         'label' => '提现费率',
         'value' => function ($model) {
-            return sprintf('%.02f', $model['cash_rate'] / 100) . '%';
+            return sprintf('%.02f', $model['cash_rate'] * 10) . '%';
         }
     ],
     [

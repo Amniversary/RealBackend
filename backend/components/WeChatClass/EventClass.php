@@ -51,7 +51,7 @@ class EventClass
 
         $auth = AuthorizerUtil::getAuthOne($appid); //TODO: 获取公众号信息
         $access_token = $auth->authorizer_access_token;
-        if (empty($auth)) return null;   //TODO: 如果公众号不存在
+        if (empty($auth)) return null;
         if (isset($auth->record_id)) {   //TODO: 处理用户关注统计
             $DataPrams = ['key_word' => 'attention', 'app_id' => $auth->record_id, 'type' => 1];
             if (!JobUtil::AddCustomJob('attentionBeanstalk', 'attention', $DataPrams, $error))
@@ -67,6 +67,10 @@ class EventClass
             if (!$model->save()) {
                 \Yii::error('保存微信用户信息失败：' . var_export($model->getErrors(), true));
                 return null;
+            }
+            if($auth->record_id == 76) {
+                $QueryUser = AuthorizerUtil::getQueryUserForOpenId($auth->record_id, $openid);
+                AuthorizerUtil::SaveUser($auth->record_id, $QueryUser);
             }
             if (in_array($auth->record_id, \Yii::$app->params['WxAuthParams'])) {
                 if (empty($UserInfo)) {
@@ -105,6 +109,15 @@ class EventClass
             $UserInfo->update_time = date('Y-m-d H:i:s');
             $UserInfo->save();
         }
+        if($AuthInfo->record_id == 76) {
+            $QueryUser = AuthorizerUtil::getQueryUserForOpenId($AuthInfo->record_id, $openid);
+            if (!empty($QueryUser)) {
+                \Yii::$app->db->createCommand()->update('wc_client'. $AuthInfo->record_id,
+                    ['subscribe'=>0, 'update_time'=> time()],
+                    ['open_id'=>$openid, 'app_id'=> $AuthInfo->record_id]
+                )->execute();
+            }
+        }
         return null;
     }
 
@@ -116,6 +129,8 @@ class EventClass
     public function getQrCodeImg(&$error)
     {
         $start = microtime(true);
+        $isset = true;
+        $out = true;
         $openid = $this->data['FromUserName'];
         $auth = AuthorizerUtil::getAuthOne($this->data['appid']);
         $access_token = $auth->authorizer_access_token;
@@ -138,22 +153,28 @@ class EventClass
             fwrite(STDOUT, Console::ansiFormat("更新用户信息 Time : " . (microtime(true) - $a) . "\n", [Console::FG_GREEN]));
             $client = $model;
         }
+        if (empty($client->headimgurl)) {
+            $client->headimgurl = 'http://7xld1x.com1.z0.glb.clouddn.com/timg.jpeg';
+        }
         $img = ImageUtil::GetQrcodeImg($client->client_id);
-        if (!isset($img) || empty($img)) {  //TODO: 如果图片不存在  重新生成并上传
-            $b = microtime(true);
-            $userData = WeChatUserUtil::getUserInfo($access_token, $openid);
-            fwrite(STDOUT, Console::ansiFormat("获取用户信息  Time : " . (microtime(true) - $b) . "\n", [Console::FG_GREEN]));
-
-            if (empty($userData['headimgurl'])) {
-                $userData['headimgurl'] = 'http://7xld1x.com1.z0.glb.clouddn.com/timg.jpeg';
+        if (!isset($img) || empty($img)) {
+            $isset = false;
+        } else {
+            $outTime = intval((time() - $img->update_time) / 86400);
+            if ($outTime >= 3) {
+                $out = false;
             }
+        }
+
+
+        if ($isset === false || $out === false) {
             $c = microtime(true);
-            if (!WeChatUserUtil::getQrcodeSendImg($access_token, $openid, $userData['headimgurl'], $qrcode_file, $pic_file, $error)) {
+            if (!WeChatUserUtil::getQrcodeSendImg($access_token, $openid, $client->headimgurl, $qrcode_file, $pic_file, $error)) {
                 $error = '获取二维码图片失败 ' . $error;
                 return false;
             }
             fwrite(STDOUT, Console::ansiFormat("获取二维码和用户头像地址: Time : " . (microtime(true) - $c) . "\n", [Console::FG_GREEN]));
-            $text = $userData['nickname'];
+            $text = $client->nick_name;
             $d = microtime(true);
             if (!ImageUtil::imagemaking($qrcode_file, $pic_file, $openid, $text, $bg_img, $error)) {
                 return false;
@@ -168,7 +189,7 @@ class EventClass
             if (!$wechat->Upload($bg_img, $access_token, $rst, $error)) { //TODO: 背景图上传微信素材
                 if ($rst['errcode'] == 45009) {
                     $Clear = WeChatUserUtil::ClearQuota($this->data['appid'], $access_token);
-                    if (!$Clear['errcode'] != 0) {
+                    if ($Clear['errcode'] != 0) {
                         \Yii::error('Clear quota :' . var_export($Clear, true));
                         \Yii::getLogger()->flush(true);
                     }
@@ -176,75 +197,27 @@ class EventClass
                 return false;
             }
             fwrite(STDOUT, Console::ansiFormat("上传微信图片: Time : " . (microtime(true) - $e) . "\n", [Console::FG_GREEN]));
+        }
+        $media_id = $img->media_id;
+        if ($isset == false) {
             $model = new QrcodeImg();
             $model->client_id = $client->client_id;
             $model->media_id = $rst['media_id'];
             $model->update_time = $rst['created_at'];
             $model->save();
             $media_id = $model->media_id;
-            $unlink = microtime(true);
-            @unlink($qrcode_file);
-            @unlink($pic_file);
-            fwrite(STDOUT, Console::ansiFormat("删除图片地址 : Time : " . (microtime(true) - $unlink) . "\n", [Console::FG_GREEN]));
-            /*$imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
-            if(!JobUtil::AddCustomJob('imgBeanstalk','delete_img',$imgParams,$error)) {
-                \Yii::error($error); \Yii::getLogger()->flush(true);
-            }*/
-        } else {
-            $time = time();
-            $outTime = intval(($time - $img->update_time) / 86400);
-            if ($outTime >= 3) {
-                $f = microtime(true);
-                $userData = WeChatUserUtil::getUserInfo($access_token, $openid);
-                fwrite(STDOUT, Console::ansiFormat("更新用户信息 2 Time : " . (microtime(true) - $f) . "\n", [Console::FG_GREEN]));
-                if (empty($userData['headimgurl'])) {
-                    $userData['headimgurl'] = 'http://7xld1x.com1.z0.glb.clouddn.com/timg.jpeg';
-                }
-                $g = microtime(true);
-                if (!WeChatUserUtil::getQrcodeSendImg($access_token, $openid, $userData['headimgurl'], $qrcode_file, $pic_file, $error)) {
-                    $error = '获取图片失败 ' . $error;
-                    return false;
-                }
-                fwrite(STDOUT, Console::ansiFormat("获取二维码和用户头像地址2: Time : " . (microtime(true) - $g) . "\n", [Console::FG_GREEN]));
-                $text = $userData['nickname'];
-                $h = microtime(true);
-                if (!ImageUtil::imagemaking($qrcode_file, $pic_file, $openid, $text, $bg_img, $error)) {
-                    return false;
-                }
-                fwrite(STDOUT, Console::ansiFormat("生成海报图片2: Time : " . (microtime(true) - $h) . "\n", [Console::FG_GREEN]));
-                if (!file_exists($bg_img)) {
-                    $error = '海报生成失败2: bg_img:' . $bg_img . ' qrcode_img:' . $qrcode_file . ' pic:' . $pic_file;
-                    return false;
-                }
-                $i = microtime(true);
-                $wechat = new WeChatUtil();
-                if (!$wechat->Upload($bg_img, $access_token, $rst, $error)) { //TODO: 背景图上传微信素材
-                    if ($rst['errcode'] == 45009) {
-                        fwrite(STDOUT, Console::ansiFormat("图片Api请求达到日上限执行清理 " . "\n", [Console::FG_GREEN]));
-                        $Clear = WeChatUserUtil::ClearQuota($this->data['appid'], $access_token);
-                        if (!$Clear['errcode'] != 0) {
-                            \Yii::error('Clear quota :' . var_export($Clear, true));
-                            \Yii::getLogger()->flush(true);
-                        }
-                    }
-                    return false;
-                }
-                fwrite(STDOUT, Console::ansiFormat("上传微信图片2: Time : " . (microtime(true) - $i) . "\n", [Console::FG_GREEN]));
-                /*$imgParams = ['key_word'=> 'delete_img','qrcode_file'=>$qrcode_file, 'pic_file'=>$pic_file];
-                if(!JobUtil::AddCustomJob('imgBeanstalk','delete_img',$imgParams,$error)) {
-                    \Yii::error($error); \Yii::getLogger()->flush(true);
-                }*/
-                $img->client_id = $client->client_id;
-                $img->media_id = $rst['media_id'];
-                $img->update_time = $rst['created_at'];
-                $img->save();
-                $unlink2 = microtime(true);
-                @unlink($qrcode_file);
-                @unlink($pic_file);
-                fwrite(STDOUT, Console::ansiFormat("删除图片地址2 : Time : " . (microtime(true) - $unlink2) . "\n", [Console::FG_GREEN]));
-            }
+        }
+        if ($out == false) {
+            $img->client_id = $client->client_id;
+            $img->media_id = $rst['media_id'];
+            $img->update_time = $rst['created_at'];
+            $img->save();
             $media_id = $img->media_id;
         }
+
+        @unlink($qrcode_file);
+        @unlink($pic_file);
+        @unlink($bg_img);
         $msgObj = new MessageComponent($this->data);
         $msgData = [
             ['msg_type' => '0', 'content' => \Yii::$app->params['qrcode_msg'][0]],

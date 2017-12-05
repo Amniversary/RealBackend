@@ -84,11 +84,16 @@ class WechatController extends Controller
             if(!AuthorizerUtil::isVerify($item['verify_type_info'])){
                 continue;
             }
-            if(!WeChatUserUtil::getWxFansAccumulate($item['authorizer_access_token'],$rst,$error)){
-                echo "$error 公众号:".$item['nick_name']." \n";continue;
+            if(!WeChatUserUtil::getWxFansAccumulate($item['authorizer_access_token'],$rst,$error)) {
+                if(strpos('42001', $error)) {
+                    $AppInfo = AuthorizerUtil::getAuthByOne($item['record_id']);
+                    if(!WeChatUserUtil::getWxFansAccumulate($AppInfo->authorizer_access_token, $rst,$error)) {
+                        echo "$error 公众号:".$item['nick_name']." \n"; continue;
+                    }
+                }
             }
             if($rst['list'][0]['cumulate_user'] < 0 || !isset($rst['list'][0]['cumulate_user'])) {
-                var_dump($rst);
+//                var_dump($rst);
                 continue;
             }
             try{
@@ -155,5 +160,45 @@ class WechatController extends Controller
      */
     private function getFansCount($record_id){
         return StatisticsCount::findOne(['app_id'=>$record_id]);
+    }
+
+    public function actionGenuser()
+    {
+        //TODO: 创建表数据
+        $app_list = (new Query())->select(['record_id'])->from('wc_authorization_list')->orderBy('record_id asc')->all();
+        foreach($app_list as $v) {
+            $appid = $v['record_id'];
+            $sql = 'CREATE TABLE IF NOT EXISTS `wc_client'. $appid .'` (
+                `client_id` int(11) NOT NULL AUTO_INCREMENT,
+                `open_id` varchar(100) DEFAULT NULL,
+                `nick_name` varchar(20) DEFAULT NULL,
+                `subscribe` int (11) DEFAULT NULL,
+                `sex` int(11) DEFAULT NULL,
+                `language` varchar(20) DEFAULT NULL,
+                `province` varchar(50) DEFAULT NULL,
+                `country` varchar(50) DEFAULT NULL,
+                `headimgurl` varchar(200) DEFAULT NULL,
+                `subscribe_time` int(11) DEFAULT NULL,
+                `unionid` varchar(100) DEFAULT NULL,
+                `groupid` varchar(20) DEFAULT NULL,
+                `app_id` int(11) DEFAULT NULL,
+                `is_vip` int(11) DEFAULT NULL,
+                `invitation` int(11) DEFAULT NULL,
+                `create_time` int(11) DEFAULT NULL,
+                `update_time` int(11)  DEFAULT NULL,
+                `remark` varchar(100) DEFAULT NULL,
+                `remark1` varchar(100) DEFAULT NULL,
+                `remark2` varchar(100) DEFAULT NULL,
+                PRIMARY KEY (`client_id`),
+                UNIQUE KEY `openid_or_appid` (`open_id`, `app_id`) USING BTREE,
+                KEY `is_vip` (`is_vip`) USING BTREE,
+                KEY `app_id` (`app_id`) USING BTREE,
+                KEY `nick_name` (`nick_name`) USING BTREE,
+                KEY `create_time` (`create_time`) USING BTREE,
+                KEY `update_time` (`update_time`) USING BTREE,
+                KEY `subscribe` (`subscribe`) USING BTREE
+                ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;';
+            \Yii::$app->db->createCommand($sql)->execute();
+        }
     }
 }

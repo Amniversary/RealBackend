@@ -55,7 +55,7 @@ class TemplateTaskAction extends Action
             unset($data['url']);
             unset($data['openid']);
             $count = count($query);
-            $num = ceil($count / 2);
+            $num = ceil($count / 3);
             $i = 0;
             $k = 0;
             $temp_day = date('d');
@@ -73,7 +73,8 @@ class TemplateTaskAction extends Action
                         sleep($sleep);
                     }
                 }
-                $this->getSleep();
+//                $this->getSleep();
+
                 $msgData = [];
                 foreach($data as $key => $v) {
                     $value = str_replace('{{NICKNAME}}', $list['nick_name'], $v['value']);
@@ -102,8 +103,7 @@ class TemplateTaskAction extends Action
                 $k ++;
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --".json_encode($res)."--$sentData->key_word--  Everything is allright"."\n", [Console::BG_BLUE]));
                 fwrite(STDOUT, Console::ansiFormat(date('Y-m-d H:i:s')." --nick_name : ".$list['nick_name'] ." -- openId :".$list['open_id']. " appId :".$auth->record_id  .  " app_name :". $auth->nick_name."\n", [Console::BG_BLUE]));
-
-//                sleep(2);
+                sleep(3);
             }
 
             $task->status = 0;

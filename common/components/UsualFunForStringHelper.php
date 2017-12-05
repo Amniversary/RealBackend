@@ -163,6 +163,23 @@ class UsualFunForStringHelper
         return $rst;
     }
 
+
+    /**
+     * 将日期转换为中文
+     * @param $day
+     * @return bool|string
+     */
+    public static function DateConversion($day)
+    {
+        if(empty($day) || strlen($day) == 0) {
+            return false;
+        }
+        $number = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        $chinese = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+        $str = str_replace($number, $chinese, date('Y',strtotime($day)).'年'.trim(str_replace('1十','十',implode('十', str_split(date('n',strtotime($day))))),'0').'月'.trim(str_replace('1十','十',implode('十', str_split(date('d',strtotime($day))))),'0')).'日';
+        return $str;
+    }
+
     /**
      * 验证身份证号
      * @param $id_card_no

@@ -62,14 +62,9 @@ class ReceiveType
             case 'CLICK':
                 $auth = AuthorizerUtil::getAuthOne($arr['appid']);
                 $contentStr = $Event->Click();
-                if($arr['EventKey'] == 'get_qrcode') {
-                    if(in_array($auth->record_id,\Yii::$app->params['WxAuthParams'])) {
-                        $params = ['key_word' => 'get_qrcode', 'data' => $arr];
-                        if(!JobUtil::AddCustomJob('imgBeanstalk','get_qrcode',$params,$error)) {
-                            \Yii::error($error);
-                        }
-                        $contentStr = '海报生成中 ...';
-                    }
+                switch($arr['EventKey']) {
+                    case 'get_qrcode': $this->get_qrcode($auth->record_id, $arr, $contentStr); break;
+                    case 'sign_up': $this->sign_up($auth->record_id, $arr, $contentStr); break;
                 }
                 break;
             case 'TEMPLATESENDJOBFINISH':
@@ -134,5 +129,25 @@ class ReceiveType
     public function Link($arr,$flag = 0)
     {
         return null;
+    }
+
+    private function get_qrcode($appId, $arr, &$contentStr)
+    {
+        if(in_array($appId, \Yii::$app->params['WxAuthParams'])) {
+            $params = ['key_word' => 'get_qrcode', 'data' => $arr];
+            if(!JobUtil::AddCustomJob('imgBeanstalk','get_qrcode',$params,$error)) {
+                \Yii::error($error);
+            }
+            $contentStr = '海报生成中 ...';
+        }
+    }
+
+    private function sign_up($appId, $arr, &$contentStr)
+    {
+        $params = ['key_word' => 'sign_up' , 'data' => $arr];
+        if(!JobUtil::AddCustomJob('imgBeanstalk', 'sign_up', $params, $error)) {
+            \Yii::error($error);
+        }
+        $contentStr = null;
     }
 }

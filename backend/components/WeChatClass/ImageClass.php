@@ -10,8 +10,10 @@ namespace backend\components\WeChatClass;
 
 
 use backend\business\AuthorizerUtil;
+use backend\business\ImageUtil;
 use backend\business\JobUtil;
 use backend\business\WeChatUserUtil;
+use backend\business\WeChatUtil;
 use backend\components\MessageComponent;
 
 class ImageClass
@@ -93,5 +95,56 @@ class ImageClass
         }
         $content = '图片正在人工审核中';
         return $content;
+    }
+
+    /**
+     * 报名点击事件 (熊猫读书会)
+     * @param $error
+     * @return bool
+     */
+    public function getSignUpImg(&$error)
+    {
+        $appId = $this->data['appid'];
+        $openid = $this->data['FromUserName'];
+        $auth = AuthorizerUtil::getAuthOne($appId);
+        $accessToken = $auth->authorizer_access_token;
+        $User = AuthorizerUtil::getUserForOpenId($openid, $auth->record_id);
+        if(!$User) {
+            $getUser = WeChatUserUtil::getUserInfo($accessToken, $openid);
+            if(!$getUser) {
+                $error = '获取用户数据空 : openId :'. $openid .'  accessToken:' . $accessToken;
+                return false;
+            }
+            $getUser['app_id'] = $auth->record_id;
+            $model = AuthorizerUtil::genModel($User, $getUser);
+            if(!$model->save()) {
+                $error = '保存已关注微信用户信息失败';
+                \Yii::error($error . ' :'. var_export($model->getErrors(), true));
+                return false;
+            }
+            $User = $model;
+        }
+        $picPath = \Yii::$app->basePath . '/runtime/sign_up/test1.jpg';
+        if(!ImageUtil::imageSignUp($picPath, $User->nick_name, $User->open_id, $filename, $error)) {
+            return false;
+        }
+        $WeChat = new WeChatUtil();
+        if(!$WeChat->Upload($filename, $accessToken, $rst, $error)) {
+            if($rst['errcode'] == 45009) {
+                $Clear = WeChatUserUtil::ClearQuota($appId, $accessToken);
+                if($Clear['errcode'] != 0) {
+                    \Yii::error('Clear quota :'. var_export($Clear, true));
+                    \Yii::getLogger()->flush(true);
+                }
+            }
+            return false;
+        }
+        @unlink($filename);
+        $msgObj = new MessageComponent($this->data);
+        $msgData = [
+            ['msg_type' => '2', 'media_id' => $rst['media_id']]
+        ];
+        $msgObj->sendMessageCustom($msgData, $openid);
+        return true;
     }
 }

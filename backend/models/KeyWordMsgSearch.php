@@ -136,7 +136,7 @@ class KeyWordMsgSearch extends AttentionEvent
 
     public function searchBatchParams($params)
     {
-        $params = 'select msg_id from wc_batch_customer_params where task_id = ' . $params['id'];
+        $params = 'select msg_id from wc_batch_customer_params where task_id=' . $params['id'];
         $condition = 'record_id in (' . $params . ') and flag = 4';
         $query = AttentionEvent::find()
             ->where($condition)

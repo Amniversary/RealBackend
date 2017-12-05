@@ -9,6 +9,7 @@
 namespace backend\business;
 
 
+use common\components\UsualFunForStringHelper;
 use common\models\QrcodeImg;
 use yii\log\Logger;
 
@@ -123,6 +124,84 @@ class ImageUtil
      * 生成用户签到图片
      * @return bool
      */
+    public static function imageSignUp($picPath, $text, $openid, &$filename, &$error)
+    {
+        if (!function_exists('gd_info')) {
+            $error = '请开启 GD库扩展';
+            return false;
+        }
+        @ini_set('memory_limit', '128M');
+//        $font = \Yii::$app->basePath .'/runtime/sign_up/Kaiti.ttc';
+        $name_font = \Yii::$app->basePath . '/runtime/sign_up/Songti.ttc';
+        $font = \Yii::$app->basePath . '/runtime/signimg/HiraginoW3.ttc';
+
+        $pic_info = getimagesize($picPath);
+        $pic_mime = $pic_info['mime'];
+        switch ($pic_mime) { //TODO: 用户头像 判断类型
+            case 'image/gif':
+                $pic_image = imagecreatefromgif($picPath);
+                break;
+            case 'image/jpeg':
+                $pic_image = imagecreatefromjpeg($picPath);
+                break;
+            case 'image/png':
+                $pic_image = imagecreatefrompng($picPath);
+                break;
+            default:
+                $error = '头像源图片类型不正确';
+                return false;
+                break;
+        }
+
+        $target_image = imagecreatetruecolor($pic_info[0], $pic_info[1]);
+        imagecopyresampled($target_image, $pic_image, 0, 0, 0, 0, $pic_info[0], $pic_info[1], $pic_info[0], $pic_info[1]);   //源图裁剪为目标图片大小
+        /**将输出图片设为透明**/
+
+        $hui = imagecolorallocate($target_image, 158, 151, 135);
+        $black = imagecolorallocate($target_image, 2, 2, 2);
+        $date = UsualFunForStringHelper::DateConversion(date('Y-m-d'));
+        $len = strlen($text);
+        if($len > 48) {
+            $sub = $len - 48;
+            $text = mb_substr($text, 0, -$sub);
+        }
+        $y = 59;
+        $font_size = 14;
+        if($len <= 9) {
+            $x = 440;
+        } elseif($len > 9 && $len <= 15) {
+            $x = 415;
+        } elseif($len > 15 && $len <= 24) {
+            $x = 400;
+        } elseif($len > 24 && $len <= 30) {
+            $x = 395; $font_size = 12;
+        } elseif($len > 30 && $len <= 36) {
+            $x = 395; $font_size = 10;
+        } elseif($len > 36 && $len <= 42) {
+            $x = 395; $font_size = 9;
+        } elseif($len > 42 && $len <= 48) {
+            $x = 385; $font_size = 8;
+        } else {
+            $x = 385; $font_size = 8;
+        }
+        imagettftext($target_image, $font_size, 0, $x, $y, $black, $name_font, $text);
+        imagettftext($target_image, 14, 0, 480, 499, $hui, $font, $date);
+//        header('content-type: image/png');
+//        imagepng($target_image);
+//        exit;
+        $filename = \Yii::$app->basePath . '/runtime/sign_up/source/sign_' . $openid . '.jpeg';
+        imagejpeg($target_image, $filename, 90);
+
+        imagedestroy($pic_image);
+        imagedestroy($target_image);
+        return true;
+    }
+
+
+    /**
+     * 生成用户签到图片
+     * @return bool
+     */
     public static function imageSign($bgPath, $picPath, $openid, $text, &$filename, &$error)
     {
         if (!function_exists('gd_info')) {
@@ -205,7 +284,7 @@ class ImageUtil
     }
 
     /**
-     * 生成用户签到图片
+     * 生成用户早晚安图片
      * @return bool
      */
     public static function imageLater($bgPath, &$filename, &$error)

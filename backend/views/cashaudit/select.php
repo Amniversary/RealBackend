@@ -80,7 +80,11 @@ use yii\bootstrap\Html;
     <p><?='提现账单详情'?></p>
 </div>
 <div class="form-group check-button-list">
-    <?= Html::button('打款' , ['class' =>'btn btn-success check-pass','id'=>'btn_pass']).'&nbsp;&nbsp;'.'&nbsp;&nbsp;'.Html::button('取消' , ['data-dismiss'=>'modal','aria-hidden'=>'true','class' =>'btn btn-success']) ?>
+    <?php if(in_array($model['status'], [1, 0])) {
+        echo Html::button('打款' , ['class' =>'btn btn-success check-pass','id'=>'btn_pass']).'&nbsp;&nbsp;&nbsp;&nbsp;';
+    }
+    ?>
+    <?= Html::button('取消' , ['data-dismiss'=>'modal','aria-hidden'=>'true','class' =>'btn btn-success']) ?>
 </div>
 <div class="user-info">
     <p>账单相关信息</p>

@@ -68,7 +68,7 @@ class CompareInfoAction extends Action
             'rate' => empty($count_json) ? 0 : sprintf('%.4f', round($count_json / $max, 4)) * 100,
         ];
         $rst['code'] = 0;
-        \Yii::error(var_export($rst,true));
+//        \Yii::error(var_export($rst,true));
         echo json_encode($rst);
     }
 }

@@ -132,6 +132,8 @@ class SaveAuthorizeInfoByTrans implements ISaveForTransaction
                 return false;
             }
         }
+
+        $Out['record_id'] = $model->record_id;
         return true;
     }
 }

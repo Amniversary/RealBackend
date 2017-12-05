@@ -30,6 +30,8 @@ class AuthorizerUtil
         return AuthorizationList::findOne(['authorizer_appid' => $appid, 'status' => 1]);
     }
 
+
+
     /**
      * 获取所有公众号昵称
      * @return mixed
@@ -92,7 +94,25 @@ class AuthorizerUtil
         return Client::findOne(['open_id' => $openid, 'app_id' => $appid]);
     }
 
+    /**
+     * 获取微信用户基本信息同 getUserForOpenId
+     * @param $openid
+     * @return array
+     */
+    public static function getQueryUserForOpenId($app_id, $openid)
+    {
+        return (new Query())->select(['*'])->from('wc_client'.$app_id)->where(['open_id'=>$openid])->all();
+    }
 
+    /**
+     * 更新用户交互时间
+     * @param $appId
+     * @param $open_id
+     */
+    public static function updateUserInfo($appId, $open_id)
+    {
+        \Yii::$app->db->createCommand()->update('wc_client'. $appId, ['update_time'=>time()], ['open_id'=>$open_id])->execute();
+    }
     /**
      * 获取用户基础信息模型
      * @param $data
@@ -131,6 +151,25 @@ class AuthorizerUtil
         return $model;
     }
 
+    /**
+     * 更新用户信息
+     * @param $appId
+     * @param $User
+     * @throws \yii\db\Exception
+     */
+    public static function SaveUser($appId, $User)
+    {
+        $db = \Yii::$app->db;
+        $time = time();
+        if(empty($User)) {
+            $sql = 'insert ignore into wc_client'.$appId.' (open_id, nick_name, subscribe, sex, city, language, province, country,
+        headimgurl, subscribe_time, unionid, groupid, app_id, is_vip, invitation, create_time, update_time, remark) VALUES (
+        :op, :nn, :sub, :sex, :city, :lgu, :pro, :cou, :img, :subt, :union, :grou, :apd, :iv, :ivt, :ct, :ut, :rm);';
+            $db->createCommand($sql,[':op'=> !empty($User['openid']) ? $User['openid']:'', ':nn'=> isset($User['nickname']) ? $User['nickname'] :'', ':sub'=> isset($User['subscribe']) ? $User['subscribe'] :'', ':sex'=> isset($User['sex']) ? $User['sex']:'', ':city'=> isset($User['city']) ? $User['city']:'', ':lgu'=> isset($User['language']) ? $User['language']:'', ':pro'=> isset($User['province']) ? $User['province']:'', ':cou'=> isset($User['country']) ? $User['country']:'', ':img'=> isset($User['headimgurl']) ? $User['headimgurl']:'', ':subt'=> $User['subscribe_time'], ':union'=> isset($User['unionid']) ? $User['unionid']:'', ':grou'=> isset($User['group_id']) ?$User['group_id']:'', ':apd'=> $User['app_id'], ':iv'=> 0, ':ivt'=> 0, ':ct'=> $time, ':ut'=> $time, ':rm' => isset($User['remark']) ? $User['remark']:''])->execute();
+        } else {
+            $db->createCommand()->update('wc_client'. $appId, ['nick_name' => isset($User['nickname']) ? $User['nickname']:'', 'subscribe' => isset($User['subscribe']) ? $User['subscribe']:'', 'sex' => isset($User['sex']) ? $User['sex']:'', 'city' => isset($User['city']) ? $User['city']:'', 'language' => isset($User['language']) ? $User['language']:'', 'province' => isset($User['province']) ? $User['province']:'', 'country' => isset($User['country']) ? $User['country']:'', 'headimgurl' => isset($User['headimgurl']) ? $User['headimgurl']:'', 'unionid' => isset($User['unionid']) ? $User['unionid']:'', 'groupid' => isset($User['groupid']) ? $User['groupid']:'', 'update_time' => $time, 'remark' => isset($User['remark']) ? $User['remark']:'', 'subscribe_time' => isset($User['subscribe_time']) ? $User['subscribe_time']:'',], ['app_id'=>$appId, 'open_id'=> $User['openid']])->execute();
+        }
+    }
 
     /**
      * 获取关键子列表
@@ -283,6 +322,45 @@ class AuthorizerUtil
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param $appid
+     * @throws \yii\db\Exception
+     */
+    public static function CreateClient($appid)
+    {
+        $sql = 'CREATE TABLE IF NOT EXISTS `wc_client'. $appid .'` (
+                `client_id` int(11) NOT NULL AUTO_INCREMENT,
+                `open_id` varchar(100) DEFAULT NULL,
+                `nick_name` varchar(20) DEFAULT NULL,
+                `subscribe` int (11) DEFAULT NULL,
+                `sex` int(11) DEFAULT NULL,
+                `language` varchar(20) DEFAULT NULL,
+                `province` varchar(50) DEFAULT NULL,
+                `country` varchar(50) DEFAULT NULL,
+                `headimgurl` varchar(200) DEFAULT NULL,
+                `subscribe_time` int(11) DEFAULT NULL,
+                `unionid` varchar(100) DEFAULT NULL,
+                `groupid` varchar(20) DEFAULT NULL,
+                `app_id` int(11) DEFAULT NULL,
+                `is_vip` int(11) DEFAULT NULL,
+                `invitation` int(11) DEFAULT NULL,
+                `create_time` int(11) DEFAULT NULL,
+                `update_time` int(11)  DEFAULT NULL,
+                `remark` varchar(100) DEFAULT NULL,
+                `remark1` varchar(100) DEFAULT NULL,
+                `remark2` varchar(100) DEFAULT NULL,
+                PRIMARY KEY (`client_id`),
+                UNIQUE KEY `openid_or_appid` (`open_id`, `app_id`) USING BTREE,
+                KEY `is_vip` (`is_vip`) USING BTREE,
+                KEY `app_id` (`app_id`) USING BTREE,
+                KEY `nick_name` (`nick_name`) USING BTREE,
+                KEY `create_time` (`create_time`) USING BTREE,
+                KEY `update_time` (`update_time`) USING BTREE,
+                KEY `subscribe` (`subscribe`) USING BTREE
+                ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;';
+        \Yii::$app->db->createCommand($sql)->execute();
     }
 
     /**

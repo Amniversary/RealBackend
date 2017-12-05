@@ -22,13 +22,13 @@ class UpdateAction extends Action
             echo json_encode($rst); exit;
         }
         $url = "https://16075509.ririyuedu.com/socket/response.do";
-        $json = '{"action_name":"up_cash_audit", "data":{"id":'.$post.'}}';
+        $json = '{"action_name":"up_cash_audit", "data":{"id":'.$post.', "backend_id":'. \Yii::$app->user->id .'}}';
         $header = ["servername:wedding"];
         $result = json_decode(UsualFunForNetWorkHelper::HttpsPost($url, $json, $header), true);
         if ($result['code'] !== 0) {
             \Yii::error($result['code']. ' :'.$result['msg']);
-            $rst['msg'] = $result['code'] . ' : '. $result['msg'];
-            echo json_encode($rst['msg']); exit;
+            $rst['msg'] = 'Code :'. $result['code'] . '  msg:'. $result['msg'];
+            echo json_encode($rst); exit;
         }
         $rst['code'] = 0;
         echo json_encode($rst);

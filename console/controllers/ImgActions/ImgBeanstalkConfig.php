@@ -11,4 +11,5 @@ return [
     'delete_img'=>'console\controllers\ImgActions\WorkerActions\DeleteImgAction',
     'gen_sign_img'=>'console\controllers\ImgActions\WorkerActions\GenSigninImgAction',
     'gen_later_img'=>'console\controllers\ImgActions\WorkerActions\GenLaterImgAction',
+    'sign_up' => 'console\controllers\ImgActions\WorkerActions\GenSignUpImgAction',
 ];
